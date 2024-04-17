@@ -37,4 +37,4 @@ out/
 .vscode/
 
 # config
-config.yml
+config-dev.yml
