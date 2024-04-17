@@ -4,6 +4,10 @@ spring:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
   hikari:
     maximum-pool-size:180
     minimum-idle:10
@@ -15,8 +19,8 @@ spring:
 #    mongodb:
 #      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority&appName=${MONGO_APPNAME}
 #      database: ${MONGO_DBNAME}
-  rabbitmq:
-    host: ${MQ_HOST}
-    port: ${MQ_PORT}
-    username: ${MQ_USER_NAME}
-    password: ${MQ_PASSWORD}
+#  rabbitmq:
+#    host: ${MQ_HOST}
+#    port: ${MQ_PORT}
+#    username: ${MQ_USER_NAME}
+#    password: ${MQ_PASSWORD}
