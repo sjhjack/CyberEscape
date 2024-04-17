@@ -11,5 +11,4 @@ public class EscapeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EscapeApplication.class, args);
 	}
-
 }
