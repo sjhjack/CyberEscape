@@ -1,4 +1,4 @@
 package com.cyber.escape.domain.rank.dto;
 
-public class RankDto {
+public class RankingDto {
 }
