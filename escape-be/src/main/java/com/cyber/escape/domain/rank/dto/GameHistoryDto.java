@@ -10,13 +10,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class GameHistoryDto {
-    private String userId;
-    private String themaId;
-    private LocalDateTime clearTime;
-    private String uuid;
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Request{
+        private String userUuid;
+        private String themaUuid;
+        private LocalDateTime clearTime;
+    }
+
 }
