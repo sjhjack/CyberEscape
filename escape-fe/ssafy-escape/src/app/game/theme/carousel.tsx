@@ -1,5 +1,5 @@
 const Carousel = () => {
-  return;
-};
+  return <div>안녕</div>
+}
 
-export default Carousel;
+export default Carousel
