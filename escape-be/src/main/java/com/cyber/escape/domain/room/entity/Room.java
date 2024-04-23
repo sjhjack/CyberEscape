@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.room;
+package com.cyber.escape.domain.room.entity;
 
 import java.time.LocalDateTime;
 
