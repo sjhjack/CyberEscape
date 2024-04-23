@@ -17,3 +17,10 @@ main {
   height: 35vh;
   margin-bottom: 3%;
 }
+.swiper-button-next {
+  color: black !important;
+}
+
+.swiper-button-prev {
+  color: black !important;
+}

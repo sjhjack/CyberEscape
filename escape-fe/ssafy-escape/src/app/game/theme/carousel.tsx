@@ -4,7 +4,6 @@ import { Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import CardComponent from "./card"
 import "swiper/css"
-import "swiper/css/pagination"
 import "swiper/css/navigation"
 type SelectThemeFunction = (index: number) => void
 const Carousel = ({
@@ -27,6 +26,7 @@ const Carousel = ({
         threshold={1}
         onSlideChange={(prop) => setCurrentCard(prop.activeIndex)}
         spaceBetween={100}
+        centeredSlides={true}
         navigation={true}
       >
         {data?.map((item: object, index: any) => {
