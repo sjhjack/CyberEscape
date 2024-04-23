@@ -50,6 +50,11 @@ dependencies {
 	// java.lang.NoClassDefFoundError:javax/persistence/Entity 에러 방지
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	// STOMP
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+	// reactor netty
+	implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.6.4'
 }
 
 // QueryDsl 빌드 옵션 (선택)
