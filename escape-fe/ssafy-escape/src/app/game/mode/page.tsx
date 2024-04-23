@@ -1,42 +1,43 @@
 "use client"
 
 import Container from "../../../components/common/Container"
-import "./style.css"
 import { useRouter } from "next/navigation"
-const GamePage = () => {
+import * as S from "./modeStyle"
+import Image from "next/image"
+const ModeSelect = () => {
   const router = useRouter()
   return (
     <Container>
       <h1>모드 선택</h1>
-      <main>
-        <div
+      <S.MainContent>
+        <S.SelectMode
           className="selectmode"
           onClick={() => {
             router.push("/game/theme")
           }}
         >
-          <img src="/image/single.png" />
-          <p>
+          <Image src="/image/single.png" alt="" width={300} height={300} />
+          <S.Text>
             싱글
             <br />
             (1인)
-          </p>
-        </div>
-        <div
+          </S.Text>
+        </S.SelectMode>
+        <S.SelectMode
           className="selectmode"
           onClick={() => {
             router.push("/game/multi")
           }}
         >
-          <img src="/image/multi.png" />
-          <p>
+          <Image src="/image/multi.png" alt="" width={300} height={300} />
+          <S.Text>
             멀티
             <br />
             (2인)
-          </p>
-        </div>
-      </main>
+          </S.Text>
+        </S.SelectMode>
+      </S.MainContent>
     </Container>
   )
 }
-export default GamePage
+export default ModeSelect

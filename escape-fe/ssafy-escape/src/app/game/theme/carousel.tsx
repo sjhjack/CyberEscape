@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 import { Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import CardComponent from "./card"
+import * as S from "./themeStyle"
 import "swiper/css"
 import "swiper/css/navigation"
 type SelectThemeFunction = (index: number) => void
@@ -19,7 +20,7 @@ const Carousel = ({
     selectTheme(currentCard)
   }, [currentCard])
   return (
-    <main>
+    <S.MainContainer>
       <Swiper
         modules={[Navigation]}
         slidesPerView={1}
@@ -37,7 +38,7 @@ const Carousel = ({
           )
         })}
       </Swiper>
-    </main>
+    </S.MainContainer>
   )
 }
 
