@@ -1,5 +1,6 @@
 package com.cyber.escape.domain.rank.entity;
 
+import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,9 +18,9 @@ import java.time.LocalDateTime;
 @Table(name="game_history")
 public class GameHistory extends BaseEntity {
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private  User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
 //    @ManyToOne
 //    @JoinColumn(name = "thema_id", referencedColumnName = "id")
@@ -27,6 +28,4 @@ public class GameHistory extends BaseEntity {
 
     @Column(name="clear_time")
     private LocalDateTime clearTime;
-
-    private String uuid;
 }
