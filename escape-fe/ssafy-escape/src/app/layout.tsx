@@ -1,5 +1,6 @@
-import StyledComponentsRegistry from "../lib/registry"
 import { Noto_Sans_KR } from "next/font/google"
+import StyledComponentsRegistry from "../lib/registry"
+import "./globals.css"
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
 })
