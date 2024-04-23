@@ -23,6 +23,7 @@ public class User extends BaseEntity {
 
 	private String nickname;
 
+	@Builder.Default
 	private int point = 0;
 
 	@Column(name = "character_id")
