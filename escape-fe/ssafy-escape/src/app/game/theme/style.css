@@ -16,8 +16,6 @@ img {
   align-items: center;
 }
 
-p {
-  font-size: x-large;
-  font-weight: bold;
-  text-align: center;
+h1 {
+  font-weight: 900;
 }
