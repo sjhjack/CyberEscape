@@ -1,25 +1,18 @@
 "use client"
 import styled from "styled-components"
 import "./style.css"
-const Card = styled.div`
-width: 30vw  
-height: 15vh  
-border-radius: 5px;
-background-color: white
-display:flex
-text-align: center
-line-height:300px
-`
+import * as S from "./themeStyle"
+
 const CardComponent = ({ card }: any) => {
   return (
-    <Card>
-      <div className="theme-container">
-        <img className="theme-image" src={card.image} />
+    <S.Card>
+      <S.ThemeContainer>
+        <S.ThemeImage src={card.image} alt="" width={200} height={250} />
         <div>주제: {card.title}</div>
         <div>제한시간: {card.time}</div>
         <div>내용: {card.content}</div>
-      </div>
-    </Card>
+      </S.ThemeContainer>
+    </S.Card>
   )
 }
 

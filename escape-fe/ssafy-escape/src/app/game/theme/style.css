@@ -1,22 +1,3 @@
-main {
-  margin-top: 3%;
-  width: 90%;
-}
-.theme-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  margin-bottom: 3%;
-}
-.theme-image {
-  border-radius: 20px;
-  width: 30vw;
-  height: 35vh;
-  margin-bottom: 3%;
-}
 .swiper-button-next {
   color: black !important;
 }
