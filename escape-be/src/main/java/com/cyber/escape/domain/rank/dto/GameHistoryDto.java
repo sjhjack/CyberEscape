@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 public class GameHistoryDto {
     @Data
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
+//    @AllArgsConstructor
+//    @NoArgsConstructor
     public static class Request{
         private String userUuid;
         private String themaUuid;

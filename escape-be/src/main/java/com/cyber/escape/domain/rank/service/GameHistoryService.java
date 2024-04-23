@@ -36,5 +36,8 @@ public class GameHistoryService {
             .clearTime(gameHistoryDto.getClearTime())
             .build();
         gameHistoryRepository.save(gameHistory);
+        //조건문 최고기록 넘는지?
+        
+
     }
 }
