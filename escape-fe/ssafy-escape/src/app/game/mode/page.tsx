@@ -1,5 +1,5 @@
-import Container from "../../../components/common/Container";
-import "./style.css";
+import Container from "../../../components/common/Container"
+import "./style.css"
 
 const GamePage = () => {
   return (
@@ -16,6 +16,6 @@ const GamePage = () => {
         </div>
       </main>
     </Container>
-  );
-};
-export default GamePage;
+  )
+}
+export default GamePage

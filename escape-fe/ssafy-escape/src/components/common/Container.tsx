@@ -1,5 +1,5 @@
-"use client";
-import styled from "styled-components";
+"use client"
+import styled from "styled-components"
 
 const Container = styled.div`
   display: flex;
@@ -11,6 +11,6 @@ const Container = styled.div`
   background-color: #eaeaea;
   border-radius: 20px;
   margin: 8% auto;
-`;
+`
 
-export default Container;
+export default Container
