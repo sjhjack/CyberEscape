@@ -16,8 +16,7 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "uuid", nullable = false, unique = true, length = 36)
-    private String uuid = UUID.randomUUID().toString(); // 랜덤 UUID 생성 및 설정
+    private String uuid;
 
     @CreatedDate
     private LocalDateTime createdAt;
