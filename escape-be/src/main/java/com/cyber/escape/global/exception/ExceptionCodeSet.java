@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 public enum ExceptionCodeSet {
     // 유저
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, 4040, "회원이 존재하지 않습니다."),
-
     NICKNAME_DUPLICATED(HttpStatus.CONFLICT, 4090, "이미 존재하는 닉네임입니다.");
 
     private final HttpStatus httpStatus;
