@@ -1,19 +1,17 @@
-"use client";
+"use client"
 
-import Container from "../../../components/common/Container";
-import "./style.css";
-import { useRouter } from "next/navigation";
+import Container from "../../../components/common/Container"
+import "./style.css"
+import { useRouter } from "next/navigation"
 const GamePage = () => {
-  const router = useRouter();
-  return (
+  const router = useRouter()
+    return (
     <Container>
       <h1>모드 선택</h1>
       <main>
         <div
           className="selectmode"
-          onClick={() => {
-            router.push("/game/theme");
-          }}
+          onClick={() => {router.push("/game/theme")}}
         >
           <img src="/image/single.png" />
           <p>
@@ -25,7 +23,7 @@ const GamePage = () => {
         <div
           className="selectmode"
           onClick={() => {
-            router.push("/game/multi");
+            router.push("/multi")
           }}
         >
           <img src="/image/multi.png" />
@@ -37,6 +35,6 @@ const GamePage = () => {
         </div>
       </main>
     </Container>
-  );
-};
-export default GamePage;
+  )
+}
+export default GamePage
