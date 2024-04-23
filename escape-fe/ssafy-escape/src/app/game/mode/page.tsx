@@ -5,13 +5,15 @@ import "./style.css"
 import { useRouter } from "next/navigation"
 const GamePage = () => {
   const router = useRouter()
-    return (
+  return (
     <Container>
       <h1>모드 선택</h1>
       <main>
         <div
           className="selectmode"
-          onClick={() => {router.push("/game/theme")}}
+          onClick={() => {
+            router.push("/game/theme")
+          }}
         >
           <img src="/image/single.png" />
           <p>
@@ -23,7 +25,7 @@ const GamePage = () => {
         <div
           className="selectmode"
           onClick={() => {
-            router.push("/multi")
+            router.push("/game/multi")
           }}
         >
           <img src="/image/multi.png" />
