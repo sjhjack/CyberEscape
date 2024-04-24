@@ -28,6 +28,13 @@ public class RankingDto {
 
     @Getter
     @Builder
+    public static class GetMyRanking{
+        private String userUuid;
+        private String themaUuid;
+    }
+
+    @Getter
+    @Builder
     public static class Response{
         private String nickname;
         private Time bestTime;
@@ -38,7 +45,7 @@ public class RankingDto {
     @Builder
     public static class UserRankingDto {
         private String nickname;
-        private LocalTime bestTime;
+        private Time bestTime;
         private int category;
     }
 }

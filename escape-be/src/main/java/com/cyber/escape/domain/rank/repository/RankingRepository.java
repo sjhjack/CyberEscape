@@ -21,12 +21,11 @@ public interface RankingRepository extends JpaRepository<Ranking, String> {
             "ORDER BY r.best_time ASC", nativeQuery = true)
     List<Object> findAllByThemaUuidOrderByBestTimeAsc(@Param("themaUuid") String themaUuid);
 
-//    @Query("SELECT u.nickname, r.best_time, t.category " +
-//            "FROM ranking r " +
-//            "JOIN user u ON r.user_id = u.id " +
-//            "JOIN thema t ON r.themaId = t.id " +
-//            "WHERE u.uuid = :userUuid AND t.uuid = :themaUuid " +
-//            "ORDER BY r.best_time ASC")
-//    List<Object[]> getUserRankings(@Param("userUuid") String userUuid, @Param("themaUuid") String themaUuid);
+    @Query(value = "SELECT u.nickname, r.best_time, t.category " +
+            "FROM ranking r " +
+            "JOIN user u ON r.user_id = u.id " +
+            "JOIN thema t ON r.thema_id = t.id " +
+            "WHERE u.uuid = :userUuid AND t.uuid = :themaUuid ", nativeQuery = true)
+    Optional<Object> getUserRankings(@Param("userUuid") String userUuid, @Param("themaUuid") String themaUuid);
 
 }

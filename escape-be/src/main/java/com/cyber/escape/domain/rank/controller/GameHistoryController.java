@@ -35,4 +35,11 @@ public class GameHistoryController {
         return new ApiResponse<>(HttpStatus.OK.value(), "테마별 랭킹 조회 성공", rankings);
     }
 
+    @PostMapping("/rank/myrank")
+    public ApiResponse<RankingDto.UserRankingDto> getMyRanking(@RequestBody RankingDto.GetMyRanking req){
+        RankingDto.UserRankingDto ranking = gameHistoryService.getRankingByUuid(req);
+        log.info("my ranking information is successfully readed");
+        return new ApiResponse<>(HttpStatus.OK.value(), "나의 랭킹 조회 성공", ranking);
+    }
+
 }
