@@ -1,7 +1,6 @@
 package com.cyber.escape.domain.room.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -141,5 +140,15 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 		findRoom.setHost(host);
 
 		return UserDto.Response.from(host);
+	}
+
+	@Transactional
+	@Override
+	public RoomDto.TimeResponse setStartTime(RoomDto.TimeRequest timeRequest) {
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, timeRequest.getRoomUuid());
+
+		findRoom.setStartedAt(timeRequest.getStartedAt());
+
+		return RoomDto.TimeResponse.from(findRoom);
 	}
 }

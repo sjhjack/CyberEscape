@@ -19,6 +19,27 @@ public class RoomDto {
 
 	@Builder
 	@Getter
+	public static class TimeRequest {
+		private final String roomUuid;
+		private final LocalDateTime startedAt;
+	}
+
+	@Builder
+	@Getter
+	public static class TimeResponse {
+		private final String roomUuid;
+		private final LocalDateTime startedAt;
+
+		public static TimeResponse from(Room room){
+			return TimeResponse.builder()
+				.roomUuid(room.getUuid())
+				.startedAt(room.getStartedAt())
+				.build();
+		}
+	}
+
+	@Builder
+	@Getter
 	public static class InfoRequest {
 		private final String title;
 		private final String password;

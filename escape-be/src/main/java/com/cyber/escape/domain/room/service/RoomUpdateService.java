@@ -6,4 +6,5 @@ import com.cyber.escape.domain.user.dto.UserDto;
 public interface RoomUpdateService {
 	RoomDto.InfoResponse changeRoomSetting(RoomDto.InfoRequest infoRequest);
 	UserDto.Response changeHost(RoomDto.Request request);
+	RoomDto.TimeResponse setStartTime(RoomDto.TimeRequest timeRequest);
 }
