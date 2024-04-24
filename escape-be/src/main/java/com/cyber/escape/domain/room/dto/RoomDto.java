@@ -18,6 +18,15 @@ public class RoomDto {
 
 	@Builder
 	@Getter
+	public static class Request {
+		private final String roomUuid;
+		private final String userUuid;
+
+
+	}
+
+	@Builder
+	@Getter
 	public static class Response {
 		private final String title;
 		private final String password;
