@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -28,5 +29,5 @@ public class GameHistory extends BaseEntity {
     private Thema thema;
 
     @Column(name="clear_time")
-    private Time clearTime;
+    private LocalTime clearTime;
 }

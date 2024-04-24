@@ -1,6 +1,8 @@
 package com.cyber.escape.domain.rank.controller;
 
 import com.cyber.escape.domain.rank.dto.GameHistoryDto;
+import com.cyber.escape.domain.rank.dto.RankingDto;
+import com.cyber.escape.domain.rank.entity.Ranking;
 import com.cyber.escape.domain.rank.service.GameHistoryService;
 import com.cyber.escape.global.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -22,4 +27,12 @@ public class GameHistoryController {
         log.info("upload");
         return new ApiResponse<>(HttpStatus.OK.value(), "게임정보 업로드 성공", gameHistoryService.toString());
     }
+
+    @PostMapping("/rankings")
+    public ApiResponse<List<RankingDto.Response>> getAllRankingsByThemaUuid(@RequestBody RankingDto.GetRanking req) {
+        List<RankingDto.Response> rankings = gameHistoryService.getAllRankingsByThemaUuid(req);
+        log.info("list complete");
+        return new ApiResponse<>(HttpStatus.OK.value(), "테마별 랭킹 조회 성공", rankings);
+    }
+
 }

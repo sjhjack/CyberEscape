@@ -3,6 +3,7 @@ package com.cyber.escape.domain.rank.dto;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 
 public class GameHistoryDto {
@@ -11,7 +12,7 @@ public class GameHistoryDto {
     public static class Request{
         private String userUuid;
         private String themaUuid;
-        private Time clearTime;
+        private LocalTime clearTime;
     }
 
 }
