@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ExceptionCodeSet {
     // 유저
+
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, 4000, "잘못된 접근입니다."),
+
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, 4040, "회원이 존재하지 않습니다."),
 
     NICKNAME_DUPLICATED(HttpStatus.CONFLICT, 4090, "이미 존재하는 닉네임입니다."),
