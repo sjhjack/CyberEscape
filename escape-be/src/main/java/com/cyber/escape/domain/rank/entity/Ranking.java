@@ -1,13 +1,13 @@
 package com.cyber.escape.domain.rank.entity;
 
+import com.cyber.escape.domain.thema.entity.Thema;
+import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.global.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.time.LocalDateTime;
+import java.sql.Time;
 
 @Entity
 @Getter
@@ -18,21 +18,19 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name="ranking")
 public class Ranking extends BaseEntity {
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private  User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "thema_id", referencedColumnName = "id")
-//    private  Thema thema;
+    @ManyToOne
+    @JoinColumn(name = "thema_id", referencedColumnName = "id")
+    private Thema thema;
 
-//    @ManyToOne
-//    @JoinColumn(name = "ranking_id", referencedColumnName = "id")
-//    private  GameHistory gameHistory;
+    @ManyToOne
+    @JoinColumn(name = "ranking_id", referencedColumnName = "id")
+    private  GameHistory gameHistory;
 
     @Column(name="best_time")
-    private LocalDateTime bestTime;
-
-    private String uuid;
+    private Time bestTime;
 
 }

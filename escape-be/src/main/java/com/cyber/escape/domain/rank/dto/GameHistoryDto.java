@@ -1,19 +1,17 @@
 package com.cyber.escape.domain.rank.dto;
 
 import lombok.*;
-import java.time.LocalDateTime;
 
+import java.sql.Time;
 
 
 public class GameHistoryDto {
     @Getter
     @Builder
-//    @AllArgsConstructor
-//    @NoArgsConstructor
     public static class Request{
         private String userUuid;
         private String themaUuid;
-        private LocalDateTime clearTime;
+        private Time clearTime;
     }
 
 }
