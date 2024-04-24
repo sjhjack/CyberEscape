@@ -37,6 +37,11 @@ public class RoomController {
 
 	@PatchMapping("/change/host")
 	public ApiResponse<UserDto.Response> changeHost(RoomDto.Request request) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 설정 변경 성공", roomUpdateService.changeHost(request));
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 방장 변경 성공", roomUpdateService.changeHost(request));
+	}
+
+	@PatchMapping("/start")
+	public ApiResponse<RoomDto.TimeResponse> setStartTime(RoomDto.TimeRequest timeRequest) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 게임 시작 시간 저장 성공", roomUpdateService.setStartTime(timeRequest));
 	}
 }

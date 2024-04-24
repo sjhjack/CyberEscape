@@ -33,6 +33,7 @@ public class Room extends BaseEntity {
 
 	private int capacity;
 
+	@Setter
 	@Column(name = "started_at")
 	private LocalDateTime startedAt;
 
