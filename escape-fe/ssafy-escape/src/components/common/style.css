@@ -1,0 +1,9 @@
+/* 캐러셀에서 next, prev button 색상만 변경하기 위해 만든 css 파일 */
+
+.swiper-button-next {
+  color: black !important;
+}
+
+.swiper-button-prev {
+  color: black !important;
+}
