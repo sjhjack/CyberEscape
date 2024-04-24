@@ -1,5 +1,4 @@
 import * as S from "./enterStyle"
-import { RoomInfo } from "@/interfaces/interface"
 import Image from "next/image"
 interface RoomProps {
   roomData: RoomInfo

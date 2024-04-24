@@ -3,26 +3,23 @@ import React, { useState, useEffect } from "react"
 import { Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import CardComponent from "./ThemeCard"
-import * as S from "../../app/game/theme/themeStyle"
+import styled from "styled-components"
 import "swiper/css"
 import "swiper/css/navigation"
 interface SelectThemeFunction {
   (index: number): void
 }
-interface CardInfoProp {
-  title: string
-  time: string
-  content: string
-  image: string
-}
 
-const ThemeCarousel = ({
-  selectTheme,
-}: {
+interface CarouselProps {
   selectTheme: SelectThemeFunction
-}) => {
+  $width?: string
+  $height?: string
+  navigation?: boolean
+  pagination?: boolean
+}
+const ThemeCarousel = ({ selectTheme }: CarouselProps) => {
   const [currentCard, setCurrentCard] = useState<number>(0)
-  const themeData: CardInfoProp[] = [
+  const themeData: CardInfo[] = [
     {
       title: "공포",
       time: "10-15분",
@@ -46,7 +43,7 @@ const ThemeCarousel = ({
     selectTheme(currentCard)
   }, [currentCard])
   return (
-    <S.MainContainer>
+    <MainContainer>
       <Swiper
         modules={[Navigation]}
         slidesPerView={1}
@@ -55,17 +52,23 @@ const ThemeCarousel = ({
         spaceBetween={100}
         centeredSlides={true}
         navigation={true}
+        pagination={true}
       >
-        {themeData?.map((item: object, index: any) => {
+        {themeData?.map((item: CardInfo, index: number) => {
           return (
             <SwiperSlide key={index}>
-              <CardComponent card={item} />
+              <CardComponent themeData={item} />
             </SwiperSlide>
           )
         })}
       </Swiper>
-    </S.MainContainer>
+    </MainContainer>
   )
 }
 
 export default ThemeCarousel
+
+const MainContainer = styled.div`
+  margin-top: 3%;
+  width: 90%;
+`
