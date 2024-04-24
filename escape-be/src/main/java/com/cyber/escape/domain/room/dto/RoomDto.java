@@ -1,16 +1,10 @@
 package com.cyber.escape.domain.room.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import com.cyber.escape.domain.member.entity.User;
 import com.cyber.escape.domain.room.entity.Room;
-import com.cyber.escape.domain.thema.entity.Thema;
 import com.querydsl.core.annotations.QueryProjection;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,8 +15,15 @@ public class RoomDto {
 	public static class Request {
 		private final String roomUuid;
 		private final String userUuid;
+	}
 
-
+	@Builder
+	@Getter
+	public static class InfoRequest {
+		private final String title;
+		private final String password;
+		private final String themaUuid;
+		private final String roomUuid;
 	}
 
 	@Builder
@@ -39,7 +40,8 @@ public class RoomDto {
 		private final String uuid;
 
 		@QueryProjection
-		public Response(String title, String password, int capacity, LocalDateTime startedAt, Long thema_id, Long user_id, String uuid){
+		public Response(String title, String password, int capacity, LocalDateTime startedAt, Long thema_id,
+			Long user_id, String uuid) {
 			this.title = title;
 			this.password = password;
 			this.capacity = capacity;
@@ -49,7 +51,7 @@ public class RoomDto {
 			this.uuid = uuid;
 		}
 
-		public static Response from(Room room){
+		public static Response from(Room room) {
 			return Response.builder()
 				.title(room.getTitle())
 				.password(room.getPassword())
@@ -57,8 +59,7 @@ public class RoomDto {
 				.startedAt(room.getStartedAt())
 				.thema_id(room.getThema().getId())
 				.user_id(room.getHost().getId())
-				// .uuid(room.getUuid())
-				.uuid("uuid")
+				.uuid(room.getUuid())
 				.build();
 		}
 	}
