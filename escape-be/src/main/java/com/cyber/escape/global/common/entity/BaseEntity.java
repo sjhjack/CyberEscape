@@ -23,9 +23,11 @@ public class BaseEntity {
 	@Column(name = "uuid", nullable = false, unique = true, length = 36)
 	private String uuid = UUID.randomUUID().toString(); // 랜덤 UUID 생성 및 설정
 
-	@CreatedDate
-	private LocalDateTime createdAt;
+    @CreatedDate
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-	@LastModifiedDate
-	private LocalDateTime updatedAt;
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
