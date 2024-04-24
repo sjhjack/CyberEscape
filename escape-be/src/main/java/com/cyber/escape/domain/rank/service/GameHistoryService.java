@@ -80,47 +80,54 @@ public class GameHistoryService {
         Time myBestTime = null;
         int myCategory = 0;
         int myRank = 0; // 내 랭킹 초기화
-
         // 내 랭킹 정보가 있는 경우에만 값을 설정
         if (myRankingObject.isPresent()) {
             Object[] myRankingArr = (Object[]) myRankingObject.get();
             myNickname = (String) myRankingArr[0];
             myBestTime = (Time) myRankingArr[1];
             myCategory = (int) myRankingArr[2];
-
-            // 내 랭킹 정보가 있는 경우, 전체 랭킹 정보 중에서 내 랭킹 계산
-            List<Object> rankingObjects = rankingRepository.findAllByThemaUuidOrderByBestTimeAsc(req.getThemaUuid());
-            int rank = 1; // 시작 랭킹 설정
-
-            for (Object obj : rankingObjects) {
-                Object[] arr = (Object[]) obj;
-                String rankingNickname = (String) arr[0];
-
-                if (myNickname.equals(rankingNickname)) {
-                    myRank = rank; // 내 랭킹 설정
-                    break;
-                }
-
-                rank++;
-            }
-            log.info(myNickname + " " + myBestTime + " " + myCategory + " " + myRank);;
-        } else {
-            // 내 랭킹 정보가 없는 경우, 기본 값 설정 또는 내 랭킹이 없습니다 문구 출력
+        }
+        else {
+            // 내 랭킹 정보가 없는 경우
             log.info("no Rank");
             throw new RankingException(ExceptionCodeSet.RANKING_NOT_FOUND);
         }
-
         //전체 랭킹
         List<Object> rankingObjects = rankingRepository.findAllByThemaUuidOrderByBestTimeAsc(req.getThemaUuid());
 
         List<RankingDto.Response> rankings = new ArrayList<>();
         int rank = 1;
+        int rankCount = 0;
+        Time prevTime = Time.valueOf("00:00:00");
 
         for (Object obj : rankingObjects) {
             Object[] arr = (Object[]) obj;
             String nickname = (String) arr[0];
             Time bestTime = (Time) arr[1];
             int category = (int) arr[2];
+
+            System.out.println("first prevTime : " + prevTime);
+            System.out.println("first bestTime : " + bestTime);
+            if(prevTime.equals(bestTime)) {
+                System.out.println("is it done?");
+                rank--;
+                rankCount++;
+            }
+            else{
+                System.out.println("여기도?");
+                prevTime = bestTime;
+                System.out.println("여기 prevtime : " + prevTime);
+                if(rankCount != 0){
+                    rank += rankCount;
+                    rankCount = 0;
+                }
+            }
+
+            if(myNickname.equals(nickname)){
+                myRank = rank;
+                System.out.println(myNickname + " " + myBestTime + " " + myCategory + " " + myRank);
+            }
+            System.out.println("rank : " + rank);
 
             RankingDto.Response dto = RankingDto.Response.builder()
                     .rank(rank++)
