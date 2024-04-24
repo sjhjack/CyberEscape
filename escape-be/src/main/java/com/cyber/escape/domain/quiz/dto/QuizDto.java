@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 public class QuizDto {
 
     @Getter
-    public static class RequestDto{
+    public static class QuizSubmissionDto{
         String themaUuid;
 
-        public RequestDto(){
+        public QuizSubmissionDto(){
 
         }
-        public RequestDto(String themaUuid){
+        public QuizSubmissionDto(String themaUuid){
             this.themaUuid = themaUuid;
         }
     }
