@@ -1,6 +1,7 @@
 package com.cyber.escape.domain.quiz.controller;
 
 
+import com.cyber.escape.domain.quiz.dto.QuizAnswerDto;
 import com.cyber.escape.domain.quiz.dto.QuizDto;
 import com.cyber.escape.domain.quiz.service.QuizService;
 import com.cyber.escape.global.common.dto.ApiResponse;
@@ -22,14 +23,15 @@ public class QuizController {
     }
 
     @PostMapping("")
-    public ApiResponse getQuizzez(@RequestBody QuizDto.QuizSubmissionReqDto submission){
+    public ApiResponse getQuizzes(@RequestBody QuizDto.QuizSubmissionReqDto submission){
 
         return new ApiResponse(HttpStatus.OK.value(), "퀴즈를 불러왔습니다.", quizService.getQuizzes(submission.getThemaUuid(), submission.getRole()));
     }
 
 //    @PostMapping("/answer")
-//    public ApiResponse submitAnswer(@RequestBody ){
+//    public ApiResponse submitAnswer(@RequestBody QuizAnswerDto.SubmitAnswerReqDto submit){
 //
+//        return new ApiResponse();
 //    }
 
 }
