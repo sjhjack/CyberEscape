@@ -1,18 +1,37 @@
-"use client"
+import React, { useState } from "react"
 import styled from "styled-components"
 
 interface InputProps {
   placeholder: string
   type?: string
   width?: string
+  onChange?: (value: string) => void // 새로운 prop 추가
 }
 
 interface InputStyleProps {
   width?: string
 }
 
-const Input = ({ type, placeholder, width }: InputProps) => {
-  return <InputStyle type={type} placeholder={placeholder} width={width} />
+const Input = ({ type, placeholder, width, onChange }: InputProps) => {
+  const [value, setValue] = useState("")
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value
+    setValue(newValue)
+    if (onChange) {
+      onChange(newValue)
+    }
+  }
+
+  return (
+    <InputStyle
+      type={type}
+      placeholder={placeholder}
+      width={width}
+      value={value} // value 추가
+      onChange={handleChange} // onChange 추가
+    />
+  )
 }
 
 export default Input
