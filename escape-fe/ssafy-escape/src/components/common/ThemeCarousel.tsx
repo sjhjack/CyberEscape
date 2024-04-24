@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react"
 import { Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
-import CardComponent from "./card"
-import * as S from "./themeStyle"
+import CardComponent from "./ThemeCard"
+import * as S from "../../app/game/theme/themeStyle"
 import "swiper/css"
 import "swiper/css/navigation"
 type SelectThemeFunction = (index: number) => void
-const Carousel = ({
+const ThemeCarousel = ({
   selectTheme,
   data,
 }: {
@@ -42,4 +42,4 @@ const Carousel = ({
   )
 }
 
-export default Carousel
+export default ThemeCarousel

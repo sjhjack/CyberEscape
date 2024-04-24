@@ -1,8 +1,8 @@
 "use client"
-import React, { useState, useEffect, use } from "react"
+import React, { useState } from "react"
 import Container from "../../../components/common/Container"
 import { useRouter } from "next/navigation"
-import Carousel from "./carousel"
+import Carousel from "../../../components/common/ThemeCarousel"
 export interface CardInfoProp {
   title: string
   time: string

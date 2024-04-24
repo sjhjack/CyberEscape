@@ -4,7 +4,7 @@ import Container from "../../../components/common/Container"
 import { useRouter } from "next/navigation"
 import * as S from "./modeStyle"
 import Image from "next/image"
-const ModeSelect = () => {
+const Page = () => {
   const router = useRouter()
   return (
     <Container>
@@ -40,4 +40,4 @@ const ModeSelect = () => {
     </Container>
   )
 }
-export default ModeSelect
+export default Page

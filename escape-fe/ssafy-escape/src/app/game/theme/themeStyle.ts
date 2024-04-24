@@ -20,11 +20,8 @@ export const ThemeImage = styled(Image)`
   margin-bottom: 3%;
 `
 export const Card = styled.div`
-width: 30vw  
-height: 15vh  
-border-radius: 5px;
-background-color: white
-display:flex
-text-align: center
-line-height:300px
+  border-radius: 5px;
+  background-color: white
+  display:flex
+  text-align: center
 `

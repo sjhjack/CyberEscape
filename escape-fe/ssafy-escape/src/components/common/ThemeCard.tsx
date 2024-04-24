@@ -1,9 +1,9 @@
 "use client"
 import styled from "styled-components"
 import "./style.css"
-import * as S from "./themeStyle"
+import * as S from "../../app/game/theme/themeStyle"
 
-const CardComponent = ({ card }: any) => {
+const ThemeCard = ({ card }: any) => {
   return (
     <S.Card>
       <S.ThemeContainer>
@@ -16,4 +16,4 @@ const CardComponent = ({ card }: any) => {
   )
 }
 
-export default CardComponent
+export default ThemeCard
