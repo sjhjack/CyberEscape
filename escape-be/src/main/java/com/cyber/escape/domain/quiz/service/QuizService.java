@@ -15,6 +15,7 @@ import com.cyber.escape.global.common.util.IdFinder;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.QuizException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +32,14 @@ public class QuizService {
     private FinalAnswerRepository finalAnswerRepository;
     private RedisTemplate<String, QuizDataInRedis.QuizData> answerInfoStore;
     private RedisTemplate<String,QuizDataInRedis.finalAnswerData> finalAnswerStore;
-
+    private RedisTemplate<String, List<Boolean>> solvedQuiz;
     public QuizService(QuizRepository quizRepository,
                        FinalAnswerRepository finalAnswerRepository,
                        QuizMapper quizMapper,
                        IdFinder idFinder,
                        RedisTemplate<String, QuizDataInRedis.QuizData> answerInfoStore,
-                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore) {
+                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore,
+                       RedisTemplate<String, List<Boolean>> solvedQuiz) {
 
         this.quizRepository = quizRepository;
         this.finalAnswerRepository = finalAnswerRepository;
@@ -45,6 +47,7 @@ public class QuizService {
         this.idFinder = idFinder;
         this.answerInfoStore = answerInfoStore;
         this.finalAnswerStore = finalAnswerStore;
+        this.solvedQuiz = solvedQuiz;
     }
 
     // 퀴즈를 뽑는 로직
@@ -64,7 +67,7 @@ public class QuizService {
                 .orElseThrow(()-> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
 
         // 레디스에 최종정답 및 현재 정답 정보 저장
-        storeAnswersToRedis(quizList, finalAnswer);
+        storeAnswersToRedis(userUuid, quizList, finalAnswer);
 
         result = quizList.stream().map(quizMapper::toDto).toList();
 
@@ -73,9 +76,12 @@ public class QuizService {
     }
 
     public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
-        
+        String userUuid = UserUtil.getUserUuid();
+
         // 현재 제출한 퀴즈 데이터 불러오기
         QuizDataInRedis.QuizData data = answerInfoStore.opsForValue().get(req.getQuizUuid());
+        // 사용자가 맞힌 퀴즈 내역 들고오기
+        List<Boolean> solvedQuizInfo = solvedQuiz.opsForValue().get(userUuid);
 
         // 올바르지 않은 quizuuid
         if(data == null){
@@ -94,11 +100,16 @@ public class QuizService {
             String clue = "";
 
             for(int clueIdx = 0; clueIdx < 3; clueIdx++){
+                if(solvedQuizInfo.get(clueIdx)){
+                    throw new QuizException(ExceptionCodeSet.ALREADY_SOLVED_QUIZ);
+                }
+                // out of index
                 if(!isUsedArr[clueIdx]){
                     clue = finalQuiz.getClues()[clueIdx];
                     finalQuiz.getIsUsed()[clueIdx] = true;
                     break;
                 }
+
             }
 
             // clue 상태 업데이트
@@ -122,7 +133,7 @@ public class QuizService {
         return answer.split(" ");
     }
 
-    private void storeAnswersToRedis(List<Quiz> quizList, FinalAnswer finalAnswer){
+    private void storeAnswersToRedis(String userUuid, List<Quiz> quizList, FinalAnswer finalAnswer){
 
         // 퀴즈 정보 캐싱 처리
         for(Quiz selectedQuiz : quizList){
@@ -135,10 +146,10 @@ public class QuizService {
 
             answerInfoStore.opsForValue().set(selectedQuiz.getUuid(), quizInfo);
         }
-
+        log.info("FINAL QUIZ UUID : {}", finalAnswer.getUuid());
         // answer를 단어별로 자른다.
         String[] clues = makeClue(finalAnswer.getAnswer());
-        boolean[] isUsed = new boolean[]{false, false, false};
+        boolean[] isUsed = new boolean[3];
 
         // 레디스에 최종 정답 리스트 저장
         finalAnswerStore.opsForValue().set(finalAnswer.getUuid(),
@@ -148,6 +159,10 @@ public class QuizService {
                         .isUsed(isUsed)
                         .build()
         );
+
+        // 사용자가 맞힌 문제 추적을 위한 저장
+        List<Boolean> solved = new ArrayList<>(Arrays.asList(new boolean[]));
+        solvedQuiz.op().set(userUuid, solved);
     }
 
 }
