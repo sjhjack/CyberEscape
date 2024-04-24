@@ -8,4 +8,6 @@ import com.cyber.escape.domain.room.entity.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
 	List<Room> findAllRooms();
+
+	void deleteRoomByUuid(String uuid);
 }
