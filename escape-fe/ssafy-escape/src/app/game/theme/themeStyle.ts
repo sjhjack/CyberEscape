@@ -1,5 +1,5 @@
-import styled from "styled-components"
 import Image from "next/image"
+import styled from "styled-components"
 export const MainContainer = styled.div`
   margin-top: 3%;
   width: 90%;
@@ -21,7 +21,7 @@ export const ThemeImage = styled(Image)`
 `
 export const Card = styled.div`
   border-radius: 5px;
-  background-color: white
-  display:flex
-  text-align: center
+  background-color: white;
+  display: flex;
+  text-align: center;
 `

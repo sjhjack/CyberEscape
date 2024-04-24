@@ -2,23 +2,11 @@
 import styled from "styled-components"
 
 interface InputProps {
-  placeholder: string
-  type?: string
-  width?: string
+  $width?: string
 }
 
-interface InputStyleProps {
-  width?: string
-}
-
-const Input = ({ type, placeholder, width }: InputProps) => {
-  return <InputStyle type={type} placeholder={placeholder} width={width} />
-}
-
-export default Input
-
-const InputStyle = styled.input<InputStyleProps>`
-  width: ${(props) => props.width || "200px"};
+const Input = styled.input<InputProps>`
+  width: ${(props) => props.$width || "200px"};
   padding: 10px;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
@@ -39,3 +27,4 @@ const InputStyle = styled.input<InputStyleProps>`
     border-color: #87cdb3;
   }
 `
+export default Input
