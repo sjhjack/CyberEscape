@@ -3,7 +3,7 @@
 import Container from "../../../components/common/Container"
 import { useRouter } from "next/navigation"
 import * as S from "./mulitStyle"
-const GamePage = () => {
+const Page = () => {
   const router = useRouter()
   return (
     <Container>
@@ -40,4 +40,4 @@ const GamePage = () => {
     </Container>
   )
 }
-export default GamePage
+export default Page
