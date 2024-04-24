@@ -34,4 +34,11 @@ public class QuizController {
         return new ApiResponse(HttpStatus.OK.value(), "정답 여부를 전송합니다.", quizService.getAnswer(submit));
     }
 
+    @PostMapping("/final/answer")
+    public ApiResponse submitfinalAnswer(@RequestBody QuizAnswerDto.SubmitAnswerReqDto submit){
+
+        return new ApiResponse(HttpStatus.OK.value(), "정답 여부를 전송합니다.", quizService.getAnswer(submit));
+    }
+
+
 }
