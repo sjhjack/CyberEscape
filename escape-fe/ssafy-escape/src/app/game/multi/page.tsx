@@ -1,6 +1,6 @@
 "use client"
 
-import Container from "../../../components/common/Container"
+import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
 import * as S from "./mulitStyle"
 const Page = () => {
@@ -9,7 +9,11 @@ const Page = () => {
     <Container>
       <h1>멀티 모드</h1>
       <S.ImageContainer>
-        <S.MenuContainer>
+        <S.MenuContainer
+          onClick={() => {
+            router.push("/game/multi/create")
+          }}
+        >
           <S.MultiImage
             src="/image/createroom.png"
             alt="create the room"
@@ -18,7 +22,11 @@ const Page = () => {
           />
           <S.MenuText>방 생성</S.MenuText>
         </S.MenuContainer>
-        <S.MenuContainer>
+        <S.MenuContainer
+          onClick={() => {
+            router.push("/game/multi/enter")
+          }}
+        >
           <S.MultiImage
             src="/image/enter.png"
             alt="enter the room"

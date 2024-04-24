@@ -1,6 +1,6 @@
 "use client"
 
-import Container from "../../../components/common/Container"
+import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
 import * as S from "./modeStyle"
 import Image from "next/image"
