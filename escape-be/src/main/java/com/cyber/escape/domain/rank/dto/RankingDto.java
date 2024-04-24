@@ -18,12 +18,13 @@ public class RankingDto {
     @Getter
     @Builder
     public static class GetRanking{
+        private String userUuid;
         private String themaUuid;
-        public GetRanking(){
-        }
-        public GetRanking(String themaUuid){
-            this.themaUuid = themaUuid;
-        }
+//        public GetRanking(){
+//        }
+//        public GetRanking(String themaUuid){
+//            this.themaUuid = themaUuid;
+//        }
     }
 
     @Getter
@@ -36,6 +37,7 @@ public class RankingDto {
     @Getter
     @Builder
     public static class Response{
+        private int rank;
         private String nickname;
         private Time bestTime;
         private int category;
