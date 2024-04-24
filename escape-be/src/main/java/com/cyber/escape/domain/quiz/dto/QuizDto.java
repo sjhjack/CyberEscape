@@ -11,12 +11,14 @@ public class QuizDto {
     @Getter
     public static class QuizSubmissionDto{
         String themaUuid;
+        int role;
 
         public QuizSubmissionDto(){
 
         }
-        public QuizSubmissionDto(String themaUuid){
+        public QuizSubmissionDto(String themaUuid, int role){
             this.themaUuid = themaUuid;
+            this.role = role;
         }
     }
 
