@@ -1,7 +1,7 @@
 "use client"
 import styled from "styled-components"
 import "./style.css"
-import * as S from "../../app/game/theme/themeStyle"
+import * as S from "../../app/(isLogIn)/game/theme/themeStyle"
 
 const ThemeCard = ({ card }: any) => {
   return (
