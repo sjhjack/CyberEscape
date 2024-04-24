@@ -6,8 +6,10 @@ import CardComponent from "./ThemeCard"
 import * as S from "../../app/game/theme/themeStyle"
 import "swiper/css"
 import "swiper/css/navigation"
-type SelectThemeFunction = (index: number) => void
-export interface CardInfoProp {
+interface SelectThemeFunction {
+  (index: number): void
+}
+interface CardInfoProp {
   title: string
   time: string
   content: string
