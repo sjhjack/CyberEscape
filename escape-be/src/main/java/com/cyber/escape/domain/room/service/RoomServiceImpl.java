@@ -13,6 +13,7 @@ import com.cyber.escape.domain.room.entity.Room;
 import com.cyber.escape.domain.room.repository.RoomRepository;
 import com.cyber.escape.domain.room.repository.RoomRepositoryImpl;
 import com.cyber.escape.domain.room.utils.RoomServiceUtils;
+import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 
@@ -101,14 +102,18 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 
 	@Transactional
 	@Override
-	public void changeRoomSetting(RoomDto.InfoRequest infoRequest) {
+	public RoomDto.InfoResponse changeRoomSetting(RoomDto.InfoRequest infoRequest) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, infoRequest.getRoomUuid());
 
 		findRoom.updateSetting(RoomUpdateSetting.of(infoRequest.getTitle(), infoRequest.getPassword()));
 		// roomRepositoryImpl.changeRoomSetting(infoRequest);
+
+		return RoomDto.InfoResponse.from(findRoom);
 	}
 
-	public void changeHost(RoomDto.Request request) {
+	@Transactional
+	@Override
+	public UserDto.Response changeHost(RoomDto.Request request) {
 		// host인 경우만 변경 가능 -> validation check 필요
 
 		// Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
@@ -134,5 +139,7 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 사용자가 없습니다."));
 
 		findRoom.setHost(host);
+
+		return UserDto.Response.from(host);
 	}
 }
