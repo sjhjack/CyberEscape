@@ -18,5 +18,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
             + " UNION ALL "
             + "(SELECT * FROM quiz WHERE difficulty = 3 AND thema_id = :themaId ORDER BY RAND() LIMIT 1)"
             + ") as sub", nativeQuery = true)
-    public Optional<List<Quiz>> submissQuizzez(@Param("themaId") Long themaId);
+    public Optional<List<Quiz>> getQuizzes(@Param("themaId") Long themaId);
+
+    public Optional<Quiz> findByUuid(String uuid);
 }

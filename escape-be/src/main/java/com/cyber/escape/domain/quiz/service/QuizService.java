@@ -1,5 +1,6 @@
 package com.cyber.escape.domain.quiz.service;
 
+import com.cyber.escape.domain.quiz.dto.QuizAnswerDto;
 import com.cyber.escape.domain.quiz.dto.QuizDto;
 import com.cyber.escape.domain.quiz.entity.FinalAnswer;
 import com.cyber.escape.domain.quiz.entity.Quiz;
@@ -49,7 +50,8 @@ public class QuizService {
 
         Long themaId = idFinder.findIdByUuid(themaUuid, Thema.class) + role;
         log.info("themaId : {}", themaId);
-        List<Quiz> quizList = quizRepository.submissQuizzez(themaId)
+
+        List<Quiz> quizList = quizRepository.getQuizzes(themaId)
                 .orElseThrow(()-> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
 
         result = quizList.stream().map(quizMapper::toDto).toList();
@@ -61,14 +63,21 @@ public class QuizService {
         return result;
     }
 
-    // 랜덤한 숫자를 뽑아서 퀴즈를 선택
-    private Quiz getRandomQuiz(List<Quiz> quizList){
-        Random random = new Random();
-        int size = quizList.size();
-        log.info("quizList의 size : {} ", size);
-        // 0 ~ size - 1의 값을 반환한다.
-        int randomIdx = random.nextInt(size);
-        return quizList.get(randomIdx);
-    }
+//    public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
+//
+//        Quiz quizInfo = quizRepository.findByUuid(req.getQuizUuid())
+//                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+//
+//        String submitAnswer = req.getAnswer();
+//        String realAnswer = quizInfo.getAnswer();
+//
+//        if(realAnswer.equals(submitAnswer)){
+//
+//            return QuizAnswerDto.SubmitAnswerResDto
+//                                .builder()
+//                                .build();
+//        }
+//
+//    }
 
 }
