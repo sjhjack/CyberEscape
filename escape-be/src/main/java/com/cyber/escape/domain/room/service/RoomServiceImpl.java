@@ -16,6 +16,7 @@ import com.cyber.escape.domain.room.utils.RoomServiceUtils;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -110,8 +111,9 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	public void changeHost(RoomDto.Request request) {
 		// host인 경우만 변경 가능 -> validation check 필요
 
-		Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
-			.orElseThrow(() -> new RuntimeException("일치하는 대기방이 없습니다."));
+		// Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
+		// 	.orElseThrow(() -> new RuntimeException("일치하는 대기방이 없습니다."));
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
 		// Todo : Context Holder에 저장된 UserUuid 값으로 방장 여부 확인
 		// User user = userRepository.findUserByUuid(UserUtil.getUserUuid())
@@ -125,6 +127,12 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 		// }
 
 		// 근데 여기랑 room 가져오는 코드가 겹치는데 좋은 방법이 없을까?
-		roomRepositoryImpl.changeHost(request);
+		// utils로 리펙토링하고, 아래 코드 impl코드 삭제하면서 해결
+		// roomRepositoryImpl.changeHost(request);
+
+		User host = userRepository.findUserByUuid(request.getUserUuid())
+			.orElseThrow(() -> new EntityNotFoundException("일치하는 사용자가 없습니다."));
+
+		findRoom.setHost(host);
 	}
 }
