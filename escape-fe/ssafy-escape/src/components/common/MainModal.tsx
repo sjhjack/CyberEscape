@@ -14,8 +14,8 @@ interface ModalProps {
 }
 
 interface ModalStyleProps {
-  width?: string
-  height?: string
+  $width?: string
+  $height?: string
 }
 
 const MainModal = ({
@@ -34,7 +34,7 @@ const MainModal = ({
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <ModalBox width={width} height={height}>
+        <ModalBox $width={width} $height={height}>
           <div style={{ position: "relative" }}>
             <MainText>{text}</MainText>
             <IconBox onClick={onClose}>
@@ -56,8 +56,8 @@ const ModalBox = styled.div<ModalStyleProps>`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: ${(props) => props.width || "35vw"};
-  height: ${(props) => props.height || "60vh"};
+  width: ${(props) => props.$width || "35vw"};
+  height: ${(props) => props.$height || "60vh"};
   border-radius: 20px;
   background-color: white;
   padding: 20px;
