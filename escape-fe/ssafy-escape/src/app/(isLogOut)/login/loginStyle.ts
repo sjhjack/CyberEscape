@@ -1,6 +1,5 @@
-
-import { MainColor } from "@/styles/palette"
 import { styled } from "styled-components"
+import { MainColor } from "@/styles/palette"
 
 export const SubContainer = styled.div`
   display: flex;
