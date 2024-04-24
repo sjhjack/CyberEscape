@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -26,11 +27,11 @@ public class Ranking extends BaseEntity {
     @JoinColumn(name = "thema_id", referencedColumnName = "id")
     private Thema thema;
 
-    @ManyToOne
-    @JoinColumn(name = "ranking_id", referencedColumnName = "id")
-    private  GameHistory gameHistory;
+//    @ManyToOne
+//    @JoinColumn(name = "ranking_id", referencedColumnName = "id")
+//    private  GameHistory gameHistory;
 
     @Column(name="best_time")
-    private Time bestTime;
+    private LocalTime bestTime;
 
 }
