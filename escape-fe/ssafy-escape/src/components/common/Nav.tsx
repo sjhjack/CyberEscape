@@ -1,12 +1,12 @@
 "use client"
+import { useEffect, useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
+import styled from "styled-components"
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents"
 import GroupIcon from "@mui/icons-material/Group"
 import HelpIcon from "@mui/icons-material/Help"
 import LocalMallIcon from "@mui/icons-material/LocalMall"
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom"
-import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import styled from "styled-components"
 
 const Nav = () => {
   const [choice, setChoice] = useState<string | null>("/main")

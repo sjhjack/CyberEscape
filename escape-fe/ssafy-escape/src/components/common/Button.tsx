@@ -1,11 +1,11 @@
 "use client"
+import styled from "styled-components"
 import {
   MainColor,
   MainColorDarker,
   RedColor,
   RedColorDarker,
 } from "@/styles/palette"
-import styled from "styled-components"
 
 // success: 메인색(녹색), fail: 서브색(적색)
 
