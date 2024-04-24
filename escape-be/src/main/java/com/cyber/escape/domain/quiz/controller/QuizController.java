@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/quiz")
+@RequestMapping("/game/quiz")
 public class QuizController {
 
 
@@ -22,10 +22,14 @@ public class QuizController {
     }
 
     @PostMapping("")
-    public ApiResponse getQuizzez(@RequestBody QuizDto.QuizSubmissionDto submission){
+    public ApiResponse getQuizzez(@RequestBody QuizDto.QuizSubmissionReqDto submission){
 
         return new ApiResponse(HttpStatus.OK.value(), "퀴즈를 불러왔습니다.", quizService.getQuizzes(submission.getThemaUuid(), submission.getRole()));
     }
 
+//    @PostMapping("/answer")
+//    public ApiResponse submitAnswer(@RequestBody ){
+//
+//    }
 
 }

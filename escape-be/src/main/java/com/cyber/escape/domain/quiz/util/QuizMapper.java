@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class QuizMapper {
-    public QuizDto.SelectedQuizDto toDto(Quiz quiz){
+    public QuizDto.SelectedQuizResDto toDto(Quiz quiz){
         return QuizDto
-                .SelectedQuizDto
+                .SelectedQuizResDto
                 .builder()
                 .quizUuid(quiz.getUuid())
                 .url(quiz.getUrl())

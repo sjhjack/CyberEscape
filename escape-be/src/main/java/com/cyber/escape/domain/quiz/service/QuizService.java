@@ -44,8 +44,8 @@ public class QuizService {
 
     // 퀴즈를 뽑는 로직
     // 여기서 주어지는 themaUuid는 설명 칸에 있는 uuid일 것이므로 무조건 role 정보가 필요함
-    public List<QuizDto.SelectedQuizDto> getQuizzes(String themaUuid, int role) throws QuizException{
-        List<QuizDto.SelectedQuizDto> result = new ArrayList<>();
+    public List<QuizDto.SelectedQuizResDto> getQuizzes(String themaUuid, int role) throws QuizException{
+        List<QuizDto.SelectedQuizResDto> result = new ArrayList<>();
 
         Long themaId = idFinder.findIdByUuid(themaUuid, Thema.class) + role;
         log.info("themaId : {}", themaId);

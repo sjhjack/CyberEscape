@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 public class QuizDto {
 
     @Getter
-    public static class QuizSubmissionDto{
+    public static class QuizSubmissionReqDto{
         String themaUuid;
         int role;
 
-        public QuizSubmissionDto(){
+        public QuizSubmissionReqDto(){
 
         }
-        public QuizSubmissionDto(String themaUuid, int role){
+        public QuizSubmissionReqDto(String themaUuid, int role){
             this.themaUuid = themaUuid;
             this.role = role;
         }
@@ -25,15 +25,15 @@ public class QuizDto {
     @Builder
     @Getter
     @AllArgsConstructor
-    public static class SelectedQuizDto{
+    public static class SelectedQuizResDto{
 
         private final int difficulty;
         private final String quizUuid;
         private final String content;
         private final String url;
 
-        public static SelectedQuizDto selectedQuizToDto(Quiz quiz){
-            return SelectedQuizDto.builder()
+        public static SelectedQuizResDto selectedQuizToDto(Quiz quiz){
+            return SelectedQuizResDto.builder()
                     .quizUuid(quiz.getUuid())
                     .content(quiz.getContent())
                     .url(quiz.getUrl())
@@ -41,5 +41,18 @@ public class QuizDto {
                     .build();
         }
     }
+
+    @AllArgsConstructor
+    public class SubmitAnswerReqDto{
+        private final String quizUuid;
+        private final String answer;
+    }
+
+    @AllArgsConstructor
+    public class SubmitAnswerResDto{
+        private final String clue;
+        private final boolean isRight;
+    }
+
 
 }
