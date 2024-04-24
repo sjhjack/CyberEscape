@@ -22,9 +22,9 @@ public class QuizController {
     }
 
     @PostMapping("")
-    public ApiResponse getQuizzez(@RequestBody QuizDto.RequestDto req){
+    public ApiResponse getQuizzez(@RequestBody QuizDto.QuizSubmissionDto submission){
 
-        return new ApiResponse(HttpStatus.OK.value(), "퀴즈를 불러왔습니다.", quizService.getQuizzes(req.getThemaUuid()));
+        return new ApiResponse(HttpStatus.OK.value(), "퀴즈를 불러왔습니다.", quizService.getQuizzes(submission.getThemaUuid()));
     }
 
 
