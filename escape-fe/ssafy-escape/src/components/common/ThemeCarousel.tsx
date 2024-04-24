@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react"
 import { Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import CardComponent from "./ThemeCard"
-import * as S from "../../app/game/theme/themeStyle"
+import * as S from "../../app/(isLogIn)/game/theme/themeStyle"
 import "swiper/css"
 import "swiper/css/navigation"
 interface SelectThemeFunction {
