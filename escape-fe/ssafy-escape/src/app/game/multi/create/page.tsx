@@ -5,29 +5,8 @@ import ThemeCarousel from "@/components/common/ThemeCarousel"
 import Button from "@/components/common/Button"
 import Checkbox from "@mui/material/Checkbox"
 import * as S from "./createStyle"
-import { CardInfoProp } from "@/interfaces/interface"
 import { useState } from "react"
 const Page = () => {
-  const themeData: CardInfoProp[] = [
-    {
-      title: "공포",
-      time: "10-15분",
-      content: "무서운 거임",
-      image: "/image/horror.jpg",
-    },
-    {
-      title: "SSAFY",
-      time: "10-15분",
-      content: "탈출 마렵다",
-      image: "/image/ssafy.jpg",
-    },
-    {
-      title: "일반",
-      time: "10-15분",
-      content: "희주야 들어와",
-      image: "/image/normal.jpg",
-    },
-  ]
   const [theme, selectTheme] = useState<number>(0)
   const [title, setTitle] = useState<string>("")
   const [secretMode, setSecretMode] = useState<boolean>(false)
@@ -52,7 +31,7 @@ const Page = () => {
           </S.MenuBox>
           <S.CarouselBox>
             <S.Menu>테마</S.Menu>
-            <ThemeCarousel selectTheme={selectTheme} data={themeData} />
+            <ThemeCarousel selectTheme={selectTheme} />
           </S.CarouselBox>
           <S.MenuBox>
             <S.Menu>비공개</S.Menu>
