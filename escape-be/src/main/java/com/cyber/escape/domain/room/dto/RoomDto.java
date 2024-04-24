@@ -28,6 +28,20 @@ public class RoomDto {
 
 	@Builder
 	@Getter
+	public static class InfoResponse {
+		private final String title;
+		private final String password;
+
+		public static InfoResponse from(Room room){
+			return InfoResponse.builder()
+				.title(room.getTitle())
+				.password(room.getPassword())
+				.build();
+		}
+	}
+
+	@Builder
+	@Getter
 	public static class Response {
 		private final String title;
 		private final String password;
