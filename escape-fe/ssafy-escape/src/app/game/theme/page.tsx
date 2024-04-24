@@ -3,14 +3,9 @@ import React, { useState } from "react"
 import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
 import Carousel from "@/components/common/ThemeCarousel"
-export interface CardInfoProp {
-  title: string
-  time: string
-  content: string
-  image: string
-}
+import { CardInfoProp } from "@/interfaces/interface"
 const Page = () => {
-  const themeData = [
+  const themeData: CardInfoProp[] = [
     {
       title: "공포",
       time: "10-15분",
