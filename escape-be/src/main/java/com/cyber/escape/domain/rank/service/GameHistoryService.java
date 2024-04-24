@@ -10,6 +10,8 @@ import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.RankingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -107,7 +109,7 @@ public class GameHistoryService {
                     .category(category)
                     .build();
         } else {
-            throw new RuntimeException("랭킹 정보를 찾을 수 없습니다.");
+            throw new RankingException(ExceptionCodeSet.RANKING_NOT_FOUND);
         }
     }
 }
