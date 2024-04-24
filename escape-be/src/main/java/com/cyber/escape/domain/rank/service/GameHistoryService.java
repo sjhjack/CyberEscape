@@ -32,12 +32,16 @@ public class GameHistoryService {
         GameHistory gameHistory = GameHistory.builder()
                 .user(user)
                 .thema(thema)
-//            .uuid(gameHistoryDto.getUuid())
-            .clearTime(gameHistoryDto.getClearTime())
-            .build();
+                .clearTime(gameHistoryDto.getClearTime())
+                .build();
         gameHistoryRepository.save(gameHistory);
         //조건문 최고기록 넘는지?
-        
+
+        //ranking 테이블에 내 정보가 있는지 (내 기록이 있는지)
+        // 없다면 그냥 넣기
+
+        // ranking 테이블에 내 정보는 있는데 최고 그 시간을 내가 넘었는지 아닌지
+        //
 
     }
 }
