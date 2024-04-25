@@ -14,6 +14,8 @@ import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.entity.Room;
 import com.cyber.escape.domain.room.repository.RoomRepository;
 import com.cyber.escape.domain.room.utils.RoomServiceUtils;
+import com.cyber.escape.domain.thema.entity.Thema;
+import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
@@ -26,9 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RoomServiceImpl implements RoomReadService, RoomUpdateService, RoomDeleteService {
+public class RoomServiceImpl implements RoomCreateService, RoomReadService, RoomUpdateService, RoomDeleteService {
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
+	private final ThemaRepository themaRepository;
 
 	@Override
 	public PagingDto.Response<PagingDto.PageResponse> findAllRooms(PagingDto.PageRequest pageRequest) {
@@ -50,6 +53,35 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService, Room
 		// return roomRepository.findAll().stream()
 		// 	.map(RoomDto.Response::from)
 		// 	.collect(Collectors.toList());
+	}
+
+	@Transactional
+	@Override
+	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
+		// Todo : Password 암호화
+		// String encryptPassword = ...;
+
+		User host = userRepository.findUserByUuid(postRequest.getHostUuid())
+			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+
+		Thema thema = themaRepository.findById(postRequest.getThemaId())
+			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
+
+		Room newRoom = Room.builder()
+			.title(postRequest.getTitle())
+			.password(postRequest.getPassword())
+			.capacity(1)
+			.thema(thema)
+			.host(host)
+			.creator(host)
+			.updator(host)
+			.build();
+
+		roomRepository.save(newRoom);
+
+		// Todo : 채팅방 생성해서 저장하고 채팅방 Uuid 가져오기
+
+		return RoomDto.PostResponse.of(newRoom.getUuid(), "chatRoomuuid");
 	}
 
 	@Transactional

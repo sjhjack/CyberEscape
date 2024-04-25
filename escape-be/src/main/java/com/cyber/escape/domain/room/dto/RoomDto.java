@@ -20,6 +20,29 @@ public class RoomDto {
 
 	@Builder
 	@Getter
+	public static class PostRequest {
+		private final String title;
+		private final Long themaId;
+		private final String password;
+		private final String hostUuid;
+	}
+
+	@Builder
+	@Getter
+	public static class PostResponse {
+		private final String roomUuid;
+		private final String chatRoomUuid;
+
+		public static PostResponse of(String roomUuid, String chatRoomUuid) {
+			return PostResponse.builder()
+				.roomUuid(roomUuid)
+				.chatRoomUuid(chatRoomUuid)
+				.build();
+		}
+	}
+
+	@Builder
+	@Getter
 	public static class TimeRequest {
 		private final String roomUuid;
 		private final LocalDateTime startedAt;

@@ -2,6 +2,9 @@ package com.cyber.escape.domain.room.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.cyber.escape.domain.room.data.RoomUpdateSetting;
 import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.user.entity.User;
@@ -9,6 +12,7 @@ import com.cyber.escape.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
@@ -23,6 +27,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Room extends BaseEntity {
 	// title, password는 patch update를 위해 Setter 사용
 	@Setter
@@ -33,6 +38,7 @@ public class Room extends BaseEntity {
 
 	private int capacity;
 
+	@CreatedDate
 	@Setter
 	@Column(name = "started_at")
 	private LocalDateTime startedAt;
