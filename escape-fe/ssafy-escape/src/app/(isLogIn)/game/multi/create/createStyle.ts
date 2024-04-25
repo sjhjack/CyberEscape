@@ -6,7 +6,7 @@ export const Contain = styled.div`
   justify-content: center;
 `
 export const CreateContainer = styled.div`
-  width: 50%;
+  width: 60%;
   display: flex;
   flex-direction: column;
 `

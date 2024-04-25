@@ -31,7 +31,13 @@ const Page = () => {
           </S.MenuBox>
           <S.CarouselBox>
             <S.Menu>테마</S.Menu>
-            <ThemeCarousel selectTheme={selectTheme} />
+            <ThemeCarousel
+              selectTheme={selectTheme}
+              width={300}
+              height={220}
+              navigation={false}
+              pagination={true}
+            />
           </S.CarouselBox>
           <S.MenuBox>
             <S.Menu>비공개</S.Menu>
