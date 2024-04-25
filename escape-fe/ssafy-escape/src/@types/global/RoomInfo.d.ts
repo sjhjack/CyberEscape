@@ -1,4 +1,4 @@
-export interface RoomInfo {
+interface RoomInfo {
   roomUuid: string
   thema: string
   nickname: string
