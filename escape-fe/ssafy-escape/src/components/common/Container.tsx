@@ -13,10 +13,10 @@ interface ContainerProps {
   alignItems?: string
 }
 interface ContainerStyleProps {
-  display?: string
-  flexDirection?: string
-  justifyContent?: string
-  alignItems?: string
+  $display?: string
+  $flexDirection?: string
+  $justifyContent?: string
+  $alignItems?: string
 }
 const Container = ({
   isBackButton = true,
@@ -29,10 +29,10 @@ const Container = ({
   const router = useRouter()
   return (
     <ContainerStyle
-      display={display}
-      flexDirection={flexDirection}
-      justifyContent={justifyContent}
-      alignItems={alignItems}
+      $display={display}
+      $flexDirection={flexDirection}
+      $justifyContent={justifyContent}
+      $alignItems={alignItems}
     >
       {isBackButton ? (
         <BackIcon onClick={() => router.back()}>
@@ -56,10 +56,10 @@ const ContainerStyle = styled.div<ContainerStyleProps>`
   background: rgba(255, 255, 255, 0.8);
   transform: translate(-50%, -50%);
   padding: 20px;
-  display: ${(props) => props.display};
-  flex-direction: ${(props) => props.flexDirection};
-  justify-content: ${(props) => props.justifyContent};
-  align-items: ${(props) => props.alignItems};
+  display: ${(props) => props.$display};
+  flex-direction: ${(props) => props.$flexDirection};
+  justify-content: ${(props) => props.$justifyContent};
+  align-items: ${(props) => props.$alignItems};
 `
 const BackIcon = styled.div`
   position: absolute;

@@ -5,7 +5,7 @@ import ThemeCarousel from "@/components/common/ThemeCarousel"
 import Button from "@/components/common/Button"
 import Checkbox from "@mui/material/Checkbox"
 import * as S from "./createStyle"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 const Page = () => {
   const [theme, selectTheme] = useState<number>(0)
   const [title, setTitle] = useState<string>("")
@@ -14,11 +14,11 @@ const Page = () => {
   const handleSecretMode = (secretMode: boolean): void => {
     setSecretMode(!secretMode)
   }
-  const handleTitle = (title: string): void => {
-    setTitle(title)
+  const handleTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setTitle(event.target.value)
   }
-  const handlePassword = (password: string): void => {
-    setPassword(password)
+  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setPassword(event.target.value)
   }
 
   return (
@@ -27,11 +27,17 @@ const Page = () => {
         <S.CreateContainer>
           <S.MenuBox>
             <S.Menu>방 제목</S.Menu>
-            <Input placeholder="" width="250px" onChange={handleTitle} />
+            <Input width="250px" onChange={handleTitle} />
           </S.MenuBox>
           <S.CarouselBox>
             <S.Menu>테마</S.Menu>
-            <ThemeCarousel selectTheme={selectTheme} />
+            <ThemeCarousel
+              selectTheme={selectTheme}
+              width={300}
+              height={220}
+              navigation={false}
+              pagination={true}
+            />
           </S.CarouselBox>
           <S.MenuBox>
             <S.Menu>비공개</S.Menu>
@@ -42,15 +48,12 @@ const Page = () => {
               }}
             />
           </S.MenuBox>
-          <S.MenuBox>
-            <S.Menu>비밀번호</S.Menu>
-            <Input
-              placeholder=""
-              type="string"
-              width="250px"
-              onChange={handlePassword}
-            />
-          </S.MenuBox>
+          {secretMode && (
+            <S.MenuBox>
+              <S.Menu>비밀번호</S.Menu>
+              <Input width="250px" onChange={handlePassword} />
+            </S.MenuBox>
+          )}
         </S.CreateContainer>
       </S.Contain>
       <S.ButtonPlaced>

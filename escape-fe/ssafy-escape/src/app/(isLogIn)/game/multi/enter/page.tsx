@@ -1,7 +1,6 @@
 import Container from "@/components/common/Container"
 import * as S from "./enterStyle"
 import Room from "./Room"
-import { RoomInfo } from "@/interfaces/interface"
 
 const Page = () => {
   // 더미 데이터. 추후 방 데이터 받아올 예정
