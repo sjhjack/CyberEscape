@@ -1,8 +1,8 @@
 "use client"
-import CloseIcon from "@mui/icons-material/Close"
-import Modal from "@mui/material/Modal"
 import { ReactNode } from "react"
 import styled from "styled-components"
+import CloseIcon from "@mui/icons-material/Close"
+import Modal from "@mui/material/Modal"
 
 interface ModalProps {
   children: ReactNode

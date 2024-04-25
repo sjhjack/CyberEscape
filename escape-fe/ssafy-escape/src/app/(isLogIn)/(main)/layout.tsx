@@ -1,7 +1,7 @@
 "use client"
+import { styled } from "styled-components"
 import Container from "@/components/common/Container"
 import Nav from "@/components/common/Nav"
-import { styled } from "styled-components"
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
