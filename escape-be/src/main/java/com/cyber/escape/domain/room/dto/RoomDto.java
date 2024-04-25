@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.cyber.escape.domain.room.entity.Room;
 import com.querydsl.core.annotations.QueryProjection;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
