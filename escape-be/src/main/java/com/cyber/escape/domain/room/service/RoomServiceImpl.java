@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
+public class RoomServiceImpl implements RoomReadService, RoomUpdateService, RoomDeleteService {
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
 
@@ -53,12 +53,25 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	}
 
 	@Transactional
-	public void deleteRoom(final String uuid) {
-		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, uuid);
+	@Override
+	public void deleteRoom(final RoomDto.Request request) {
+		// 이거 근데 왜 필요한거지?
+		// 방장이 나갔을 때 말고는 삭제할 일이 없는거 아닌가?
 
-		roomRepository.delete(findRoom);
-		// roomRepository.deleteRoomByUuid(uuid);
-		// 연결된 채팅방까지 삭제 ???
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
+
+		User user = userRepository.findUserByUuid(request.getUserUuid())
+			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+
+		if(user.getId() == findRoom.getHostId()){
+			roomRepository.delete(findRoom);
+			// roomRepository.deleteRoomByUuid(uuid);
+			// Todo : 연결된 채팅방까지 삭제 ???
+			// Todo : 방에 남아있는 Guest는 추방 조치
+
+		} else {
+			throw new RuntimeException("방장이 아닙니다.");
+		}
 	}
 
 	public void inviteUserToRoom(final RoomDto.Request request) {
@@ -91,9 +104,12 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 		User user = userRepository.findUserByUuid(request.getUserUuid())
 			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
 
-		if (user.getId() == findRoom.getHost().getId()) {
+		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
-			roomRepository.deleteRoomByUuid(findRoom.getUuid());
+			roomRepository.delete(findRoom);
+			// roomRepository.deleteRoomByUuid(uuid);
+			// Todo : 연결된 채팅방까지 삭제 ???
+			// Todo : 방에 남아있는 Guest는 추방 조치
 			log.info("RoomServiceImpl ========== 방 삭제 성공");
 		} else {
 			log.info("RoomServiceImpl ========== 게스트입니다.");
