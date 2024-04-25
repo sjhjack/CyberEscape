@@ -15,7 +15,6 @@ import com.cyber.escape.global.common.util.IdFinder;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.QuizException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -50,8 +49,8 @@ public class QuizService {
 
     // 퀴즈를 뽑는 로직
     // 여기서 주어지는 themaUuid는 설명 칸에 있는 uuid일 것이므로 무조건 role 정보가 필요함
-    public List<QuizDto.SelectedQuizResDto> getQuizzes(String themaUuid, int role) throws QuizException{
-        List<QuizDto.SelectedQuizResDto> result = new ArrayList<>();
+    public List<QuizDto.QuizSubmissionResDto> getQuizzes(String themaUuid, int role) throws QuizException{
+        List<QuizDto.QuizSubmissionResDto> result = new ArrayList<>();
 
         String userUuid = UserUtil.getUserUuid();
 
@@ -67,9 +66,14 @@ public class QuizService {
         // 레디스에 최종정답 및 현재 정답 정보 저장
         storeAnswersToRedis(userUuid, quizList, finalAnswer);
 
-        result = quizList.stream().map(quizMapper::toDto).toList();
+        for(Quiz q : quizList){
+            result.add(quizMapper.toDto(q));
+        }
+        //result = quizList.stream().map(quizMapper::toDto).toList();
+        result.add(new QuizDto.QuizSubmissionResDto(finalAnswer.getUuid(), "마지막 문제입니다. 풀고 탈출하세요.", "", 4));
 
         return result;
+
     }
 
     public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
@@ -119,6 +123,62 @@ public class QuizService {
                 .isRight(false)
                 .build();
     }
+
+    public QuizDto.QuizHintResDto getHint(String quizUuid){
+        String userUuid = UserUtil.getUserUuid();
+
+        Map<String, QuizDataInRedis.MapQuizWithClueData> map = mappedClueWithQuiz.opsForValue().get(userUuid);
+
+        // quiz uuid로 데이터를 꺼낸다.
+        QuizDataInRedis.MapQuizWithClueData data = map.get(quizUuid);
+
+        // 이미 힌트를 썼으면
+        if(data.isUsedHint()){
+            throw new QuizException(ExceptionCodeSet.ALREADY_USE_HINT);
+        }
+
+        // redis에 힌트 사용 여부를 저장한다.
+        for(Map.Entry<String, QuizDataInRedis.MapQuizWithClueData> quizInfo : map.entrySet()){
+            MapQuizWithClueData clueData = quizInfo.getValue();
+            clueData.setUsedHint(true);
+        }
+
+        map.replace(quizUuid, data);
+        mappedClueWithQuiz.opsForValue().set(userUuid, map);
+
+        String hint = quizRepository.findByUuid(quizUuid).get().getHint();
+
+        return QuizDto.QuizHintResDto.builder().hint(hint).build();
+    }
+
+    public QuizAnswerDto.SubmitFinalAnswerResDto getResult(QuizAnswerDto.SubmitAnswerReqDto req){
+
+        finalAnswerData answerInfo = finalAnswerStore.opsForValue().get(req.getQuizUuid());
+
+        if(answerInfo == null)
+            throw new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS);
+
+        // 공백 문자 제거
+        String submitAnswer = req.getAnswer().replace(" ", "").trim();
+        String realAnswer = answerInfo.getFinalAnswer().replace(" ", "").trim();
+
+        if(realAnswer.equals(submitAnswer)){
+            String userUuid = UserUtil.getUserUuid();
+
+            // 레디스에서 유저가 풀던 문제 삭제
+            mappedClueWithQuiz.delete(userUuid);
+
+            return QuizAnswerDto.SubmitFinalAnswerResDto.
+                    builder()
+                    .right(true)
+                    .build();
+        }
+        return QuizAnswerDto.SubmitFinalAnswerResDto.
+                builder()
+                .right(false)
+                .build();
+    }
+
 
     private String[] makeClue(String answer){
 
