@@ -42,17 +42,4 @@ public class QuizDto {
         }
     }
 
-    @AllArgsConstructor
-    public class SubmitAnswerReqDto{
-        private final String quizUuid;
-        private final String answer;
-    }
-
-    @AllArgsConstructor
-    public class SubmitAnswerResDto{
-        private final String clue;
-        private final boolean isRight;
-    }
-
-
 }
