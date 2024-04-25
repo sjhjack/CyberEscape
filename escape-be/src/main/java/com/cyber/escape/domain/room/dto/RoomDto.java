@@ -7,6 +7,7 @@ import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 public class RoomDto {
 
@@ -63,11 +64,11 @@ public class RoomDto {
 	@Getter
 	public static class Response {
 		private final String title;
-		private final String password;
+		// private final String password;
 		private final int capacity;
 		private final LocalDateTime startedAt;
-		private final Long thema_id;
-		private final Long user_id;
+		private final Long themaId;
+		private final Long userId;
 		// private final Long created_user;
 		// private final Long updated_user;
 		private final String uuid;
@@ -75,30 +76,30 @@ public class RoomDto {
 		@QueryProjection
 		public Response(
 			final String title,
-			final String password,
+			// final String password,
 			final int capacity,
 			final LocalDateTime startedAt,
-			final Long thema_id,
-			final Long user_id,
+			final Long themaId,
+			final Long userId,
 			final String uuid
 		) {
 			this.title = title;
-			this.password = password;
+			// this.password = password;
 			this.capacity = capacity;
 			this.startedAt = startedAt;
-			this.thema_id = thema_id;
-			this.user_id = user_id;
+			this.themaId = themaId;
+			this.userId = userId;
 			this.uuid = uuid;
 		}
 
 		public static Response from(final Room room) {
 			return Response.builder()
 				.title(room.getTitle())
-				.password(room.getPassword())
+				// .password(room.getPassword())
 				.capacity(room.getCapacity())
 				.startedAt(room.getStartedAt())
-				.thema_id(room.getThema().getId())
-				.user_id(room.getHost().getId())
+				.themaId(room.getThema().getId())
+				.userId(room.getHost().getId())
 				.uuid(room.getUuid())
 				.build();
 		}
