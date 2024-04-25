@@ -1,6 +1,7 @@
 package com.cyber.escape.domain.room.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.querydsl.core.annotations.QueryProjection;
@@ -13,13 +14,19 @@ public class PagingDto {
 
 	@Builder
 	@Getter
-	public static class Response<T> {
-		private List<T> roomList;
+	public static class Response {
+		private List<PageResponse> roomList = new ArrayList<>();
 		private Pagination pagination;
 
-		public Response(List<T> roomList, Pagination pagination){
-			this.roomList.addAll(roomList);
+		private Response(List<PageResponse> roomList, Pagination pagination){
+			if(roomList.size() > 0) {
+				this.roomList.addAll(roomList);
+			}
 			this.pagination = pagination;
+		}
+
+		public static Response of(List<PageResponse> roomList, Pagination pagination){
+			return new Response(roomList, pagination);
 		}
 	}
 

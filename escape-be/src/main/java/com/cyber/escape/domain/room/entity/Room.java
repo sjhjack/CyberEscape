@@ -29,7 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Room extends BaseEntity {
-	// title, password는 patch update를 위해 Setter 사용
+	// title, password, startedAt는 patch update를 위해 Setter 사용
 	@Setter
 	private String title;
 

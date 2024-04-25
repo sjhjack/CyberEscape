@@ -1,8 +1,10 @@
 package com.cyber.escape.domain.room.dto;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 public class Pagination {
 
 	private int totalRecordCount;     // 전체 데이터 수
@@ -18,6 +20,9 @@ public class Pagination {
 			this.totalRecordCount = totalRecordCount;
 			calculation(pageRequest);
 		}
+
+		log.info("totalRecordCount = {} | totalPageCount = {} | startPage = {} | endPage = {} | limitStart = {} | ", totalRecordCount, totalPageCount, startPage, endPage, limitStart);
+		log.info("existPrevPage = {} | existNextPage = {}", existPrevPage, existNextPage);
 	}
 
 	private void calculation(PagingDto.PageRequest pageRequest) {

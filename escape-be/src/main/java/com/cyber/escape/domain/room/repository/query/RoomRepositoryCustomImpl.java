@@ -7,7 +7,8 @@ import java.util.List;
 
 import com.cyber.escape.domain.room.dto.PagingDto;
 import com.cyber.escape.domain.room.dto.QPagingDto_PageResponse;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,15 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 				room.host.id,
 				room.uuid,
 				user.nickname,
-				Expressions.booleanPath("CASE WHEN EXISTS (SELECT 1 FROM Room r WHERE r.id = room.id AND r.password IS NOT NULL) THEN true ELSE false END")
+				new CaseBuilder()
+					.when(JPAExpressions.selectFrom(room)
+						.where(room.id.eq(room.id).and(room.password.isNotNull()))
+						.exists())
+					.then(true)
+					.otherwise(false).as("hasPassword")
 			))
 			.from(room)
-			.innerJoin(user)
-			.on(room.host.id.eq(user.id))
+			.innerJoin(room.host, user)
 			.orderBy(room.id.asc())
 			.offset(pageRequest.getOffset())
 			.limit(4)

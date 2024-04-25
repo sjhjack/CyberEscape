@@ -2,7 +2,6 @@ package com.cyber.escape.domain.room.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +33,14 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 	private final ThemaRepository themaRepository;
 
 	@Override
-	public PagingDto.Response<PagingDto.PageResponse> findAllRooms(PagingDto.PageRequest pageRequest) {
-		// Todo : 4개씩 페이지네이션
-
+	public PagingDto.Response findAllRooms(PagingDto.PageRequest pageRequest) {
+		// 4개씩 페이지네이션
 		int totalRecordCount = (int)roomRepository.count();
+
+		log.info("totalRecordCount = {}", totalRecordCount);
+
 		if (totalRecordCount < 1) {
-			return new PagingDto.Response<>(Collections.emptyList(), null);
+			return PagingDto.Response.of(Collections.emptyList(), null);
 		}
 
 		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
@@ -48,7 +49,7 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 
 		// 계산된 페이지 정보의 일부(limitStart, recordSize)를 기준으로 리스트 데이터 조회 후 응답 데이터 반환
 		List<PagingDto.PageResponse> list = roomRepository.findAllRooms(pageRequest);
-		return new PagingDto.Response<>(list, pagination);
+		return PagingDto.Response.of(list, pagination);
 
 		// return roomRepository.findAll().stream()
 		// 	.map(RoomDto.Response::from)
@@ -61,6 +62,7 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		// Todo : Password 암호화
 		// String encryptPassword = ...;
 
+		log.info("hostUuid : {}", postRequest.getHostUuid());
 		User host = userRepository.findUserByUuid(postRequest.getHostUuid())
 			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
 
@@ -114,13 +116,15 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 	public void acceptInvitation(final RoomDto.Request request) {
 		// broadcasting 공부 후 개발
 		// 비밀번호 check 필요
+		// Todo : capacity 변경
 	}
 
 	public void joinRoom(final RoomDto.Request request) {
 		// broadcasting 공부 후 개발
-		// 비밀번호 check 필요
+		// Todo : 비밀번호 check 필요
 		// 없으면 바로 입장 가능
 		// 있으면 ..? 비밀번호 입력하라고 다시 돌려보내? ㅋㅋㅋ;
+		// Todo : capacity 변경
 	}
 
 	public void exitRoom(final RoomDto.Request request) {
@@ -145,6 +149,7 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 			log.info("RoomServiceImpl ========== 방 삭제 성공");
 		} else {
 			log.info("RoomServiceImpl ========== 게스트입니다.");
+			// Todo : capacity 변경
 		}
 	}
 
@@ -159,6 +164,7 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
 			// DB에 저장을 안 하면 강퇴는 어떻게 하지? 연결을 서버에서 끊어버려? 이게 되나?
+			// Todo : capacity 변경
 		} else {
 			throw new RuntimeException("방장이 아닙니다.");
 		}
