@@ -51,12 +51,10 @@ public class RoomDto {
 	@Getter
 	public static class InfoResponse {
 		private final String title;
-		private final String password;
 
 		public static InfoResponse from(final Room room){
 			return InfoResponse.builder()
 				.title(room.getTitle())
-				.password(room.getPassword())
 				.build();
 		}
 	}

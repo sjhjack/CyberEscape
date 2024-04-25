@@ -51,10 +51,12 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 
 	public void acceptInvitation(final RoomDto.Request request) {
 		// broadcasting 공부 후 개발
+		// 비밀번호 check 필요
 	}
 
 	public void joinRoom(final RoomDto.Request request) {
 		// broadcasting 공부 후 개발
+		// 비밀번호 check 필요
 	}
 
 	public void exitRoom(final RoomDto.Request request) {
@@ -65,15 +67,14 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 
 		// 연결 끊기는 front에서 하는 건가?
 
-		Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
-			.orElseThrow(() -> new RuntimeException("일치하는 대기방이 없습니다."));
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
 		User user = userRepository.findUserByUuid(request.getUserUuid())
 			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
 
-		if (user.getId() == room.getHost().getId()) {
+		if (user.getId() == findRoom.getHost().getId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
-			roomRepository.deleteRoomByUuid(room.getUuid());
+			roomRepository.deleteRoomByUuid(findRoom.getUuid());
 			log.info("RoomServiceImpl ========== 방 삭제 성공");
 		} else {
 			log.info("RoomServiceImpl ========== 게스트입니다.");
@@ -83,13 +84,12 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	public void kickGuestFromRoom(final RoomDto.Request request) {
 		// host인 경우만 강퇴 가능 -> validation check 필요
 
-		Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
-			.orElseThrow(() -> new RuntimeException("일치하는 대기방이 없습니다."));
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
 		User user = userRepository.findUserByUuid(request.getUserUuid())
 			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
 
-		if (user.getId() == room.getHostId()) {
+		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
 			// DB에 저장을 안 하면 강퇴는 어떻게 하지? 연결을 서버에서 끊어버려? 이게 되나?
 		} else {
@@ -102,6 +102,7 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	public RoomDto.InfoResponse changeRoomSetting(final RoomDto.InfoRequest infoRequest) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, infoRequest.getRoomUuid());
 
+		// Todo : 비밀번호 암호화
 		findRoom.updateSetting(RoomUpdateSetting.of(infoRequest.getTitle(), infoRequest.getPassword()));
 		// roomRepositoryImpl.changeRoomSetting(infoRequest);
 
