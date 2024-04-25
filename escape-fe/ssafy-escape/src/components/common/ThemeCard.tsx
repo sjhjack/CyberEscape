@@ -5,54 +5,46 @@ import "./style.css"
 interface CardComponentProps {
   themeData: CardInfo
 }
-
+interface CardStyleProps {
+  $width?: string
+  $height?: string
+}
 const ThemeCard = ({ themeData }: CardComponentProps) => {
   return (
     <Card>
-      <ThemeContainer>
-        <ThemeImage src={themeData.image} alt="" width={300} height={250} />
-        <InfoOverlay>
-          <div>주제: {themeData.title}</div>
-          <div>제한시간: {themeData.time}</div>
-          <div>내용: {themeData.content}</div>
-        </InfoOverlay>
-      </ThemeContainer>
+      <ThemeImage
+        src={themeData.image}
+        alt="테마 이미지"
+        width={400}
+        height={300}
+        priority
+      />
+      <InfoOverlay>
+        <div>주제: {themeData.title}</div>
+        <div>제한시간: {themeData.time}</div>
+        <div>내용: {themeData.content}</div>
+      </InfoOverlay>
     </Card>
   )
 }
 
 export default ThemeCard
 
-const Card = styled.div`
+const Card = styled.div<CardStyleProps>`
   border-radius: 5px;
-  background-color: white;
+  background-color: #cecece;
   display: flex;
-  text-align: center;
-`
-
-const ThemeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  margin-bottom: 3%;
-  position: relative;
-  cursor: pointer;
+  text-align: center;
+  width: ${(props) => props.$width || "35vw"};
+  height: ${(props) => props.$height || "60vh"};
+  overflow: hidden; /* 내부 요소의 넘치는 부분을 숨김 */
 `
 
 const ThemeImage = styled(Image)`
-  transition: opacity 0.3s;
-  opacity: 1;
-  width: 300px;
-  height: 250px;
-  border-radius: 20px;
-  margin-bottom: 3%;
-
-  ${ThemeContainer}:hover & {
-    opacity: 0.5;
-  }
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지를 부모 요소에 맞게 조정 */
 `
 
 const InfoOverlay = styled.div`
