@@ -21,11 +21,11 @@ public class QuizAnswerDto {
     @Getter
     @Builder
     public static class SubmitAnswerResDto{
-        private String clue;
+        private Object clue;
         private int order;
         private boolean isRight;
 
-        public SubmitAnswerResDto(String clue, int order, boolean isRight){
+        public SubmitAnswerResDto(Object clue, int order, boolean isRight){
             this.clue = clue;
             this.order = order;
             this.isRight = isRight;

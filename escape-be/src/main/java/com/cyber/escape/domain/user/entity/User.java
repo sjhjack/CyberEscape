@@ -19,7 +19,7 @@ public class User extends BaseEntity {
 
 	private String nickname;
 
-	private int point = 0;
+	private int point;
 
 	@Column(name = "character_id")
 	private Long characterId;

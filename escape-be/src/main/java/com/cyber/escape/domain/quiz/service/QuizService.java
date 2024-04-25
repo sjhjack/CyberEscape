@@ -88,8 +88,17 @@ public class QuizService {
 
         // 만일 답이 맞으면
         if(realAnswer.equals(submitAnswer)){
-            String[] clues = makeClue(realAnswer);
+            log.info("answer : {}", realAnswer);
+
             Map<String, QuizDataInRedis.MapQuizWithClueData> data = mappedClueWithQuiz.opsForValue().get(userUuid);
+
+            String finalUuid = data.get(quiz.getUuid()).getFinalUuid();
+            String finalAnswer = finalAnswerStore.opsForValue().get(finalUuid).getFinalAnswer();
+            String[] clues = makeClue(finalAnswer);
+
+            for(int i = 0; i < 3; i++){
+                log.info("clue : {}",clues[i]);
+            }
 
             String clue = data.get(quiz.getUuid()).getClue();
             // 정답의 어순을 위한 데이터
@@ -111,7 +120,32 @@ public class QuizService {
     }
 
     private String[] makeClue(String answer){
-        return answer.split(" ");
+
+        //log.info("answer : {}", answer);
+        answer = answer.replace(" ", "").trim();
+
+        String[] clue = new String[3];
+
+        int size = answer.length();
+        int wordSize = size / 3;
+
+        int start = 0;
+        int end = wordSize;
+
+        clue[0] = answer.substring(start, end);
+        //log.info("0 : {}", clue[0]);
+
+        start = end;
+        end = start + wordSize;
+        clue[1] = answer.substring(start, start + wordSize);
+        //log.info("1 : {}", clue[1]);
+
+        start = end;
+        end = start + wordSize + size % 3;
+        clue[2] = answer.substring(start, end);
+        //log.info("2 : {}", clue[2]);
+
+        return clue;
     }
 
     private void storeAnswersToRedis(String userUuid, List<Quiz> quizList, FinalAnswer finalAnswer){
