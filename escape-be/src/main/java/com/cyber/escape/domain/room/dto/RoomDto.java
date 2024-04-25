@@ -30,7 +30,7 @@ public class RoomDto {
 		private final String roomUuid;
 		private final LocalDateTime startedAt;
 
-		public static TimeResponse from(Room room){
+		public static TimeResponse from(final Room room){
 			return TimeResponse.builder()
 				.roomUuid(room.getUuid())
 				.startedAt(room.getStartedAt())
@@ -53,7 +53,7 @@ public class RoomDto {
 		private final String title;
 		private final String password;
 
-		public static InfoResponse from(Room room){
+		public static InfoResponse from(final Room room){
 			return InfoResponse.builder()
 				.title(room.getTitle())
 				.password(room.getPassword())
@@ -75,8 +75,15 @@ public class RoomDto {
 		private final String uuid;
 
 		@QueryProjection
-		public Response(String title, String password, int capacity, LocalDateTime startedAt, Long thema_id,
-			Long user_id, String uuid) {
+		public Response(
+			final String title,
+			final String password,
+			final int capacity,
+			final LocalDateTime startedAt,
+			final Long thema_id,
+			final Long user_id,
+			final String uuid
+		) {
 			this.title = title;
 			this.password = password;
 			this.capacity = capacity;
@@ -86,7 +93,7 @@ public class RoomDto {
 			this.uuid = uuid;
 		}
 
-		public static Response from(Room room) {
+		public static Response from(final Room room) {
 			return Response.builder()
 				.title(room.getTitle())
 				.password(room.getPassword())

@@ -10,7 +10,6 @@ import com.cyber.escape.domain.room.data.RoomUpdateSetting;
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.entity.Room;
 import com.cyber.escape.domain.room.repository.RoomRepository;
-import com.cyber.escape.domain.room.repository.RoomRepositoryImpl;
 import com.cyber.escape.domain.room.utils.RoomServiceUtils;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
@@ -26,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	private final RoomRepository roomRepository;
-	private final RoomRepositoryImpl roomRepositoryImpl;
 	private final UserRepository userRepository;
 
 	@Override
@@ -38,7 +36,7 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	}
 
 	@Transactional
-	public void deleteRoom(String uuid) {
+	public void deleteRoom(final String uuid) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, uuid);
 
 		roomRepository.delete(findRoom);
@@ -46,20 +44,20 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 		// 연결된 채팅방까지 삭제 ???
 	}
 
-	public void inviteUserToRoom(RoomDto.Request request) {
+	public void inviteUserToRoom(final RoomDto.Request request) {
 		// 알림 전송 및 MongoDB에 저장
 		// 이 부분에 알림 send 메소드 넣으면 끝
 	}
 
-	public void acceptInvitation(RoomDto.Request request) {
+	public void acceptInvitation(final RoomDto.Request request) {
 		// broadcasting 공부 후 개발
 	}
 
-	public void joinRoom(RoomDto.Request request) {
+	public void joinRoom(final RoomDto.Request request) {
 		// broadcasting 공부 후 개발
 	}
 
-	public void exitRoom(RoomDto.Request request) {
+	public void exitRoom(final RoomDto.Request request) {
 		// host, guest 분기 필요
 
 		// host : 연결 끊고, 방 폭파
@@ -82,7 +80,7 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 		}
 	}
 
-	public void kickGuestFromRoom(RoomDto.Request request) {
+	public void kickGuestFromRoom(final RoomDto.Request request) {
 		// host인 경우만 강퇴 가능 -> validation check 필요
 
 		Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
@@ -101,7 +99,7 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 
 	@Transactional
 	@Override
-	public RoomDto.InfoResponse changeRoomSetting(RoomDto.InfoRequest infoRequest) {
+	public RoomDto.InfoResponse changeRoomSetting(final RoomDto.InfoRequest infoRequest) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, infoRequest.getRoomUuid());
 
 		findRoom.updateSetting(RoomUpdateSetting.of(infoRequest.getTitle(), infoRequest.getPassword()));
@@ -112,7 +110,7 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 
 	@Transactional
 	@Override
-	public UserDto.Response changeHost(RoomDto.Request request) {
+	public UserDto.Response changeHost(final RoomDto.Request request) {
 		// host인 경우만 변경 가능 -> validation check 필요
 
 		// Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
@@ -144,7 +142,7 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 
 	@Transactional
 	@Override
-	public RoomDto.TimeResponse setStartTime(RoomDto.TimeRequest timeRequest) {
+	public RoomDto.TimeResponse setStartTime(final RoomDto.TimeRequest timeRequest) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, timeRequest.getRoomUuid());
 
 		findRoom.setStartedAt(timeRequest.getStartedAt());
