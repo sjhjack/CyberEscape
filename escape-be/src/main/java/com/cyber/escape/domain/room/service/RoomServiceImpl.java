@@ -1,5 +1,6 @@
 package com.cyber.escape.domain.room.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cyber.escape.domain.room.data.RoomUpdateSetting;
+import com.cyber.escape.domain.room.dto.Pagination;
+import com.cyber.escape.domain.room.dto.PagingDto;
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.entity.Room;
 import com.cyber.escape.domain.room.repository.RoomRepository;
@@ -28,11 +31,25 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	private final UserRepository userRepository;
 
 	@Override
-	public List<RoomDto.Response> findAllRooms() {
+	public PagingDto.Response<PagingDto.PageResponse> findAllRooms(PagingDto.PageRequest pageRequest) {
 		// Todo : 4개씩 페이지네이션
-		return roomRepository.findAll().stream()
-			.map(RoomDto.Response::from)
-			.collect(Collectors.toList());
+
+		int totalRecordCount = (int)roomRepository.count();
+		if (totalRecordCount < 1) {
+			return new PagingDto.Response<>(Collections.emptyList(), null);
+		}
+
+		// Pagination 객체를 생성해서 페이지 정보 계산 후 SearchDto 타입의 객체인 params에 계산된 페이지 정보 저장
+		Pagination pagination = new Pagination(totalRecordCount, pageRequest);
+		pageRequest.setPagination(pagination);
+
+		// 계산된 페이지 정보의 일부(limitStart, recordSize)를 기준으로 리스트 데이터 조회 후 응답 데이터 반환
+		List<PagingDto.PageResponse> list = roomRepository.findAllRooms(pageRequest);
+		return new PagingDto.Response<>(list, pagination);
+
+		// return roomRepository.findAll().stream()
+		// 	.map(RoomDto.Response::from)
+		// 	.collect(Collectors.toList());
 	}
 
 	@Transactional
@@ -57,6 +74,8 @@ public class RoomServiceImpl implements RoomReadService, RoomUpdateService {
 	public void joinRoom(final RoomDto.Request request) {
 		// broadcasting 공부 후 개발
 		// 비밀번호 check 필요
+		// 없으면 바로 입장 가능
+		// 있으면 ..? 비밀번호 입력하라고 다시 돌려보내? ㅋㅋㅋ;
 	}
 
 	public void exitRoom(final RoomDto.Request request) {

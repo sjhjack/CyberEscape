@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cyber.escape.domain.room.dto.PagingDto;
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.service.RoomReadService;
 import com.cyber.escape.domain.room.service.RoomUpdateService;
@@ -25,9 +26,14 @@ public class RoomController {
 	private final RoomReadService roomReadService;
 	private final RoomUpdateService roomUpdateService;
 
+	// @GetMapping
+	// public ApiResponse<List<RoomDto.Response>> findAllRooms() {
+	// 	return new ApiResponse<>(HttpStatus.OK.value(), "대기실 전체 리스트를 가져왔습니다.", roomReadService.findAllRooms());
+	// }
+
 	@GetMapping
-	public ApiResponse<List<RoomDto.Response>> findAllRooms() {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 전체 리스트를 가져왔습니다.", roomReadService.findAllRooms());
+	public ApiResponse<PagingDto.Response<PagingDto.PageResponse>> findAllRooms(PagingDto.PageRequest pageRequest) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 전체 리스트를 가져왔습니다.", roomReadService.findAllRooms(pageRequest));
 	}
 
 	@PatchMapping("/setting")
