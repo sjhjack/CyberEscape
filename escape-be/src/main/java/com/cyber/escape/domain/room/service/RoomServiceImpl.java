@@ -77,7 +77,7 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 			.updator(host)
 			.build();
 
-		roomRepository.save(newRoom);
+		newRoom = roomRepository.save(newRoom);
 
 		// Todo : 채팅방 생성해서 저장하고 채팅방 Uuid 가져오기
 
