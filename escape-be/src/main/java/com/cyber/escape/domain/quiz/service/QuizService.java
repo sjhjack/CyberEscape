@@ -50,8 +50,8 @@ public class QuizService {
 
     // 퀴즈를 뽑는 로직
     // 여기서 주어지는 themaUuid는 설명 칸에 있는 uuid일 것이므로 무조건 role 정보가 필요함
-    public List<QuizDto.SelectedQuizResDto> getQuizzes(String themaUuid, int role) throws QuizException{
-        List<QuizDto.SelectedQuizResDto> result = new ArrayList<>();
+    public List<QuizDto.QuizSubmissionResDto> getQuizzes(String themaUuid, int role) throws QuizException{
+        List<QuizDto.QuizSubmissionResDto> result = new ArrayList<>();
 
         String userUuid = UserUtil.getUserUuid();
 
@@ -119,6 +119,34 @@ public class QuizService {
                 .isRight(false)
                 .build();
     }
+
+    public String getHint(String quizUuid){
+        String userUuid = UserUtil.getUserUuid();
+
+        Map<String, QuizDataInRedis.MapQuizWithClueData> map = mappedClueWithQuiz.opsForValue().get(userUuid);
+
+        // quiz uuid로 데이터를 꺼낸다.
+        QuizDataInRedis.MapQuizWithClueData data = map.get(quizUuid);
+
+        // 이미 힌트를 썼으면
+        if(data.isUsedHint()){
+            throw new QuizException(ExceptionCodeSet.ALREADY_USE_HINT);
+        }
+
+        // redis에 힌트 사용 여부를 저장한다.
+        for(Map.Entry<String, QuizDataInRedis.MapQuizWithClueData> quizInfo : map.entrySet()){
+            MapQuizWithClueData clueData = quizInfo.getValue();
+            clueData.setUsedHint(true);
+        }
+
+        map.replace(quizUuid, data);
+        mappedClueWithQuiz.opsForValue().set(userUuid, map);
+
+        String hint = quizRepository.findByUuid(quizUuid).get().getHint();
+
+        return hint;
+    }
+
 
     private String[] makeClue(String answer){
 

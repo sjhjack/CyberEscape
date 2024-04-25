@@ -28,6 +28,13 @@ public class QuizController {
         return new ApiResponse(HttpStatus.OK.value(), "퀴즈를 불러왔습니다.", quizService.getQuizzes(submission.getThemaUuid(), submission.getRole()));
     }
 
+    @PostMapping("/hint")
+    public ApiResponse<String> getHint(@RequestBody QuizDto.QuizHintReqDto hintDto){
+        return new ApiResponse(HttpStatus.OK.value(), "힌트를 불러왔습니다.", quizService.getHint(hintDto.getQuizUuid()));
+    }
+
+
+
     @PostMapping("/answer")
     public ApiResponse submitAnswer(@RequestBody QuizAnswerDto.SubmitAnswerReqDto submit){
 
