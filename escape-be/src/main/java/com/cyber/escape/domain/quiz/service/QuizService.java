@@ -15,7 +15,6 @@ import com.cyber.escape.global.common.util.IdFinder;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.QuizException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -125,7 +124,7 @@ public class QuizService {
                 .build();
     }
 
-    public String getHint(String quizUuid){
+    public QuizDto.QuizHintResDto getHint(String quizUuid){
         String userUuid = UserUtil.getUserUuid();
 
         Map<String, QuizDataInRedis.MapQuizWithClueData> map = mappedClueWithQuiz.opsForValue().get(userUuid);
@@ -149,7 +148,7 @@ public class QuizService {
 
         String hint = quizRepository.findByUuid(quizUuid).get().getHint();
 
-        return hint;
+        return QuizDto.QuizHintResDto.builder().hint(hint).build();
     }
 
     public QuizAnswerDto.SubmitFinalAnswerResDto getResult(QuizAnswerDto.SubmitAnswerReqDto req){
