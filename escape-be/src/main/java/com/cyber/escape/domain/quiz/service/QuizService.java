@@ -76,7 +76,8 @@ public class QuizService {
         String userUuid = UserUtil.getUserUuid();
 
         // 현재 제출한 퀴즈 데이터 불러오기
-        Quiz quiz = quizRepository.findByUuid(req.getQuizUuid()).get();
+        Quiz quiz = quizRepository.findByUuid(req.getQuizUuid())
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
 
         // 올바르지 않은 quizuuid
         if(quiz == null){
