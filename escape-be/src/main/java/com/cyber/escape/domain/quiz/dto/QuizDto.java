@@ -24,13 +24,18 @@ public class QuizDto {
 
     @Builder
     @Getter
-    @AllArgsConstructor
     public static class QuizSubmissionResDto{
 
-        private final int difficulty;
-        private final String quizUuid;
-        private final String content;
-        private final String url;
+        private String quizUuid;
+        private String content;
+        private String url;
+        private int difficulty;
+        public QuizSubmissionResDto(String quizUuid, String content, String url, int difficulty){
+            this.quizUuid = quizUuid;
+            this.content = content;
+            this.url = url;
+            this.difficulty = difficulty;
+        }
 
         public static QuizSubmissionResDto selectedQuizToDto(Quiz quiz){
             return QuizSubmissionResDto.builder()
