@@ -18,7 +18,7 @@ public class RankingDto {
     @Getter
     @Builder
     public static class GetRanking{
-        private String userUuid;
+        private int pageNumber;
         private String themaUuid;
 //        public GetRanking(){
 //        }
@@ -46,6 +46,7 @@ public class RankingDto {
     @Getter
     @Builder
     public static class UserRankingDto {
+        private int rank;
         private String nickname;
         private Time bestTime;
         private int category;
