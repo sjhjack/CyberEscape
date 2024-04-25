@@ -4,7 +4,7 @@ import styled from "styled-components"
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn"
 
 const ChattingBox = () => {
-  const [chat, setChat] = useState(["dd", "dd"])
+  const [chat, setChat] = useState(["i love ilgoo"])
   return (
     <MainContainer>
       <ChatBox>
@@ -47,7 +47,6 @@ const ChatInput = styled.div`
   display: flex;
   align-items: center;
   background-color: #d3d3d3;
-  border: 1px solid white;
   border-radius: 2px;
   width: 100%;
   height: 3vh;
