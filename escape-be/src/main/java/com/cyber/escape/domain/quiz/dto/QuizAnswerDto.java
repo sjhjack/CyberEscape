@@ -9,16 +9,27 @@ public class QuizAnswerDto {
     @AllArgsConstructor
     @Getter
     public static class SubmitAnswerReqDto{
-        private final String quizUuid;
-        private final String answer;
+        private String quizUuid;
+        private String answer;
+
+//        public SubmitAnswerReqDto(String quizUuid, String answer){
+//            this.quizUuid = quizUuid;
+//            this.answer = answer;
+//        }
     }
 
-    @AllArgsConstructor
     @Getter
     @Builder
     public static class SubmitAnswerResDto{
-        private final String clue;
-        private final boolean isRight;
+        private String clue;
+        private int order;
+        private boolean isRight;
+
+        public SubmitAnswerResDto(String clue, int order, boolean isRight){
+            this.clue = clue;
+            this.order = order;
+            this.isRight = isRight;
+        }
     }
 
 

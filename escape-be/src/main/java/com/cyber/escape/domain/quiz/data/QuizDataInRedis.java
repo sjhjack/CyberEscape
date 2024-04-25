@@ -19,11 +19,10 @@ public class QuizDataInRedis {
     @Getter
     @NoArgsConstructor(force = true)
     @AllArgsConstructor
-    public static class QuizData{
-        // quizId - number : answer, hint, 이미 풀었는가
-        private final String answer;
-        private final String hint;
-        private final String finalQuizUuid;
+    public static class MapQuizWithClueData{
+        private String finalUuid;
+        private Integer clueIdx;
+        private String clue;
     }
 
     @Builder
@@ -31,9 +30,6 @@ public class QuizDataInRedis {
     @NoArgsConstructor(force = true)
     @AllArgsConstructor
     public static class finalAnswerData{
-        private final String quizUuid;
         private final String finalAnswer;
-        private final String[] clues;
-        private final boolean[] isUsed;
     }
 }

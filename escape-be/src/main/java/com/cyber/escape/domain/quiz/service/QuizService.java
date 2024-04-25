@@ -30,24 +30,22 @@ public class QuizService {
     private IdFinder idFinder;
     private QuizRepository quizRepository;
     private FinalAnswerRepository finalAnswerRepository;
-    private RedisTemplate<String, QuizDataInRedis.QuizData> answerInfoStore;
-    private RedisTemplate<String,QuizDataInRedis.finalAnswerData> finalAnswerStore;
-    private RedisTemplate<String, List<Boolean>> solvedQuiz;
+    private RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz;
+    private RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore;
+//    private RedisTemplate<String, List<Boolean>> solvedQuiz;
     public QuizService(QuizRepository quizRepository,
                        FinalAnswerRepository finalAnswerRepository,
                        QuizMapper quizMapper,
                        IdFinder idFinder,
-                       RedisTemplate<String, QuizDataInRedis.QuizData> answerInfoStore,
-                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore,
-                       RedisTemplate<String, List<Boolean>> solvedQuiz) {
+                       RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz,
+                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore) {
 
         this.quizRepository = quizRepository;
         this.finalAnswerRepository = finalAnswerRepository;
         this.quizMapper = quizMapper;
         this.idFinder = idFinder;
-        this.answerInfoStore = answerInfoStore;
+        this.mappedClueWithQuiz = mappedClueWithQuiz;
         this.finalAnswerStore = finalAnswerStore;
-        this.solvedQuiz = solvedQuiz;
     }
 
     // 퀴즈를 뽑는 로직
@@ -71,7 +69,6 @@ public class QuizService {
 
         result = quizList.stream().map(quizMapper::toDto).toList();
 
-
         return result;
     }
 
@@ -79,45 +76,28 @@ public class QuizService {
         String userUuid = UserUtil.getUserUuid();
 
         // 현재 제출한 퀴즈 데이터 불러오기
-        QuizDataInRedis.QuizData data = answerInfoStore.opsForValue().get(req.getQuizUuid());
-        // 사용자가 맞힌 퀴즈 내역 들고오기
-        List<Boolean> solvedQuizInfo = solvedQuiz.opsForValue().get(userUuid);
+        Quiz quiz = quizRepository.findByUuid(req.getQuizUuid()).get();
 
         // 올바르지 않은 quizuuid
-        if(data == null){
+        if(quiz == null){
             throw new QuizException(ExceptionCodeSet.BAD_REQUEST);
         }
 
         String submitAnswer = req.getAnswer();
-        String realAnswer = data.getAnswer();
+        String realAnswer = quiz.getAnswer();
 
         // 만일 답이 맞으면
         if(realAnswer.equals(submitAnswer)){
-            String finalQuizUuid = data.getFinalQuizUuid();
-            // final 정답 일부를 전달한다.
-            QuizDataInRedis.finalAnswerData finalQuiz = finalAnswerStore.opsForValue().get(finalQuizUuid);
-            boolean[] isUsedArr = finalQuiz.getIsUsed();
-            String clue = "";
+            String[] clues = makeClue(realAnswer);
+            Map<String, QuizDataInRedis.MapQuizWithClueData> data = mappedClueWithQuiz.opsForValue().get(userUuid);
 
-            for(int clueIdx = 0; clueIdx < 3; clueIdx++){
-                if(solvedQuizInfo.get(clueIdx)){
-                    throw new QuizException(ExceptionCodeSet.ALREADY_SOLVED_QUIZ);
-                }
-                // out of index
-                if(!isUsedArr[clueIdx]){
-                    clue = finalQuiz.getClues()[clueIdx];
-                    finalQuiz.getIsUsed()[clueIdx] = true;
-                    break;
-                }
-
-            }
-
-            // clue 상태 업데이트
-            finalAnswerStore.opsForValue().set(finalQuizUuid, finalQuiz);
-
+            String clue = data.get(quiz.getUuid()).getClue();
+            // 정답의 어순을 위한 데이터
+            int order = data.get(quiz.getUuid()).getClueIdx();
             return QuizAnswerDto.SubmitAnswerResDto
                                 .builder()
                                 .clue(clue)
+                                .order(order + 1)
                                 .isRight(true)
                                 .build();
         }
@@ -125,6 +105,7 @@ public class QuizService {
         return QuizAnswerDto.SubmitAnswerResDto
                 .builder()
                 .clue("")
+                .order(-1)
                 .isRight(false)
                 .build();
     }
@@ -135,34 +116,33 @@ public class QuizService {
 
     private void storeAnswersToRedis(String userUuid, List<Quiz> quizList, FinalAnswer finalAnswer){
 
-        // 퀴즈 정보 캐싱 처리
-        for(Quiz selectedQuiz : quizList){
-            QuizDataInRedis.QuizData quizInfo = QuizDataInRedis.QuizData.builder()
-                    .answer(selectedQuiz.getAnswer())
-                    .hint(selectedQuiz.getHint())
-                    .finalQuizUuid(finalAnswer.getUuid())
-                    .build();
-            // quiz 정보를 저장한다.
-
-            answerInfoStore.opsForValue().set(selectedQuiz.getUuid(), quizInfo);
-        }
         log.info("FINAL QUIZ UUID : {}", finalAnswer.getUuid());
         // answer를 단어별로 자른다.
         String[] clues = makeClue(finalAnswer.getAnswer());
-        boolean[] isUsed = new boolean[3];
 
         // 레디스에 최종 정답 리스트 저장
         finalAnswerStore.opsForValue().set(finalAnswer.getUuid(),
                 finalAnswerData.builder()
                         .finalAnswer(finalAnswer.getAnswer())
-                        .clues(clues)
-                        .isUsed(isUsed)
                         .build()
         );
 
-        // 사용자가 맞힌 문제 추적을 위한 저장
-        List<Boolean> solved = new ArrayList<>(Arrays.asList(new boolean[]));
-        solvedQuiz.op().set(userUuid, solved);
+        // 퀴즈별 클루 정보를 저장하기 위한 레디스
+        Map<String, QuizDataInRedis.MapQuizWithClueData> map = new HashMap<>();
+
+        int idx = 0;
+        for(Quiz quiz : quizList){
+            map.put(quiz.getUuid(), MapQuizWithClueData
+                                    .builder()
+                                    .finalUuid(finalAnswer.getUuid())
+                                    .clueIdx(idx)
+                                    .clue(clues[idx])
+                                    .build());
+
+            idx++;
+        }
+
+        mappedClueWithQuiz.opsForValue().set(userUuid, map);
     }
 
 }
