@@ -67,9 +67,14 @@ public class QuizService {
         // 레디스에 최종정답 및 현재 정답 정보 저장
         storeAnswersToRedis(userUuid, quizList, finalAnswer);
 
-        result = quizList.stream().map(quizMapper::toDto).toList();
+        for(Quiz q : quizList){
+            result.add(quizMapper.toDto(q));
+        }
+        //result = quizList.stream().map(quizMapper::toDto).toList();
+        result.add(new QuizDto.QuizSubmissionResDto(finalAnswer.getUuid(), "마지막 문제입니다. 풀고 탈출하세요.", "", 4));
 
         return result;
+
     }
 
     public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
@@ -145,6 +150,34 @@ public class QuizService {
         String hint = quizRepository.findByUuid(quizUuid).get().getHint();
 
         return hint;
+    }
+
+    public QuizAnswerDto.SubmitFinalAnswerResDto getResult(QuizAnswerDto.SubmitAnswerReqDto req){
+
+        finalAnswerData answerInfo = finalAnswerStore.opsForValue().get(req.getQuizUuid());
+
+        if(answerInfo == null)
+            throw new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS);
+
+        // 공백 문자 제거
+        String submitAnswer = req.getAnswer().replace(" ", "").trim();
+        String realAnswer = answerInfo.getFinalAnswer().replace(" ", "").trim();
+
+        if(realAnswer.equals(submitAnswer)){
+            String userUuid = UserUtil.getUserUuid();
+
+            // 레디스에서 유저가 풀던 문제 삭제
+            mappedClueWithQuiz.delete(userUuid);
+
+            return QuizAnswerDto.SubmitFinalAnswerResDto.
+                    builder()
+                    .right(true)
+                    .build();
+        }
+        return QuizAnswerDto.SubmitFinalAnswerResDto.
+                builder()
+                .right(false)
+                .build();
     }
 
 

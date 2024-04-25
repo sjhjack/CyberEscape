@@ -20,15 +20,26 @@ public class QuizAnswerDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
     public static class SubmitAnswerResDto{
-        private Object clue;
+        private String clue;
         private int order;
         private boolean isRight;
 
-        public SubmitAnswerResDto(Object clue, int order, boolean isRight){
-            this.clue = clue;
-            this.order = order;
-            this.isRight = isRight;
+    }
+
+
+
+
+    @Getter
+    @Builder
+    public static class SubmitFinalAnswerResDto{
+        private boolean right;
+        public SubmitFinalAnswerResDto(){
+        }
+
+        public SubmitFinalAnswerResDto(boolean right){
+            this.right = right;
         }
     }
 
