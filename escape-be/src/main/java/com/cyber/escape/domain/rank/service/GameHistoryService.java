@@ -135,7 +135,13 @@ public class GameHistoryService {
         else {
             // 내 랭킹 정보가 없는 경우
             log.info("no Rank");
-            return null;
+            RankingDto.UserRankingDto dto = RankingDto.UserRankingDto.builder()
+                    .rank(-1)
+                    .nickname("")
+                    .bestTime(Time.valueOf("00:00:00"))
+                    .category(-1)
+                    .build();
+            return dto;
         }
         //전체 랭킹
         List<Object> rankingObjects = rankingRepository.findAllByThemaUuidOrderByBestTimeAsc(req.getThemaUuid());
