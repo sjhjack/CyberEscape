@@ -58,6 +58,7 @@ public class QuizDto {
     }
 
     @Getter
+    @Builder
     public static class QuizHintResDto{
         private String hint;
         public QuizHintResDto(){
