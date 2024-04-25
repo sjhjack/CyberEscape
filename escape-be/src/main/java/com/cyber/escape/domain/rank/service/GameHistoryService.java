@@ -73,7 +73,52 @@ public class GameHistoryService {
         }
     }
 
-    public List<RankingDto.Response> getAllRankingsByThemaUuid(RankingDto.GetRanking req) {//해당 테마 랭킹 불러오기
+    public List<RankingDto.Response> getAllRankingsByUuid(RankingDto.GetRanking req) {//해당 테마 랭킹 불러오기
+        // 요청한 페이지 번호에 해당하는 시작 인덱스 계산
+        int pageNumber = req.getPageNumber();
+        int pageSize = 20;
+        int startIndex = (pageNumber - 1) * pageSize;
+
+
+        //전체 랭킹
+        List<Object> rankingObjects = rankingRepository.findAllByThemaUuidOrderByBestTimeAsc(req.getThemaUuid());
+
+        List<RankingDto.Response> rankings = new ArrayList<>();
+        int rank = startIndex + 1;
+        int endIndex = Math.min(startIndex + pageSize, rankingObjects.size());
+        int rankCount = 0;
+        Time prevTime = Time.valueOf("00:00:00");
+
+        for (int i = startIndex; i < endIndex; i++) {
+            Object[] arr = (Object[]) rankingObjects.get(i);
+            String nickname = (String) arr[0];
+            Time bestTime = (Time) arr[1];
+            int category = (int) arr[2];
+
+            if (prevTime.equals(bestTime)) {
+                rank--;
+                rankCount++;
+            } else {
+                prevTime = bestTime;
+                if (rankCount != 0) {
+                    rank += rankCount;
+                    rankCount = 0;
+                }
+            }
+
+            RankingDto.Response dto = RankingDto.Response.builder()
+                    .rank(rank++)
+                    .nickname(nickname)
+                    .bestTime(bestTime)
+                    .category(category)
+                    .build();
+
+            rankings.add(dto);
+        }
+        return rankings;
+    }
+
+    public RankingDto.UserRankingDto getMyRankingByUuid(RankingDto.GetMyRanking req){
         //내 랭킹
         Optional<Object> myRankingObject = rankingRepository.getUserRankings(req.getUserUuid(), req.getThemaUuid());
         String myNickname = "";
@@ -90,12 +135,11 @@ public class GameHistoryService {
         else {
             // 내 랭킹 정보가 없는 경우
             log.info("no Rank");
-            throw new RankingException(ExceptionCodeSet.RANKING_NOT_FOUND);
+            return null;
         }
         //전체 랭킹
         List<Object> rankingObjects = rankingRepository.findAllByThemaUuidOrderByBestTimeAsc(req.getThemaUuid());
 
-        List<RankingDto.Response> rankings = new ArrayList<>();
         int rank = 1;
         int rankCount = 0;
         Time prevTime = Time.valueOf("00:00:00");
@@ -104,19 +148,14 @@ public class GameHistoryService {
             Object[] arr = (Object[]) obj;
             String nickname = (String) arr[0];
             Time bestTime = (Time) arr[1];
-            int category = (int) arr[2];
 
-            System.out.println("first prevTime : " + prevTime);
-            System.out.println("first bestTime : " + bestTime);
+            //동순위 처리
             if(prevTime.equals(bestTime)) {
-                System.out.println("is it done?");
                 rank--;
                 rankCount++;
             }
             else{
-                System.out.println("여기도?");
                 prevTime = bestTime;
-                System.out.println("여기 prevtime : " + prevTime);
                 if(rankCount != 0){
                     rank += rankCount;
                     rankCount = 0;
@@ -125,46 +164,17 @@ public class GameHistoryService {
 
             if(myNickname.equals(nickname)){
                 myRank = rank;
-                System.out.println(myNickname + " " + myBestTime + " " + myCategory + " " + myRank);
             }
-            System.out.println("rank : " + rank);
-
-            RankingDto.Response dto = RankingDto.Response.builder()
-                    .rank(rank++)
-                    .nickname(nickname)
-                    .bestTime(bestTime)
-                    .category(category)
-                    .build();
-
-            rankings.add(dto);
+            else{
+                rank++;
+            }
         }
-        //내 랭킹 정보
-        RankingDto.Response myDto = RankingDto.Response.builder()
-                .rank(myRank)
-                .nickname(myNickname)
-                .bestTime(myBestTime)
-                .category(myCategory)
-                .build();
-        rankings.add(myDto);
-
-        return rankings;
-    }
-
-    public RankingDto.UserRankingDto getRankingByUuid(RankingDto.GetMyRanking req){
-        Optional<Object> rankingObjects = rankingRepository.getUserRankings(req.getUserUuid(), req.getThemaUuid());
-        if (rankingObjects.isPresent()) {
-            Object[] rankingData = (Object[]) rankingObjects.get();
-            String nickname = (String) rankingData[0];
-            Time bestTime = (Time) rankingData[1];
-            int category = (int) rankingData[2];
-
-            return RankingDto.UserRankingDto.builder()
-                    .nickname(nickname)
-                    .bestTime(bestTime)
-                    .category(category)
-                    .build();
-        } else {
-            throw new RankingException(ExceptionCodeSet.RANKING_NOT_FOUND);
-        }
+        //내 랭킹 + 최고기록 정보
+        return RankingDto.UserRankingDto.builder()
+                 .rank(myRank)
+                 .nickname(myNickname)
+                 .bestTime(myBestTime)
+                 .category(myCategory)
+                 .build();
     }
 }

@@ -30,14 +30,14 @@ public class GameHistoryController {
 
     @PostMapping("/rankings")
     public ApiResponse<List<RankingDto.Response>> getAllRankingsByThemaUuid(@RequestBody RankingDto.GetRanking req) {
-        List<RankingDto.Response> rankings = gameHistoryService.getAllRankingsByThemaUuid(req);
+        List<RankingDto.Response> rankings = gameHistoryService.getAllRankingsByUuid(req);
         log.info("list complete");
         return new ApiResponse<>(HttpStatus.OK.value(), "테마별 랭킹 조회 성공", rankings);
     }
 
     @PostMapping("/rank/myrank")
     public ApiResponse<RankingDto.UserRankingDto> getMyRanking(@RequestBody RankingDto.GetMyRanking req){
-        RankingDto.UserRankingDto ranking = gameHistoryService.getRankingByUuid(req);
+        RankingDto.UserRankingDto ranking = gameHistoryService.getMyRankingByUuid(req);
         log.info("my ranking information is successfully readed");
         return new ApiResponse<>(HttpStatus.OK.value(), "나의 랭킹 조회 성공", ranking);
     }
