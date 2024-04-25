@@ -54,7 +54,7 @@ public class Room extends BaseEntity {
 	@JoinColumn(name = "updated_user", referencedColumnName = "id")
 	private User updator;
 
-	public void updateSetting(RoomUpdateSetting setting) {
+	public void updateSetting(final RoomUpdateSetting setting) {
 		title = setting.title();
 		password = setting.password();
 	}
