@@ -12,12 +12,12 @@ interface SelectThemeFunction {
 
 interface CarouselProps {
   selectTheme: SelectThemeFunction
-  $width?: string
-  $height?: string
+  width?: string
+  height?: string
   navigation?: boolean
   pagination?: boolean
 }
-const ThemeCarousel = ({ selectTheme }: CarouselProps) => {
+const ThemeCarousel = ({ selectTheme, width, height }: CarouselProps) => {
   const [currentCard, setCurrentCard] = useState<number>(0)
   const themeData: CardInfo[] = [
     {
