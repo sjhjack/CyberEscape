@@ -29,13 +29,14 @@ import lombok.Setter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Room extends BaseEntity {
-	// title, password, startedAt는 patch update를 위해 Setter 사용
+	// title, password, startedAt, updator는 변경감지 update를 위해 Setter 사용
 	@Setter
 	private String title;
 
 	@Setter
 	private String password;
 
+	@Setter
 	private int capacity;
 
 	@CreatedDate
@@ -56,6 +57,7 @@ public class Room extends BaseEntity {
 	@JoinColumn(name = "created_user", referencedColumnName = "id")
 	private User creator;
 
+	@Setter
 	@ManyToOne
 	@JoinColumn(name = "updated_user", referencedColumnName = "id")
 	private User updator;

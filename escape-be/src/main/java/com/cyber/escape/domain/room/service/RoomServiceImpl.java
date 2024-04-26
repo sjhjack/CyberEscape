@@ -31,11 +31,11 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
 	private final ThemaRepository themaRepository;
+	// private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
 		// 4개씩 페이지네이션
-		// int totalRecordCount = (int)roomRepository.count();
 		int totalRecordCount = (int)roomRepository.countAllByTitleLike(pageRequest.getKeyword());
 
 		log.info("totalRecordCount = {}", totalRecordCount);
@@ -51,17 +51,13 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		// 계산된 페이지 정보의 일부(limitStart, recordSize)를 기준으로 리스트 데이터 조회 후 응답 데이터 반환
 		List<PagingDto.PageResponse> list = roomRepository.findAllRooms(pageRequest);
 		return PagingDto.Response.of(list, pagination);
-
-		// return roomRepository.findAll().stream()
-		// 	.map(RoomDto.Response::from)
-		// 	.collect(Collectors.toList());
 	}
 
 	@Transactional
 	@Override
 	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
-		// Todo : Password 암호화
-		// String encryptPassword = ...;
+		// Todo : Security 적용 후 주석 해제
+		// String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 
 		log.info("hostUuid : {}", postRequest.getHostUuid());
 		User host = userRepository.findUserByUuid(postRequest.getHostUuid())
@@ -73,6 +69,7 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		Room newRoom = Room.builder()
 			.title(postRequest.getTitle())
 			.password(postRequest.getPassword())
+			// .password(encryptPassword)
 			.capacity(1)
 			.thema(thema)
 			.host(host)
@@ -100,7 +97,6 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 
 		if(user.getId() == findRoom.getHostId()){
 			roomRepository.delete(findRoom);
-			// roomRepository.deleteRoomByUuid(uuid);
 			// Todo : 연결된 채팅방까지 삭제 ???
 			// Todo : 방에 남아있는 Guest는 추방 조치
 
@@ -115,20 +111,33 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 	}
 
 	public void acceptInvitation(final RoomDto.Request request) {
-		// broadcasting 공부 후 개발
+		// Todo : broadcasting 공부 후 개발
 		// 비밀번호 check 필요
+		
+		// 이것도 필요 없을 것 같은데? joinRoom()으로 퉁치면 되잖아
 		// Todo : capacity 변경
 	}
 
-	public void joinRoom(final RoomDto.Request request) {
-		// broadcasting 공부 후 개발
-		// Todo : 비밀번호 check 필요
-		// 없으면 바로 입장 가능
-		// 있으면 ..? 비밀번호 입력하라고 다시 돌려보내? ㅋㅋㅋ;
-		// Todo : capacity 변경
+	public void joinRoom(final RoomDto.JoinRequest joinRequest) {
+		// Todo : broadcasting 공부 후 입장 처리 개발
+
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, joinRequest.getRoomUuid());
+
+		if(findRoom.getPassword() != null){
+			// Todo : Security 적용 후 주석 해제
+			// 비밀번호 check
+			// if(bCryptPasswordEncoder.match(joinRequest.getPassword(), findRoom.getPassword())){
+			// 	findRoom.setCapacity(2);
+			// } else {
+			// 	throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+			// }
+		} else {
+			findRoom.setCapacity(2);
+		}
 	}
 
 	public void exitRoom(final RoomDto.Request request) {
+		// Todo : broadcasting 공부 후 퇴장 및 자동강퇴 처리 개발
 		// host, guest 분기 필요
 
 		// host : 연결 끊고, 방 폭파
@@ -144,31 +153,35 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
 			roomRepository.delete(findRoom);
-			// roomRepository.deleteRoomByUuid(uuid);
 			// Todo : 연결된 채팅방까지 삭제 ???
-			// Todo : 방에 남아있는 Guest는 추방 조치
+			// Todo : 방에 남아있는 Guest는 자동강퇴 조치
 			log.info("RoomServiceImpl ========== 방 삭제 성공");
 		} else {
 			log.info("RoomServiceImpl ========== 게스트입니다.");
-			// Todo : capacity 변경
+			// capacity 변경
+			findRoom.setCapacity(1);
 		}
 	}
 
 	public void kickGuestFromRoom(final RoomDto.Request request) {
+		// Todo : broadcasting 공부 후 강퇴 개발
 		// host인 경우만 강퇴 가능 -> validation check 필요
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
-		User user = userRepository.findUserByUuid(request.getUserUuid())
-			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+		// Todo : Context Holder에 저장된 UserUuid 값으로 방장 여부 확인
+		// User host = userRepository.findUserByUuid(UserUtil.getUserUuid())
+		// 	.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
 
-		if (user.getId() == findRoom.getHostId()) {
-			log.info("RoomServiceImpl ========== 방장입니다.");
-			// DB에 저장을 안 하면 강퇴는 어떻게 하지? 연결을 서버에서 끊어버려? 이게 되나?
-			// Todo : capacity 변경
-		} else {
-			throw new RuntimeException("방장이 아닙니다.");
-		}
+		// if (host.getId() == findRoom.getHostId()) {
+		// 	log.info("RoomServiceImpl ========== 방장입니다.");
+		// 	// Todo : 강퇴..
+		// 	// DB에 저장을 안 하면 강퇴는 어떻게 하지? 연결을 서버에서 끊어버려? 이게 되나?
+		// 	// capacity 변경
+		// 	findRoom.setCapacity(1);
+		// } else {
+		// 	throw new RuntimeException("방장이 아닙니다.");
+		// }
 	}
 
 	@Transactional
@@ -177,8 +190,11 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, infoRequest.getRoomUuid());
 
 		// Todo : 비밀번호 암호화
+		// String encryptPassword = bCryptPasswordEncoder.encode(infoRequest.getPassword());
+		// findRoom.updateSetting(RoomUpdateSetting.of(infoRequest.getTitle(), encryptPassword));
+
 		findRoom.updateSetting(RoomUpdateSetting.of(infoRequest.getTitle(), infoRequest.getPassword()));
-		// roomRepositoryImpl.changeRoomSetting(infoRequest);
+		findRoom.setUpdator(findRoom.getHost());
 
 		return RoomDto.InfoResponse.from(findRoom);
 	}
@@ -188,8 +204,6 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 	public UserDto.Response changeHost(final RoomDto.Request request) {
 		// host인 경우만 변경 가능 -> validation check 필요
 
-		// Room room = roomRepository.findRoomByUuid(request.getRoomUuid())
-		// 	.orElseThrow(() -> new RuntimeException("일치하는 대기방이 없습니다."));
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
 		// Todo : Context Holder에 저장된 UserUuid 값으로 방장 여부 확인
@@ -203,13 +217,10 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		// 	throw new RuntimeException("방장이 아닙니다.");
 		// }
 
-		// 근데 여기랑 room 가져오는 코드가 겹치는데 좋은 방법이 없을까?
-		// utils로 리펙토링하고, 아래 코드 impl코드 삭제하면서 해결
-		// roomRepositoryImpl.changeHost(request);
-
 		User host = userRepository.findUserByUuid(request.getUserUuid())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 사용자가 없습니다."));
 
+		findRoom.setUpdator(findRoom.getHost());
 		findRoom.setHost(host);
 
 		return UserDto.Response.from(host);
@@ -221,6 +232,7 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, timeRequest.getRoomUuid());
 
 		findRoom.setStartedAt(timeRequest.getStartedAt());
+		findRoom.setUpdator(findRoom.getHost());
 
 		return RoomDto.TimeResponse.from(findRoom);
 	}
