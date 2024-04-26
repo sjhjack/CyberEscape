@@ -19,10 +19,6 @@ const Nav = () => {
     setChoice(pathname)
   }, [pathname])
 
-  const navigateTo = (path: string) => {
-    router.push(path)
-  }
-
   return (
     <div>
       <hr style={{ margin: "10px 20px" }} />
@@ -30,12 +26,12 @@ const Nav = () => {
         {/* 중복 있어서 나중에 컴포넌트화 시키면 좋을 듯*/}
 
         {choice === "/main" ? (
-          <IconBox onClick={() => navigateTo("/main")}>
+          <IconBox onClick={() => router.push("/main")}>
             <AccountCircleIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
             <TitleText>마이홈</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/main")}>
+          <IconBox onClick={() => router.push("/main")}>
             <AccountCircleIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
@@ -44,58 +40,28 @@ const Nav = () => {
           </IconBox>
         )}
 
-        {choice === "/main/friends" ? (
-          <IconBox onClick={() => navigateTo("/main/friends")}>
-            <GroupIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
-            <TitleText>친구</TitleText>
-          </IconBox>
-        ) : (
-          <IconBox onClick={() => navigateTo("/main/friends")}>
-            <GroupIcon
-              sx={{ fontSize: "50px", cursor: "pointer" }}
-              color="disabled"
-            />
-            <TitleText style={{ color: "gray" }}>친구</TitleText>
-          </IconBox>
-        )}
-
         {choice === "/main/ranking" ? (
-          <IconBox onClick={() => navigateTo("/main/ranking")}>
+          <IconBox onClick={() => router.push("/main/ranking")}>
             <EmojiEventsIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
-            <TitleText>랭킹</TitleText>
+            <TitleText>싱글랭킹</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/main/ranking")}>
+          <IconBox onClick={() => router.push("/main/ranking")}>
             <EmojiEventsIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
             />
-            <TitleText style={{ color: "gray" }}>랭킹</TitleText>
-          </IconBox>
-        )}
-
-        {choice === "/main/store" ? (
-          <IconBox onClick={() => navigateTo("/main/store")}>
-            <LocalMallIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
-            <TitleText>상점</TitleText>
-          </IconBox>
-        ) : (
-          <IconBox onClick={() => navigateTo("/main/store")}>
-            <LocalMallIcon
-              sx={{ fontSize: "50px", cursor: "pointer" }}
-              color="disabled"
-            />
-            <TitleText style={{ color: "gray" }}>상점</TitleText>
+            <TitleText style={{ color: "gray" }}>싱글랭킹</TitleText>
           </IconBox>
         )}
 
         {choice === "/main/help" ? (
-          <IconBox onClick={() => navigateTo("/main/help")}>
+          <IconBox onClick={() => router.push("/main/help")}>
             <HelpIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
             <TitleText>게임설명</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/main/help")}>
+          <IconBox onClick={() => router.push("/main/help")}>
             <HelpIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
@@ -104,7 +70,7 @@ const Nav = () => {
           </IconBox>
         )}
 
-        <IconBox onClick={() => navigateTo("/game/mode")}>
+        <IconBox onClick={() => router.push("/game/mode")}>
           <MeetingRoomIcon
             sx={{ fontSize: "50px", cursor: "pointer", color: MainColor }}
           />
