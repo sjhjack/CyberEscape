@@ -2,14 +2,25 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn"
-
+interface ChatType {
+  username: string
+  message: string
+}
 const ChattingBox = () => {
-  const [chat, setChat] = useState(["i love ilgoo"])
+  const [chat, setChat] = useState([
+    { username: "ilgoo", message: "hi" },
+    { username: "heejoo", message: "hi" },
+    { username: "ilgoo", message: "hi" },
+  ])
   return (
     <MainContainer>
       <ChatBox>
-        {chat?.map((data: string, index: number) => {
-          return <ChatContent key={index}>{data}</ChatContent>
+        {chat?.map((data: ChatType, index: number) => {
+          return (
+            <ChatContent key={index}>
+              {data.username}: {data.message}
+            </ChatContent>
+          )
         })}
       </ChatBox>
       <ChatInput>
@@ -34,6 +45,7 @@ const ChatBox = styled.div`
   height: 85%;
   border-radius: 2px;
   background-color: #3b3a3a;
+  opacity: 0.8;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
@@ -49,7 +61,7 @@ const ChatInput = styled.div`
   background-color: #d3d3d3;
   border-radius: 2px;
   width: 100%;
-  height: 3vh;
+  height: 4vh;
 
   input {
     flex: 1;
