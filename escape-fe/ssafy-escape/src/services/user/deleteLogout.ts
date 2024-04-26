@@ -1,7 +1,7 @@
 // import API_PATH from "@/constants/path"
 // import api from "/api"
 
-// interface deleteLogoutBodyProps {
+// interface DeleteLogoutBodyProps {
 //   status: number
 //   message: string
 //   data: string
@@ -10,7 +10,7 @@
 // // 로그아웃
 // const deleteLogout = async (): Promise<null> => {
 //   try {
-//     const response = await api.delete<deleteLogoutBodyProps>(
+//     const response = await api.delete<DeleteLogoutBodyProps>(
 //       API_PATH.AUTH.LOGOUT,
 //     )
 //     if (response.data.status !== 200) {

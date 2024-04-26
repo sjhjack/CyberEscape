@@ -3,7 +3,7 @@ import { styled } from "styled-components"
 import Container from "@/components/common/Container"
 import Nav from "@/components/common/Nav"
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Container>
       {children}
@@ -14,7 +14,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export default MainLayout
+export default Layout
 
 const SubContainer = styled.div`
   position: absolute;
