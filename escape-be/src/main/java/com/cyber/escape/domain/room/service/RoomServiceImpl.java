@@ -33,9 +33,10 @@ public class RoomServiceImpl implements RoomCreateService, RoomReadService, Room
 	private final ThemaRepository themaRepository;
 
 	@Override
-	public PagingDto.Response findAllRooms(PagingDto.PageRequest pageRequest) {
+	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
 		// 4개씩 페이지네이션
-		int totalRecordCount = (int)roomRepository.count();
+		// int totalRecordCount = (int)roomRepository.count();
+		int totalRecordCount = (int)roomRepository.countAllByTitleLike(pageRequest.getKeyword());
 
 		log.info("totalRecordCount = {}", totalRecordCount);
 

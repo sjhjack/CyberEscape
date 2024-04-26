@@ -36,6 +36,7 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 			))
 			.from(room)
 			.innerJoin(room.host, user)
+			.where(room.title.like(pageRequest.getKeyword()))
 			.orderBy(room.id.asc())
 			.offset(pageRequest.getOffset())
 			.limit(4)
