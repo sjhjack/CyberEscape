@@ -1,13 +1,14 @@
 "use client"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { styled } from "styled-components"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 // import postSignUp from "@/services/user/postSignUp"
 // import useUserStore from "@/stores/UserStore"
 import Button from "@/components/common/Button"
 import Input from "@/components/common/Input"
 import Container from "@/components/common/Container"
-import * as S from "./loginStyle"
+import { MainColor } from "@/styles/palette"
 
 /*
 추후 리팩토링 사항
@@ -74,11 +75,11 @@ const Login = ({ handleLoginback }: LoginProps) => {
     >
       {!isSignUpClicked ? (
         <div>
-          <S.BackIcon onClick={() => handleLoginback()}>
+          <BackIcon onClick={() => handleLoginback()}>
             <ArrowBackIosNewIcon />
-          </S.BackIcon>
-          <S.Form onSubmit={(e) => handleLogin(e)}>
-            <S.MainText>LOGIN</S.MainText>
+          </BackIcon>
+          <Form onSubmit={(e) => handleLogin(e)}>
+            <MainText>LOGIN</MainText>
             <Input
               placeholder="아이디"
               value={loginId}
@@ -94,10 +95,10 @@ const Login = ({ handleLoginback }: LoginProps) => {
               required
             />
             <Button text="로그인" theme="success" type="submit" />
-          </S.Form>
+          </Form>
           <hr />
-          <S.SubContainer>
-            <S.SubText>계정이 없으신가요?</S.SubText>
+          <SubContainer>
+            <SubText>계정이 없으신가요?</SubText>
             <Button
               text="회원가입"
               theme="success"
@@ -105,19 +106,19 @@ const Login = ({ handleLoginback }: LoginProps) => {
                 setIsSignUpClicked(true), setLoginId(""), setPassword("")
               }}
             />
-          </S.SubContainer>
+          </SubContainer>
         </div>
       ) : (
         <div>
-          <S.BackIcon
+          <BackIcon
             onClick={() => {
               setIsSignUpClicked(false), setLoginId(""), setPassword("")
             }}
           >
             <ArrowBackIosNewIcon />
-          </S.BackIcon>
-          <S.Form onSubmit={(e) => handleSignUp(e)}>
-            <S.MainText>SIGN UP</S.MainText>
+          </BackIcon>
+          <Form onSubmit={(e) => handleSignUp(e)}>
+            <MainText>SIGN UP</MainText>
             <Input
               placeholder="아이디"
               value={loginId}
@@ -133,7 +134,7 @@ const Login = ({ handleLoginback }: LoginProps) => {
               required
             />
             <Button text="회원가입" theme="success" type="submit" />
-          </S.Form>
+          </Form>
         </div>
       )}
     </Container>
@@ -141,3 +142,35 @@ const Login = ({ handleLoginback }: LoginProps) => {
 }
 
 export default Login
+
+const SubContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 50px;
+`
+
+const MainText = styled.div`
+  font-size: 35px;
+  color: ${MainColor};
+`
+
+const SubText = styled.div`
+  font-size: 12px;
+  color: ${MainColor};
+`
+
+const BackIcon = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  cursor: pointer;
+`
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+`
