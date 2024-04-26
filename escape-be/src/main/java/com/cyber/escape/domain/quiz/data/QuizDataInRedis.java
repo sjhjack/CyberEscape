@@ -1,10 +1,7 @@
 package com.cyber.escape.domain.quiz.data;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -17,12 +14,14 @@ public class QuizDataInRedis {
 
     @Builder
     @Getter
+    @Setter
     @NoArgsConstructor(force = true)
     @AllArgsConstructor
     public static class MapQuizWithClueData{
         private String finalUuid;
         private Integer clueIdx;
         private String clue;
+        private boolean isUsedHint;
     }
 
     @Builder
