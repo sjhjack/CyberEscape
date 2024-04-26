@@ -1,4 +1,3 @@
-"use client"
 import styled from "styled-components"
 import Image from "next/image"
 
@@ -6,7 +5,7 @@ export const UserBox = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  width: 25%;
+  width: 22%;
 `
 
 export const CharacterBox = styled.div`
