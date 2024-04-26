@@ -7,6 +7,8 @@ import GroupIcon from "@mui/icons-material/Group"
 import HelpIcon from "@mui/icons-material/Help"
 import LocalMallIcon from "@mui/icons-material/LocalMall"
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom"
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"
+import { MainColor } from "@/styles/palette"
 
 const Nav = () => {
   const [choice, setChoice] = useState<string | null>("/main")
@@ -15,7 +17,6 @@ const Nav = () => {
 
   useEffect(() => {
     setChoice(pathname)
-    console.log(pathname)
   }, [pathname])
 
   const navigateTo = (path: string) => {
@@ -29,27 +30,27 @@ const Nav = () => {
         {/* 중복 있어서 나중에 컴포넌트화 시키면 좋을 듯*/}
 
         {choice === "/main" ? (
-          <IconBox onClick={() => navigateTo("/game/mode")}>
-            <MeetingRoomIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
-            <TitleText>게임시작</TitleText>
+          <IconBox onClick={() => navigateTo("/main")}>
+            <AccountCircleIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
+            <TitleText>마이홈</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/game/mode")}>
-            <MeetingRoomIcon
+          <IconBox onClick={() => navigateTo("/main")}>
+            <AccountCircleIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
             />
-            <TitleText style={{ color: "gray" }}>게임시작</TitleText>
+            <TitleText style={{ color: "gray" }}>마이홈</TitleText>
           </IconBox>
         )}
 
-        {choice === "/main" || choice === "/friends" ? (
-          <IconBox onClick={() => navigateTo("/friends")}>
+        {choice === "/main/friends" ? (
+          <IconBox onClick={() => navigateTo("/main/friends")}>
             <GroupIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
             <TitleText>친구</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/friends")}>
+          <IconBox onClick={() => navigateTo("/main/friends")}>
             <GroupIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
@@ -58,13 +59,13 @@ const Nav = () => {
           </IconBox>
         )}
 
-        {choice === "/main" || choice === "/ranking" ? (
-          <IconBox onClick={() => navigateTo("/ranking")}>
+        {choice === "/main/ranking" ? (
+          <IconBox onClick={() => navigateTo("/main/ranking")}>
             <EmojiEventsIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
             <TitleText>랭킹</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/ranking")}>
+          <IconBox onClick={() => navigateTo("/main/ranking")}>
             <EmojiEventsIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
@@ -73,13 +74,13 @@ const Nav = () => {
           </IconBox>
         )}
 
-        {choice === "/main" || choice === "/store" ? (
-          <IconBox onClick={() => navigateTo("/store")}>
+        {choice === "/main/store" ? (
+          <IconBox onClick={() => navigateTo("/main/store")}>
             <LocalMallIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
             <TitleText>상점</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/store")}>
+          <IconBox onClick={() => navigateTo("/main/store")}>
             <LocalMallIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
@@ -88,13 +89,13 @@ const Nav = () => {
           </IconBox>
         )}
 
-        {choice === "/main" || choice === "/help" ? (
-          <IconBox onClick={() => navigateTo("/help")}>
+        {choice === "/main/help" ? (
+          <IconBox onClick={() => navigateTo("/main/help")}>
             <HelpIcon sx={{ fontSize: "50px", cursor: "pointer" }} />
             <TitleText>게임설명</TitleText>
           </IconBox>
         ) : (
-          <IconBox onClick={() => navigateTo("/help")}>
+          <IconBox onClick={() => navigateTo("/main/help")}>
             <HelpIcon
               sx={{ fontSize: "50px", cursor: "pointer" }}
               color="disabled"
@@ -102,6 +103,13 @@ const Nav = () => {
             <TitleText style={{ color: "gray" }}>게임설명</TitleText>
           </IconBox>
         )}
+
+        <IconBox onClick={() => navigateTo("/game/mode")}>
+          <MeetingRoomIcon
+            sx={{ fontSize: "50px", cursor: "pointer", color: MainColor }}
+          />
+          <TitleText style={{ color: MainColor }}>게임시작</TitleText>
+        </IconBox>
       </MainContainer>
     </div>
   )
