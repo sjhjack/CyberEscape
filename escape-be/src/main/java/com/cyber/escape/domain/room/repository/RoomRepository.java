@@ -13,4 +13,6 @@ public interface RoomRepository extends JpaRepository<Room, Long>, RoomRepositor
 	void deleteRoomByUuid(String uuid);
 
 	Optional<Room> findRoomByUuid(String uuid);
+
+	long countAllByTitleLike(String keyword);
 }

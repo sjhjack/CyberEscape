@@ -32,14 +32,16 @@ public class RoomController {
 	private final RoomUpdateService roomUpdateService;
 	private final RoomDeleteService roomDeleteService;
 
-	// @GetMapping
-	// public ApiResponse<List<RoomDto.Response>> findAllRooms() {
-	// 	return new ApiResponse<>(HttpStatus.OK.value(), "대기실 전체 리스트를 가져왔습니다.", roomReadService.findAllRooms());
-	// }
-
+	/**
+	 * keyword가 주어지지 않으면 전체 리스트를 반환합니다.
+	 * keyword가 주어지면 like 연산을 통한 리스트를 반환합니다.
+	 *
+	 * @param pageRequest (page 번호, 검색할 제목)
+	 * @return 대기실 정보 리스트
+	 */
 	@GetMapping
-	public ApiResponse<PagingDto.Response> findAllRooms(@RequestBody PagingDto.PageRequest pageRequest) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 전체 리스트를 가져왔습니다.", roomReadService.findAllRooms(pageRequest));
+	public ApiResponse<PagingDto.Response> findAllRoomsByKeyword(@RequestBody PagingDto.PageRequest pageRequest) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 전체 리스트를 가져왔습니다.", roomReadService.findAllRoomsByKeyword(pageRequest));
 	}
 
 	@PostMapping

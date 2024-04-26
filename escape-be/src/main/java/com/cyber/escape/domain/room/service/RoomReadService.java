@@ -7,5 +7,5 @@ import com.cyber.escape.domain.room.dto.RoomDto;
 
 public interface RoomReadService {
 	// List<RoomDto.Response> findAllRooms();
-	PagingDto.Response findAllRooms(PagingDto.PageRequest pageRequest);
+	PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest);
 }

@@ -45,6 +45,10 @@ public class PagingDto {
 			// this.pageSize = 5;
 		}
 
+		public void setKeyword(String keyword) {
+			this.keyword = "%" + keyword + "%";
+		}
+
 		public int getOffset(){
 			return this.pagination.getLimitStart();
 		}
