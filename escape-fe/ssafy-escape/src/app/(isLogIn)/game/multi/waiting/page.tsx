@@ -1,4 +1,4 @@
-import WaitingRoom from "@/components/waitingroom/WaitingRoom"
+import WaitingRoom from "@/components/waiting/Waiting"
 const Page = () => {
   return <WaitingRoom />
 }

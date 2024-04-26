@@ -6,12 +6,37 @@ interface ChatType {
   username: string
   message: string
 }
-const ChattingBox = () => {
-  const [chat, setChat] = useState([
-    { username: "ilgoo", message: "hi" },
-    { username: "heejoo", message: "hi" },
-    { username: "ilgoo", message: "hi" },
-  ])
+const ChattingBox = ({ session }: any) => {
+  const [chat, setChat] = useState<ChatType[]>([])
+  const [text, setText] = useState<string>("")
+  // 메시지 인풋 태그 값 최신화
+  const handleChangeInput = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setText(event.target.value)
+  }
+
+  // 세션이 연결된 참가자에게 메시지 보내기
+  const sendMessage = () => {
+    session
+      .signal({
+        data: text,
+        to: [],
+      })
+      .then(() => {
+        console.log("Message successfully sent")
+      })
+      .catch((error: Error) => {
+        console.error(error)
+      })
+  }
+  const submitChat = () => {
+    // sendMessage()
+    setText("")
+  }
+  useEffect(() => {
+    console.log(text)
+  }, [text])
   return (
     <MainContainer>
       <ChatBox>
@@ -24,8 +49,8 @@ const ChattingBox = () => {
         })}
       </ChatBox>
       <ChatInput>
-        <input type="text" />
-        <KeyboardReturnIcon />
+        <input type="text" value={text} onChange={handleChangeInput} />
+        <KeyboardReturnIcon onClick={submitChat} />
       </ChatInput>
     </MainContainer>
   )

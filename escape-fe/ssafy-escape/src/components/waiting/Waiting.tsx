@@ -1,10 +1,14 @@
 "use client"
+import React, { useState } from "react"
 import Container from "@/components/common/Container"
 import * as S from "../../app/(isLogIn)/game/multi/waiting/waitingStyle"
-import ChattingBox from "@/components/waitingroom/ChattingBox"
+import ChattingBox from "@/components/waiting/ChattingBox"
+import Openvidu from "./Openvidu"
 const Page = () => {
+  const [session, setSession] = useState(null)
   return (
     <Container display="flex" justifyContent="center" alignItems="center">
+      {/* <Openvidu /> */}
       <S.UserBox style={{ marginRight: "20px" }}>
         <S.CharacterBox></S.CharacterBox>
         <S.Nickname>김싸피</S.Nickname>
@@ -19,7 +23,7 @@ const Page = () => {
             priority
           />
         </S.MainContentBox>
-        <ChattingBox></ChattingBox>
+        <ChattingBox session={session}></ChattingBox>
       </S.MainBox>
       <S.UserBox style={{ marginLeft: "20px" }}>
         <S.CharacterBox></S.CharacterBox>
