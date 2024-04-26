@@ -4,6 +4,15 @@ const API_PATH = {
     LOGIN: "/auth/signin",
     LOGOUT: "/auth/logout",
   },
+  MAIN: {
+    FRIEND: {
+      LIST: "/friend/list",
+      DELETE: "/friend/remove",
+      REQUEST: "/friend/request",
+      ADDITION: "/friend/addition",
+      SEARCH: "/user/search",
+    },
+  },
 }
 
 export default API_PATH
