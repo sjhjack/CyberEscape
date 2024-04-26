@@ -1,4 +1,4 @@
-import MainHeader from "@/components/common/MainHeader"
+import MainHeader from "@/components/common/HeaderNav"
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
