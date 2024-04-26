@@ -21,6 +21,24 @@ public class RoomDto {
 
 	@Builder
 	@Getter
+	public static class JoinRequest {
+		private final String roomUuid;
+		private final String userUuid;
+		private final String password;
+
+		public JoinRequest(final String roomUuid, final String userUuid, final String password){
+			this.roomUuid = roomUuid;
+			this.userUuid = userUuid;
+			this.password = password;
+		}
+
+		public JoinRequest(final String roomUuid, final String userUuid){
+			this(roomUuid, userUuid, "");
+		}
+	}
+
+	@Builder
+	@Getter
 	public static class PostRequest {
 		private final String title;
 		private final Long themaId;
@@ -34,7 +52,7 @@ public class RoomDto {
 		private final String roomUuid;
 		private final String chatRoomUuid;
 
-		public static PostResponse of(String roomUuid, String chatRoomUuid) {
+		public static PostResponse of(final String roomUuid, final String chatRoomUuid) {
 			return PostResponse.builder()
 				.roomUuid(roomUuid)
 				.chatRoomUuid(chatRoomUuid)
