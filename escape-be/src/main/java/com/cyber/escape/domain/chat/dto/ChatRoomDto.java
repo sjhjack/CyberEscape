@@ -1,7 +1,7 @@
 package com.cyber.escape.domain.chat.dto;
 
-import com.cyber.escape.domain.chat.entity.ChatRoom;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,8 +21,10 @@ public class ChatRoomDto {
     @Getter
     @NoArgsConstructor(force = true)
     @AllArgsConstructor
+    @Builder
     public static class ChatRoomResDto{
         private final String ChatRoomUuid;
+
     }
 
 }
