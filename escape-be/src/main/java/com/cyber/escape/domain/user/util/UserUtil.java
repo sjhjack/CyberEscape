@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserUtil {
     public static String getUserUuid(){
-        return "b7fbeac5-02c2-11ef-86e3-0242ac101404";
+        return "c83e73a6-0470-11ef-9c95-0242ac101404";
     }
     public static String getAnotherUserUuid(){
-        return "b7fc17d2-02c2-11ef-86e3-0242ac101404";
+        return "c83e8aea-0470-11ef-9c95-0242ac101404";
     }
 }
