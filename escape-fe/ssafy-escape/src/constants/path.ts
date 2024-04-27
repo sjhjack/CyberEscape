@@ -11,6 +11,7 @@ const API_PATH = {
       REQUEST: "/friend/request",
       ADDITION: "/friend/addition",
       SEARCH: "/user/search",
+      NOTIFICATION: "/notification/friend",
     },
   },
 }
