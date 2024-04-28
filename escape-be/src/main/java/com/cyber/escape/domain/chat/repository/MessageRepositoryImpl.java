@@ -11,17 +11,18 @@ import jakarta.persistence.EntityNotFoundException;
 public class MessageRepositoryImpl {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
-    private final MessageRepository messageRepository;
+    // import 시 순환참조 에러 발생
+    //private final MessageRepository messageRepository;
 
-    public MessageRepositoryImpl(ChatRoomRepository chatRoomRepository, UserRepository userRepository, MessageRepository messageRepository) {
+    public MessageRepositoryImpl(ChatRoomRepository chatRoomRepository, UserRepository userRepository) {
         this.chatRoomRepository = chatRoomRepository;
         this.userRepository = userRepository;
-        this.messageRepository = messageRepository;
+        //this.messageRepository = messageRepository;
     }
 
     public void saveMessage(ChatMessageDto messageDto){
         ChatMessage message = ChatMessage.builder()
-                .chatRoom(chatRoomRepository.findById(Long.parseLong(messageDto.getRoomId()))
+                .chatRoom(chatRoomRepository.findByUuid(messageDto.getRoomUuid())
                         .orElseThrow(() -> new EntityNotFoundException("채팅방이 존재하지 않습니다.")))
                 .sender(userRepository.findById(messageDto.getSender())
                         .orElseThrow(() -> new EntityNotFoundException("사용자가 존재하지 않습니다.")))
@@ -30,6 +31,6 @@ public class MessageRepositoryImpl {
                 .type(messageDto.getType().name())
                 .build();
 
-        messageRepository.save(message);
+        //messageRepository.save(message);
     }
 }

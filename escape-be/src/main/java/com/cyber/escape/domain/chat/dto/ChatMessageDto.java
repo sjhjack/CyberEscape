@@ -11,7 +11,7 @@ public class ChatMessageDto {
     public enum MessageType {
         ENTER, TALK, EXIT
     }
-    private String roomId;
+    private String roomUuid;
     private Long sender;
     private String message;
     private Character isRead;
