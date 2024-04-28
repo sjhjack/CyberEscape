@@ -1,19 +1,15 @@
-package com.cyber.escape.domain.chat.Repository;
+package com.cyber.escape.domain.chat.repository;
 
 import com.cyber.escape.domain.chat.entity.ChatRoom;
-import com.cyber.escape.domain.chat.entity.Participants;
 import com.cyber.escape.domain.chat.entity.QChatRoom;
 import com.cyber.escape.domain.chat.entity.QParticipants;
 import com.cyber.escape.domain.user.entity.QUser;
 import com.cyber.escape.global.exception.ChatException;
-import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

@@ -1,8 +1,7 @@
 package com.cyber.escape.domain.chat.service;
 
-import com.cyber.escape.domain.chat.Repository.ParticipantsRepository;
-import com.cyber.escape.domain.chat.Repository.ParticipantsRepositoryImpl;
-import com.cyber.escape.domain.chat.data.DataInChatMap;
+import com.cyber.escape.domain.chat.repository.ParticipantsRepository;
+import com.cyber.escape.domain.chat.repository.ParticipantsRepositoryImpl;
 import com.cyber.escape.domain.chat.entity.ChatRoom;
 import com.cyber.escape.domain.chat.entity.Participants;
 import com.cyber.escape.domain.user.entity.User;
@@ -14,7 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import com.cyber.escape.domain.chat.Repository.ChatRoomRepository;
+import com.cyber.escape.domain.chat.repository.ChatRoomRepository;
 import com.cyber.escape.domain.chat.dto.ChatRoomDto;
 
 import java.util.*;

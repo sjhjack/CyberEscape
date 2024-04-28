@@ -25,10 +25,8 @@ public class ChatRoomController {
         return new ApiResponse(HttpStatus.CREATED.value(), "채팅방이 생성되었습니다.", chatRoomService.createChatRoom(req));
     }
 
-//    @PostMapping("/join")
-//    public ApiResponse joinRoom(@RequestBody ChatRoomDto.ChatRoomReqDto req){
-//        return new ApiResponse(HttpStatus.CREATED.value(), "채팅방에 참가하였습니다.", chatRoomService.createChatRoom(req));
-//    }
+
+
 
 
 }
