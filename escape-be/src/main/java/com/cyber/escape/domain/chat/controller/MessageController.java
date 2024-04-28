@@ -1,5 +1,7 @@
 package com.cyber.escape.domain.chat.controller;
 
+import com.cyber.escape.domain.chat.dto.ChatMessageDto;
+import com.cyber.escape.domain.chat.service.MessageService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -7,14 +9,10 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.a602.actors.domain.chat.dto.ChatMessageDto;
-import com.a602.actors.domain.chat.service.MessageService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequiredArgsConstructor
 @Slf4j
 public class MessageController {
     private final RabbitTemplate rabbitTemplate;

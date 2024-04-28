@@ -31,7 +31,6 @@ public class ChatRoomDto {
         public ChatRoomResDto(String chatRoomUuid){
             this.ChatRoomUuid = chatRoomUuid;
         }
-
     }
 
 }

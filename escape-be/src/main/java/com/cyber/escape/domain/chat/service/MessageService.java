@@ -1,24 +1,22 @@
 package com.cyber.escape.domain.chat.service;
 
-import com.cyber.escape.domain.chat.Repository.MessageRepositoryImpl;
+import com.cyber.escape.domain.chat.repository.MessageRepositoryImpl;
 import com.cyber.escape.domain.chat.dto.ChatMessageDto;
 import org.springframework.stereotype.Service;
 
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class MessageService {
-    private final MessageRepositoryImpl messageRepositoryCustom;
+    private final MessageRepositoryImpl messageRepositoryImpl;
 
-    public MessageService(MessageRepositoryImpl messageRepositoryCustom) {
-        this.messageRepositoryCustom = messageRepositoryCustom;
+    public MessageService(MessageRepositoryImpl messageRepositoryImpl) {
+        this.messageRepositoryImpl = messageRepositoryImpl;
     }
 
     public void saveMessage(ChatMessageDto messageDto){
-        messageRepositoryCustom.saveMessage(messageDto);
+        messageRepositoryImpl.saveMessage(messageDto);
     }
 }

@@ -57,14 +57,14 @@ public class RabbitConfig {
     // 특정 Exchange가 특정 Queue로 매칭될지를 결정한다.
 
     // Topic Exchange : routing key 의 패턴을 만족하는 모든 queue에 전달한다.
-    @Bean
-    public Binding binding(Queue queue, TopicExchange exchange){
-        log.info("binding 등록 !!");
-        return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(ROUTING_KEY);
-    }
+//    @Bean
+//    public Binding binding(Queue queue, TopicExchange exchange){
+//        log.info("binding 등록 !!");
+//        return BindingBuilder
+//                .bind(queue)
+//                .to(exchange)
+//                .with(ROUTING_KEY);
+//    }
 
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange){
@@ -87,7 +87,7 @@ public class RabbitConfig {
 
     // RabbitMQ와의 연결을 관리하는 클래스
     @Bean
-    public ConnectionFactory connectionFactory(@Value("${rabbit.user_name}") String USER_NAME, @Value("${rabbit.password}") String PASSWORD){
+    public ConnectionFactory connectionFactory(@Value("${rabbit.username}") String USER_NAME, @Value("${rabbit.password}") String PASSWORD){
         log.info("connectionFactory 등록 !!");
         CachingConnectionFactory factory = new CachingConnectionFactory();
 //		factory.setHost("localhost");

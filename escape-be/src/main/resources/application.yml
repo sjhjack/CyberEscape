@@ -19,8 +19,10 @@ spring:
 #    mongodb:
 #      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority&appName=${MONGO_APPNAME}
 #      database: ${MONGO_DBNAME}
-#  rabbitmq:
-#    host: ${MQ_HOST}
-#    port: ${MQ_PORT}
-#    username: ${MQ_USER_NAME}
-#    password: ${MQ_PASSWORD}
+rabbit:
+  chat-queue-name: ${MQ_QUEUE_NAME}
+  exchange-name: ${MQ_EXCHANGE_NAME}
+  host: ${MQ_HOST}
+  port: ${MQ_PORT}
+  username: ${MQ_USER_NAME}
+  password: ${MQ_PASSWORD}
