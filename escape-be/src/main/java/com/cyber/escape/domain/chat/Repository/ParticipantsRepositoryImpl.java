@@ -42,9 +42,8 @@ public class ParticipantsRepositoryImpl {
                 .where(participants.participant.uuid.eq(myUuid))
                 .fetch();
 
-//        if(myRooms.isEmpty())
-//            throw new ChatException(ExceptionCodeSet.ENTITY_NOT_EXISTS);
-
+        if(myRooms.isEmpty())
+            return null;
 
         return jpaQueryFactory
                         .selectFrom(chatRoom)
