@@ -38,7 +38,7 @@ public class RabbitConfig {
 
     // Queue 등록
     @Bean
-    public Queue queue(@Value("${rabbit.queue-name}") String CHAT_QUEUE_NAME){
+    public Queue queue(@Value("${rabbit.chat-queue-name}") String CHAT_QUEUE_NAME){
         log.info("queue 등록 !!");
         // return new Queue(CHAT_QUEUE_NAME, true);
         return new Queue(CHAT_QUEUE_NAME);
@@ -90,8 +90,8 @@ public class RabbitConfig {
     public ConnectionFactory connectionFactory(@Value("${rabbit.username}") String USER_NAME, @Value("${rabbit.password}") String PASSWORD){
         log.info("connectionFactory 등록 !!");
         CachingConnectionFactory factory = new CachingConnectionFactory();
-//		factory.setHost("localhost");
-        factory.setHost("rabbitmq");
+		factory.setHost("localhost");
+        //factory.setHost("rabbitmq");
         factory.setPort(5672);
         // factory.setPort(58153);
         factory.setVirtualHost("/");	// ?? 이게 뭘까
