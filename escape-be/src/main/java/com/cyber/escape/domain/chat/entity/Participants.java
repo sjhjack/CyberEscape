@@ -7,9 +7,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
+
+@Getter
+@ToString
 @Entity
 @Table(name="participants")
 public class Participants extends BaseEntity {
@@ -23,5 +30,17 @@ public class Participants extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="updated_user", referencedColumnName = "id")
     private User updatedUser;
+
+
+    public Participants(){
+
+    }
+
+    @Builder
+    public Participants(ChatRoom chatRoom, User participant, User updatedUser) {
+        this.chatRoom = chatRoom;
+        this.participant = participant;
+        this.updatedUser = updatedUser;
+    }
 
 }

@@ -1,9 +1,11 @@
 package com.cyber.escape.domain.chat.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,10 +22,15 @@ public class ChatRoomDto {
 
     @Getter
     @NoArgsConstructor(force = true)
-    @AllArgsConstructor
+//    @AllArgsConstructor
     @Builder
     public static class ChatRoomResDto{
-        private final String ChatRoomUuid;
+        private String ChatRoomUuid;
+
+        @QueryProjection
+        public ChatRoomResDto(String chatRoomUuid){
+            this.ChatRoomUuid = chatRoomUuid;
+        }
 
     }
 
