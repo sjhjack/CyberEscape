@@ -13,7 +13,7 @@
 //     const response = await api.delete<DeleteLogoutBodyProps>(
 //       API_PATH.AUTH.LOGOUT,
 //     )
-//     if (response.data.status !== 200) {
+//     if (response.data.status === 400) {
 //       throw new Error(`오류: ${response.data.message}`)
 //     }
 //     return null

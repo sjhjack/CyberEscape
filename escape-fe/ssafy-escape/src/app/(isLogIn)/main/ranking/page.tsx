@@ -1,5 +1,7 @@
+import Ranking from "@/components/main/ranking/Ranking"
+
 const Page = () => {
-  return <div>랭킹페이지</div>
+  return <Ranking />
 }
 
 export default Page
