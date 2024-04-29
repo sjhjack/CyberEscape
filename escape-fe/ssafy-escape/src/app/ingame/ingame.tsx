@@ -11,13 +11,13 @@ import Chat from "@/components/ingame/Chat"
 import ExitGame from "@/components/ingame/ExitGame"
 import type { NextPage } from "next"
 import Image from "next/image"
-import * as S from "./IngameStyle"
+import * as S from "./ingameStyle"
 
 interface PointerLockControlsMethods {
   moveToPosition: (x: number, y: number, z: number) => void
 }
 
-const Home: NextPage = () => {
+const InGame: NextPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
@@ -107,4 +107,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default InGame
