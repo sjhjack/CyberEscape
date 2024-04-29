@@ -11,5 +11,6 @@ import com.cyber.escape.domain.user.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findUserByUuid(String uuid);
 	Optional<User> findUserById(Long id);
+	Optional<User> findUserByNickname(String nickname);
 
 }
