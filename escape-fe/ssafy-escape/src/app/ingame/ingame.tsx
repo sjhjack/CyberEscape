@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
 import { Canvas } from "@react-three/fiber"
-import styled from "styled-components"
 import CameraKeyControls from "@/components/ingame/CameraControl"
 import PointerLockControls from "@/components/ingame/PointerLockControl"
 import MainModal from "@/components/common/MainModal"
@@ -12,6 +11,7 @@ import Chat from "@/components/ingame/Chat"
 import ExitGame from "@/components/ingame/ExitGame"
 import type { NextPage } from "next"
 import Image from "next/image"
+import * as S from "./IngameStyle"
 
 interface PointerLockControlsMethods {
   moveToPosition: (x: number, y: number, z: number) => void
@@ -29,9 +29,9 @@ const Home: NextPage = () => {
     setShowModal(false)
   }
 
-  const handleHideObject = () => {
-    setShowObject(false)
-  }
+  // const handleHideObject = () => {
+  //   setShowObject(false)
+  // }
 
   const onKeyClick = () => {
     setShowModal(!showModal)
@@ -61,7 +61,7 @@ const Home: NextPage = () => {
   }, [isModelLoaded, countdown])
 
   return (
-    <Container>
+    <S.Container>
       <Canvas
         shadows
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
@@ -83,7 +83,7 @@ const Home: NextPage = () => {
         {isGameStart ? <CameraKeyControls /> : null}
       </Canvas>
       {isModelLoaded && countdown > 0 ? (
-        <CountdownBox>{countdown}</CountdownBox>
+        <S.CountdownBox>{countdown}</S.CountdownBox>
       ) : null}
       {showModal && (
         <MainModal
@@ -103,23 +103,8 @@ const Home: NextPage = () => {
           height="40"
         />
       </ExitGame>
-    </Container>
+    </S.Container>
   )
 }
 
 export default Home
-
-const Container = styled.div`
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-`
-const CountdownBox = styled.div`
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 90px;
-  color: white;
-  zindex: 100;
-`
