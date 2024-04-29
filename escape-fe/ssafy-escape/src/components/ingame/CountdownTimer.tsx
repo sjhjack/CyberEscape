@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 
+// for merge request
+
 const CountdownTimer = () => {
   const [time, setTime] = useState({
     minutes: 10,

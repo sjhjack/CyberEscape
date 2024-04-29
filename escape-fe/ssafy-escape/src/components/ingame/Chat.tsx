@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "styled-components"
 
+// for merge request
+
 interface Message {
   sender: string
   text: string

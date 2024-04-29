@@ -13,6 +13,8 @@ import type { NextPage } from "next"
 import Image from "next/image"
 import * as S from "./ingameStyle"
 
+// for merge request
+
 interface PointerLockControlsMethods {
   moveToPosition: (x: number, y: number, z: number) => void
 }
