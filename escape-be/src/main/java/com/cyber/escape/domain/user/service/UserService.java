@@ -55,17 +55,15 @@ public class UserService {
         if (userRepository.existsByNickname(dto.getNewNickname())) {
             throw new RuntimeException("이미 사용 중인 닉네임입니다.");
         }
+        String newNickname = dto.getNewNickname();
+        if (newNickname.length() > 20) {
+            throw new RuntimeException("닉네임은 최대 20자까지 가능합니다.");
+        }
         // 새로운 닉네임의 길이를 한글 20자로 제한
-        String newNickname = dto.getNewNickname().substring(0, Math.min(dto.getNewNickname().length(), 20));
+//        String newNickname = dto.getNewNickname().substring(0, Math.min(dto.getNewNickname().length(), 20));
 
-        // 닉네임 변경
-        user = user.builder()
-                .loginId(user.getLoginId())
-                .password(user.getPassword())
-                .nickname(newNickname)
-                .point(user.getPoint())
-                .build();
-
+        // 기존 사용자의 닉네임 업데이트
+        user.setNickname(newNickname);
         userRepository.save(user);
 
         return newNickname;
