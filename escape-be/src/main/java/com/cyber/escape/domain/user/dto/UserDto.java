@@ -12,4 +12,25 @@ public class UserDto {
         private String[] words;
         private String seed;
     }
+
+    @Getter
+    @Builder
+    public static class ChangeNickname{
+        private String nickname;
+    }
+
+    @Getter
+    @Builder
+    public static class SearchNicknameRequest{
+        private String fromUserUuid;
+        private String nickname;
+    }
+
+    @Getter
+    @Builder
+    public static class SearchNicknameResponse{
+        private String nickname;
+        private String relationship;
+    }
+
 }
