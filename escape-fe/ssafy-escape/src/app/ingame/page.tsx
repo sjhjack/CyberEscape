@@ -17,7 +17,7 @@ interface PointerLockControlsMethods {
   moveToPosition: (x: number, y: number, z: number) => void
 }
 
-const InGame: NextPage = () => {
+const Page: NextPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
@@ -107,4 +107,4 @@ const InGame: NextPage = () => {
   )
 }
 
-export default InGame
+export default Page
