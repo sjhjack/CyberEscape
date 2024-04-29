@@ -4,11 +4,7 @@ import MainModal from "@/components/common/MainModal"
 import useModalStore from "@/stores/ModalStore"
 import FriendRequestActions from "./FriendRequestActions"
 
-interface FriendMainModalProps {
-  open: boolean
-  onClose: () => void
-}
-const FriendMainModal = ({ open, onClose }: FriendMainModalProps) => {
+const FriendMainModal = ({ open, onClose }: ModalProps) => {
   const { isRequestModalOpen, setIsRequestModalOpen } = useModalStore()
   const handleRequestModalClose = () => {
     setIsRequestModalOpen(false)
