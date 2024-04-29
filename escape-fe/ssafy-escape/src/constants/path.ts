@@ -13,6 +13,11 @@ const API_PATH = {
       SEARCH: "/user/search",
       NOTIFICATION: "/notification/friend",
     },
+    RANKING: {
+      LIST: "/rankings",
+      MY_RANK: "/rank/myrank",
+      UPDATE_RANK: "/rank/update"
+    },
   },
 }
 
