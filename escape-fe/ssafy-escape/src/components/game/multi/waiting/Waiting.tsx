@@ -1,8 +1,8 @@
 "use client"
 import React, { useState } from "react"
 import Container from "@/components/common/Container"
-import * as S from "../../app/(isLogIn)/game/multi/waiting/waitingStyle"
-import ChattingBox from "@/components/waiting/ChattingBox"
+import * as S from "../../../../app/(isLogIn)/game/multi/waiting/waitingStyle"
+import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
 import Openvidu from "./Openvidu"
 const Page = () => {
   const [session, setSession] = useState(null)
