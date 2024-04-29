@@ -23,11 +23,11 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
 
+    // 메시지를 도착지까지 보내는 MessageSendingOperations
     // stomp와 같은 단순 메시징 프로토콜을 위한 프로토콜
     private final SimpMessageSendingOperations messagingTemplate;
     private final ChatRoomService chatRoomService;
 
-    //메시지를 도착지까지 보내는 MessageSendingOperations<Destination>
     public StompHandler(SimpMessageSendingOperations messagingTemplate, ChatRoomService chatRoomService) {
         this.messagingTemplate = messagingTemplate;
         this.chatRoomService = chatRoomService;
@@ -60,31 +60,15 @@ public class StompHandler implements ChannelInterceptor {
         // wrap 메서드를 이용해 message를 감싸면 stomp의 헤더에 직접 접근이 가능하다고 한다!
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         log.info("Current User SessionID : {}", headerAccessor.getSessionId());
-        // 보아하니 이 코드는 헤더에 유저 name과 roomUuid를 담는가보군
-
-        // websocket 연결 시 헤더의 jwt token 유효성 검증
-//        if(StompCommand.CONNECT == headerAccessor.getCommand()){
-//            final String authorization = jwtUtil.extractJwt(headerAccessor);
-//            jwtUtils.validateToken(authorization);
-//        }
-
-        //chatRoomService.joinRoom(roomId, headerAccessor.getSessionId());
-        //messagingTemplate.convertAndSend("/topic/public", username + " has joined the chat.");
     }
 
     // 소켓 연결 닫힐 때
-    // 한 사용자가 채팅창을 닫을 때
-
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         log.info("disconnect a web socket connection");
 
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         log.info("Current User SessionID : {}", headerAccessor.getSessionId());
-        //String username = (String) headerAccessor.getSessionAttributes().get("username");
-        //String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        //chatRoomManager.leaveRoom(roomId, headerAccessor.getSessionId());
-        //messagingTemplate.convertAndSend("/topic/public", username + " has left the chat.");
     }
 
 }
