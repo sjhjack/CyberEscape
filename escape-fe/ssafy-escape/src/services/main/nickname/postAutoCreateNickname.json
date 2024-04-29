@@ -1,0 +1,8 @@
+{
+  "status": 200,
+  "message": "닉네임 랜덤 생성 완료",
+  "data": {
+    "words": ["뒤로 걷는 타이슨"],
+    "seed": "hwanmoo.yong"
+  }
+}
