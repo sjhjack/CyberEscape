@@ -1,10 +1,33 @@
+"use client"
+import React, { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import getRoomList from "@/services/game/room/getRoomList"
 import Container from "@/components/common/Container"
-import * as S from "../../../../app/(isLogIn)/game/multi/room/roomStyle"
-import Room from "./RoomList"
+import RoomList from "./RoomList"
+import CustomPagination from "./CustomPagination"
+const Room = () => {
+  const [page, setPage] = useState<number>(1)
+  const { data: roomData, isLoading } = useQuery({
+    queryKey: ["roomList", page],
+    queryFn: () => getRoomList(),
+  })
 
-const Enter = ({ data }: any) => {
-  // 더미 데이터. 추후 방 데이터 받아올 예정
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage)
+  }
 
+  if (isLoading) {
+    return (
+      <Container
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        flexDirection="column"
+      >
+        로딩중입니다
+      </Container>
+    )
+  }
   return (
     <Container
       display="flex"
@@ -12,11 +35,27 @@ const Enter = ({ data }: any) => {
       alignItems="center"
       flexDirection="column"
     >
-      {data.map((room: RoomInfo) => (
-        <Room key={room.roomUuid} roomData={room} />
+      {roomData?.data.roomList.map((room) => (
+        <RoomList key={room.uuid} roomData={room} />
       ))}
+      <CustomPagination
+        pagination={
+          roomData
+            ? roomData.data.pagination
+            : {
+                totalRecordCount: 5,
+                totalPageCount: 2,
+                startPage: 1,
+                endPage: 2,
+                limitStart: 0,
+                existPrevPage: false,
+                existNextPage: false,
+              }
+        }
+        onPageChange={handlePageChange}
+      />
     </Container>
   )
 }
 
-export default Enter
+export default Room

@@ -1,15 +1,21 @@
-import Enter from "@/components/game/multi/room/Room"
-import { useQuery } from "@tanstack/react-query"
+import { getQueryClient } from "@/hooks/getQueryClient"
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query"
 import getRoomList from "@/services/game/room/getRoomList"
+import Room from "@/components/game/multi/room/Room"
+
 const Page = () => {
-  const { data: roomData, isLoading } = useQuery({
+  const queryClient = getQueryClient()
+  queryClient.prefetchQuery({
     queryKey: ["roomList"],
-    queryFn: getRoomList,
+    queryFn: () => getRoomList(),
   })
-  if (isLoading) {
-    return <div>로딩 중</div>
-  }
-  return <Enter data={roomData} />
+
+  const dehydratedState = dehydrate(queryClient)
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <Room />
+    </HydrationBoundary>
+  )
 }
 
 export default Page
