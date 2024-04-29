@@ -1,4 +1,4 @@
-import * as S from "@/app/(isLogIn)/game/multi/enter/enterStyle"
+import * as S from "@/app/(isLogIn)/game/multi/room/roomStyle"
 import Image from "next/image"
 interface RoomProps {
   roomData: RoomInfo
