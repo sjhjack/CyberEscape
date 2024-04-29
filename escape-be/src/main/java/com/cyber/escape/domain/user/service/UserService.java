@@ -38,4 +38,13 @@ public class UserService {
                 .relationship(relationship)
                 .build();
     }
+
+    public UserDto.CheckNicknameResponse checkNickname(UserDto.CheckNicknameRequest request) {
+        String nickname = request.getNickname();
+        boolean isAvailable = !userRepository.existsByNickname(nickname);
+        return UserDto.CheckNicknameResponse.builder()
+                .isAvailable(isAvailable)
+                .build();
+    }
+
 }

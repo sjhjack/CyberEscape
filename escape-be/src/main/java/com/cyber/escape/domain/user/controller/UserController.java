@@ -28,4 +28,10 @@ public class UserController {
         UserDto.SearchNicknameResponse response = userService.searchNickname(req);
         return new ApiResponse<>(HttpStatus.OK.value(),"닉네임 검색 완료", response);
     }
+
+    @PostMapping("/user/checkNickname")
+    public ApiResponse<UserDto.CheckNicknameResponse> checkNickname(@RequestBody UserDto.CheckNicknameRequest request) {
+        UserDto.CheckNicknameResponse response = userService.checkNickname(request);
+        return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 중복 검사 완료", response);
+    }
 }
