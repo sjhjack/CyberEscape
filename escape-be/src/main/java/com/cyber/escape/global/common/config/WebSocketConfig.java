@@ -24,9 +24,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		registry.setPathMatcher(new AntPathMatcher("."));	// url을 chat/room/3 -> chat.room.3으로 참조하기 위한 설정
 		// client에서 SEND 요청을 처리한다.
 		registry.setApplicationDestinationPrefixes("/pub");		// 메시지 발행 요청 prefix (메시지 전송)
-		// registry.enableSimpleBroker("/sub");	// 메시지 구독 요청 prefix
-		// Enable a STOMP broker relay and configure the destination prefixes supported by the message broker.
-	    //여기서 모든 사용자에게 브로드캐스팅할 수 있는 방법을 생각해보자
+
+		// Enable a STOMP broker relay and configure the destination prefixes supported by the message broker
 		registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
 	}
 
@@ -37,10 +36,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 				.setAllowedOriginPatterns("*");
 			//.withSockJS();
 	}
-
-
-//    @Override
-//    public void configureClientInboundChannel(ChannelRegistration registration){
-//        registration.interceptors(stompHandler);
-//    }
 }

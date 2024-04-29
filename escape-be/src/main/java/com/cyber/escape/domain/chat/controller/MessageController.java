@@ -29,7 +29,7 @@ public class MessageController {
     public void enterUser(@DestinationVariable String roomUuid, @Payload ChatMessageDto message){
         log.info("ENTER 입장합니다.");
         message.setMessage(message.getSender() + "님이 입장하셨습니다.");
-        rabbitTemplate.convertAndSend("chat.exchange", "chat.room.enter" + roomUuid, message);
+        rabbitTemplate.convertAndSend("chat.exchange", "chat.room.enter." + roomUuid, message);
         messageService.saveMessage(message);
     }
 
@@ -37,7 +37,7 @@ public class MessageController {
     @MessageMapping("chat.talk.{roomUuid}")
     public void talkUser(@DestinationVariable String roomUuid, @Payload ChatMessageDto message){
         log.info("TALK 합니다.");
-        rabbitTemplate.convertAndSend("chat.exchange", "chat.room.talk" + roomUuid, message);
+        rabbitTemplate.convertAndSend("chat.exchange", "chat.room.talk." + roomUuid, message);
         messageService.saveMessage(message);
     }
 
@@ -45,7 +45,7 @@ public class MessageController {
     @MessageMapping("chat.exit.{roomUuid}")
     public void exitUser(@DestinationVariable String roomUuid, @Payload ChatMessageDto message){
         message.setMessage(message.getSender() + "님이 퇴장하셨습니다.");
-        rabbitTemplate.convertAndSend("chat.exchange", "chat.room.exit" + roomUuid, message);
+        rabbitTemplate.convertAndSend("chat.exchange", "chat.room.exit." + roomUuid, message);
         messageService.saveMessage(message);
     }
 
