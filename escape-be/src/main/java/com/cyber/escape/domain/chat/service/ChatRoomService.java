@@ -27,7 +27,6 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ParticipantsRepository participantsRepository;
     private final ParticipantsRepositoryImpl participantsRepositoryImpl;
-
     private final UserRepository userRepository;
 
     public ChatRoomService(ChatRoomRepository chatRoomRepository, ParticipantsRepository participantsRepository, ParticipantsRepositoryImpl participantsRepositoryImpl, UserRepository userRepository) {
@@ -58,7 +57,10 @@ public class ChatRoomService {
             // 채팅방이 만들어져 있으면 똑같은 걸 준다.
             if(existChatRoom != null) {
                 log.info("chatRoom 정보 {}", existChatRoom.toString());
-                return new ChatRoomDto.CreateChatRoomResDto(existChatRoom.getUuid());
+                return ChatRoomDto.CreateChatRoomResDto
+                        .builder()
+                        .chatRoomUuid(existChatRoom.getUuid())
+                        .build();
             }
 
             // 처음 시작하는 채팅방이면 만든다.
@@ -87,7 +89,10 @@ public class ChatRoomService {
             //joinRoom(makedRoom.getUuid(), createdRoomUser.getNickname());
             //joinRoom(makedRoom.getUuid(), friendRoomUser.getNickname());
 
-            return new ChatRoomDto.CreateChatRoomResDto(makedRoom.getUuid());
+            return ChatRoomDto.CreateChatRoomResDto
+                            .builder()
+                            .chatRoomUuid(makedRoom.getUuid())
+                            .build();
     }
 
     public String exitRoom(ChatRoomDto.ExitChatRoomReqDto req) throws ChatException{
