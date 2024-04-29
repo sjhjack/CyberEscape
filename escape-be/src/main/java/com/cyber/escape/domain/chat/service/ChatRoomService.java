@@ -37,7 +37,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatRoomDto.ChatRoomResDto createChatRoom(ChatRoomDto.ChatRoomReqDto chatroomInfo){
+    public ChatRoomDto.CreateChatRoomResDto createChatRoom(ChatRoomDto.CreateChatRoomReqDto chatroomInfo){
 
             String userUuid = UserUtil.getUserUuid();
             String friendUuid = chatroomInfo.getUserUuid();
@@ -58,7 +58,7 @@ public class ChatRoomService {
             // 채팅방이 만들어져 있으면 똑같은 걸 준다.
             if(existChatRoom != null) {
                 log.info("chatRoom 정보 {}", existChatRoom.toString());
-                return new ChatRoomDto.ChatRoomResDto(existChatRoom.getUuid());
+                return new ChatRoomDto.CreateChatRoomResDto(existChatRoom.getUuid());
             }
 
             // 처음 시작하는 채팅방이면 만든다.
@@ -87,8 +87,14 @@ public class ChatRoomService {
             //joinRoom(makedRoom.getUuid(), createdRoomUser.getNickname());
             //joinRoom(makedRoom.getUuid(), friendRoomUser.getNickname());
 
-            return new ChatRoomDto.ChatRoomResDto(makedRoom.getUuid());
+            return new ChatRoomDto.CreateChatRoomResDto(makedRoom.getUuid());
     }
+
+    public String exitRoom(ChatRoomDto.ExitChatRoomReqDto req){
+        participantsRepositoryImpl.exitRoom(req.getChatRoomUuid(), req.getExitUserUuid());
+        return "";
+    }
+
 
     public void joinRoom(String roomUuid, String userNickname) {
         // map에 사용자 userUUid를 집어넣는다.

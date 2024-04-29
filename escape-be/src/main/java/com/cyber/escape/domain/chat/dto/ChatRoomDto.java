@@ -13,7 +13,7 @@ public class ChatRoomDto {
 
     @Getter
     @AllArgsConstructor
-    public static class ChatRoomReqDto{
+    public static class CreateChatRoomReqDto{
         private final String title;
         private final String nickname;
         // 같이 채팅하려는 친구 uuid
@@ -24,13 +24,20 @@ public class ChatRoomDto {
     @NoArgsConstructor(force = true)
 //    @AllArgsConstructor
     @Builder
-    public static class ChatRoomResDto{
+    public static class CreateChatRoomResDto{
         private String ChatRoomUuid;
 
         @QueryProjection
-        public ChatRoomResDto(String chatRoomUuid){
+        public CreateChatRoomResDto(String chatRoomUuid){
             this.ChatRoomUuid = chatRoomUuid;
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ExitChatRoomReqDto{
+        private final String chatRoomUuid;
+        private final String exitUserUuid;
     }
 
 }
