@@ -11,7 +11,7 @@
 //       API_PATH.MAIN.FRIEND.DELETE,
 //       { userUuid, friendUuid },
 //     )
-//     if (response.data.status !== 200) {
+//     if (response.data.status === 400) {
 //       throw new Error(`오류: ${response.data.message}`)
 //     }
 //     return null

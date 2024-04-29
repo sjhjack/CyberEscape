@@ -18,7 +18,7 @@
 //     const response = await api.post<PostFriendListBodyProps>(
 //       API_PATH.MAIN.FRIEND.LIST,
 //     )
-//     if (response.status !== 400) {
+//     if (response.status === 400) {
 //       throw new Error(`오류: ${response.data.message}`)
 //     }
 //     return response.data.data
