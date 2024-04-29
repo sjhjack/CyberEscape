@@ -13,12 +13,6 @@ import org.springframework.messaging.simp.config.ChannelRegistration;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-//    private final StompHandler stompHandler;
-//
-//    public WebSocketConfig(StompHandler stompHandler) {
-//        this.stompHandler = stompHandler;
-//    }
-
     @Override
 	public void configureMessageBroker(MessageBrokerRegistry registry){
 		registry.setPathMatcher(new AntPathMatcher("."));	// url을 chat/room/3 -> chat.room.3으로 참조하기 위한 설정
