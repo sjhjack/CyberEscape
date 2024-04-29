@@ -34,9 +34,6 @@ const ChattingBox = ({ session }: any) => {
     // sendMessage()
     setText("")
   }
-  useEffect(() => {
-    console.log(text)
-  }, [text])
   return (
     <MainContainer>
       <ChatBox>

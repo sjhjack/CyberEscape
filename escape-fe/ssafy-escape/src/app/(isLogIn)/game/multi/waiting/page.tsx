@@ -1,4 +1,4 @@
-import WaitingRoom from "@/components/waiting/Waiting"
+import WaitingRoom from "@/components/game/multi/waiting/Waiting"
 const Page = () => {
   return <WaitingRoom />
 }
