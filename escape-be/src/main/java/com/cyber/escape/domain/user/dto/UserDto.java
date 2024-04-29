@@ -33,6 +33,27 @@ public class UserDto {
         private String relationship;
     }
 
+    @Getter
+    @Builder
+    public static class CheckNicknameRequest {
+        private String nickname;
+        public CheckNicknameRequest(){
+        }
+        public CheckNicknameRequest(String nickname){
+            this.nickname = nickname;
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class CheckNicknameResponse {
+        private boolean isAvailable;
+        public CheckNicknameResponse(){
+        }
+        public CheckNicknameResponse(boolean isAvailable){
+            this.isAvailable = isAvailable;
+        }
+    }
 
 	@Builder
 	@Getter
