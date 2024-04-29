@@ -2,6 +2,8 @@ import React, { useEffect } from "react"
 import { useRouter } from "next/router"
 import styled from "styled-components"
 
+// for merge request
+
 const ExitGame = ({ href, children }: any) => {
   //   const router = useRouter()
 

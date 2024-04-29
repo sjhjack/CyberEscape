@@ -2,6 +2,8 @@ import { useThree } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
+// for merge request
+
 const CameraControl = () => {
   const { camera } = useThree()
   const positionRef = useRef(new THREE.Vector3(4, 3, -2))

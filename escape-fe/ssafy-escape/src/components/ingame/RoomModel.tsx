@@ -2,6 +2,8 @@ import { useEffect } from "react"
 import { useGLTF } from "@react-three/drei"
 import { Mesh } from "three"
 
+// for merge request
+
 interface RoomProps {
   onLoaded: (isLoaded: boolean) => void
 }

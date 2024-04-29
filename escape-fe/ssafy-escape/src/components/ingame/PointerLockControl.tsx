@@ -2,6 +2,8 @@ import { useFrame, useThree } from "@react-three/fiber"
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { PointerLockControls as PointerLockControlsImpl } from "three/examples/jsm/controls/PointerLockControls.js"
 
+// for merge request
+
 interface CustomWindow extends Window {
   pointerLockControls?: PointerLockControlsImpl
 }
