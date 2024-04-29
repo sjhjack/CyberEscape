@@ -3,33 +3,45 @@
 import { styled } from "styled-components"
 import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
+import { useQuery } from "@tanstack/react-query"
+import postNotificationFriend from "@/services/main/friends/postNotificationFriend"
 // import postFriendRequest from "@/services/main/friends/postFriendAddition"
 
-// 받은 친구 요청 목록 조회(추후 api 생기면 연결 필요)
+// 받은 친구 요청 목록 조회
 const FriendRequestActions = () => {
-//   const handleRequest = async (id: string) => {
-//     console.log("친구 수락 완료")
-//     await postFriendRequest(myid, id)
-//   }
+  const { data: requestData } = useQuery({
+    queryKey: ["friendRequestList"],
+    queryFn: () => postNotificationFriend(),
+  })
+  // myid는 현재 로그인된 나의 uuid
+  //   const handleRequest = async (requestUserUuid: string) => {
+  //     console.log("친구 수락 완료")
+  //     await postFriendRequest(myid, requestUserUuid)
+  //   }
+
   return (
     <div>
       <Text>받은 친구 요청</Text>
-      <SubContainer>
-        <ProfileBox>
-          <PersonIcon sx={{ fontSize: "35px" }} />
-          <div>이싸피</div>
-        </ProfileBox>
-        <ButtonBox>
-          <Button
-            text="수락"
-            theme="success"
-            width="60px"
-            // onClick={() => handleRequest(id)}
-          />
-          <Button text="거절" theme="fail" width="60px" />
-          {/* 거절 누르면 안보이도록 처리 */}
-        </ButtonBox>
-      </SubContainer>
+      {requestData?.data.map((user) => (
+        <div key={user.requestUserUuid}>
+          <SubContainer>
+            <ProfileBox>
+              <PersonIcon sx={{ fontSize: "35px" }} />
+              <div>{user.nickname}</div>
+            </ProfileBox>
+            <ButtonBox>
+              <Button
+                text="수락"
+                theme="success"
+                width="60px"
+                // onClick={() => handleRequest(user.requestUserUuid)}
+              />
+              <Button text="거절" theme="fail" width="60px" />
+              {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}
+            </ButtonBox>
+          </SubContainer>
+        </div>
+      ))}
     </div>
   )
 }
