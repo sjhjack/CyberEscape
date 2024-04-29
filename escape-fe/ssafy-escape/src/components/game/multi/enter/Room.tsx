@@ -1,10 +1,10 @@
-import * as S from "./enterStyle"
+import * as S from "@/app/(isLogIn)/game/multi/enter/enterStyle"
 import Image from "next/image"
 interface RoomProps {
   roomData: RoomInfo
 }
 
-const Page = ({ roomData }: RoomProps) => {
+const Room = ({ roomData }: RoomProps) => {
   return (
     <S.RoomBox>
       <Image
@@ -21,4 +21,4 @@ const Page = ({ roomData }: RoomProps) => {
   )
 }
 
-export default Page
+export default Room
