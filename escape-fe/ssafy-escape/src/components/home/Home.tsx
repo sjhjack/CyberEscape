@@ -7,7 +7,7 @@ import Login from "../login/Login"
 
 const Home = () => {
   // const { isLogin } = useUserStore()
-//   const router = useRouter()
+  //   const router = useRouter()
   const [isStartClicked, setIsStartClicked] = useState<boolean>(false)
   const onMoveClick = () => {
     // if (isLogin) {
