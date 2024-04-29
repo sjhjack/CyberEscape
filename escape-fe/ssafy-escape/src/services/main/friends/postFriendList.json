@@ -1,0 +1,66 @@
+{
+  "status": 200,
+  "message": "친구 목록 불러오기 성공",
+  "data": [
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "이싸피",
+      "friendUuid": "Leessafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    },
+    {
+      "friendNickname": "김싸피",
+      "friendUuid": "kimssafy"
+    }
+  ]
+}
