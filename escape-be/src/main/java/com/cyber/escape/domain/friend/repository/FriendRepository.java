@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, String> {
-    @Query(value = "SELECT * " +
+    @Query(value = "SELECT f.* " +
         "FROM friend f " +
         "JOIN user u ON f.from_user_id = u.id " +
         "JOIN user s ON f.to_user_id = s.id " +
