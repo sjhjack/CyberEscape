@@ -1,17 +1,15 @@
 // import API_PATH from "@/constants/path"
 // import api from "/api"
 
-// interface DeleteLogoutBodyProps {
-//   status: number
-//   message: string
-//   data: string
-// }
-
-// // 로그아웃
-// const deleteLogout = async (): Promise<null> => {
+// // 친구 삭제
+// const deleteFriend = async (
+//   userUuid: string,
+//   friendUuid: string,
+// ): Promise<null> => {
 //   try {
-//     const response = await api.delete<DeleteLogoutBodyProps>(
-//       API_PATH.AUTH.LOGOUT,
+//     const response = await api.delete<NullBodyProps>(
+//       API_PATH.MAIN.FRIEND.DELETE,
+//       { userUuid, friendUuid },
 //     )
 //     if (response.data.status === 400) {
 //       throw new Error(`오류: ${response.data.message}`)
@@ -23,4 +21,4 @@
 //   }
 // }
 
-// export default deleteLogout
+// export default deleteFriend

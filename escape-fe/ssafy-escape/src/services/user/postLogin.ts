@@ -1,13 +1,13 @@
 // import API_PATH from "@/constants/path"
 // import api from "/api"
 
-// interface postLoginBodyProps {
+// interface PostLoginBodyProps {
 //   status: number
 //   message: string
-//   data: postLoginDataProps
+//   data: PostLoginDataProps
 // }
 
-// interface postLoginDataProps {
+// interface PostLoginDataProps {
 //   loginId: string
 //   grantType: string
 //   accessToken: string
@@ -18,9 +18,9 @@
 // const postLogin = async (
 //   loginId: string,
 //   password: string,
-// ): Promise<postLoginDataProps> => {
+// ): Promise<PostLoginDataProps> => {
 //   try {
-//     const response = await api.post<postLoginBodyProps>(API_PATH.AUTH.LOGIN, {
+//     const response = await api.post<PostLoginBodyProps>(API_PATH.AUTH.LOGIN, {
 //       loginId,
 //       password,
 //     })

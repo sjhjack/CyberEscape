@@ -1,6 +1,6 @@
-import MainHeader from "@/components/common/MainHeader"
+import MainHeader from "@/components/common/HeaderNav"
 
-const LoginLayout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <MainHeader />
@@ -9,4 +9,4 @@ const LoginLayout = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export default LoginLayout
+export default Layout

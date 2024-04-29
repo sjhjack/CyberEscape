@@ -1,15 +1,10 @@
 // import API_PATH from "@/constants/path"
 // import api from "/api"
 
-// interface postSignUpBodyProps {
-//   status: number
-//   message: string
-//   data: null
-// }
 // // 회원가입
 // const postSignUp = async (loginId: string, password: string): Promise<null> => {
 //   try {
-//     const response = await api.post<postSignUpBodyProps>(API_PATH.AUTH.SIGNUP, {
+//     const response = await api.post<NullBodyProps>(API_PATH.AUTH.SIGNUP, {
 //       loginId,
 //       password,
 //     })
