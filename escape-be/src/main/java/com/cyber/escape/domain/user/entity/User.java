@@ -21,8 +21,8 @@ public class User extends BaseEntity {
 
 	private int point;
 
-	@Column(name = "character_id")
-	private Long characterId;
+//	@Column(name = "character_id")
+//	private Long characterId;
 
 	private boolean withdrawal;
 }

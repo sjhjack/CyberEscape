@@ -15,12 +15,6 @@ public class UserDto {
 
     @Getter
     @Builder
-    public static class ChangeNickname{
-        private String nickname;
-    }
-
-    @Getter
-    @Builder
     public static class SearchNicknameRequest{
         private String fromUserUuid;
         private String nickname;
@@ -55,6 +49,14 @@ public class UserDto {
         }
     }
 
+    @Getter
+    @Builder
+    public static class UpdateNicknameRequest{
+        private String userUuid;
+        private String newNickname;
+    }
+
+
 	@Builder
 	@Getter
 	public static class Response {
@@ -70,7 +72,7 @@ public class UserDto {
 				.loginId(user.getLoginId())
 				.nickname(user.getNickname())
 				.point(user.getPoint())
-				.characterId(user.getCharacterId())
+//				.characterId(user.getCharacterId())
 				// .withdrawal(user.get)
 				.build();
 		}

@@ -6,10 +6,7 @@ import com.cyber.escape.domain.user.service.UserService;
 import com.cyber.escape.global.common.dto.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -29,9 +26,15 @@ public class UserController {
         return new ApiResponse<>(HttpStatus.OK.value(),"닉네임 검색 완료", response);
     }
 
-    @PostMapping("/user/checkNickname")
+    @PostMapping("/user/nickname/duplication")
     public ApiResponse<UserDto.CheckNicknameResponse> checkNickname(@RequestBody UserDto.CheckNicknameRequest request) {
         UserDto.CheckNicknameResponse response = userService.checkNickname(request);
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 중복 검사 완료", response);
+    }
+
+    @PatchMapping("/user/change")
+    public ApiResponse<String> changeNickname(@RequestBody UserDto.UpdateNicknameRequest req) {
+        String newNickname = userService.changeNickname(req);
+        return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 변경 완료", newNickname);
     }
 }

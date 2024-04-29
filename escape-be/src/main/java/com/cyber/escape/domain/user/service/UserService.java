@@ -47,4 +47,28 @@ public class UserService {
                 .build();
     }
 
+    public String changeNickname(UserDto.UpdateNicknameRequest dto){
+        User user = userRepository.findUserByUuid(dto.getUserUuid())
+                .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
+
+        // 새로운 닉네임 중복 검사
+        if (userRepository.existsByNickname(dto.getNewNickname())) {
+            throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+        }
+        // 새로운 닉네임의 길이를 한글 20자로 제한
+        String newNickname = dto.getNewNickname().substring(0, Math.min(dto.getNewNickname().length(), 20));
+
+        // 닉네임 변경
+        user = user.builder()
+                .loginId(user.getLoginId())
+                .password(user.getPassword())
+                .nickname(newNickname)
+                .point(user.getPoint())
+                .build();
+
+        userRepository.save(user);
+
+        return newNickname;
+    }
+
 }
