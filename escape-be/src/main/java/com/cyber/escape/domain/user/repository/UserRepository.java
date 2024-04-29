@@ -14,6 +14,7 @@ import com.cyber.escape.domain.user.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findUserByUuid(String uuid);
 	Optional<User> findUserById(Long id);
+	Optional<User> findUserByNickname(String nickname);
 
 	@Query("SELECT u FROM User u WHERE u.uuid IN :uuids")
 	Optional<List<User>> findByUuids(@Param("uuids") List<String> uuids);
