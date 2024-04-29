@@ -6,8 +6,15 @@ import * as S from "@/app/(isLogIn)/game/multi/mulitStyle"
 const Multi = () => {
   const router = useRouter()
   return (
-    <Container>
-      <h1>멀티 모드</h1>
+    <Container
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      flexDirection="column"
+    >
+      <S.Title>멀티 모드</S.Title>
+      <div></div>
+      <div></div>
       <S.ImageContainer>
         <S.MenuContainer
           onClick={() => {
@@ -45,6 +52,9 @@ const Multi = () => {
           <S.MenuText>랜덤 매칭</S.MenuText>
         </S.MenuContainer>
       </S.ImageContainer>
+      <div></div>
+      <div></div>
+      <div></div>
     </Container>
   )
 }

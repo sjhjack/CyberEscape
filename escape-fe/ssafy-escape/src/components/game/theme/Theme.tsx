@@ -10,7 +10,7 @@ const Theme = () => {
   return (
     <Container
       display="flex"
-      justifyContent="center"
+      justifyContent="space-between"
       flexDirection="column"
       alignItems="center"
     >

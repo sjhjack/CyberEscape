@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import Image from "next/image"
-
+export const Title = styled.h1`
+  text-align: center;
+`
 export const ImageContainer = styled.div`
   display: flex;
   flex-direction: row;
