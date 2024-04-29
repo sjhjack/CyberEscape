@@ -1,12 +1,6 @@
 "use client"
 import styled from "styled-components"
 
-export const RoomContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`
 export const RoomBox = styled.div`
   background-color: #d7e5d5;
   width: 80%;
@@ -21,4 +15,6 @@ export const Menu = styled.div`
 `
 export const Title = styled.h3`
   margin-left: 2%;
+  width: 25vw;
+  max-height: 10vh;
 `

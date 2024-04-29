@@ -16,7 +16,22 @@ const API_PATH = {
     RANKING: {
       LIST: "/rankings",
       MY_RANK: "/rank/myrank",
-      UPDATE_RANK: "/rank/update"
+      UPDATE_RANK: "/rank/update",
+    },
+  },
+  GAME: {
+    MULTI: {
+      ROOM: {
+        LIST: "/room",
+        INVITE: "room/invite",
+        ACCEPT: "room/invite",
+        JOIN: "room/join",
+        EXIT: "room/exit",
+        KICK: "room/exit",
+        SETTING: "room/eixt",
+        CHANGE_HOST: "room/change/host",
+        START: "room/start",
+      },
     },
   },
 }

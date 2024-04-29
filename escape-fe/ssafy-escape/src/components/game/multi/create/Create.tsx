@@ -22,40 +22,43 @@ const Create = () => {
   }
 
   return (
-    <Container>
-      <S.Contain>
-        <S.CreateContainer>
+    <Container
+      display="flex"
+      justifyContent="space-evenly"
+      alignItems="center"
+      flexDirection="column"
+    >
+      <S.CreateContainer>
+        <S.MenuBox>
+          <S.Menu>방 제목</S.Menu>
+          <Input width="250px" onChange={handleTitle} />
+        </S.MenuBox>
+        <S.MenuBox>
+          <S.Menu>테마</S.Menu>
+          <ThemeCarousel
+            selectTheme={selectTheme}
+            width={300}
+            height={220}
+            navigation={false}
+            pagination={true}
+          />
+        </S.MenuBox>
+        <S.MenuBox>
+          <S.Menu>비공개</S.Menu>
+          <Checkbox
+            checked={secretMode}
+            onChange={() => {
+              handleSecretMode(secretMode)
+            }}
+          />
+        </S.MenuBox>
+        {secretMode && (
           <S.MenuBox>
-            <S.Menu>방 제목</S.Menu>
-            <Input width="250px" onChange={handleTitle} />
+            <S.Menu>비밀번호</S.Menu>
+            <Input width="250px" onChange={handlePassword} />
           </S.MenuBox>
-          <S.CarouselBox>
-            <S.Menu>테마</S.Menu>
-            <ThemeCarousel
-              selectTheme={selectTheme}
-              width={300}
-              height={220}
-              navigation={false}
-              pagination={true}
-            />
-          </S.CarouselBox>
-          <S.MenuBox>
-            <S.Menu>비공개</S.Menu>
-            <Checkbox
-              checked={secretMode}
-              onChange={() => {
-                handleSecretMode(secretMode)
-              }}
-            />
-          </S.MenuBox>
-          {secretMode && (
-            <S.MenuBox>
-              <S.Menu>비밀번호</S.Menu>
-              <Input width="250px" onChange={handlePassword} />
-            </S.MenuBox>
-          )}
-        </S.CreateContainer>
-      </S.Contain>
+        )}
+      </S.CreateContainer>
       <S.ButtonPlaced>
         <Button theme="success" text="방 만들기" width="200" />
       </S.ButtonPlaced>

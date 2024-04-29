@@ -31,12 +31,15 @@ const Enter = () => {
     },
   ]
   return (
-    <Container>
-      <S.RoomContainer>
-        {data.map((room: RoomInfo) => (
-          <Room key={room.roomUuid} roomData={room} />
-        ))}
-      </S.RoomContainer>
+    <Container
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      flexDirection="column"
+    >
+      {data.map((room: RoomInfo) => (
+        <Room key={room.roomUuid} roomData={room} />
+      ))}
     </Container>
   )
 }

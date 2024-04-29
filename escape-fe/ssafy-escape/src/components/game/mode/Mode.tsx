@@ -4,10 +4,15 @@ import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
 import * as S from "@/app/(isLogIn)/game/mode/modeStyle"
 import Image from "next/image"
-const Page = () => {
+const Mode = () => {
   const router = useRouter()
   return (
-    <Container>
+    <Container
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      flexDirection="column"
+    >
       <h1>모드 선택</h1>
       <S.MainContent>
         <S.SelectMode
@@ -40,4 +45,4 @@ const Page = () => {
     </Container>
   )
 }
-export default Page
+export default Mode
