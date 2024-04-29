@@ -18,6 +18,11 @@ const API_PATH = {
       MY_RANK: "/rank/myrank",
       UPDATE_RANK: "/rank/update"
     },
+    NICKNAME: {
+      DUPLICATION: "/user/nickname/duplication",
+      AUTO_CREATE: "/user/nickname",
+      CHANGE: "/user/change",
+    },
   },
 }
 
