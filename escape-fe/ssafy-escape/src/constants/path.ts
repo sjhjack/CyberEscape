@@ -33,6 +33,11 @@ const API_PATH = {
         START: "/room/start",
       },
     },
+    NICKNAME: {
+      DUPLICATION: "/user/nickname/duplication",
+      AUTO_CREATE: "/user/nickname",
+      CHANGE: "/user/change",
+    },
   },
 }
 
