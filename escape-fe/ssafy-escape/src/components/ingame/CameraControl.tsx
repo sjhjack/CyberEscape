@@ -2,9 +2,7 @@ import { useThree } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
-// for merge request
-
-const CameraControl = () => {
+const CameraKeyControls = () => {
   const { camera } = useThree()
   const positionRef = useRef(new THREE.Vector3(4, 3, -2))
   const [position, setPosition] = useState(new THREE.Vector3(4, 3, -2))
@@ -14,12 +12,6 @@ const CameraControl = () => {
     left: false,
     right: false,
   })
-
-  useEffect(() => {
-    camera.near = 0.1
-    camera.far = 1000000
-    camera.updateProjectionMatrix()
-  }, [camera])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -83,19 +75,17 @@ const CameraControl = () => {
       let newPosition = position.clone()
       positionRef.current = newPosition
 
-      const moveDistance = 10
-
       if (moveDirection.forward) {
-        newPosition.addScaledVector(direction, moveDistance)
+        newPosition.addScaledVector(direction, 0.05)
       }
       if (moveDirection.backward) {
-        newPosition.addScaledVector(direction, -5)
+        newPosition.addScaledVector(direction, -0.05)
       }
       if (moveDirection.left) {
-        newPosition.addScaledVector(left, 5)
+        newPosition.addScaledVector(left, 0.05)
       }
       if (moveDirection.right) {
-        newPosition.addScaledVector(left, -5)
+        newPosition.addScaledVector(left, -0.05)
       }
 
       newPosition.y = position.y
@@ -123,4 +113,4 @@ const CameraControl = () => {
   return null
 }
 
-export default CameraControl
+export default CameraKeyControls
