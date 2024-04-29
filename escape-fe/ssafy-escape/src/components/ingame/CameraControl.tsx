@@ -14,9 +14,8 @@ const CameraControl = () => {
   })
 
   useEffect(() => {
-    // Set near and far clipping planes
-    camera.near = 0.1 // Adjust as needed
-    camera.far = 1000000 // Adjust as needed
+    camera.near = 0.1
+    camera.far = 1000000
     camera.updateProjectionMatrix()
   }, [camera])
 
@@ -82,8 +81,7 @@ const CameraControl = () => {
       let newPosition = position.clone()
       positionRef.current = newPosition
 
-      // Increase the distance moved when moving forward
-      const moveDistance = 10 // Adjust this value to your preference
+      const moveDistance = 10
 
       if (moveDirection.forward) {
         newPosition.addScaledVector(direction, moveDistance)
