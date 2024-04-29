@@ -66,22 +66,30 @@ public class ParticipantsRepositoryImpl {
         QChatRoom chatRoom = QChatRoom.chatRoom;
 
         // 채팅방에서 현재 남아있는 유저가 몇 명인지를 판단한다.
-//        Long remainUserCount =
-//                jpaQueryFactory
-//                .select(participants.count())
-//                        .where(participants.chatRoom.uuid.eq(roomUuid)
-//                                .and(participants.deleteFlag.eq(false)))
-//                        .fetchOne();
+        long remainUserCount =
+                jpaQueryFactory
+                .selectFrom(participants)
+                        .join(chatRoom).on(chatRoom.uuid.eq(roomUuid))
+                        .where(participants.deleteFlag.eq(false))
+                        .fetch().stream().count();
 
-        // 채팅방에서 사용자를 삭제한다.
-        //if(remainUserCount <= 1){
+        log.info("Active : {}", remainUserCount);
+
+        // 한 명 남았는데, 한 명도 나가려고 한다면
+        if(remainUserCount <= 1){
+            jpaQueryFactory
+                    .delete(chatRoom)
+                    .where(chatRoom.uuid.eq(roomUuid))
+                    .execute();
+        }
+        else{
+            // 채팅방에서 사용자의 상태를 변경한다.
             jpaQueryFactory
                     .update(participants)
                     .set(participants.deleteFlag, true)
                     .where(participants.chatRoom.uuid.eq(roomUuid)
                             .and(participants.participant.uuid.eq(exitUuid)))
                     .execute();
-        //}
-
+        }
     }
 }
