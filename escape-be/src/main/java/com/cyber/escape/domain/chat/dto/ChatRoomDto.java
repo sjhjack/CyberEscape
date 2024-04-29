@@ -23,11 +23,11 @@ public class ChatRoomDto {
     @Getter
     @NoArgsConstructor(force = true)
 //    @AllArgsConstructor
-    @Builder
     public static class CreateChatRoomResDto{
         private String ChatRoomUuid;
 
         @QueryProjection
+        @Builder
         public CreateChatRoomResDto(String chatRoomUuid){
             this.ChatRoomUuid = chatRoomUuid;
         }
