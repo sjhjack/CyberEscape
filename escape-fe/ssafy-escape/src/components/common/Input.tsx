@@ -2,6 +2,7 @@ import styled from "styled-components"
 
 interface InputProps {
   $width?: string
+  $textIndent?: string
 }
 
 const Input = styled.input<InputProps>`
@@ -9,7 +10,7 @@ const Input = styled.input<InputProps>`
   padding: 10px;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
-  text-indent: 5px;
+  text-indent: ${(props) => props.$textIndent || "5px"};
   transition:
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
