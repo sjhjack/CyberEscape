@@ -14,6 +14,8 @@ import {
   dehydrate,
 } from "@tanstack/react-query"
 import postFriendList from "@/services/main/friends/postFriendList"
+import NotificationModal from "../notification/NotificationModal"
+import postInvitedList from "@/services/notification/postInvitedList"
 
 interface HeaderProps {
   Icon: React.ElementType
@@ -25,8 +27,14 @@ const MainHeader = () => {
   const router = useRouter()
   // const { logout } = useUserStore()
   const [friendModalopen, setfriendModalOpen] = useState<boolean>(false)
+  const [notificationModalopen, setNotificationModalopen] =
+    useState<boolean>(false)
+  
   const handleFriendModalClose = () => {
     setfriendModalOpen(false)
+  }
+  const handleNotificationModalClose = () => {
+    setNotificationModalopen(false)
   }
 
   const queryClient = new QueryClient()
@@ -34,7 +42,11 @@ const MainHeader = () => {
     queryClient.prefetchQuery({
       queryKey: ["friendList"],
       queryFn: postFriendList,
-    })
+    }),
+      queryClient.prefetchQuery({
+        queryKey: ["invitedList"],
+        queryFn: postInvitedList,
+      })
   }, [])
 
   // // 로그아웃 버튼 클릭 시
@@ -71,7 +83,7 @@ const MainHeader = () => {
       Icon: NotificationsNoneIcon,
       text: "알림",
       onClick: () => {
-        // 알림 모달 띄우기
+        setNotificationModalopen(true)
       },
     },
   ]
@@ -111,6 +123,11 @@ const MainHeader = () => {
           onClose={handleFriendModalClose}
         />
       </HydrationBoundary>
+
+      <NotificationModal
+        open={notificationModalopen}
+        onClose={handleNotificationModalClose}
+      />
     </div>
   )
 }
