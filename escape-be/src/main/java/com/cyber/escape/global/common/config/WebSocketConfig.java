@@ -25,14 +25,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		// client에서 SEND 요청을 처리한다.
 		registry.setApplicationDestinationPrefixes("/pub");		// 메시지 발행 요청 prefix (메시지 전송)
 		// registry.enableSimpleBroker("/sub");	// 메시지 구독 요청 prefix
-
-		/*
-			 /topic : 암시적으로 1:N 전파를 의미한다.
-			 /queue : 암시적으로 1:1 전파를 의미한다.
-			 /exchange : 메시지가 전달될 대상을 나타냅니다.
-			 /amq/queue :
-		*/
-
 		// Enable a STOMP broker relay and configure the destination prefixes supported by the message broker.
 	    //여기서 모든 사용자에게 브로드캐스팅할 수 있는 방법을 생각해보자
 		registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
@@ -42,8 +34,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry){
 		registry.addEndpoint("/ws-stomp")
-			.setAllowedOrigins("*");
-		// .withSockJS();	// 이거 있으면 ws://localhost:8080/api/ws-stomp 접속 안됨.. 왜지?
+				.setAllowedOriginPatterns("*");
+			//.withSockJS();
 	}
 
 
