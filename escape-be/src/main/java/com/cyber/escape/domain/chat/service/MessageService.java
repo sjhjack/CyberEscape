@@ -17,7 +17,6 @@ public class MessageService {
     //private final MessageRepositoryImpl messageRepositoryImpl;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
-    // import 시 순환참조 에러 발생
     private final MessageRepository messageRepository;
 
     public MessageService(ChatRoomRepository chatRoomRepository, UserRepository userRepository, MessageRepository messageRepository) {
@@ -28,8 +27,6 @@ public class MessageService {
     }
 
     public void saveMessage(ChatMessageDto messageDto){
-        //messageRepositoryImpl.saveMessage(messageDto);
-
         //
         log.info("현재 들어오는 채팅방 uuid : {}", messageDto.getRoomUuid());
         ChatMessage message = ChatMessage.builder()

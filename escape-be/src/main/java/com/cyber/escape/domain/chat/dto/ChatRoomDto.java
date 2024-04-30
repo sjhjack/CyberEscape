@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ChatRoomDto {
 
@@ -38,6 +40,19 @@ public class ChatRoomDto {
     public static class ExitChatRoomReqDto{
         private final String chatRoomUuid;
         private final String exitUserUuid;
+    }
+
+    @Getter
+    public static class MyChatListDto{
+        private final String chatRoomUuid;
+        private final List<ParticipantDto.ParticipantsDto> participantsList;
+
+        @QueryProjection
+        public MyChatListDto(String chatRoomUuid, List<ParticipantDto.ParticipantsDto> participantsList){
+            this.chatRoomUuid = chatRoomUuid;
+            this.participantsList = participantsList;
+        }
+
     }
 
 }

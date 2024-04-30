@@ -104,6 +104,10 @@ public class ChatRoomService {
         return "";
     }
 
+    public List<ChatRoomDto.MyChatListDto> getMyChatList(){
+        String userUuid = UserUtil.getUserUuid();
+        return participantsRepositoryImpl.getMyChatList(userUuid);
+    }
 
     public void joinRoom(String roomUuid, String userNickname) {
         // map에 사용자 userUUid를 집어넣는다.
