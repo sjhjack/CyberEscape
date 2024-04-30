@@ -1,21 +1,24 @@
 "use client"
+
 import { useEffect, useState } from "react"
 import MainModal from "@/components/common/MainModal"
 import CountdownTimer from "@/components/ingame/CountdownTimer"
 import Chat from "@/components/ingame/Chat"
 import ExitGame from "@/components/ingame/ExitGame"
 import ProgressBar from "@/components/ingame/ProgressBar"
-import type { NextPage } from "next"
 import Image from "next/image"
 import * as S from "./ingameStyle"
 import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
+import StartingCountDown from "@/components/ingame/StartingCountDown"
+import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
+import useIngameThemeStore from "@/stores/IngameTheme"
 
-const Page: NextPage = () => {
+const Page = () => {
   const [showModal, setShowModal] = useState(false)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
-  const [countdown, setCountdown] = useState(3)
-
+  const { selectedTheme } = useIngameThemeStore()
+  
   const handleModalClose = () => {
     setShowModal(false)
   }
@@ -27,30 +30,33 @@ const Page: NextPage = () => {
     }
   }
 
+  const handleGameStart = () => {
+    setIsGameStart(true)
+  }
+
   useEffect(() => {
     document.addEventListener("click", onStartClick)
   }, [])
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout
-    if (isModelLoaded && countdown > 0) {
-      intervalId = setInterval(() => {
-        setCountdown((prevCount) => prevCount - 1)
-      }, 1000)
-    } else if (countdown === 0) {
-      setIsGameStart(true)
-    }
-    return () => clearInterval(intervalId)
-  }, [isModelLoaded, countdown])
-
   return (
     <S.Container>
-      <SpaceTheme
-        setIsModelLoaded={setIsModelLoaded}
-        isGameStart={isGameStart}
-      />
-      {isModelLoaded && countdown > 0 ? (
-        <S.CountdownBox>{countdown}</S.CountdownBox>
+      {selectedTheme === "space" ? (
+        <SpaceTheme
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : selectedTheme === "horror" ? (
+        <HorrorTheme
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : null}
+
+      {isModelLoaded ? (
+        <StartingCountDown
+          isModelLoaded={isModelLoaded}
+          onFinish={handleGameStart}
+        />
       ) : null}
       {showModal && (
         <MainModal
@@ -60,7 +66,7 @@ const Page: NextPage = () => {
           onClose={handleModalClose}
         />
       )}
-      {countdown <= 0 ? <CountdownTimer /> : null}
+      {isGameStart ? <CountdownTimer /> : null}
       <Chat />
       <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
       <ExitGame>

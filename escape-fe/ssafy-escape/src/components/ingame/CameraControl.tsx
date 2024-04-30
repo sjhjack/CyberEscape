@@ -1,11 +1,20 @@
-import { useThree } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
+import { useThree } from "@react-three/fiber"
 import * as THREE from "three"
 
-const CameraControl = () => {
+interface CameraControlProps {
+  startPosition: { x: number; y: number; z: number }
+  movingSpeed: number // 절댓값으로 넣어야 함
+}
+// 버튼키로 카메라 이동(시작위치(타겟 포지션), 속도 props 필요)
+const CameraControl = ({ startPosition, movingSpeed }: CameraControlProps) => {
   const { camera } = useThree()
-  const positionRef = useRef(new THREE.Vector3(4, 3, -2))
-  const [position, setPosition] = useState(new THREE.Vector3(4, 3, -2))
+  const positionRef = useRef(
+    new THREE.Vector3(startPosition.x, startPosition.y, startPosition.z),
+  )
+  const [position, setPosition] = useState(
+    new THREE.Vector3(startPosition.x, startPosition.y, startPosition.z),
+  )
   const [moveDirection, setMoveDirection] = useState({
     forward: false,
     backward: false,
@@ -84,16 +93,16 @@ const CameraControl = () => {
       const moveDistance = 10
 
       if (moveDirection.forward) {
-        newPosition.addScaledVector(direction, moveDistance)
+        newPosition.addScaledVector(direction, movingSpeed)
       }
       if (moveDirection.backward) {
-        newPosition.addScaledVector(direction, -5)
+        newPosition.addScaledVector(direction, -movingSpeed)
       }
       if (moveDirection.left) {
-        newPosition.addScaledVector(left, 5)
+        newPosition.addScaledVector(left, movingSpeed)
       }
       if (moveDirection.right) {
-        newPosition.addScaledVector(left, -5)
+        newPosition.addScaledVector(left, -movingSpeed)
       }
 
       newPosition.y = position.y
