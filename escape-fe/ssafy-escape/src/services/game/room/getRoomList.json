@@ -11,7 +11,7 @@
         "userId": 1,
         "uuid": "8b91e093-269a-4e28-8e0e-40bc0a889133",
         "nickname": "asdf",
-        "hasPassword": true
+        "hasPassword": false
       },
       {
         "title": "제목2",
@@ -21,7 +21,7 @@
         "userId": 2,
         "uuid": "a495f8ae-207d-4f50-821a-cdf1ca03d082",
         "nickname": "qwer",
-        "hasPassword": true
+        "hasPassword": false
       },
       {
         "title": "제목3",
@@ -31,7 +31,7 @@
         "userId": 3,
         "uuid": "1206c741-7668-49b8-89ea-db4cf20dd98c",
         "nickname": "zxcv",
-        "hasPassword": true
+        "hasPassword": false
       },
       {
         "title": "제목4",
@@ -41,7 +41,7 @@
         "userId": 4,
         "uuid": "77a8a4d6-f4e0-4f8a-8909-f482bd5b4fcb",
         "nickname": "poiu",
-        "hasPassword": true
+        "hasPassword": false
       }
     ],
     "pagination": {

@@ -1,17 +1,17 @@
 "use client"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import * as S from "@/app/(isLogIn)/game/multi/room/roomStyle"
 import Image from "next/image"
 import RoomPasswordModal from "./RoomPasswordModal"
 import { useRouter } from "next/navigation"
 const Room = ({ roomData }: any) => {
   const [showModal, setShowModal] = useState<boolean>(false)
+  const router = useRouter()
+  const thema = ["공포", "싸피", "우주"]
   const handleModalClose = (): void => {
     setShowModal(false)
   }
-  const router = useRouter()
-  const thema = ["공포", "싸피", "우주"]
-  const enterRoom = () => {
+  const enterRoom = (): void => {
     if (roomData.hasPassword) {
       setShowModal(true)
     } else {
@@ -21,7 +21,7 @@ const Room = ({ roomData }: any) => {
   }
   return (
     <S.RoomBox onClick={enterRoom}>
-      <RoomPasswordModal open={showModal} onClose={handleModalClose} />
+      <RoomPasswordModal open={showModal} handleClose={handleModalClose} />
       <Image
         src={`/image/${thema[roomData.themaId]}.png`}
         alt=""

@@ -4,7 +4,8 @@ import Container from "@/components/common/Container"
 import * as S from "../../../../app/(isLogIn)/game/multi/waiting/waitingStyle"
 import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
 import Openvidu from "./Openvidu"
-const Page = () => {
+
+const Waiting = () => {
   const [session, setSession] = useState(null)
   return (
     <Container display="flex" justifyContent="center" alignItems="center">
@@ -33,4 +34,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default Waiting
