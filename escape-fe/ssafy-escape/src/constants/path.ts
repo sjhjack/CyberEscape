@@ -39,6 +39,10 @@ const API_PATH = {
       CHANGE: "/user/change",
     },
   },
+  INVITE: {
+    INVITED_LIST: "/notification/game",
+    INVITED_ACCEPT: "/room/acceptance",
+  },
 }
 
 export default API_PATH
