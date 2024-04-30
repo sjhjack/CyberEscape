@@ -149,10 +149,10 @@ public class RoomDto {
 	}
 
 	@Getter
-	@Setter
 	public static class StompResponse {
 		private String hostSessionId;
 		private String guestSessionId;
+		@Setter
 		private UserDto.StompResponse host;
 		private UserDto.StompResponse guest;
 
@@ -160,7 +160,7 @@ public class RoomDto {
 			this.hostSessionId = hostSessionId;
 		}
 
-		public void swapHost(String guestSessionId){
+		public void swapHost(String guestSessionId) {
 			String tmpSessionId = this.hostSessionId;
 			this.hostSessionId = guestSessionId;
 			this.guestSessionId = tmpSessionId;
@@ -168,6 +168,16 @@ public class RoomDto {
 			UserDto.StompResponse tmpUser = this.host;
 			this.host = this.guest;
 			this.guest = tmpUser;
+		}
+
+		public void joinGuest(String guestSessionId, UserDto.StompResponse guest){
+			this.guestSessionId = guestSessionId;
+			this.guest = guest;
+		}
+
+		public void kickGuest() {
+			this.guestSessionId = null;
+			this.guest = null;
 		}
 	}
 }

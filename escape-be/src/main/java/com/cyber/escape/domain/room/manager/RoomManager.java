@@ -10,33 +10,36 @@ import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RoomManager {
 	private final Map<String, RoomDto.StompResponse> roomMap = new ConcurrentHashMap<>();
 	private final UserRepository userRepository;
 
-	public void createRoom(String roomUuid, String userUuid, String hostSessionId) {
+	public RoomDto.StompResponse createRoom(String roomUuid, String userUuid, String hostSessionId) {
 		UserDto.StompResponse host = UserDto.StompResponse.from(userRepository.findUserByUuid(userUuid)
 			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다.")));
 		RoomDto.StompResponse room = new RoomDto.StompResponse(hostSessionId);
 		room.setHost(host);
 		roomMap.put(roomUuid, room);
+
+		return room;
 	}
 
-	public void joinRoom(String roomUuid, String userUuid, String guestSessionId) {
+	public RoomDto.StompResponse joinRoom(String roomUuid, String userUuid, String guestSessionId) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
 
-		if (room.getGuestSessionId() == null) {
+		if (isGuestInRoom(room)) {
 			UserDto.StompResponse guest = UserDto.StompResponse.from(userRepository.findUserByUuid(userUuid)
 				.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다.")));
 
-			room.setGuestSessionId(guestSessionId);
-			room.setGuest(guest);
-		} else {
-			throw new RuntimeException("대기방이 가득 찼습니다.");
+			room.joinGuest(guestSessionId, guest);
 		}
+
+		return room;
 	}
 
 	public RoomDto.StompResponse leaveRoom(String roomUuid, String sessionId) {
@@ -47,8 +50,7 @@ public class RoomManager {
 			roomMap.remove(roomUuid);
 		} else if (room.getGuestSessionId() != null && room.getGuestSessionId().equals(sessionId)) {
 			// guest인 경우 guest 정보 null 처리
-			room.setGuestSessionId(null);
-			room.setGuest(null);
+			room.kickGuest();
 
 			return room;
 		}
@@ -56,34 +58,31 @@ public class RoomManager {
 		return new RoomDto.StompResponse(null);
 	}
 
-	public String kickGuest(String roomUuid) {
+	public RoomDto.StompResponse kickGuest(String roomUuid) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
-		String guestSessionId = "";
-
-		if (room.getGuestSessionId() != null) {
-			guestSessionId = room.getGuestSessionId();
-			room.setGuestSessionId(null);
-			room.setGuest(null);
-		} else {
-			throw new RuntimeException("게스트가 존재하지 않습니다.");
-		}
-
-		return guestSessionId;
-	}
-
-	public RoomDto.StompResponse delegateHost(String roomUuid, String guestSessionId) {
-		RoomDto.StompResponse room = getRoom(roomUuid);
-
-		if (room.getGuestSessionId() != null && room.getGuestSessionId().equals(guestSessionId)) {
-			room.swapHost(guestSessionId);
-		} else {
-			throw new RuntimeException("올바르지 않은 대상입니다.");
-		}
+		room.kickGuest();
 
 		return room;
 	}
-	
-	public RoomDto.StompResponse getRoom(String roomUuid) {
+
+	public RoomDto.StompResponse delegateHost(String roomUuid) {
+		RoomDto.StompResponse room = getRoom(roomUuid);
+		room.swapHost(getGuestSessionId(room));
+
+		return room;
+	}
+
+	public boolean isHostInRoom(String roomUuid, String sessionId) {
+		RoomDto.StompResponse room = getRoom(roomUuid);
+
+		if(room.getHostSessionId().equals(sessionId)) {
+			return true;
+		}
+
+		throw new RuntimeException("방장이 아닙니다.");
+	}
+
+	private RoomDto.StompResponse getRoom(String roomUuid) {
 		RoomDto.StompResponse room = roomMap.get(roomUuid);
 
 		if(room == null){
@@ -93,13 +92,19 @@ public class RoomManager {
 		return room;
 	}
 
-	public boolean isHostInRoom(String roomUuid, String sessionId) {
-		RoomDto.StompResponse room = roomMap.get(roomUuid);
-		return room != null && room.getHostSessionId().equals(sessionId);
+	private boolean isGuestInRoom(RoomDto.StompResponse room) {
+		if(room.getGuestSessionId() == null){
+			return true;
+		}
+
+		throw new RuntimeException("대기방이 가득 찼습니다.");
 	}
 
-	public boolean isGuestInRoom(String roomUuid, String sessionId) {
-		RoomDto.StompResponse room = roomMap.get(roomUuid);
-		return room != null && room.getGuestSessionId() != null && room.getGuestSessionId().equals(sessionId);
+	private String getGuestSessionId(RoomDto.StompResponse room) {
+		if (room.getGuestSessionId() != null) {
+			return room.getGuestSessionId();
+		} else {
+			throw new RuntimeException("게스트가 존재하지 않습니다.");
+		}
 	}
 }
