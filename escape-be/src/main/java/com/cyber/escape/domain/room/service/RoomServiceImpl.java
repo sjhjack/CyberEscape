@@ -2,6 +2,8 @@ package com.cyber.escape.domain.room.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomCreateService, RoomReadService, RoomUpdateService, RoomDeleteService {
+	private final Map<String, RoomDto.StompResponse> roomMap = new ConcurrentHashMap<>();
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
 	private final ThemaRepository themaRepository;
