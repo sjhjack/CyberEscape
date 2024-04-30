@@ -8,6 +8,7 @@ import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,8 +22,8 @@ public class User extends BaseEntity {
 
 	private int point;
 
-	@Column(name = "character_id")
-	private Long characterId;
+//	@Column(name = "character_id")
+//	private Long characterId;
 
 	private boolean withdrawal;
 	private String profileUrl;
