@@ -14,6 +14,13 @@ public class GlobalExceptionHandler {
         return makeResponseFormat(e.getExceptionCode());
     }
 
+
+    @ExceptionHandler(ChatException.class)
+    public ApiResponse handleMemberException(ChatException e) {
+        return makeResponseFormat(e.getExceptionCode());
+    }
+
+
     @ExceptionHandler(RankingException.class)
     public ApiResponse handleRecruitmentException(RankingException e) {
         return makeResponseFormat(e.getExceptionCode());
