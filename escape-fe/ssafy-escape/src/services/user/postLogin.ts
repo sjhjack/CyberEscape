@@ -4,21 +4,14 @@
 // interface PostLoginBodyProps {
 //   status: number
 //   message: string
-//   data: PostLoginDataProps
-// }
-
-// interface PostLoginDataProps {
-//   loginId: string
-//   grantType: string
-//   accessToken: string
-//   refreshToken: string
+//   data: UserInfo
 // }
 
 // // 로그인
 // const postLogin = async (
 //   loginId: string,
 //   password: string,
-// ): Promise<PostLoginDataProps> => {
+// ): Promise<UserInfo> => {
 //   try {
 //     const response = await api.post<PostLoginBodyProps>(API_PATH.AUTH.LOGIN, {
 //       loginId,
