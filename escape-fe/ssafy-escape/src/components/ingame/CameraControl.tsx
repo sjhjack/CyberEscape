@@ -23,12 +23,6 @@ const CameraControl = ({ startPosition, movingSpeed }: CameraControlProps) => {
   })
 
   useEffect(() => {
-    camera.near = 0.1
-    camera.far = 1000000
-    camera.updateProjectionMatrix()
-  }, [camera])
-
-  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key.toLowerCase()) {
         case "w":

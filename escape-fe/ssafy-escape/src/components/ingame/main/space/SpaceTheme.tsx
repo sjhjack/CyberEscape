@@ -1,7 +1,10 @@
 import { Canvas } from "@react-three/fiber"
+import { Physics } from "@react-three/cannon"
 import RoomModel from "@/components/ingame/elements/space/RoomModel"
-import PointerLockControls from "@/components/ingame/PointerLockControls"
-import CameraControl from "@/components/ingame/CameraControl"
+import PointerLockControls from "@/components/ingame/PointerLockControl"
+import Player from "../../elements/space/Player"
+import Plane from "../../elements/space/Floor"
+import CameraControl from "../../CameraControl"
 
 // 오류 방지를 위한 임시 값들입니다! 수정해서 써 주세요.
 const startPosition = { x: 8, y: 8, z: -2 }
@@ -24,8 +27,11 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
       />
-      <RoomModel onLoaded={setIsModelLoaded} />
-      {/* 오류 방지를 위한 임시 값들입니다! 수정해서 써 주세요. */}
+      <Physics>
+        <Player />
+        <Plane />
+        <RoomModel onLoaded={setIsModelLoaded} />
+      </Physics>
       <PointerLockControls
         startPosition={startPosition}
         startTargetPosition={startTargetPosition}
