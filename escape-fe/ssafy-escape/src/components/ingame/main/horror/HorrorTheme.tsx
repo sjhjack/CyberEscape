@@ -1,14 +1,18 @@
 import { Canvas } from "@react-three/fiber"
-import RoomModel from "@/components/ingame/elements/space/RoomModel"
-import PointerLockControls from "@/components/ingame/PointerLockControls"
 import CameraControl from "@/components/ingame/CameraControl"
+import DollModel from "@/components/ingame/elements/horror/DollModel"
+import HorrorRoomModel from "@/components/ingame/elements/horror/HorrorRoomModel"
+import PointerLockControls from "@/components/ingame/PointerLockControls"
 
-// 오류 방지를 위한 임시 값들입니다! 수정해서 써 주세요.
 const startPosition = { x: 8, y: 8, z: -2 }
 const startTargetPosition = { x: 4, y: 3, z: -2 }
 const lookAt = { x: -4, y: 2, z: 2 }
 
-const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+  const handleDoll = () => {
+    console.log("인형클릭")
+  }
+
   return (
     <Canvas
       shadows
@@ -17,15 +21,15 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       <ambientLight intensity={1} />
       <pointLight position={[10, 10, 10]} intensity={1} />
       <directionalLight
-        position={[1, 1, 5]}
-        intensity={1}
+        position={[10, 10, 5]}
+        intensity={2}
         castShadow
         receiveShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
       />
-      <RoomModel onLoaded={setIsModelLoaded} />
-      {/* 오류 방지를 위한 임시 값들입니다! 수정해서 써 주세요. */}
+      <HorrorRoomModel onLoaded={setIsModelLoaded} />
+      <DollModel onClick={handleDoll} />
       <PointerLockControls
         startPosition={startPosition}
         startTargetPosition={startTargetPosition}
@@ -40,4 +44,4 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   )
 }
 
-export default SpaceTheme
+export default HorrorTheme
