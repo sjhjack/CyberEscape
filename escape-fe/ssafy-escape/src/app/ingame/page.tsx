@@ -8,7 +8,7 @@ import ProgressBar from "@/components/ingame/ProgressBar"
 import type { NextPage } from "next"
 import Image from "next/image"
 import * as S from "./ingameStyle"
-import Space from "../../components/ingame/main/space/SpaceTheme"
+import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
 
 const Page: NextPage = () => {
   const [showModal, setShowModal] = useState(false)
@@ -25,10 +25,6 @@ const Page: NextPage = () => {
     if (canvas && !document.pointerLockElement) {
       canvas.requestPointerLock()
     }
-  }
-
-  const handleExitClick = () => {
-    setShowModal(true)
   }
 
   useEffect(() => {
@@ -49,8 +45,10 @@ const Page: NextPage = () => {
 
   return (
     <S.Container>
-      <Space setIsModelLoaded={setIsModelLoaded} isGameStart={isGameStart} />
-
+      <SpaceTheme
+        setIsModelLoaded={setIsModelLoaded}
+        isGameStart={isGameStart}
+      />
       {isModelLoaded && countdown > 0 ? (
         <S.CountdownBox>{countdown}</S.CountdownBox>
       ) : null}
@@ -63,10 +61,9 @@ const Page: NextPage = () => {
         />
       )}
       {countdown <= 0 ? <CountdownTimer /> : null}
-
       <Chat />
       <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
-      <ExitGame onClick={handleExitClick}>
+      <ExitGame>
         <Image
           src="/image/exitbutton.png"
           alt="exit game image"
