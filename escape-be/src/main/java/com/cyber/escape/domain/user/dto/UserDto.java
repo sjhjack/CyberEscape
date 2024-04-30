@@ -15,12 +15,6 @@ public class UserDto {
 
     @Getter
     @Builder
-    public static class ChangeNickname{
-        private String nickname;
-    }
-
-    @Getter
-    @Builder
     public static class SearchNicknameRequest{
         private String fromUserUuid;
         private String nickname;
@@ -31,6 +25,35 @@ public class UserDto {
     public static class SearchNicknameResponse{
         private String nickname;
         private String relationship;
+    }
+
+    @Getter
+    @Builder
+    public static class CheckNicknameRequest {
+        private String nickname;
+        public CheckNicknameRequest(){
+        }
+        public CheckNicknameRequest(String nickname){
+            this.nickname = nickname;
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class CheckNicknameResponse {
+        private boolean isAvailable;
+        public CheckNicknameResponse(){
+        }
+        public CheckNicknameResponse(boolean isAvailable){
+            this.isAvailable = isAvailable;
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class UpdateNicknameRequest{
+        private String userUuid;
+        private String newNickname;
     }
 
 
@@ -49,8 +72,24 @@ public class UserDto {
 				.loginId(user.getLoginId())
 				.nickname(user.getNickname())
 				.point(user.getPoint())
-				.characterId(user.getCharacterId())
+//				.characterId(user.getCharacterId())
 				// .withdrawal(user.get)
+				.build();
+		}
+	}
+
+	@Builder
+	@Getter
+	public static class StompResponse {
+		private String nickname;
+		private String profileUrl;
+		private String uuid;
+
+		public static StompResponse from(User user){
+			return StompResponse.builder()
+				.nickname(user.getNickname())
+				.profileUrl(user.getProfileUrl())
+				.uuid(user.getUuid())
 				.build();
 		}
 	}

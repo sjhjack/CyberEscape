@@ -19,4 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.uuid IN :uuids")
 	Optional<List<User>> findByUuids(@Param("uuids") List<String> uuids);
 
+	boolean existsByNickname(String nickname);
 }
