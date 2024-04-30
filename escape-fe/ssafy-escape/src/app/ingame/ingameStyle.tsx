@@ -15,5 +15,5 @@ export const CountdownBox = styled.div`
   transform: translateX(-50%);
   font-size: 90px;
   color: white;
-  zindex: 100;
+  z-index: 100;
 `
