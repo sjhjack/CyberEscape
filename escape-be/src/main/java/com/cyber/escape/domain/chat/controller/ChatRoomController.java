@@ -26,11 +26,15 @@ public class ChatRoomController {
         return new ApiResponse(HttpStatus.CREATED.value(), "채팅방이 생성되었습니다.", chatRoomService.createChatRoom(req));
     }
 
-    @PostMapping("/exit")
+    @PostMapping("/room/exit")
     public ApiResponse exitRoom(@RequestBody ChatRoomDto.ExitChatRoomReqDto req) throws ChatException{
         return new ApiResponse(HttpStatus.OK.value(), "채팅방을 나왔습니다.", chatRoomService.exitRoom(req));
     }
 
+    @PostMapping("/room/mylist")
+    public ApiResponse getMyChatList(){
+        return new ApiResponse(HttpStatus.OK.value(), "내가 참가한 채팅방 리스트와 참가자 정보입니다.", chatRoomService.getMyChatList());
+    }
 
 
 

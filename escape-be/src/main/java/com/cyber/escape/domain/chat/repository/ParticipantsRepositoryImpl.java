@@ -1,5 +1,9 @@
 package com.cyber.escape.domain.chat.repository;
 
+import com.cyber.escape.domain.chat.dto.ChatRoomDto;
+import com.cyber.escape.domain.chat.dto.ParticipantDto;
+import com.cyber.escape.domain.chat.dto.QChatRoomDto_MyChatListDto;
+import com.cyber.escape.domain.chat.dto.QParticipantDto_ParticipantsDto;
 import com.cyber.escape.domain.chat.entity.ChatRoom;
 import com.cyber.escape.domain.chat.entity.QChatRoom;
 import com.cyber.escape.domain.chat.entity.QParticipants;
@@ -14,6 +18,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.querydsl.jpa.JPAExpressions.select;
 
 @Repository
 @Slf4j
@@ -92,4 +99,39 @@ public class ParticipantsRepositoryImpl {
                     .execute();
         }
     }
+
+    public  List<ChatRoomDto.MyChatListDto> getMyChatList(String userUuid){
+        QParticipants participants = QParticipants.participants;
+        QChatRoom chatRoom = QChatRoom.chatRoom;
+        QUser user = QUser.user;
+
+        // 사용자가 속한 모든 채팅방 ID 조회
+        List<Long> chatRoomIds = jpaQueryFactory
+                .select(participants.chatRoom.id)
+                .from(participants)
+                .where(participants.participant.uuid.eq(userUuid))
+                .distinct()
+                .fetch();
+
+        // 각 채팅방과 참가자 정보 조회
+        return chatRoomIds.stream().map(chatRoomId -> {
+            List<ParticipantDto.ParticipantsDto> participantList = jpaQueryFactory
+                    .select(new QParticipantDto_ParticipantsDto(participants.participant.uuid, participants.participant.nickname))
+                    .from(participants)
+                    .join(participants.participant, user)
+                    .where(participants.chatRoom.id.eq(chatRoomId))
+                    .fetch();
+            
+            // chatRoom 의 uuid를 불러옴
+            String chatRoomUuid = jpaQueryFactory
+                    .select(chatRoom.uuid)
+                    .from(chatRoom)
+                    .where(chatRoom.id.eq(chatRoomId))
+                    .fetchOne();
+
+            return new ChatRoomDto.MyChatListDto(chatRoomUuid, participantList);
+        }).collect(Collectors.toList());
+
+    }
+
 }
