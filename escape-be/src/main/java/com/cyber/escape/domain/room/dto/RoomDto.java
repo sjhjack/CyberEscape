@@ -3,6 +3,7 @@ package com.cyber.escape.domain.room.dto;
 import java.time.LocalDateTime;
 
 import com.cyber.escape.domain.room.entity.Room;
+import com.cyber.escape.domain.user.dto.UserDto;
 import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.AllArgsConstructor;
@@ -144,6 +145,29 @@ public class RoomDto {
 				.userId(room.getHost().getId())
 				.uuid(room.getUuid())
 				.build();
+		}
+	}
+
+	@Getter
+	@Setter
+	public static class StompResponse {
+		private String hostSessionId;
+		private String guestSessionId;
+		private UserDto.StompResponse host;
+		private UserDto.StompResponse guest;
+
+		public StompResponse(String hostSessionId){
+			this.hostSessionId = hostSessionId;
+		}
+
+		public void swapHost(String guestSessionId){
+			String tmpSessionId = this.hostSessionId;
+			this.hostSessionId = guestSessionId;
+			this.guestSessionId = tmpSessionId;
+
+			UserDto.StompResponse tmpUser = this.host;
+			this.host = this.guest;
+			this.guest = tmpUser;
 		}
 	}
 }

@@ -27,4 +27,20 @@ public class UserDto {
 				.build();
 		}
 	}
+
+	@Builder
+	@Getter
+	public static class StompResponse {
+		private String nickname;
+		private String profileUrl;
+		private String uuid;
+
+		public static StompResponse from(User user){
+			return StompResponse.builder()
+				.nickname(user.getNickname())
+				.profileUrl(user.getProfileUrl())
+				.uuid(user.getUuid())
+				.build();
+		}
+	}
 }
