@@ -22,7 +22,6 @@ public class MessageController {
         this.rabbitTemplate = rabbitTemplate;
         this.messageService = messageService;
     }
-    // private final NotificationService notificationService;
 
     // 채팅방 입장
     @MessageMapping("chat.enter.{roomUuid}")

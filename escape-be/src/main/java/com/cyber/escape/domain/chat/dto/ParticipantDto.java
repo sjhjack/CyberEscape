@@ -1,8 +1,6 @@
 package com.cyber.escape.domain.chat.dto;
 
-import com.cyber.escape.domain.chat.entity.Participants;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public class ParticipantDto {

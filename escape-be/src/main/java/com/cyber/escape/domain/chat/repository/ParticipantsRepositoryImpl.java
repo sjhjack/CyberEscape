@@ -2,7 +2,6 @@ package com.cyber.escape.domain.chat.repository;
 
 import com.cyber.escape.domain.chat.dto.ChatRoomDto;
 import com.cyber.escape.domain.chat.dto.ParticipantDto;
-import com.cyber.escape.domain.chat.dto.QChatRoomDto_MyChatListDto;
 import com.cyber.escape.domain.chat.dto.QParticipantDto_ParticipantsDto;
 import com.cyber.escape.domain.chat.entity.ChatRoom;
 import com.cyber.escape.domain.chat.entity.QChatRoom;
@@ -11,23 +10,19 @@ import com.cyber.escape.domain.user.entity.QUser;
 import com.cyber.escape.global.exception.ChatException;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.querydsl.jpa.JPAExpressions.select;
 
 @Repository
 @Slf4j
 public class ParticipantsRepositoryImpl {
 
     private final JPAQueryFactory jpaQueryFactory;
-    //private final EntityManager entityManager;
 
     public ParticipantsRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
         this.jpaQueryFactory = jpaQueryFactory;
