@@ -9,7 +9,7 @@ interface PointerLockControlsMethods {
   moveToPosition: (x: number, y: number, z: number) => void
 }
 
-const Page = ({ isGameStart, setIsModelLoaded }: any) => {
+const SpaceTheme = ({ isGameStart, setIsModelLoaded }: any) => {
   const pointerLockControlsRef = useRef<PointerLockControlsMethods | null>(null)
 
   return (
@@ -35,4 +35,4 @@ const Page = ({ isGameStart, setIsModelLoaded }: any) => {
   )
 }
 
-export default Page
+export default SpaceTheme
