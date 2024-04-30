@@ -5,7 +5,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -26,23 +25,6 @@ public class RoomStompHandler {
 
 	@EventListener
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-		// log.info("Connection event : {}", event.toString());
-		// StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-		// log.info("headerAccessor : {}", headerAccessor.toString());
-		// String userUuid = headerAccessor.getNativeHeader("userUuid").get(0);
-		// String roomUuid = headerAccessor.getNativeHeader("roomUuid").get(0);
-		// String userType = headerAccessor.getNativeHeader("userType").get(0);
-		//
-		// log.info("Connected roomUuid : {}", roomUuid);
-		//
-		// if ("host".equals(userType)) {
-		// 	roomManager.createRoom(roomUuid, userUuid, headerAccessor.getSessionId());
-		// } else if ("guest".equals(userType)) {
-		// 	roomManager.joinRoom(roomUuid, userUuid, headerAccessor.getSessionId());
-		// }
-		//
-		// RoomDto.StompResponse room = roomManager.getRoom(roomUuid);
-		// sendRoomInfo(roomUuid, room);
 		log.info("연결 성공");
 		log.info("Connection event : {}", event.toString());
 	}
@@ -64,46 +46,52 @@ public class RoomStompHandler {
 		String userUuid = headerAccessor.getFirstNativeHeader("userUuid");
 		String roomUuid = headerAccessor.getFirstNativeHeader("roomUuid");
 		String userType = headerAccessor.getFirstNativeHeader("userType");
+		RoomDto.StompResponse room = null;
 
 		log.info("userUuid : {}, roomUuid : {}, userType : {}", userUuid, roomUuid, userType);
 		log.info("들어왔어");
 
 		if ("host".equals(userType)) {
-			roomManager.createRoom(roomUuid, userUuid, headerAccessor.getSessionId());
+			room = roomManager.createRoom(roomUuid, userUuid, headerAccessor.getSessionId());
 		} else if ("guest".equals(userType)) {
-			roomManager.joinRoom(roomUuid, userUuid, headerAccessor.getSessionId());
+			room = roomManager.joinRoom(roomUuid, userUuid, headerAccessor.getSessionId());
 		}
 
-		RoomDto.StompResponse room = roomManager.getRoom(roomUuid);
 		sendRoomInfo(roomUuid, room);
 	}
 
-	@MessageMapping("/room.kickGuest")
+	@MessageMapping("room.kickGuest")
 	public void kickGuest(@Payload String roomUuid, StompHeaderAccessor headerAccessor) {
-		if (roomManager.isHostInRoom(roomUuid, headerAccessor.getSessionId())) {
-			String guestSessionId = roomManager.kickGuest(roomUuid);
-			RoomDto.StompResponse room = roomManager.getRoom(roomUuid);
+		log.info("강퇴 시작해볼까??");
 
-			sendRoomInfo(roomUuid, room);
-			// convertAndSendToUser 사용 시 유저 개인에게 전송 가능하며 "/user"가 자동으로 prefix에 추가된다.
-			// 즉, /user/{guestSessionId}/queue/kick 으로 전송된다.
-			// Client는 /user/queue/kick을 구독하여 수신한다. (자신의 SessionId와 맵핑되어 자동으로 받아진다)
-			messagingTemplate.convertAndSendToUser(guestSessionId, "/queue/kick", "강제퇴장 되었습니다.");
-		}
+		roomManager.isHostInRoom(roomUuid, headerAccessor.getSessionId());
+		RoomDto.StompResponse room = roomManager.kickGuest(roomUuid);
+
+		// convertAndSendToUser 사용 시 유저 개인에게 전송 가능하며 "/user"가 자동으로 prefix에 추가된다.
+		// 즉, /user/{guestSessionId}/queue/kick 으로 전송된다.
+		// Client는 /user/queue/kick을 구독하여 수신한다. (자신의 SessionId와 맵핑되어 자동으로 받아진다)
+		// messagingTemplate.convertAndSendToUser(guestSessionId, "/queue/kick", "강제퇴장 되었습니다.");
+		// -> 이거 없이 방 정보만 줘도 충분하다고 한다.
+
+		sendRoomInfo(roomUuid, room);
+
+		log.info("guest 강퇴 됐나? {}", room.getGuestSessionId() == null);
 	}
 
-	@MessageMapping("/room.delegateHost")
+	@MessageMapping("room.delegateHost")
 	public void delegateHost(@Payload String roomUuid, StompHeaderAccessor headerAccessor) {
-		if (roomManager.isHostInRoom(roomUuid, headerAccessor.getSessionId())) {
-			String guestSessionId = (String)headerAccessor.getSessionAttributes().get("userUuid");
-			RoomDto.StompResponse room = roomManager.delegateHost(roomUuid, guestSessionId);
+		log.info("방장 변경 해볼까??");
 
-			sendRoomInfo(roomUuid, room);
-		}
+		roomManager.isHostInRoom(roomUuid, headerAccessor.getSessionId());
+		RoomDto.StompResponse room = roomManager.delegateHost(roomUuid);
+
+		log.info("방장 : {}, 게스트 : {}", room.getHost().getNickname(), room.getGuest().getNickname());
+
+		sendRoomInfo(roomUuid, room);
 	}
 
 	private void sendRoomInfo(String roomUuid, RoomDto.StompResponse room) {
-		log.info("BroadCasting Info ========== roomUuid: {}, room : {}", roomUuid, room.toString());
+		log.info("BroadCasting Info ========== roomUuid: {}, host : {}", roomUuid, room.getHost().getNickname());
 		// 대기방 정보 브로드캐스팅
 		messagingTemplate.convertAndSend("/topic/" + roomUuid, room);
 	}
