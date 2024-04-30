@@ -25,7 +25,7 @@ public class GameHistoryController {
     public ApiResponse<String> upload(@RequestBody GameHistoryDto.Request req){
         gameHistoryService.upload(req);
         log.info("upload");
-        return new ApiResponse<>(HttpStatus.OK.value(), "게임정보 업로드 성공", gameHistoryService.toString());
+        return new ApiResponse<>(HttpStatus.OK.value(), "게임정보 업로드 성공", "");
     }
 
     @PostMapping("/rankings")
