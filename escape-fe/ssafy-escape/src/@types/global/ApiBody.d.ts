@@ -3,3 +3,10 @@ interface NullBodyProps {
   message: string
   data: null
 }
+
+interface UserInfoProps {
+  loginId: string
+  grantType: string
+  accessToken: string
+  refreshToken: string
+}
