@@ -28,7 +28,7 @@ const API_PATH = {
         JOIN: "/room/join",
         EXIT: "/room/exit",
         KICK: "/room/exit",
-        SETTING: "/room/eixt",
+        SETTING: "/room/exit",
         CHANGE_HOST: "/room/change/host",
         START: "/room/start",
       },
