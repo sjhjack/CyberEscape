@@ -4,20 +4,14 @@ import * as THREE from "three"
 
 const CameraControl = () => {
   const { camera } = useThree()
-  const positionRef = useRef(new THREE.Vector3(4, 3, -2))
-  const [position, setPosition] = useState(new THREE.Vector3(4, 3, -2))
+  const positionRef = useRef(new THREE.Vector3(4, 16, -2))
+  const [position, setPosition] = useState(new THREE.Vector3(4, 16, -2))
   const [moveDirection, setMoveDirection] = useState({
     forward: false,
     backward: false,
     left: false,
     right: false,
   })
-
-  useEffect(() => {
-    camera.near = 0.1
-    camera.far = 1000000
-    camera.updateProjectionMatrix()
-  }, [camera])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
