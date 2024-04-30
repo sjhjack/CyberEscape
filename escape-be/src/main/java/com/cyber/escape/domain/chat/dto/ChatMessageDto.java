@@ -12,7 +12,7 @@ public class ChatMessageDto {
         ENTER, TALK, EXIT
     }
     private String roomUuid;
-    private Long sender;
+    private String sender;
     private String message;
     private Character isRead;
     private MessageType type;
