@@ -7,6 +7,7 @@ import com.cyber.escape.domain.chat.entity.Participants;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.exception.ChatException;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.UserException;
 import jakarta.transaction.Transactional;
@@ -26,7 +27,6 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ParticipantsRepository participantsRepository;
     private final ParticipantsRepositoryImpl participantsRepositoryImpl;
-
     private final UserRepository userRepository;
 
     public ChatRoomService(ChatRoomRepository chatRoomRepository, ParticipantsRepository participantsRepository, ParticipantsRepositoryImpl participantsRepositoryImpl, UserRepository userRepository) {
@@ -37,8 +37,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatRoomDto.ChatRoomResDto createChatRoom(ChatRoomDto.ChatRoomReqDto chatroomInfo){
-
+    public ChatRoomDto.CreateChatRoomResDto createChatRoom(ChatRoomDto.CreateChatRoomReqDto chatroomInfo)  throws ChatException{
             String userUuid = UserUtil.getUserUuid();
             String friendUuid = chatroomInfo.getUserUuid();
 
@@ -58,7 +57,10 @@ public class ChatRoomService {
             // 채팅방이 만들어져 있으면 똑같은 걸 준다.
             if(existChatRoom != null) {
                 log.info("chatRoom 정보 {}", existChatRoom.toString());
-                return new ChatRoomDto.ChatRoomResDto(existChatRoom.getUuid());
+                return ChatRoomDto.CreateChatRoomResDto
+                        .builder()
+                        .chatRoomUuid(existChatRoom.getUuid())
+                        .build();
             }
 
             // 처음 시작하는 채팅방이면 만든다.
@@ -87,7 +89,24 @@ public class ChatRoomService {
             //joinRoom(makedRoom.getUuid(), createdRoomUser.getNickname());
             //joinRoom(makedRoom.getUuid(), friendRoomUser.getNickname());
 
-            return new ChatRoomDto.ChatRoomResDto(makedRoom.getUuid());
+            return ChatRoomDto.CreateChatRoomResDto
+                            .builder()
+                            .chatRoomUuid(makedRoom.getUuid())
+                            .build();
+    }
+
+    public String exitRoom(ChatRoomDto.ExitChatRoomReqDto req) throws ChatException{
+        // 여기서 나가려는 유저가 진짜 채팅방에 있는 유저인지를 확인
+        participantsRepository.findByUuid(req.getExitUserUuid())
+                        .orElseThrow(() -> new ChatException(ExceptionCodeSet.BAD_REQUEST));
+
+        participantsRepositoryImpl.exitRoom(req.getChatRoomUuid(), req.getExitUserUuid());
+        return "";
+    }
+
+    public List<ChatRoomDto.MyChatListDto> getMyChatList(){
+        String userUuid = UserUtil.getUserUuid();
+        return participantsRepositoryImpl.getMyChatList(userUuid);
     }
 
     public void joinRoom(String roomUuid, String userNickname) {

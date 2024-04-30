@@ -16,4 +16,6 @@ public interface FriendRepository extends JpaRepository<Friend, String> {
         "JOIN user s ON f.to_user_id = s.id " +
         "WHERE s.uuid = :toUser AND u.uuid = :fromUser", nativeQuery = true)
     Optional<Friend> getFriend(@Param("fromUser") String fromUser, @Param("toUser") String toUser);
+
+
 }

@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ChatRoomDto {
 
     @Getter
     @AllArgsConstructor
-    public static class ChatRoomReqDto{
+    public static class CreateChatRoomReqDto{
         private final String title;
         private final String nickname;
         // 같이 채팅하려는 친구 uuid
@@ -23,14 +25,34 @@ public class ChatRoomDto {
     @Getter
     @NoArgsConstructor(force = true)
 //    @AllArgsConstructor
-    @Builder
-    public static class ChatRoomResDto{
+    public static class CreateChatRoomResDto{
         private String ChatRoomUuid;
 
         @QueryProjection
-        public ChatRoomResDto(String chatRoomUuid){
+        @Builder
+        public CreateChatRoomResDto(String chatRoomUuid){
             this.ChatRoomUuid = chatRoomUuid;
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ExitChatRoomReqDto{
+        private final String chatRoomUuid;
+        private final String exitUserUuid;
+    }
+
+    @Getter
+    public static class MyChatListDto{
+        private final String chatRoomUuid;
+        private final List<ParticipantDto.ParticipantsDto> participantsList;
+
+        @QueryProjection
+        public MyChatListDto(String chatRoomUuid, List<ParticipantDto.ParticipantsDto> participantsList){
+            this.chatRoomUuid = chatRoomUuid;
+            this.participantsList = participantsList;
+        }
+
     }
 
 }
