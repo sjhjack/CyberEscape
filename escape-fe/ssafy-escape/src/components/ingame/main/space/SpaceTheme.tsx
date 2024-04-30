@@ -1,9 +1,12 @@
 "use client"
 import { useRef } from "react"
 import { Canvas } from "@react-three/fiber"
+import { Physics } from "@react-three/cannon"
 import RoomModel from "@/components/ingame/elements/space/RoomModel"
 import PointerLockControls from "@/components/ingame/PointerLockControl"
 import CameraKeyControls from "@/components/ingame/CameraControl"
+import Player from "../../elements/space/Player"
+import Plane from "../../elements/space/Floor"
 
 interface PointerLockControlsMethods {
   moveToPosition: (x: number, y: number, z: number) => void
@@ -27,8 +30,11 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: any) => {
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
       />
-
-      <RoomModel onLoaded={setIsModelLoaded} />
+      <Physics>
+        <Player />
+        <Plane />
+        <RoomModel onLoaded={setIsModelLoaded} />
+      </Physics>
       <PointerLockControls ref={pointerLockControlsRef} />
       {isGameStart ? <CameraKeyControls /> : null}
     </Canvas>

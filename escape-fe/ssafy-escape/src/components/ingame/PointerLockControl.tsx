@@ -12,8 +12,8 @@ declare var window: CustomWindow
 
 const PointerLockControls = forwardRef((props, ref) => {
   const { camera, gl } = useThree()
-  const [startPosition] = useState({ x: 8, y: 8, z: -2 })
-  const [targetPosition, setTargetPosition] = useState({ x: -4, y: 3, z: -2 })
+  const [startPosition] = useState({ x: 4, y: 16, z: -2 })
+  const [targetPosition, setTargetPosition] = useState({ x: 4, y: 16, z: -2 })
   const [isMoving, setIsMoving] = useState(true)
 
   useImperativeHandle(ref, () => ({
@@ -26,6 +26,7 @@ const PointerLockControls = forwardRef((props, ref) => {
   useEffect(() => {
     const canvas = document.querySelector("canvas")
     camera.position.set(startPosition.x, startPosition.y, startPosition.z)
+    console.log(camera.position)
     camera.zoom = 2.5
     camera.lookAt(-4, 2, 2)
     camera.updateProjectionMatrix()
