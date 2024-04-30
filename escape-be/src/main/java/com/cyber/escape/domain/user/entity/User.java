@@ -25,4 +25,5 @@ public class User extends BaseEntity {
 	private Long characterId;
 
 	private boolean withdrawal;
+	private String profileUrl;
 }
