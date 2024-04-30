@@ -1,42 +1,23 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
-import { Canvas } from "@react-three/fiber"
-import CameraKeyControls from "@/components/ingame/CameraControl"
-import PointerLockControls from "@/components/ingame/PointerLockControl"
+import { useEffect, useState } from "react"
 import MainModal from "@/components/common/MainModal"
-import RoomModel from "@/components/ingame/RoomModel"
-import KeyModels from "@/components/ingame/KeyModels"
 import CountdownTimer from "@/components/ingame/CountdownTimer"
 import Chat from "@/components/ingame/Chat"
 import ExitGame from "@/components/ingame/ExitGame"
+import ProgressBar from "@/components/ingame/ProgressBar"
 import type { NextPage } from "next"
 import Image from "next/image"
 import * as S from "./ingameStyle"
-
-// for merge request
-
-interface PointerLockControlsMethods {
-  moveToPosition: (x: number, y: number, z: number) => void
-}
+import Space from "../../components/ingame/main/space/page"
 
 const Page: NextPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
   const [countdown, setCountdown] = useState(3)
-  const [showObject, setShowObject] = useState(true)
-  const pointerLockControlsRef = useRef<PointerLockControlsMethods | null>(null)
 
   const handleModalClose = () => {
     setShowModal(false)
-  }
-
-  // const handleHideObject = () => {
-  //   setShowObject(false)
-  // }
-
-  const onKeyClick = () => {
-    setShowModal(!showModal)
   }
 
   const onStartClick = () => {
@@ -64,26 +45,7 @@ const Page: NextPage = () => {
 
   return (
     <S.Container>
-      <Canvas
-        shadows
-        style={{ width: "100%", height: "100%", backgroundColor: "white" }}
-      >
-        <ambientLight intensity={1} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <directionalLight
-          position={[1, 1, 5]}
-          intensity={1}
-          castShadow
-          receiveShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-        />
-
-        {showObject && <KeyModels onClick={onKeyClick} />}
-        <RoomModel onLoaded={setIsModelLoaded} />
-        <PointerLockControls ref={pointerLockControlsRef} />
-        {isGameStart ? <CameraKeyControls /> : null}
-      </Canvas>
+      <Space setIsModelLoaded={setIsModelLoaded} isGameStart={isGameStart} />
       {isModelLoaded && countdown > 0 ? (
         <S.CountdownBox>{countdown}</S.CountdownBox>
       ) : null}
@@ -97,9 +59,10 @@ const Page: NextPage = () => {
       )}
       {countdown <= 0 ? <CountdownTimer /> : null}
       <Chat />
+      <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
       <ExitGame>
         <Image
-          src="/image/exitgame.png"
+          src="/image/exitbutton.png"
           alt="exit game image"
           width="40"
           height="40"
