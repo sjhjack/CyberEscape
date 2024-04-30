@@ -1,5 +1,7 @@
 "use client"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
+import SockJS from "sockjs-client"
+import { Stomp } from "@stomp/stompjs"
 import Container from "@/components/common/Container"
 import * as S from "../../../../app/(isLogIn)/game/multi/waiting/waitingStyle"
 import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
@@ -7,16 +9,38 @@ import Openvidu from "./Openvidu"
 
 const Waiting = () => {
   const [session, setSession] = useState(null)
-  const [userType, setUserType] = useState(null)
-  const [roomUuid, setRoomUuid] = useState(null)
-  const [userUuid, setUserUuid] = useState(null)
-  const [isHost, setIsHost] = useState(false)
-  const webSocket = useState(null)
-  const stompClient = useState(null)
-  const room = useState({
-    host: null,
-    guest: null,
-  })
+  useEffect(() => {
+    // WebSocket 서버의 URL
+    const serverUrl = "ws://localhost:8080/ws-stomp"
+    const sock = new SockJS(serverUrl)
+    const client = Stomp.over(sock)
+
+    // 디버그 모드를 false로 설정하여 콘솔에 로깅을 하지 않도록 할 수 있습니다.
+    client.debug = () => {}
+
+    const onConnect = () => {
+      console.log("Connected to WebSocket")
+
+      // 예를 들어, 메시지를 받는 구독을 추가
+      client.subscribe("/topic/messages", (message: any) => {
+        console.log("Received message", message.body)
+      })
+    }
+
+    const onError = (error: Error) => {
+      console.error("Failed to connect to WebSocket", error)
+    }
+
+    // WebSocket 서버에 연결
+    client.connect({}, onConnect, onError)
+
+    // 컴포넌트 언마운트 시 연결 해제
+    return () => {
+      client.disconnect(() => {
+        console.log("Disconnected from WebSocket")
+      })
+    }
+  }, [])
 
   return (
     <Container display="flex" justifyContent="center" alignItems="center">
