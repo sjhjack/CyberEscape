@@ -11,4 +11,18 @@ public class FriendDto {
         private String toUserUuid;
     }
 
+    @Getter
+    @Builder
+    public static class friendListRequest{
+        private String fromUserUuid;
+        private String toUserUuid;
+    }
+
+    @Getter
+    @Builder
+    public static class friendListResponse{
+        private String fromUserUuid;
+        private String toUserUuid;
+    }
+
 }
