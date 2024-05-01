@@ -10,6 +10,7 @@ interface RoomMainModalProps {
 }
 const RoomPasswordModal = ({ open, handleClose }: RoomMainModalProps) => {
   const [password, setPassword] = useState<string>("")
+
   const onPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {

@@ -9,6 +9,7 @@ const Room = ({ roomData }: any) => {
   const router = useRouter()
   const thema = ["공포", "싸피", "우주"]
   const handleModalClose = (): void => {
+    console.log('닫기')
     setShowModal(false)
   }
   const enterRoom = (): void => {
@@ -20,19 +21,21 @@ const Room = ({ roomData }: any) => {
     // router.push(`/game/multi/waiting/${roomData.uuid}`)
   }
   return (
-    <S.RoomBox onClick={enterRoom}>
-      <RoomPasswordModal open={showModal} handleClose={handleModalClose} />
-      <Image
-        src={`/image/${thema[roomData.themaId]}.png`}
-        alt=""
-        width={70}
-        height={70}
-      />
-      <S.Title>{roomData.title}</S.Title>
-      <S.Menu>인원: {roomData.capacity}/2</S.Menu>
-      <S.Menu>방장: {roomData.nickname}</S.Menu>
-      <S.Menu>테마: {thema[roomData.themaId]}</S.Menu>
-    </S.RoomBox>
+      <>
+        <RoomPasswordModal open={showModal} handleClose={handleModalClose} />
+        <S.RoomBox onClick={enterRoom}>
+          <Image
+            src={`/image/${thema[roomData.themaId]}.png`}
+            alt=""
+            width={70}
+            height={70}
+            />
+          <S.Title>{roomData.title}</S.Title>
+          <S.Menu>인원: {roomData.capacity}/2</S.Menu>
+          <S.Menu>방장: {roomData.nickname}</S.Menu>
+          <S.Menu>테마: {thema[roomData.themaId]}</S.Menu>
+        </S.RoomBox>
+      </>
   )
 }
 
