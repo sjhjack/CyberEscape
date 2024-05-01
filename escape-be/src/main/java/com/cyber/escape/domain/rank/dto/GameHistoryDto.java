@@ -1,22 +1,18 @@
 package com.cyber.escape.domain.rank.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
+import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.sql.Time;
+import java.time.LocalTime;
 
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class GameHistoryDto {
-    private String userId;
-    private String themaId;
-    private LocalDateTime clearTime;
-    private String uuid;
+    @Getter
+    @Builder
+    public static class Request{
+        private String userUuid;
+        private String themaUuid;
+        private LocalTime clearTime;
+    }
+
 }
