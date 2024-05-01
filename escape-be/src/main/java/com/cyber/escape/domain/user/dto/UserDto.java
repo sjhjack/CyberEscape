@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 public class UserDto {
+
+	@Builder
+	@Getter
+	public static class
+
     @Getter
     @Builder
     public static class NicknameResponse{

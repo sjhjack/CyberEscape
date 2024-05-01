@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.cyber.escape.domain.user.dto.CustomUser;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 
@@ -25,22 +26,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+		// Todo : uitl 분리
 		User findUser = userRepository.findByLoginId(loginId)
 			.orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-		// return null;
-		// return new User(
-		// findMember.getMemberId(),
-		// findMember.getPassword(),
-		// new ArrayList<>()
-		// );
-		UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+
+		return new CustomUser(
 			findUser.getLoginId(),
 			findUser.getPassword(),
 			new ArrayList<>()
-		);
-
-		log.info("userDetails : {}", userDetails.toString());
-
-		return userDetails;
+		).toUser();
 	}
 }
