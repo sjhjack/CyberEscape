@@ -1,5 +1,8 @@
 package com.cyber.escape.domain.user.dto;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import com.cyber.escape.domain.quiz.entity.FinalAnswer;
 import com.cyber.escape.domain.user.entity.User;
 
 import lombok.Builder;
@@ -16,6 +19,40 @@ public class UserDto {
 		private String password;
 		private String nickname;
 		private String profileUrl;
+	}
+
+	@Builder
+	@Getter
+	public static class SigninRequest {
+		private String loginId;
+		private String password;
+
+		public UsernamePasswordAuthenticationToken toAuthentication() {
+			return new UsernamePasswordAuthenticationToken(loginId, password);
+		}
+	}
+
+	@Builder
+	@Getter
+	public static class SigninResponse {
+		private String loginId;
+		private String grantType;
+		private String accessToken;
+		private String refreshToken;
+
+		public static SigninResponse of(
+			final String loginId,
+			final String grantType,
+			final String accessToken,
+			final String refreshToken
+		) {
+			return SigninResponse.builder()
+				.loginId(loginId)
+				.grantType(grantType)
+				.accessToken(accessToken)
+				.refreshToken(refreshToken)
+				.build();
+		}
 	}
 
     @Getter

@@ -4,11 +4,18 @@ import com.cyber.escape.domain.friend.entity.Friend;
 import com.cyber.escape.domain.friend.repository.FriendRepository;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
+import com.cyber.escape.domain.user.jwt.TokenProvider;
 import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.domain.user.util.UserUtil;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +30,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final TokenProvider tokenProvider;
 
     @Transactional
     public String signup(UserDto.SignupRequest signupRequest) {
@@ -40,6 +49,19 @@ public class UserService {
         if(userRepository.existsByLoginId(loginId)) {
             throw new RuntimeException("존재하는 아이디입니다.");
         }
+    }
+
+    public UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest) {
+        // User user = UserUtil.findByLoginId(userRepository, signinRequest.getLoginId());
+        Authentication authentication = authenticationManagerBuilder.getObject()
+            .authenticate(signinRequest.toAuthentication());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
+
+        // Todo : refresh token 저장
+
+        return signinResponse;
     }
 
     public UserDto.NicknameResponse generateNickname(String format, int count){
