@@ -4,12 +4,19 @@ import com.cyber.escape.domain.user.entity.User;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 public class UserDto {
 
 	@Builder
 	@Getter
-	public static class
+	public static class SignupRequest {
+		private String loginId;
+		@Setter
+		private String password;
+		private String nickname;
+		private String profileUrl;
+	}
 
     @Getter
     @Builder
