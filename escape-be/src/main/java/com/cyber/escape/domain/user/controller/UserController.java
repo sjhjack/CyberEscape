@@ -21,6 +21,11 @@ public class UserController {
         return new ApiResponse<>(HttpStatus.OK.value(), "회원가입 완료", userService.signup(signupRequest));
     }
 
+    @PostMapping("/auth/signin")
+    public ApiResponse<UserDto.SigninResponse> signin(@RequestBody UserDto.SigninRequest signinRequest) {
+        return new ApiResponse<>(HttpStatus.OK.value(), "로그인 완료", userService.signin(signinRequest));
+    }
+
     @PostMapping("/user/nickname")
     public ApiResponse<UserDto.NicknameResponse> generateNickname(@RequestParam(value = "format", defaultValue = "json") String format,
                                                                   @RequestParam(value = "count", defaultValue = "1") int count) {
