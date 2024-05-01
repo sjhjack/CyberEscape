@@ -2,16 +2,24 @@ package com.cyber.escape.domain.user.controller;
 
 import com.cyber.escape.domain.rank.dto.GameHistoryDto;
 import com.cyber.escape.domain.user.dto.UserDto;
+import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.service.UserService;
 import com.cyber.escape.global.common.dto.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
     private UserService userService;
+
+    @PostMapping("/auth/signup")
+    public ApiResponse<String> signup(@RequestBody UserDto.SignupRequest signupRequest) {
+        return new ApiResponse<>(HttpStatus.OK.value(), "회원가입 완료", userService.signup(signupRequest));
+    }
 
     @PostMapping("/user/nickname")
     public ApiResponse<UserDto.NicknameResponse> generateNickname(@RequestParam(value = "format", defaultValue = "json") String format,
