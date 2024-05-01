@@ -1,17 +1,14 @@
-package com.cyber.escape.domain.member.entity;
+package com.cyber.escape.domain.user.entity;
 
 import com.cyber.escape.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,10 +20,11 @@ public class User extends BaseEntity {
 
 	private String nickname;
 
-	private int point = 0;
+	private int point;
 
-	@Column(name = "character_id")
-	private Long characterId;
+//	@Column(name = "character_id")
+//	private Long characterId;
 
 	private boolean withdrawal;
+	private String profileUrl;
 }
