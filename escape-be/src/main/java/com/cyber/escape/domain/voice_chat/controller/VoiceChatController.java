@@ -37,7 +37,7 @@ public class VoiceChatController {
 
     // 세션 초기화
     @PostMapping("/session")
-    public ApiResponse initSession(@RequestBody Map<String, Object> params) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ApiResponse initSession(@RequestBody(required = false) Map<String, Object> params) throws OpenViduJavaClientException, OpenViduHttpException {
 
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
