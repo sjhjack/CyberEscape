@@ -27,8 +27,10 @@ public class TokenUtil {
 		return redisTemplate.delete("token" + UserUtil.getLoginUserUuid(userRepository));
 	}
 
-	public boolean checkRefreshTokenEquals(String refreshToken) {
-		return refreshToken.equals(getRefreshToken());
+	public void checkRefreshTokenEquals(String refreshToken) {
+		if(refreshToken.equals(getRefreshToken()) == false) {
+			throw new RuntimeException("저장되어 있는 토큰과 일치하지 않습니다 !!!");
+		}
 	}
 }
 

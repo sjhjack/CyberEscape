@@ -63,6 +63,20 @@ public class UserService {
         return signinResponse;
     }
 
+    public UserDto.SigninResponse reIssue(UserDto.SigninResponse tokenRequest) {
+        // Refresh Token 파싱되면 OK
+        tokenProvider.validateToken(tokenRequest.getRefreshToken());
+        // Access Token 파싱해서 새로운 인증객체 만들기
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequest.getAccessToken());
+        log.info("UserService :::::::::: 인증객체 생성 {}", authentication.getName());
+        // Redis에 저장되어있는 Refresh Token과 Request로 받은 Refresh Token 비교
+        tokenUtil.checkRefreshTokenEquals(tokenRequest.getRefreshToken());
+        // 인증 객체로 토큰 재발행
+        UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
+
+        return signinResponse;
+    }
+
     public UserDto.NicknameResponse generateNickname(String format, int count){
         String url = "https://nickname.hwanmoo.kr/?format=" + format + "&count=" + count;
         RestTemplate restTemplate = new RestTemplate();
