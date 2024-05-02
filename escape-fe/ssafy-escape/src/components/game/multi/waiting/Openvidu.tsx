@@ -9,10 +9,9 @@ import {
 import axios from "axios"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 
-const APPLICATION_SERVER_URL = "http://localhost:4443/"
+const APPLICATION_SERVER_URL = "http://localhost:8080/"
 axios.defaults.headers.post["Content-Type"] = "application/json"
-const OPENVIDU_SECRET = "MY_SECRET"
-const Openvidu = () => {
+const Openvidu = ({ connectSession, setMessage }: any) => {
   const [session, setSession] = useState<Session | undefined>(undefined)
   const [mySessionId, setMySessionId] = useState<string>("A303")
   const [subscribers, setSubscribers] = useState<any[]>([])
@@ -21,10 +20,18 @@ const Openvidu = () => {
   const [mainStreamManager, setMainStreamManager] = useState<
     StreamManager | undefined
   >(undefined)
+  const [chatData, setChatData] = useState<Array<object>>([])
+  useEffect(() => {
+    setMessage(chatData)
+  }, [chatData])
   useEffect(() => {
     // 렌더링과 동시에 joinSession 함수 실행 할 예정
     joinSession()
   }, [])
+  useEffect(() => {
+    connectSession(session)
+  }, [session])
+
   const joinSession = async () => {
     const newOV = new OpenVidu()
     setOV(newOV)
@@ -42,14 +49,18 @@ const Openvidu = () => {
         deleteSubscriber(mainStreamManager)
       }
     })
-    // // 채팅 데이터 저장하기
-    // newSession.on("signal", (event: any) => {
-    //   console.log(event.data) // Message
-    //   console.log(event.from) // Connection object of the sender
-    //   console.log(event.type) // The type of message ("my-chat")
-    // })
+    // 채팅 데이터 저장하기
+    newSession.on("signal", (event: any) => {
+      console.log("받음", event.data, 1, JSON.parse(event.from.data).clientData) // Message
+      const userName: string = JSON.parse(event.from.data).clientData
+      const message: string = event.data
+      setChatData((prevChatData) => [
+        ...prevChatData,
+        { userName: userName, message: message },
+      ])
+    })
 
-    const token = await getToken(mySessionId)
+    const token = await getToken()
     newSession
       .connect(token, { clientData: "김싸피" })
       .then(async () => {
@@ -90,32 +101,30 @@ const Openvidu = () => {
     }
   }
   // 우선, 세션을 생성한다. 그 후, 세션 아이디를 토대로 토큰을 생성한다.
-  const getToken = async (mySessionId: string) => {
-    const sessionId = await createSession(mySessionId)
+  const getToken = async () => {
+    const sessionId = await createSession()
     return await createToken(sessionId)
   }
-  const createSession = async (mySessionId: string) => {
+  const createSession = async () => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
-      { customSessionId: mySessionId },
+      APPLICATION_SERVER_URL + "voice/session",
       {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true,
       },
     )
-    return response.data
+    console.log("세션 요청을 함", response.data.data.sessionId)
+    return response.data.data.sessionId
   }
-  const createToken = async (sessionId: string) => {
+  const createToken = async (id: string) => {
     const res = await axios.post(
-      APPLICATION_SERVER_URL + `/api/sessions/${sessionId}/connections`,
-      {},
+      APPLICATION_SERVER_URL + `voice/connection`,
+      { sessionId: id },
       {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true,
       },
     )
-    console.log("토큰 요청을 함", res)
-    return res.data.token
+    console.log("토큰 요청을 함", res.data.data.voiceChatToken)
+    return res.data.data.voiceChatToken
   }
 
   return <div></div>
