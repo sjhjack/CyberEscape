@@ -3,6 +3,8 @@ package com.cyber.escape.domain.user.util;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.cyber.escape.domain.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,18 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TokenUtil {
 	private final RedisTemplate<String, String> redisTemplate;
-	private final UserUtil userUtil;
+	private final UserRepository userRepository;
 
 	public void setRefreshToken(String refreshToken) {
-		redisTemplate.opsForValue().set("token" + userUtil.getLoginMemberUuid(), refreshToken);
+		redisTemplate.opsForValue().set("token" + UserUtil.getLoginUserUuid(userRepository), refreshToken);
 	}
 
 	public String getRefreshToken() {
-		return redisTemplate.opsForValue().get("token" + userUtil.getLoginMemberUuid());
+		return redisTemplate.opsForValue().get("token" + UserUtil.getLoginUserUuid(userRepository));
 	}
 
 	public boolean deleteRefreshToken() {
-		return redisTemplate.delete("token" + userUtil.getLoginMemberUuid());
+		return redisTemplate.delete("token" + UserUtil.getLoginUserUuid(userRepository));
 	}
 
 	public boolean checkRefreshTokenEquals(String refreshToken) {
