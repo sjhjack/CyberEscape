@@ -21,7 +21,6 @@ public enum ExceptionCodeSet {
     ENTITY_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "정보가 존재하지 않습니다.");
 
 
-
     private final HttpStatus httpStatus;
     private final Integer status;
     private final String message;
