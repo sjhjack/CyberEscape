@@ -8,10 +8,9 @@ import {
 
 import axios from "axios"
 import React, { useCallback, useEffect, useRef, useState } from "react"
-
 const APPLICATION_SERVER_URL = "http://localhost:8080/"
 axios.defaults.headers.post["Content-Type"] = "application/json"
-const Openvidu = ({ connectSession, setMessage }: any) => {
+const Openvidu = ({ connectSession, setMessage, uuid }: any) => {
   const [session, setSession] = useState<Session | undefined>(undefined)
   const [mySessionId, setMySessionId] = useState<string>("A303")
   const [subscribers, setSubscribers] = useState<any[]>([])
@@ -21,13 +20,22 @@ const Openvidu = ({ connectSession, setMessage }: any) => {
     StreamManager | undefined
   >(undefined)
   const [chatData, setChatData] = useState<Array<object>>([])
+  const userName: string =
+    "참가자" + Math.floor(Math.random() * 100 + 1).toString()
+
   useEffect(() => {
     setMessage(chatData)
   }, [chatData])
   useEffect(() => {
     // 렌더링과 동시에 joinSession 함수 실행 할 예정
-    joinSession()
+    if (!session) {
+      joinSession()
+    }
+    return () => {
+      leaveSession()
+    }
   }, [])
+
   useEffect(() => {
     connectSession(session)
   }, [session])
@@ -62,7 +70,7 @@ const Openvidu = ({ connectSession, setMessage }: any) => {
 
     const token = await getToken()
     newSession
-      .connect(token, { clientData: "김싸피" })
+      .connect(token, { clientData: userName })
       .then(async () => {
         const newPublisher = await newOV.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -80,9 +88,8 @@ const Openvidu = ({ connectSession, setMessage }: any) => {
 
   // 세션을 나갈 때 실행
   const leaveSession = () => {
-    const mySession = session
-    if (mySession) {
-      mySession.disconnect()
+    if (session) {
+      session.disconnect()
     }
     // 설정 초기화
     setOV(null)
@@ -108,6 +115,7 @@ const Openvidu = ({ connectSession, setMessage }: any) => {
   const createSession = async () => {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "voice/session",
+      { roomUuid: uuid },
       {
         headers: { "Content-Type": "application/json" },
       },
