@@ -1,12 +1,25 @@
 "use client"
 import React, { useState } from "react"
 import Container from "@/components/common/Container"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import ThemeCarousel from "@/components/common/ThemeCarousel"
 const Theme = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const mode: string | null = searchParams.get("mode")
   const [theme, selectTheme] = useState<number>(0)
-
+  const gameStart = (): void => {
+    if (mode === "single") {
+      alert("게임을 시작합니다.")
+      router.push("/ingame")
+    } else if (mode === "multi") {
+      alert("매칭을 시작합니다.")
+      router.push("multi/random")
+    } else {
+      alert("잘못된 접근입니다. ")
+      router.push("mode")
+    }
+  }
   return (
     <Container
       display="flex"
@@ -24,7 +37,7 @@ const Theme = () => {
       />
       <button
         onClick={() => {
-          console.log("게임시작", theme)
+          gameStart()
         }}
       >
         시작하기
