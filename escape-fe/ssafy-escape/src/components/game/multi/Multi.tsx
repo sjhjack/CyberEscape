@@ -1,10 +1,11 @@
 "use client"
 
 import Container from "@/components/common/Container"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import * as S from "@/app/(isLogIn)/game/multi/mulitStyle"
 const Multi = () => {
   const router = useRouter()
+
   return (
     <Container
       display="flex"
@@ -42,7 +43,11 @@ const Multi = () => {
           />
           <S.MenuText>방 찾기</S.MenuText>
         </S.MenuContainer>
-        <S.MenuContainer>
+        <S.MenuContainer
+          onClick={() => {
+            router.push("theme?mode=multi")
+          }}
+        >
           <S.MultiImage
             src="/image/random.png"
             alt="random matching"
