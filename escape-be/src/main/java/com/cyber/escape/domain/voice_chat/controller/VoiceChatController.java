@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @RestController
@@ -29,6 +30,8 @@ public class VoiceChatController {
 
     private OpenVidu openvidu;
 
+    private ConcurrentHashMap<String, String> roomSessionInfo = new ConcurrentHashMap<>();
+
     @PostConstruct
     public void init(){
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
@@ -42,17 +45,24 @@ public class VoiceChatController {
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
 
-        // sessionId를 보낸다.
+        String roomUuid = (String) params.get("roomUuid");
 
-        VoiceChatDto.SessionResDto sessionDto = VoiceChatDto.SessionResDto.builder().sessionId(session.getSessionId()).build();
+        if(roomUuid == null || roomUuid.isBlank())
+            throw new VoiceChatException(ExceptionCodeSet.BAD_REQUEST);
+
+        // 현재 roomUuid로 저장된 sessionId가 있다면
+        String sessionId = roomSessionInfo.get(roomUuid) != null ? roomSessionInfo.get(roomUuid) : session.getSessionId();
+
+        roomSessionInfo.put(roomUuid, sessionId);
+        VoiceChatDto.SessionResDto sessionDto = VoiceChatDto.SessionResDto.builder().sessionId(sessionId).build();
         return new ApiResponse(HttpStatus.OK.value(), "보이스 채팅 세션이 만들어졌습니다.", sessionDto);
     }
 
     // 연결 생성
     // 해당 메서드에서 반환하는 토큰을 기반으로 사용자를 세션에 연결할 수 있음
     @PostMapping("/connection")
-    public ApiResponse createConnection(@RequestBody Map<String, String> sessionInfo) throws
-            OpenViduHttpException, OpenViduJavaClientException{
+    public ApiResponse createConnection(@RequestBody Map<String, String> sessionInfo)
+                                throws OpenViduHttpException, OpenViduJavaClientException{
 
         Session session = openvidu.getActiveSession(sessionInfo.get("sessionId"));
 
