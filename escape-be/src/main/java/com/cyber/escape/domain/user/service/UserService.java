@@ -1,17 +1,6 @@
 package com.cyber.escape.domain.user.service;
 
-import com.cyber.escape.domain.friend.entity.Friend;
-import com.cyber.escape.domain.friend.repository.FriendRepository;
-import com.cyber.escape.domain.user.dto.UserDto;
-import com.cyber.escape.domain.user.entity.User;
-import com.cyber.escape.domain.user.jwt.TokenProvider;
-import com.cyber.escape.domain.user.repository.UserRepository;
-import com.cyber.escape.domain.user.util.UserUtil;
-
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -21,7 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
+import com.cyber.escape.domain.friend.entity.Friend;
+import com.cyber.escape.domain.friend.repository.FriendRepository;
+import com.cyber.escape.domain.user.dto.UserDto;
+import com.cyber.escape.domain.user.entity.User;
+import com.cyber.escape.domain.user.jwt.TokenProvider;
+import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.domain.user.util.TokenUtil;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +30,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
+    private final TokenUtil tokenUtil;
 
     @Transactional
     public String signup(UserDto.SignupRequest signupRequest) {
@@ -52,14 +51,14 @@ public class UserService {
     }
 
     public UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest) {
-        // User user = UserUtil.findByLoginId(userRepository, signinRequest.getLoginId());
         Authentication authentication = authenticationManagerBuilder.getObject()
             .authenticate(signinRequest.toAuthentication());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
 
-        // Todo : refresh token 저장
+        // Refresh Token Redis에 저장
+        tokenUtil.setRefreshToken(signinResponse.getRefreshToken());
 
         return signinResponse;
     }
