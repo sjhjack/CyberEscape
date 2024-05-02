@@ -26,3 +26,5 @@ rabbit:
   port: ${MQ_PORT}
   username: ${MQ_USER_NAME}
   password: ${MQ_PASSWORD}
+
+secretKeyPlain: ${KEY}
