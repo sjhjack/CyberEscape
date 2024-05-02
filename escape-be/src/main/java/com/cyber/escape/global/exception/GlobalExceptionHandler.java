@@ -10,13 +10,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(QuizException.class)
-    public ApiResponse handleMemberException(QuizException e) {
+    public ApiResponse handleQuizException(QuizException e) {
         return makeResponseFormat(e.getExceptionCode());
     }
 
 
     @ExceptionHandler(ChatException.class)
-    public ApiResponse handleMemberException(ChatException e) {
+    public ApiResponse handleChatException(ChatException e) {
+        return makeResponseFormat(e.getExceptionCode());
+    }
+
+    @ExceptionHandler(VoiceChatException.class)
+    public ApiResponse handleVoiceChatException(VoiceChatException e) {
         return makeResponseFormat(e.getExceptionCode());
     }
 
