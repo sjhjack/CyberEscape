@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping("/auth/signup")
     public ApiResponse<String> signup(@RequestBody UserDto.SignupRequest signupRequest) {
@@ -24,6 +24,11 @@ public class UserController {
     @PostMapping("/auth/signin")
     public ApiResponse<UserDto.SigninResponse> signin(@RequestBody UserDto.SigninRequest signinRequest) {
         return new ApiResponse<>(HttpStatus.OK.value(), "로그인 완료", userService.signin(signinRequest));
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<UserDto.SigninResponse> reIssue(@RequestBody UserDto.SigninResponse tokenRequest) {
+        return new ApiResponse<>(HttpStatus.OK.value(), "생성 성공", userService.reIssue(tokenRequest));
     }
 
     @PostMapping("/user/nickname")
