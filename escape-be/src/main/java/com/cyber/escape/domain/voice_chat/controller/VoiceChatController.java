@@ -7,6 +7,7 @@ import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.VoiceChatException;
 import io.openvidu.java.client.*;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 @RestController
+@Slf4j
 @RequestMapping("/voice")
 public class VoiceChatController {
 
@@ -39,16 +41,17 @@ public class VoiceChatController {
 
 
     // 세션 초기화
-    @PostMapping("/session")
+    @PostMapping("/init/session")
     public ApiResponse initSession(@RequestBody(required = false) Map<String, Object> params) throws OpenViduJavaClientException, OpenViduHttpException {
 
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
 
         String roomUuid = (String) params.get("roomUuid");
+        log.info("roomUUID : {}", roomUuid);
 
         if(roomUuid == null || roomUuid.isBlank())
-            throw new VoiceChatException(ExceptionCodeSet.BAD_REQUEST);
+            throw new VoiceChatException(ExceptionCodeSet.UUID_NOT_CORRECT);
 
         // 현재 roomUuid로 저장된 sessionId가 있다면
         String sessionId = roomSessionInfo.get(roomUuid) != null ? roomSessionInfo.get(roomUuid) : session.getSessionId();
@@ -64,10 +67,11 @@ public class VoiceChatController {
     public ApiResponse createConnection(@RequestBody Map<String, String> sessionInfo)
                                 throws OpenViduHttpException, OpenViduJavaClientException{
 
-        Session session = openvidu.getActiveSession(sessionInfo.get("sessionId"));
+        String sessionId = sessionInfo.get("sessionId") == null ? "" : sessionInfo.get("sessionId");
+        Session session = openvidu.getActiveSession(sessionId);
 
         if(session == null){
-            throw new VoiceChatException(ExceptionCodeSet.SESSION_NOT_CORRECT);
+            throw new VoiceChatException(ExceptionCodeSet.SESSION_ID_NOT_CORRECT);
         }
 
         ConnectionProperties properties = ConnectionProperties.fromJson(sessionInfo).build();
