@@ -24,7 +24,7 @@ const DollModel = ({ onClick }: DollProps) => {
 
   useEffect(() => {
     if (doll.scene) {
-      doll.scene.position.set(2, 3, -2)
+      doll.scene.position.set(2, 80, -2)
     }
   }, [doll])
 
@@ -38,21 +38,12 @@ const DollModel = ({ onClick }: DollProps) => {
     }
   }, [scene])
 
-  const handlePointerOver = () => {
-    document.body.style.cursor = "pointer"
-  }
-
-  const handlePointerOut = () => {
-    document.body.style.cursor = "default"
-  }
-
   return (
     <primitive
       object={doll.scene}
-      scale={0.05}
+      scale={1}
       onClick={onClick}
-      onPointerOver={handlePointerOver}
-      onPointerOut={handlePointerOut}
+
     />
   )
 }
