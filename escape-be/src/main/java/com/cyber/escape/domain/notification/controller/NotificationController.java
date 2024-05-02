@@ -1,13 +1,13 @@
 package com.cyber.escape.domain.notification.controller;
 
-
-package com.a602.actors.domain.notification.controller;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cyber.escape.domain.notification.document.Notify;
+import com.cyber.escape.domain.notification.dto.NotifyDto;
 import com.cyber.escape.domain.notification.service.NotificationService;
 import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.common.dto.ApiResponse;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,7 +47,7 @@ public class NotificationController {
     }
 
     @GetMapping("/list")
-    public ApiResponse<List<NotifyDto.Response>> getUnreadNotifyList(@RequestParam Long loginId){
+    public ApiResponse<List<NotifyDto.Response>> getUnreadNotifyList(@RequestParam String loginId){
         log.info("NotificationController ========== getNotReadNoteList() start ..");
         return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList(loginId));
     }
@@ -64,16 +64,16 @@ public class NotificationController {
 
 
     // 디버깅 용 메서드
-    @PostMapping("/sendtest/{senderId}/{receiverId}")
-    public void sendTest(@PathVariable Long senderId, @PathVariable Long receiverId){
-        // Member sender = Member.builder()
-        // 	.memberId(String.valueOf(senderId))
-        // 	.build();
-        // Member receiver = Member.builder()
-        // 	.memberId(String.valueOf(receiverId))
-        // 	.build();
-
-        notificationService.send(receiverId, Notify.NotificationType.CHAT, "test content");
-    }
+//    @PostMapping("/sendtest/{senderId}/{receiverId}")
+//    public void sendTest(@PathVariable Long senderId, @PathVariable Long receiverId){
+//        // Member sender = Member.builder()
+//        // 	.memberId(String.valueOf(senderId))
+//        // 	.build();
+//        // Member receiver = Member.builder()
+//        // 	.memberId(String.valueOf(receiverId))
+//        // 	.build();
+//
+//        notificationService.send(receiverId, Notify.NotificationType.CHAT, "test content");
+//    }
 }
 
