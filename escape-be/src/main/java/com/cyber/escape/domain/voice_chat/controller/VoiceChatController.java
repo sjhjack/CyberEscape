@@ -18,9 +18,8 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/voice/")
+@RequestMapping("/voice")
 public class VoiceChatController {
-
 
     @Value("${openvidu.url}")
     private String OPENVIDU_URL;
