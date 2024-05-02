@@ -9,7 +9,7 @@ const Player = (props: any) => {
   const frontVector = new THREE.Vector3()
   const sideVector = new THREE.Vector3()
   const speed = new THREE.Vector3()
-  const SPEED = 5
+  const SPEED = props.speed || 5
 
   const { camera } = useThree()
 
@@ -51,7 +51,7 @@ const Player = (props: any) => {
         position={props.position}
         ref={ref as React.MutableRefObject<THREE.Mesh>}
       >
-        <sphereGeometry args={[2, 5, 5]} />
+        <sphereGeometry args={props.args || [2, 5, 5]} />
         <meshStandardMaterial color="#ff0000" opacity={0} transparent />
       </mesh>
     </group>
