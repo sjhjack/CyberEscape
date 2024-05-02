@@ -28,7 +28,7 @@ services:
 #      - /home/ubuntu/volume/mysql:/var/lib/mysql
     env_file: ".env"
     ports:
-      - "3306:3306"
+      - "3307:3306"
 #
 #  flask:
 #    container_name: flask
