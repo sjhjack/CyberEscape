@@ -39,6 +39,7 @@ public class UserService {
         // 비밀번호 암호화
         signupRequest.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
         // Todo : nickname, profile image 자동 생성
+        signupRequest.setNickname("닉네임");
         // Todo : profile image S3에 저장 및 url 가져오기
 
         return userRepository.save(User.from(signupRequest)).getLoginId();
@@ -51,6 +52,8 @@ public class UserService {
     }
 
     public UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest) {
+        log.info("signin start !!");
+
         Authentication authentication = authenticationManagerBuilder.getObject()
             .authenticate(signinRequest.toAuthentication());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -64,15 +67,19 @@ public class UserService {
     }
 
     public UserDto.SigninResponse reIssue(UserDto.SigninResponse tokenRequest) {
+        log.info("reissue start !!");
+
         // Refresh Token 파싱되면 OK
         tokenProvider.validateToken(tokenRequest.getRefreshToken());
-        // Access Token 파싱해서 새로운 인증객체 만들기
-        Authentication authentication = tokenProvider.getAuthentication(tokenRequest.getAccessToken());
-        log.info("UserService :::::::::: 인증객체 생성 {}", authentication.getName());
         // Redis에 저장되어있는 Refresh Token과 Request로 받은 Refresh Token 비교
         tokenUtil.checkRefreshTokenEquals(tokenRequest.getRefreshToken());
+        // Context Holder에 있는 인증 객체 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("UserService.reIssue :::::::::: 저장되어 있는 인증 객체 {}", authentication.getName());
         // 인증 객체로 토큰 재발행
         UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
+        // Refresh Token Redis에 저장
+        tokenUtil.setRefreshToken(signinResponse.getRefreshToken());
 
         return signinResponse;
     }

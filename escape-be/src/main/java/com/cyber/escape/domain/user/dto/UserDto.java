@@ -13,9 +13,9 @@ public class UserDto {
 
 	@Builder
 	@Getter
+	@Setter
 	public static class SignupRequest {
 		private String loginId;
-		@Setter
 		private String password;
 		private String nickname;
 		private String profileUrl;

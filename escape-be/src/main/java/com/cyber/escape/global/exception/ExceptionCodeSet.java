@@ -20,7 +20,8 @@ public enum ExceptionCodeSet {
 
     ENTITY_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "정보가 존재하지 않습니다."),
 
-    TOKEN_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 6000, "토큰이 존재하지 않습니다.");
+    TOKEN_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 6000, "토큰이 존재하지 않습니다."),
+    TOKEN_EXPIRED(HttpStatus.INTERNAL_SERVER_ERROR, 6001, "유효기간 만료된 토큰입니다.");
 
 
     private final HttpStatus httpStatus;

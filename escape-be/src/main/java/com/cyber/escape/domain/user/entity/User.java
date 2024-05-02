@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
-	@Column(name = "login_id")
+	@Column(name = "login_id", unique = true)
 	private String loginId;
 
 	private String password;

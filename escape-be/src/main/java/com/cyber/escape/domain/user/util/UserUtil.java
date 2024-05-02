@@ -6,7 +6,9 @@ import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class UserUtil {
 
     public static String getUserUuid(){
@@ -17,6 +19,7 @@ public class UserUtil {
     }
 
     public static User findByLoginId(final UserRepository userRepository, final String loginId) {
+        log.info("UserUtil.findByLoginId ========== loginId : {}", loginId);
         return userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
     }

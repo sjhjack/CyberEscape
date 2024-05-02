@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.cyber.escape.domain.user.dto.UserDto;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.TokenException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -57,12 +59,16 @@ public class TokenProvider {
 			.signWith(key, SignatureAlgorithm.HS512)
 			.compact();
 
-		log.info("generateTokenResponse start =============");
-		log.info("access : {}", accessToken.toString());
-		log.info("refresh : {}", refreshToken.toString());
-		log.info("generateTokenResponse end ===============");
+		logGenerateTokenResponse(accessToken, refreshToken);
 
 		return UserDto.SigninResponse.of(auth.getName(), BEARER_TYPE, accessToken, refreshToken);
+	}
+
+	private static void logGenerateTokenResponse(String accessToken, String refreshToken) {
+		log.info("generateTokenResponse start =============");
+		log.info("access : {}", accessToken);
+		log.info("refresh : {}", refreshToken);
+		log.info("generateTokenResponse end ===============");
 	}
 
 	public Authentication getAuthentication(String accessToken) {
@@ -70,20 +76,6 @@ public class TokenProvider {
 		Claims claims = paresClaims(accessToken);
 
 		UserDetails principal = new User(claims.getSubject(), "", new ArrayList<>());
-
-		return new UsernamePasswordAuthenticationToken(principal, "");
-	}
-
-	public Authentication getPlainAuthentication(String accessToken) {
-		// Access Token 유효성 확인 및 파싱
-		String plainTextClaims = paresPlainTextClaims(accessToken);
-
-		// if (claims.get(AUTHORITIES_KEY) == null) {
-		// 	throw new RuntimeException();
-		// }
-
-		log.info("getPlainAuthentication ::::: plainTextClaims = {}", plainTextClaims.toString());
-		UserDetails principal = new User(plainTextClaims.toString(), "", new ArrayList<>());
 
 		return new UsernamePasswordAuthenticationToken(principal, "");
 	}
@@ -116,15 +108,6 @@ public class TokenProvider {
 		}
 	}
 
-	private String paresPlainTextClaims(String accessToken) {
-		try {
-			return Jwts.parserBuilder().setSigningKey(key).build().parsePlaintextJws(accessToken).getBody();
-		} catch (ExpiredJwtException e) {
-			return e.getMessage();
-		}
-	}
-
-
 	private void handleSecurityException(SecurityException e) {
 		throw new RuntimeException("서명이 유효하지 않습니다.");
 	}
@@ -134,7 +117,7 @@ public class TokenProvider {
 	}
 
 	private void handleExpiredJwtException(ExpiredJwtException e) {
-		throw new RuntimeException("토큰의 유효 기간이 만료되었습니다.");
+		throw new TokenException(ExceptionCodeSet.TOKEN_EXPIRED);
 	}
 
 	private void handleUnsupportedJwtException(UnsupportedJwtException e) {
