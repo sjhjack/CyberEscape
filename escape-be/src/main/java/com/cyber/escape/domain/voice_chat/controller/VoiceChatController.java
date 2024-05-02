@@ -30,7 +30,7 @@ public class VoiceChatController {
 
     private OpenVidu openvidu;
 
-    private ConcurrentHashMap<String, String> roomSessionInfo = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, String> roomSessionInfo = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void init(){
