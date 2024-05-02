@@ -85,7 +85,7 @@ public class UserService {
     }
 
     public UserDto.NicknameResponse generateNickname(String format, int count){
-        String url = "https://nickname.hwanmoo.kr/?format=" + format + "&count=" + count;
+        String url = "https://nickname.hwanmoo.kr/?format=" + format + "&count=" + count + "max_length=20";
         RestTemplate restTemplate = new RestTemplate();
         UserDto.NicknameResponse nicknameResponse = restTemplate.getForObject(url, UserDto.NicknameResponse.class);
         return nicknameResponse;
