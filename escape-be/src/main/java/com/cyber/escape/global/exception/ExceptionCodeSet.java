@@ -12,7 +12,9 @@ public enum ExceptionCodeSet {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, 4000, "잘못된 접근입니다."),
     ALREADY_SOLVED_QUIZ(HttpStatus.BAD_REQUEST, 4001, "이미 푼 문제입니다."),
     ALREADY_USE_HINT(HttpStatus.BAD_REQUEST, 4002, "힌트 사용 횟수를 초과했습니다"),
-    SESSION_NOT_CORRECT(HttpStatus.BAD_REQUEST, 4003, "세션 아이디가 잘못 되었습니다."),
+    SESSION_ID_NOT_CORRECT(HttpStatus.BAD_REQUEST, 4003, "세션 아이디가 잘못 되었습니다."),
+    SESSION_NOT_CORRECT(HttpStatus.BAD_REQUEST, 4004, "세션이 잘못 되었습니다."),
+    UUID_NOT_CORRECT(HttpStatus.BAD_REQUEST, 4005, "uuid가 잘못 되었습니다."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, 4040, "회원이 존재하지 않습니다."),
     RANKING_NOT_FOUND(HttpStatus.NOT_FOUND, 4041, "랭킹 정보가 존재하지 않습니다."),
