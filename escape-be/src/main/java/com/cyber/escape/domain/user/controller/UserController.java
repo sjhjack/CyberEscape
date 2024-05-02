@@ -26,7 +26,7 @@ public class UserController {
         return new ApiResponse<>(HttpStatus.OK.value(), "로그인 완료", userService.signin(signinRequest));
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/auth/refresh")
     public ApiResponse<UserDto.SigninResponse> reIssue(@RequestBody UserDto.SigninResponse tokenRequest) {
         return new ApiResponse<>(HttpStatus.OK.value(), "생성 성공", userService.reIssue(tokenRequest));
     }
