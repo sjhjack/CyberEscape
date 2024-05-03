@@ -9,7 +9,7 @@ type Props = {
 }
 
 const Flower = ({ onClick }: Props) => {
-  const flower = useGLTF("/glb/flower.glb", true)
+  const flower = useGLTF("/glb/horror/flower.glb", true)
   // const { scene } = useThree()
 
   useEffect(() => {
