@@ -57,23 +57,23 @@ const Waiting = () => {
 
   const pathname: string = usePathname()
   const uuid: string = pathname.substring(20)
-  useEffect(() => {
-    // 렌더링과 동시에 joinSession 함수 실행 할 예정
-    if (!session) {
-      joinSession()
-    }
-    const handleBeforeUnload = () => {
-      session?.disconnect()
-      console.log("세션 종료")
-    }
+  // useEffect(() => {
+  //   // 렌더링과 동시에 joinSession 함수 실행 할 예정
+  //   if (!session) {
+  //     joinSession()
+  //   }
+  //   const handleBeforeUnload = () => {
+  //     session?.disconnect()
+  //     console.log("세션 종료")
+  //   }
 
-    window.addEventListener("beforeunload", handleBeforeUnload)
+  //   window.addEventListener("beforeunload", handleBeforeUnload)
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload)
-      session?.disconnect() // 컴포넌트 언마운트 시에도 세션 종료
-    }
-  }, [])
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload)
+  //     session?.disconnect() // 컴포넌트 언마운트 시에도 세션 종료
+  //   }
+  // }, [])
 
   // 세션 참여
   const joinSession = async () => {
