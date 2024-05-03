@@ -55,7 +55,6 @@ const Create = () => {
         <S.MenuBox>
           <S.Menu>테마</S.Menu>
           <ThemeCarousel
-            selectTheme={selectTheme}
             width={300}
             height={220}
             navigation={false}
