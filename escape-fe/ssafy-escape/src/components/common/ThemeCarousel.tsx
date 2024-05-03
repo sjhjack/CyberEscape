@@ -32,13 +32,13 @@ const themeData: CardInfo[] = [
     title: "SSAFY",
     time: "10-15분",
     content: "탈출 마렵다",
-    image: "/image/ssafy.jpg",
+    image: "/image/ssafy.png",
   },
   {
     title: "우주",
     time: "10-15분",
     content: "우주선에서 탈출하라!",
-    image: "/image/normal.jpg",
+    image: "/image/space.png",
   },
 ]
 const themes = ["horror", "ssafy", "space"]
