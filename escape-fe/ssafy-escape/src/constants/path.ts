@@ -19,6 +19,11 @@ const API_PATH = {
       MY_RANK: "/rank/myrank",
       UPDATE_RANK: "/rank/update",
     },
+    NICKNAME: {
+      DUPLICATION: "/user/nickname/duplication",
+      AUTO_CREATE: "/user/nickname",
+      CHANGE: "/user/change",
+    },
   },
   GAME: {
     MULTI: {
@@ -33,11 +38,6 @@ const API_PATH = {
         CHANGE_HOST: "/room/change/host",
         START: "/room/start",
       },
-    },
-    NICKNAME: {
-      DUPLICATION: "/user/nickname/duplication",
-      AUTO_CREATE: "/user/nickname",
-      CHANGE: "/user/change",
     },
   },
   INVITE: {
