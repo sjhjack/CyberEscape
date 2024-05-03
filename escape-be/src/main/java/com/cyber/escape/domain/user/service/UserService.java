@@ -38,9 +38,8 @@ public class UserService {
         loginIdValidationCheck(signupRequest.getLoginId());
         // 비밀번호 암호화
         signupRequest.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
-        // nickname 랜덤 생성 -> 생성되는 닉네임 글자수 따라 속도 다른 듯
-        signupRequest.setNickname(generateNickname("json", 1).getWords()[0]);
-        // signupRequest.setNickname(randomNickname());
+        // nickname 랜덤 생성 -> API 서버 속도 따라서 다른 듯 (5초까지 봤음,,)
+        signupRequest.setNickname(randomNickname());
         // Todo : profile image 자동 생성
         // Todo : profile image S3에 저장 및 url 가져오기
 
@@ -90,11 +89,8 @@ public class UserService {
         return "";
     }
 
-    public UserDto.NicknameResponse generateNickname(String format, int count){
-        String url = "https://nickname.hwanmoo.kr/?format=" + format + "&count=" + count + "max_length=20";
-        RestTemplate restTemplate = new RestTemplate();
-        UserDto.NicknameResponse nicknameResponse = restTemplate.getForObject(url, UserDto.NicknameResponse.class);
-        return nicknameResponse;
+    public String generateNickname(){
+        return randomNickname();
     }
 
     public UserDto.SearchNicknameResponse searchNickname(UserDto.SearchNicknameRequest dto){
