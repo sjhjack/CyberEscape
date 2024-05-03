@@ -9,13 +9,7 @@ import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
-// 어떤 테마를 선택했는지 파악하기 위해 인덱스로 정보 전달
-interface SelectThemeFunction {
-  (value: string): void
-}
-
 interface CarouselProps {
-  selectTheme: SelectThemeFunction
   width?: number
   height?: number
   navigation?: boolean
@@ -41,9 +35,8 @@ const themeData: CardInfo[] = [
     image: "/image/space.png",
   },
 ]
-const themes = ["horror", "ssafy", "space"]
+const themes: Array<string> = ["horror", "ssafy", "space"]
 const ThemeCarousel = ({
-  selectTheme,
   width,
   height,
   navigation,
@@ -52,7 +45,6 @@ const ThemeCarousel = ({
   const [currentCard, setCurrentCard] = useState<number>(0)
   const { setSelectedTheme } = useIngameThemeStore()
   useEffect(() => {
-    selectTheme(themes[currentCard])
     setSelectedTheme(themes[currentCard])
   }, [currentCard])
   return (
