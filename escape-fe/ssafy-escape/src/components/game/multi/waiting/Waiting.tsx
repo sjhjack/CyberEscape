@@ -183,7 +183,7 @@ const Waiting = () => {
       <S.MainBox>
         <S.MainContentBox>
           <S.ThemeImage
-            src="/image/horror.jpg"
+            src="/image/ssafy.png"
             alt=""
             width={400}
             height={220}

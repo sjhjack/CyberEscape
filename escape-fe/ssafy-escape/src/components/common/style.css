@@ -4,7 +4,7 @@
   color: black !important; /* 버튼 색상 변경 */
   width: 20px !important; /* 버튼 너비 조정 */
   height: 20px !important; /* 버튼 높이 조정 */
-  top: 50% !important; /* 버튼을 세로 중앙에 위치 */
+  top: 60% !important; /* 버튼을 세로 중앙에 위치 */
   transform: translateY(-50%) !important; /* 버튼을 세로 중앙 정렬 */
 }
 
