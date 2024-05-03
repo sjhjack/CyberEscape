@@ -31,6 +31,10 @@ const Create = () => {
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPassword(event.target.value)
   }
+  const buttonDisabled = (): boolean => {
+    return title.trim() === "" || (secretMode && password.trim() === "")
+  }
+
   const hostUuid: string = ""
   const data: postCreateRoomRequestProps = {
     title: title,
@@ -52,16 +56,14 @@ const Create = () => {
       <S.CreateContainer>
         <S.MenuBox>
           <S.Menu>방 제목</S.Menu>
-          <Input width="250px" onChange={handleTitle} />
+          <Input $width="300px" onChange={handleTitle} />
         </S.MenuBox>
         <S.MenuBox>
-          <S.Menu>
-            <div>테마</div>
-          </S.Menu>
+          <S.ThemeMenu>테마</S.ThemeMenu>
           <ThemeCarousel
             width={300}
             height={220}
-            navigation={false}
+            navigation={true}
             pagination={true}
           />
         </S.MenuBox>
@@ -77,12 +79,17 @@ const Create = () => {
         {secretMode && (
           <S.MenuBox>
             <S.Menu>비밀번호</S.Menu>
-            <Input width="250px" onChange={handlePassword} />
+            <Input type="password" $width="300px" onChange={handlePassword} />
           </S.MenuBox>
         )}
       </S.CreateContainer>
       <S.ButtonPlaced onClick={createRoom}>
-        <Button theme="success" text="방 만들기" width="200" />
+        <Button
+          theme="success"
+          text="방 생성"
+          width="200px"
+          disabled={buttonDisabled()}
+        />
       </S.ButtonPlaced>
     </Container>
   )
