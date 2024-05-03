@@ -1,11 +1,10 @@
 package com.cyber.escape.domain.user.controller;
 
-import com.cyber.escape.domain.rank.dto.GameHistoryDto;
 import com.cyber.escape.domain.user.dto.UserDto;
-import com.cyber.escape.domain.user.entity.User;
+import com.cyber.escape.domain.user.service.AuthService;
 import com.cyber.escape.domain.user.service.UserService;
 import com.cyber.escape.global.common.dto.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,31 +13,32 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+    private final AuthService authService;
     private final UserService userService;
 
     @PostMapping("/auth/signup")
     public ApiResponse<String> signup(@RequestBody UserDto.SignupRequest signupRequest) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "회원가입 완료", userService.signup(signupRequest));
+        return new ApiResponse<>(HttpStatus.OK.value(), "회원가입 완료", authService.signup(signupRequest));
     }
 
     @PostMapping("/auth/signin")
     public ApiResponse<UserDto.SigninResponse> signin(@RequestBody UserDto.SigninRequest signinRequest) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "로그인 완료", userService.signin(signinRequest));
+        return new ApiResponse<>(HttpStatus.OK.value(), "로그인 완료", authService.signin(signinRequest));
     }
 
     @PostMapping("/auth/refresh")
     public ApiResponse<UserDto.SigninResponse> reIssue(@RequestBody UserDto.SigninResponse tokenRequest) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "생성 성공", userService.reIssue(tokenRequest));
+        return new ApiResponse<>(HttpStatus.OK.value(), "생성 성공", authService.reIssue(tokenRequest));
     }
 
     @PostMapping("/auth/logout")
     public ApiResponse<String> logout() {
-        return new ApiResponse<>(HttpStatus.OK.value(), "로그아웃 성공", userService.logout());
+        return new ApiResponse<>(HttpStatus.OK.value(), "로그아웃 성공", authService.logout());
     }
 
     @PatchMapping("/auth/quit")
     public ApiResponse<String> quit() {
-        return new ApiResponse<>(HttpStatus.OK.value(), "회원 탈퇴 성공", userService.quit());
+        return new ApiResponse<>(HttpStatus.OK.value(), "회원 탈퇴 성공", authService.quit());
     }
 
     @PostMapping("/user/nickname")

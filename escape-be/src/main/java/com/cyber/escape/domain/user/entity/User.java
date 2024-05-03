@@ -26,7 +26,7 @@ public class User extends BaseEntity {
 	private boolean withdrawal;
 	private String profileUrl;
 
-	public static User from(UserDto.SignupRequest signupRequest){
+	public static User from(final UserDto.SignupRequest signupRequest){
 		return User.builder()
 			.loginId(signupRequest.getLoginId())
 			.password(signupRequest.getPassword())
