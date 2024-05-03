@@ -1,9 +1,14 @@
-const Lights = () => {
+interface LightProps {
+  isFanalty: boolean
+}
+
+const Lights = ({ isFanalty }: LightProps) => {
   return (
     <>
-      <ambientLight intensity={0.5} />
-      {/* <pointLight position={[10, 10, 10]} intensity={1} /> */}
-      <directionalLight position={[6, 15, 5]} intensity={1} receiveShadow />
+      <ambientLight intensity={1} />
+      {!isFanalty ? (
+        <directionalLight position={[6, 15, 5]} intensity={1} receiveShadow />
+      ) : null}
     </>
   )
 }

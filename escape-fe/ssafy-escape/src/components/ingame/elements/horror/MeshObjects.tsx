@@ -1,14 +1,13 @@
-
 import BaseBox from "../common/BaseBox"
 
 const MeshObjects = () => {
   return (
     <>
       <BaseBox
-        position={[-60, -0.5, 6]}
-        args={[110, 40, 40]}
+        position={[-40, -0.5, 7]}
+        args={[70, 40, 40]}
         color={"red"}
-        opacity={0.5}
+        opacity={0}
         renderOrder={1}
       />
     </>
