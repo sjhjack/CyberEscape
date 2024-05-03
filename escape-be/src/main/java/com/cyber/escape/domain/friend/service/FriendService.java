@@ -55,6 +55,6 @@ public class FriendService {
 
     public List<NotifyDto.Response> getMyFriendList(){
         String userUuid = UserUtil.getUserUuid();
-        IdFinder.
+        return null;
     }
 }
