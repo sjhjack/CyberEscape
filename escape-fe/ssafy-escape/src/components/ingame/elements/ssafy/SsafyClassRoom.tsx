@@ -25,7 +25,7 @@ const SsafyClassRoom = ({ onLoaded }: RoomProps) => {
     })
   }, [gltf])
 
-  return <primitive object={gltf.scene} scale={35} />
+  return <primitive object={gltf.scene} scale={5} />
 }
 
 export default SsafyClassRoom

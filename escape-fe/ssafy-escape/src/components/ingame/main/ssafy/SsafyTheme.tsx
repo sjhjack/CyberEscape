@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber"
 import CameraControl from "@/components/ingame/CameraControl"
 import PointerLockControls from "@/components/ingame/PointerLockControls"
 import SsafyClassRoom from "../../elements/ssafy/SsafyClassRoom"
-const startPosition = { x: 8, y: 8, z: -2 }
+const startPosition = { x: 8, y: 8, z: 1 }
 const startTargetPosition = { x: 4, y: 3, z: -2 }
 const lookAt = { x: -4, y: 2, z: 2 }
 
