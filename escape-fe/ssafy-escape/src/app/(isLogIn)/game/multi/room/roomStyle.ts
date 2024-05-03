@@ -6,7 +6,7 @@ export const RoomBox = styled.div`
   width: 80%;
   padding: 1.5%;
   border-radius: 20px;
-  margin-bottom: 3%;
+  margin-bottom: 2%;
   display: flex;
   align-items: center;
 `

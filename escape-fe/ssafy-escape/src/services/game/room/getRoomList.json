@@ -11,7 +11,7 @@
         "userId": 1,
         "uuid": "8b91e093-269a-4e28-8e0e-40bc0a889133",
         "nickname": "asdf",
-        "hasPassword": false
+        "hasPassword": true
       },
       {
         "title": "제목2",
