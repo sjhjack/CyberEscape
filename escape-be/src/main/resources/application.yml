@@ -26,3 +26,7 @@ rabbit:
   port: ${MQ_PORT}
   username: ${MQ_USER_NAME}
   password: ${MQ_PASSWORD}
+
+openvidu:
+  url: ${OPENVIDU_URL}
+  secret: ${OPENVIDU_SECRET}

@@ -28,7 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 //	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -40,7 +40,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
-//	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	// queryDSL
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
@@ -55,6 +55,18 @@ dependencies {
 	implementation 'org.webjars:stomp-websocket:2.3.4'
 	// reactor netty
 	implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.6.4'
+
+	// openvidu
+	implementation group: 'io.openvidu', name: 'openvidu-parent', version: '2.0.0', ext: 'pom'
+
+	// Openvidu 의존성
+	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.29.0'
+
+	implementation 'org.webjars.bower:webrtc-adapter:7.4.0'
+	//Kurento (미디어서버) 관련 의존성 추가
+//	implementation 'org.kurento:kurento-client:6.16.0'
+//	implementation 'org.kurento:kurento-utils-js:6.15.0'
+
 }
 
 // QueryDsl 빌드 옵션 (선택)
