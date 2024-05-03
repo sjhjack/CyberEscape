@@ -39,24 +39,12 @@ public class UserService {
         // 비밀번호 암호화
         signupRequest.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
         // nickname 랜덤 생성 -> 생성되는 닉네임 글자수 따라 속도 다른 듯
-        // signupRequest.setNickname(generateNickname("json", 1).getWords()[0]);
-        signupRequest.setNickname(randomNickname());
+        signupRequest.setNickname(generateNickname("json", 1).getWords()[0]);
+        // signupRequest.setNickname(randomNickname());
         // Todo : profile image 자동 생성
         // Todo : profile image S3에 저장 및 url 가져오기
 
         return userRepository.save(User.from(signupRequest)).getLoginId();
-    }
-
-    public String randomNickname(){
-        String url = "https://nickname.hwanmoo.kr/?format=text&count=1&max_length=20";
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(url, String.class);
-    }
-
-    private void loginIdValidationCheck(String loginId) {
-        if(userRepository.existsByLoginId(loginId)) {
-            throw new RuntimeException("존재하는 아이디입니다.");
-        }
     }
 
     public UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest) {
@@ -90,6 +78,16 @@ public class UserService {
         tokenUtil.setRefreshToken(signinResponse.getRefreshToken());
 
         return signinResponse;
+    }
+
+    public String logout() {
+        // 이거 근데 return 값으로 뭘 줘야 하지?
+        log.info("logout start !!");
+
+        tokenUtil.deleteRefreshToken();
+
+        log.info("logout end !!");
+        return "";
     }
 
     public UserDto.NicknameResponse generateNickname(String format, int count){
@@ -141,6 +139,18 @@ public class UserService {
         userRepository.save(user);
 
         return newNickname;
+    }
+
+    private void loginIdValidationCheck(String loginId) {
+        if(userRepository.existsByLoginId(loginId)) {
+            throw new RuntimeException("존재하는 아이디입니다.");
+        }
+    }
+
+    private String randomNickname(){
+        String url = "https://nickname.hwanmoo.kr/?format=text&count=1&max_length=20";
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForObject(url, String.class);
     }
 
 }

@@ -31,6 +31,11 @@ public class UserController {
         return new ApiResponse<>(HttpStatus.OK.value(), "생성 성공", userService.reIssue(tokenRequest));
     }
 
+    @PostMapping("/auth/logout")
+    public ApiResponse<String> logout() {
+        return new ApiResponse<>(HttpStatus.OK.value(), "로그아웃 성공", userService.logout());
+    }
+
     @PostMapping("/user/nickname")
     public ApiResponse<UserDto.NicknameResponse> generateNickname(@RequestParam(value = "format", defaultValue = "json") String format,
                                                                   @RequestParam(value = "count", defaultValue = "1") int count) {
