@@ -24,6 +24,7 @@ const Theme = () => {
       />
       <button
         onClick={() => {
+          router.push("/ingame")
           console.log("게임시작", theme)
         }}
       >
