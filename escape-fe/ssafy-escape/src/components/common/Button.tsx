@@ -15,6 +15,7 @@ interface ButtonProps {
   width?: string
   backgroundColor?: string
   type?: "button" | "submit"
+  disabled?: boolean
   onClick?: () => void
 }
 
@@ -30,6 +31,7 @@ const Button = ({
   backgroundColor,
   text,
   type,
+  disabled,
   onClick,
 }: ButtonProps) => {
   return (
@@ -38,6 +40,7 @@ const Button = ({
       width={width}
       backgroundColor={backgroundColor}
       type={type}
+      disabled={disabled}
       onClick={onClick}
     >
       {text}
