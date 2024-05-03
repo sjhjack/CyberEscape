@@ -1,13 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import {
-  OpenVidu,
-  Session,
-  Subscriber,
-  Publisher,
-  StreamManager,
-} from "openvidu-browser"
+import { OpenVidu, Session, Publisher, StreamManager } from "openvidu-browser"
 import axios from "axios"
 import Container from "@/components/common/Container"
 import * as S from "@/app/(isLogIn)/game/multi/waiting/waitingStyle"
@@ -15,18 +9,17 @@ import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
 // import Openvidu from "./Openvidu"
 
 const APPLICATION_SERVER_URL = "http://localhost:8080/"
+const userName: string =
+  "참가자" + Math.floor(Math.random() * 100 + 1).toString()
 const Waiting = () => {
   const [session, setSession] = useState<Session | undefined>(undefined)
-  const [mySessionId, setMySessionId] = useState<string>("A303")
-  const [subscribers, setSubscribers] = useState<any[]>([])
+  const [subscribers, setSubscribers] = useState<Array<any>>([])
   const [publisher, setPublisher] = useState<Publisher | null>(null)
   const [OV, setOV] = useState<OpenVidu | null>(null)
   const [mainStreamManager, setMainStreamManager] = useState<
     StreamManager | undefined
   >(undefined)
   const [chatData, setChatData] = useState<Array<object>>([])
-  const userName: string =
-    "참가자" + Math.floor(Math.random() * 100 + 1).toString()
 
   const pathname: string = usePathname()
   const uuid: string = pathname.substring(20)
@@ -35,16 +28,27 @@ const Waiting = () => {
     if (!session) {
       joinSession()
     }
+    const handleBeforeUnload = () => {
+      session?.disconnect()
+      console.log("세션 종료")
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+
     return () => {
-      leaveSession()
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+      session?.disconnect() // 컴포넌트 언마운트 시에도 세션 종료
     }
   }, [])
 
+  // 세션 참여
   const joinSession = async () => {
     const newOV = new OpenVidu()
     setOV(newOV)
     const newSession = newOV.initSession()
     setSession(newSession)
+    const token = await getToken()
+
     newSession.on("streamCreated", (event: any) => {
       const subscriber = newSession.subscribe(event.stream, undefined)
       const newSubscribers = subscribers
@@ -53,13 +57,12 @@ const Waiting = () => {
     })
 
     newSession.on("streamDestroyed", (event: any) => {
-      if (mainStreamManager) {
-        deleteSubscriber(mainStreamManager)
-      }
+      console.log("스트림 끊김")
+      deleteSubscriber(event.stream.streamManager)
     })
     // 채팅 데이터 저장하기
     newSession.on("signal", (event: any) => {
-      console.log("받음", event.data, 1, JSON.parse(event.from.data).clientData) // Message
+      console.log("받음", event.data, JSON.parse(event.from.data).clientData) // Message
       const userName: string = JSON.parse(event.from.data).clientData
       const message: string = event.data
       setChatData((prevChatData) => [
@@ -68,7 +71,6 @@ const Waiting = () => {
       ])
     })
 
-    const token = await getToken()
     newSession
       .connect(token, { clientData: userName })
       .then(async () => {
@@ -89,6 +91,7 @@ const Waiting = () => {
   // 세션을 나갈 때 실행
   const leaveSession = () => {
     if (session) {
+      console.log("세션을 떠납니다")
       session.disconnect()
       if (mainStreamManager) {
         deleteSubscriber(mainStreamManager)
@@ -98,18 +101,18 @@ const Waiting = () => {
     setOV(null)
     setSession(undefined)
     setSubscribers([])
-    setMySessionId("A303")
     setPublisher(null)
     setMainStreamManager(undefined)
   }
   const deleteSubscriber = (streamManager: StreamManager) => {
     let nowSubscribers = subscribers
-    let index = nowSubscribers.indexOf(StreamManager, 0)
+    let index = nowSubscribers.indexOf(streamManager, 0)
     if (index > -1) {
       nowSubscribers.splice(index, 1)
       setSubscribers(nowSubscribers)
     }
   }
+
   // 우선, 세션을 생성한다. 그 후, 세션 아이디를 토대로 토큰을 생성한다.
   const getToken = async () => {
     const sessionId = await createSession()
