@@ -16,9 +16,8 @@ const Room = ({ roomData }: any) => {
     if (roomData.hasPassword) {
       setShowModal(true)
     } else {
-      router.push(`/game/multi/waiting`)
+      router.push(`/game/multi/waiting/${roomData.uuid}`)
     }
-    // router.push(`/game/multi/waiting/${roomData.uuid}`)
   }
   return (
     <>
