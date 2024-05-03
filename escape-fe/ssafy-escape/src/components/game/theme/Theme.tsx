@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import ThemeCarousel from "@/components/common/ThemeCarousel"
 const Theme = () => {
   const router = useRouter()
-  const [theme, selectTheme] = useState<number>(0)
+  const [theme, selectTheme] = useState<string>("")
 
   return (
     <Container
