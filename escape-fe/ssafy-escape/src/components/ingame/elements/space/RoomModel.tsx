@@ -7,7 +7,7 @@ interface RoomProps {
 }
 
 const RoomModel = ({ onLoaded }: RoomProps) => {
-  const gltf = useGLTF("/glb/textureapply13.glb", true)
+  const gltf = useGLTF("/glb/textureapply24.glb", true)
 
   useEffect(() => {
     if (gltf) {
