@@ -65,15 +65,15 @@ services:
       ports:
         - "3000:3000"
 
-  mongo:
-    image: mongo
-    networks:
-      - backend
-    volumes:
-      - /home/ubuntu/volume/data:/data
-    env_file: ".env"
-    ports:
-      - "27017:27017"
+    mongo:
+      image: mongo
+      networks:
+        - backend
+      volumes:
+        - /home/ubuntu/volume/data:/data
+      env_file: ".env"
+      ports:
+        - "27017:27017"
 
 # 브리지 네트워크는 도커가 제공하는 네트워크 드라이버 중 하나로, 가상
 # 인터페이스를 통해 컨테이너들을 연결한다.
