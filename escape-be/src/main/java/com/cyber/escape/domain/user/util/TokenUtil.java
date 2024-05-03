@@ -16,15 +16,19 @@ public class TokenUtil {
 	private final UserRepository userRepository;
 
 	public void setRefreshToken(String refreshToken) {
-		redisTemplate.opsForValue().set("token" + UserUtil.getLoginUserUuid(userRepository), refreshToken);
+		redisTemplate.opsForValue().set(getKey(), refreshToken);
 	}
 
 	public String getRefreshToken() {
-		return redisTemplate.opsForValue().get("token" + UserUtil.getLoginUserUuid(userRepository));
+		return redisTemplate.opsForValue().get(getKey());
 	}
 
 	public boolean deleteRefreshToken() {
-		return redisTemplate.delete("token" + UserUtil.getLoginUserUuid(userRepository));
+		return redisTemplate.delete(getKey());
+	}
+
+	private String getKey() {
+		return "token" + UserUtil.getLoginUserUuid(userRepository);
 	}
 
 	public void checkRefreshTokenEquals(String refreshToken) {
