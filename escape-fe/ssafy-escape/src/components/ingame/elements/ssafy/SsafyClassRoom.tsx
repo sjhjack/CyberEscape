@@ -7,8 +7,8 @@ type RoomProps = {
 }
 
 // 로딩 오래걸리는 큰 모델들은 onLoaded 적용해서 나머지 요소들이랑 함께 출력되도록 처리
-const HorrorRoomModel = ({ onLoaded }: RoomProps) => {
-  const gltf = useGLTF("/glb/horror_hospital_room.glb", true)
+const SsafyClassRoom = ({ onLoaded }: RoomProps) => {
+  const gltf = useGLTF("/glb/conference_room.glb", true)
 
   useEffect(() => {
     if (gltf) {
@@ -25,7 +25,7 @@ const HorrorRoomModel = ({ onLoaded }: RoomProps) => {
     })
   }, [gltf])
 
-  return <primitive object={gltf.scene} scale={35} />
+  return <primitive object={gltf.scene} scale={5} />
 }
 
-export default HorrorRoomModel
+export default SsafyClassRoom

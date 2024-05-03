@@ -7,7 +7,7 @@ interface RoomProps {
 }
 
 const RoomModel = ({ onLoaded }: RoomProps) => {
-  const gltf = useGLTF("/glb/textureapply9.glb", true)
+  const gltf = useGLTF("/glb/textureapply13.glb", true)
 
   useEffect(() => {
     if (gltf) {
@@ -24,7 +24,7 @@ const RoomModel = ({ onLoaded }: RoomProps) => {
     })
   }, [gltf])
 
-  return <primitive object={gltf.scene} scale={24} />
+  return <primitive object={gltf.scene} scale={35} />
 }
 
 export default RoomModel
