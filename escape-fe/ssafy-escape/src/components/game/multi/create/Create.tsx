@@ -1,12 +1,21 @@
 "use client"
+import { useRouter } from "next/navigation"
 import Container from "@/components/common/Container"
 import Input from "@/components/common/Input"
 import ThemeCarousel from "@/components/common/ThemeCarousel"
 import Button from "@/components/common/Button"
 import Checkbox from "@mui/material/Checkbox"
 import * as S from "@/app/(isLogIn)/game/multi/create/createStyle"
+import postCreateRoom from "@/services/game/room/postCreateRoom"
 import { useState, useEffect } from "react"
+interface postCreateRoomRequestProps {
+  title: string
+  themaId: number
+  password: string
+  hostUuid: string
+}
 const Create = () => {
+  const router = useRouter()
   const [theme, selectTheme] = useState<number>(0)
   const [title, setTitle] = useState<string>("")
   const [secretMode, setSecretMode] = useState<boolean>(false)
@@ -20,7 +29,17 @@ const Create = () => {
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPassword(event.target.value)
   }
-
+  const hostUuid: string = ""
+  const data: postCreateRoomRequestProps = {
+    title: title,
+    themaId: theme,
+    password: password,
+    hostUuid: hostUuid,
+  }
+  const createRoom = async () => {
+    const response = await postCreateRoom(data)
+    router.push(`waiting/${response.data.roomUuid}`)
+  }
   return (
     <Container
       display="flex"
@@ -59,7 +78,7 @@ const Create = () => {
           </S.MenuBox>
         )}
       </S.CreateContainer>
-      <S.ButtonPlaced>
+      <S.ButtonPlaced onClick={createRoom}>
         <Button theme="success" text="방 만들기" width="200" />
       </S.ButtonPlaced>
     </Container>
