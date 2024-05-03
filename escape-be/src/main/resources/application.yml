@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+  hikari:
+    maximum-pool-size:180
+    minimum-idle:10
+  data:
+    redis:
+      host: ${REDIS_HOST} # Redis 서버 호스트 주소
+      port: 6379      # Redis 서버 포트
+      database: 0
+#    mongodb:
+#      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority&appName=${MONGO_APPNAME}
+#      database: ${MONGO_DBNAME}
+rabbit:
+  chat-queue-name: ${MQ_QUEUE_NAME}
+  exchange-name: ${MQ_EXCHANGE_NAME}
+  host: ${MQ_HOST}
+  port: ${MQ_PORT}
+  username: ${MQ_USER_NAME}
+  password: ${MQ_PASSWORD}
+
+openvidu:
+  url: ${OPENVIDU_URL}
+  secret: ${OPENVIDU_SECRET}
