@@ -11,6 +11,7 @@ import * as S from "./ingameStyle"
 import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
 import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
+import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 
 const Page = () => {
@@ -18,7 +19,7 @@ const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
   const { selectedTheme } = useIngameThemeStore()
-  
+
   const handleModalClose = () => {
     setShowModal(false)
   }
@@ -47,6 +48,11 @@ const Page = () => {
         />
       ) : selectedTheme === "horror" ? (
         <HorrorTheme
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : selectedTheme === "ssafy" ? (
+        <SsafyTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />

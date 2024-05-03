@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 import { Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import ThemeCard from "./ThemeCard"
+import useIngameThemeStore from "@/stores/IngameTheme"
 import styled from "styled-components"
 import "swiper/css"
 import "swiper/css/navigation"
@@ -10,7 +11,7 @@ import "swiper/css/pagination"
 
 // 어떤 테마를 선택했는지 파악하기 위해 인덱스로 정보 전달
 interface SelectThemeFunction {
-  (index: number): void
+  (value: string): void
 }
 
 interface CarouselProps {
@@ -34,12 +35,13 @@ const themeData: CardInfo[] = [
     image: "/image/ssafy.jpg",
   },
   {
-    title: "일반",
+    title: "우주",
     time: "10-15분",
-    content: "희주야 들어와",
+    content: "우주선에서 탈출하라!",
     image: "/image/normal.jpg",
   },
 ]
+const themes = ["horror", "ssafy", "space"]
 const ThemeCarousel = ({
   selectTheme,
   width,
@@ -48,9 +50,10 @@ const ThemeCarousel = ({
   pagination,
 }: CarouselProps) => {
   const [currentCard, setCurrentCard] = useState<number>(0)
-
+  const { setSelectedTheme } = useIngameThemeStore()
   useEffect(() => {
-    selectTheme(currentCard)
+    selectTheme(themes[currentCard])
+    setSelectedTheme(themes[currentCard])
   }, [currentCard])
   return (
     <MainContainer style={{ borderRadius: "20px" }}>
