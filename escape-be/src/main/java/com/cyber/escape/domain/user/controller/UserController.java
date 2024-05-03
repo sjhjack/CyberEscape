@@ -36,6 +36,11 @@ public class UserController {
         return new ApiResponse<>(HttpStatus.OK.value(), "로그아웃 성공", userService.logout());
     }
 
+    @PatchMapping("/auth/quit")
+    public ApiResponse<String> quit() {
+        return new ApiResponse<>(HttpStatus.OK.value(), "회원 탈퇴 성공", userService.quit());
+    }
+
     @PostMapping("/user/nickname")
     public ApiResponse<String> generateNickname() {
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 랜덤 생성 완료", userService.generateNickname());
