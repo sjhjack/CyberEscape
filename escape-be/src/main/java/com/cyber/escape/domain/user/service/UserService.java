@@ -17,12 +17,14 @@ import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.jwt.TokenProvider;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.TokenUtil;
+import com.cyber.escape.domain.user.util.UserUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
@@ -40,12 +42,13 @@ public class UserService {
         signupRequest.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
         // nickname 랜덤 생성 -> API 서버 속도 따라서 다른 듯 (5초까지 봤음,,)
         signupRequest.setNickname(randomNickname());
-        // Todo : profile image 자동 생성
+        // Todo : profile image 더미 데이터로 세팅
         // Todo : profile image S3에 저장 및 url 가져오기
 
         return userRepository.save(User.from(signupRequest)).getLoginId();
     }
 
+    @Transactional
     public UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest) {
         log.info("signin start !!");
 
@@ -81,11 +84,18 @@ public class UserService {
 
     public String logout() {
         // 이거 근데 return 값으로 뭘 줘야 하지?
-        log.info("logout start !!");
-
         tokenUtil.deleteRefreshToken();
 
-        log.info("logout end !!");
+        log.info("logout 성공 !!");
+        return "";
+    }
+
+    @Transactional
+    public String quit() {
+        User findUser = UserUtil.getLoginUser(userRepository);
+        findUser.initializeUserInfo();
+
+        log.info("회원 탈퇴 성공 !!");
         return "";
     }
 
@@ -115,6 +125,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional
     public String changeNickname(UserDto.UpdateNicknameRequest dto){
         User user = userRepository.findUserByUuid(dto.getUserUuid())
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));

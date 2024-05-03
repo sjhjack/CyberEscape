@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
-	@Column(name = "login_id", unique = true)
+	@Column(name = "login_id")
 	private String loginId;
 
 	private String password;
@@ -33,5 +33,15 @@ public class User extends BaseEntity {
 			.nickname(signupRequest.getNickname())
 			.profileUrl(signupRequest.getProfileUrl())
 			.build();
+	}
+
+	public void initializeUserInfo() {
+		this.loginId = "탈퇴한 사용자";
+		this.password = "";
+		this.nickname = "탈퇴한 사용자";
+		this.point = 0;
+		this.withdrawal = true;
+		// this.profileUrl = "";
+		// Todo : S3에서 사진 삭제
 	}
 }
