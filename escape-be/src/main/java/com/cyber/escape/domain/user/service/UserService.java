@@ -38,8 +38,9 @@ public class UserService {
         loginIdValidationCheck(signupRequest.getLoginId());
         // 비밀번호 암호화
         signupRequest.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
-        // Todo : nickname, profile image 자동 생성
-        signupRequest.setNickname("닉네임");
+        // nickname 랜덤 생성 -> 이거 근데 속도가 많이 느리다..
+        signupRequest.setNickname(generateNickname("json", 1).getWords()[0]);
+        // Todo : profile image 자동 생성
         // Todo : profile image S3에 저장 및 url 가져오기
 
         return userRepository.save(User.from(signupRequest)).getLoginId();
