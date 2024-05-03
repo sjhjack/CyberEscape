@@ -37,10 +37,8 @@ public class UserController {
     }
 
     @PostMapping("/user/nickname")
-    public ApiResponse<UserDto.NicknameResponse> generateNickname(@RequestParam(value = "format", defaultValue = "json") String format,
-                                                                  @RequestParam(value = "count", defaultValue = "1") int count) {
-        UserDto.NicknameResponse response = userService.generateNickname(format, count);
-        return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 랜덤 생성 완료", response);
+    public ApiResponse<String> generateNickname() {
+        return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 랜덤 생성 완료", userService.generateNickname());
     }
 
     @PostMapping("/user/search")
