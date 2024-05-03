@@ -43,10 +43,11 @@ public class NotificationService {
         // 시간이 만료된 경우에 대해 자동으로 레포지토리에서 삭제 처리해줄 수 있는 콜백을 등록해놓을 수 있다.
         sseEmitter.onCompletion(() -> emitterRepository.deleteById(id));
         sseEmitter.onTimeout(() -> emitterRepository.deleteById(id));
+        sseEmitter.onError((e) -> emitterRepository.deleteById(id));
         // sseEmitter.onError();
 
         // sendToClient(sseEmitter, id, "EventStream Created. memberId = {" + memberId + "}");
-        sendToClient(sseEmitter, id, "젭라 살려줏메");
+        sendToClient(sseEmitter, id, "SSE 구독 요청이 완료되었습니다.");
         log.info("NotificationService ============ sendToClient completed");
 
         // 클라이언트가 미수신한 알림에 대해 전송
@@ -70,6 +71,7 @@ public class NotificationService {
         // receiver = 현재 로그인 한 유저 = 알림 받을 사람
         // String receiverId = receiver.getMemberId();
 
+        // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
         sseEmitters.forEach(
                 (key, sseEmitter) -> {
@@ -114,6 +116,7 @@ public class NotificationService {
         return null;
     }
 
+    // mongoDB에서 read 처리 지정
     public void markAsRead(List<ObjectId> objectIdList){
         for(ObjectId objectId : objectIdList){
             log.info("objectId : " + objectId);

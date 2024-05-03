@@ -24,7 +24,7 @@ public class Notify {
     private LocalDateTime createdAt;
 
     public enum NotificationType {
-        GAME, FOLLOW, CHAT
+        GAME, FRIEND, CHAT
     }
 }
 
