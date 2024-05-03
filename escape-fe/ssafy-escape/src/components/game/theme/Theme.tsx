@@ -5,9 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation"
 import ThemeCarousel from "@/components/common/ThemeCarousel"
 const Theme = () => {
   const router = useRouter()
+  const [theme, selectTheme] = useState<string>("")
+
   const searchParams = useSearchParams()
   const mode: string | null = searchParams.get("mode")
-  const [theme, selectTheme] = useState<number>(0)
   const gameStart = (): void => {
     if (mode === "single") {
       alert("게임을 시작합니다.")
@@ -37,6 +38,7 @@ const Theme = () => {
       />
       <button
         onClick={() => {
+          console.log("게임시작", theme)
           gameStart()
         }}
       >
