@@ -7,6 +7,7 @@ import Button from "@/components/common/Button"
 import Checkbox from "@mui/material/Checkbox"
 import * as S from "@/app/(isLogIn)/game/multi/create/createStyle"
 import postCreateRoom from "@/services/game/room/postCreateRoom"
+import useIngameThemeStore from "@/stores/IngameTheme"
 import { useState, useEffect } from "react"
 interface postCreateRoomRequestProps {
   title: string
@@ -14,12 +15,13 @@ interface postCreateRoomRequestProps {
   password: string
   hostUuid: string
 }
+const themes: Array<string> = ["horror", "ssafy", "space"]
 const Create = () => {
   const router = useRouter()
-  const [theme, selectTheme] = useState<number>(0)
   const [title, setTitle] = useState<string>("")
   const [secretMode, setSecretMode] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
+  const { selectedTheme } = useIngameThemeStore()
   const handleSecretMode = (secretMode: boolean): void => {
     setSecretMode(!secretMode)
   }
@@ -32,7 +34,7 @@ const Create = () => {
   const hostUuid: string = ""
   const data: postCreateRoomRequestProps = {
     title: title,
-    themaId: theme,
+    themaId: selectedTheme ? themes.indexOf(selectedTheme) : 1,
     password: password,
     hostUuid: hostUuid,
   }
@@ -53,7 +55,9 @@ const Create = () => {
           <Input width="250px" onChange={handleTitle} />
         </S.MenuBox>
         <S.MenuBox>
-          <S.Menu>테마</S.Menu>
+          <S.Menu>
+            <div>테마</div>
+          </S.Menu>
           <ThemeCarousel
             width={300}
             height={220}

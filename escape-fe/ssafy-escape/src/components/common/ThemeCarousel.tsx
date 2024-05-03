@@ -35,7 +35,7 @@ const themeData: CardInfo[] = [
     image: "/image/space.png",
   },
 ]
-const themes = ["horror", "ssafy", "space"]
+const themes: Array<string> = ["horror", "ssafy", "space"]
 const ThemeCarousel = ({
   width,
   height,
