@@ -18,15 +18,35 @@ public class UserUtil {
         return "c83e8aea-0470-11ef-9c95-0242ac101404";
     }
 
+    /**
+     * login_id로 사용자 검색
+     * @param userRepository
+     * @param loginId
+     * @return User Entity
+     */
     public static User findByLoginId(final UserRepository userRepository, final String loginId) {
         log.info("UserUtil.findByLoginId ========== loginId : {}", loginId);
         return userRepository.findByLoginId(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
     }
 
+    /**
+     * 현재 로그인 한 사용자의 UUID 가져오기
+     * @param userRepository
+     * @return 사용자의 UUID
+     */
     public static String getLoginUserUuid(final UserRepository userRepository) {
         User loginUser = findByLoginId(userRepository, getLoginIdFromContextHolder());
         return loginUser.getUuid();
+    }
+
+    /**
+     * 현재 로그인 한 사용자의 정보 가져오기
+     * @param userRepository
+     * @return User Entity
+     */
+    public static User getLoginUser(final UserRepository userRepository) {
+        return findByLoginId(userRepository, getLoginUserUuid(userRepository));
     }
 
     private static String getLoginIdFromContextHolder() {
