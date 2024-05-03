@@ -1,6 +1,4 @@
 import { Canvas } from "@react-three/fiber"
-import CameraControl from "@/components/ingame/CameraControl"
-import PointerLockControls from "@/components/ingame/PointerLockControls"
 import SsafyClassRoom from "../../elements/ssafy/SsafyClassRoom"
 const startPosition = { x: 8, y: 8, z: 1 }
 const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -23,16 +21,6 @@ const SsafyTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         shadow-mapSize-height={1024}
       />
       <SsafyClassRoom onLoaded={setIsModelLoaded} />
-      <PointerLockControls
-        startPosition={startPosition}
-        startTargetPosition={startTargetPosition}
-        cameraMovingSpeed={0.03}
-        lookAt={lookAt}
-        zoom={2.5}
-      />
-      {isGameStart ? (
-        <CameraControl startPosition={startTargetPosition} movingSpeed={0.05} />
-      ) : null}
     </Canvas>
   )
 }
