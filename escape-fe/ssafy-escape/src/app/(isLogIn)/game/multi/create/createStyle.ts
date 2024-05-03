@@ -14,7 +14,9 @@ export const MenuBox = styled.div`
 `
 export const Menu = styled.p`
   width: 7vw;
-  margin-right: 15%;
+  margin-right: 10%;
+  font-weight: 600;
+  font-size: large;
 `
 
 export const ButtonPlaced = styled.div`
