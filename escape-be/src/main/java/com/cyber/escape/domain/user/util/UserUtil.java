@@ -36,8 +36,7 @@ public class UserUtil {
      * @return 사용자의 UUID
      */
     public static String getLoginUserUuid(final UserRepository userRepository) {
-        User loginUser = findByLoginId(userRepository, getLoginIdFromContextHolder());
-        return loginUser.getUuid();
+        return getLoginUser(userRepository).getUuid();
     }
 
     /**
@@ -46,7 +45,7 @@ public class UserUtil {
      * @return User Entity
      */
     public static User getLoginUser(final UserRepository userRepository) {
-        return findByLoginId(userRepository, getLoginUserUuid(userRepository));
+        return findByLoginId(userRepository, getLoginIdFromContextHolder());
     }
 
     private static String getLoginIdFromContextHolder() {
