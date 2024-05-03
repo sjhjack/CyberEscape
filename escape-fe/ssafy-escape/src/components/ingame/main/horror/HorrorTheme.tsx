@@ -1,46 +1,44 @@
-import { Canvas } from "@react-three/fiber"
-import CameraControl from "@/components/ingame/CameraControl"
 import DollModel from "@/components/ingame/elements/horror/DollModel"
 import HorrorRoomModel from "@/components/ingame/elements/horror/HorrorRoomModel"
-import PointerLockControls from "@/components/ingame/PointerLockControls"
-
-const startPosition = { x: 8, y: 8, z: -2 }
-const startTargetPosition = { x: 4, y: 3, z: -2 }
-const lookAt = { x: -4, y: 2, z: 2 }
+import Lights from "../../elements/horror/Lights"
+import BasicScene from "../../BasicScene"
+import Player from "../../elements/common/Player"
+import MeshObjects from "../../elements/horror/MeshObjects"
+import Floor from "../../elements/common/Floor"
+import Blood from "../../elements/horror/Blood"
+import { useState } from "react"
+import Skull from "../../elements/horror/Skull"
+import Flower from "../../elements/horror/Flower"
+// const startPosition = { x: 8, y: 8, z: -2 }
+// const startTargetPosition = { x: 4, y: 3, z: -2 }
+// const lookAt = { x: -4, y: 2, z: 2 }
 
 const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+  const [isFlowerShow, setIsFlowerShow] = useState<boolean>(true)
   const handleDoll = () => {
     console.log("인형클릭")
   }
 
+  const handleFlowerClick = () => {
+    console.log("꽃클릭")
+    setIsFlowerShow(false)
+  }
   return (
-    <Canvas
-      shadows
-      style={{ width: "100%", height: "100%", backgroundColor: "white" }}
-    >
-      <ambientLight intensity={1} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <directionalLight
-        position={[10, 10, 5]}
-        intensity={2}
-        castShadow
-        receiveShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+    <BasicScene>
+      <Lights />
+      <Player position={[3, 50, 0]} speed={100} args={[2, 100, 5]} />
+      <Floor
+        rotation={[Math.PI / -2, 0, 0]}
+        color="white"
+        position={[0, -0.5, 0]}
       />
-      <HorrorRoomModel onLoaded={setIsModelLoaded} />
+      {isFlowerShow ? <Flower onClick={handleFlowerClick} /> : null}
+      <MeshObjects />
+      <Blood />
+      <Skull />
       <DollModel onClick={handleDoll} />
-      <PointerLockControls
-        startPosition={startPosition}
-        startTargetPosition={startTargetPosition}
-        cameraMovingSpeed={0.03}
-        lookAt={lookAt}
-        zoom={2.5}
-      />
-      {isGameStart ? (
-        <CameraControl startPosition={startTargetPosition} movingSpeed={0.05} />
-      ) : null}
-    </Canvas>
+      <HorrorRoomModel onLoaded={setIsModelLoaded} />
+    </BasicScene>
   )
 }
 

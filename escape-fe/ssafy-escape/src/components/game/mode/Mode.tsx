@@ -18,7 +18,7 @@ const Mode = () => {
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/game/theme")
+            router.push("theme?mode=single")
           }}
         >
           <Image src="/image/single.png" alt="" width={300} height={300} />
