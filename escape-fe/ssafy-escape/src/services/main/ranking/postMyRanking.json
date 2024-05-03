@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "message": "나의 랭킹 조회 성공",
+  "data": {
+    "rank": 1,
+    "nickname": "김싸피",
+    "bestTime": "00:08:15",
+    "category": 2
+  }
+}
