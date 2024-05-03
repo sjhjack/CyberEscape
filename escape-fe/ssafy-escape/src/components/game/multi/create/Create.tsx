@@ -1,5 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation"
+import Swal from "sweetalert2"
 import Container from "@/components/common/Container"
 import Input from "@/components/common/Input"
 import ThemeCarousel from "@/components/common/ThemeCarousel"
@@ -43,6 +44,10 @@ const Create = () => {
     hostUuid: hostUuid,
   }
   const createRoom = async () => {
+    if (buttonDisabled()) {
+      Swal.fire({ icon: "error", text: "모든 항목을 채워주세요" })
+      return
+    }
     const response = await postCreateRoom(data)
     router.push(`waiting/${response.data.roomUuid}`)
   }
@@ -84,12 +89,7 @@ const Create = () => {
         )}
       </S.CreateContainer>
       <S.ButtonPlaced onClick={createRoom}>
-        <Button
-          theme="success"
-          text="방 생성"
-          width="200px"
-          disabled={buttonDisabled()}
-        />
+        <Button theme="success" text="방 생성" width="200px" />
       </S.ButtonPlaced>
     </Container>
   )
