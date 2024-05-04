@@ -8,6 +8,8 @@ import { Stomp } from "@stomp/stompjs"
 import Container from "@/components/common/Container"
 import * as S from "@/app/(isLogIn)/game/multi/waiting/waitingStyle"
 import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
+import useIngameThemeStore from "@/stores/IngameTheme"
+
 // import Openvidu from "./Openvidu"
 
 const APPLICATION_SERVER_URL = "http://localhost:8080/"
@@ -22,6 +24,10 @@ const Waiting = () => {
     StreamManager | undefined
   >(undefined)
   const [chatData, setChatData] = useState<Array<object>>([])
+  const { selectedTheme } = useIngameThemeStore()
+  useEffect(() => {
+    console.log(selectedTheme)
+  }, [])
   // useEffect(() => {
   //   // WebSocket 서버의 URL
   //   const serverUrl = "ws://localhost:8080/ws-stomp"
@@ -183,7 +189,7 @@ const Waiting = () => {
       <S.MainBox>
         <S.MainContentBox>
           <S.ThemeImage
-            src="/image/ssafy.png"
+            src={`/image/${selectedTheme}.png`}
             alt=""
             width={400}
             height={220}
