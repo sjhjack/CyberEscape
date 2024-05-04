@@ -37,10 +37,9 @@ const Theme = () => {
       />
       <div></div>
       <Button
-        theme={"fail"}
-        width={"150px"}
+        theme="game"
+        width="200px"
         text="시작하기"
-        backgroundColor={"white"}
         onClick={() => {
           console.log("게임시작")
           gameStart()

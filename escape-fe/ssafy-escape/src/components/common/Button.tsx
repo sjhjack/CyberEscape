@@ -4,6 +4,7 @@ import {
   MainColor,
   MainColorDarker,
   RedColor,
+  RedColorBrighter,
   RedColorDarker,
 } from "@/styles/palette"
 
@@ -11,7 +12,7 @@ import {
 
 interface ButtonProps {
   text: string
-  theme: "success" | "fail"
+  theme: "success" | "fail" | "game"
   width?: string
   backgroundColor?: string
   type?: "button" | "submit"
@@ -20,7 +21,7 @@ interface ButtonProps {
 }
 
 interface ButtonStyleProps {
-  theme: "success" | "fail"
+  theme: "success" | "fail" | "game"
   backgroundColor?: string
   width?: string
 }
@@ -60,7 +61,9 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
       ? MainColor
       : props.theme === "fail"
         ? RedColor
-        : props.backgroundColor};
+        : props.theme === "game"
+          ? RedColorBrighter
+          : props.backgroundColor};
   color: white;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
