@@ -1,0 +1,34 @@
+import API_PATH from "@/constants/path"
+// import api from "/api"
+
+interface PatchExitRequestProps {
+  roomUuid: string
+  userUuid: string
+}
+
+interface PatchExitResponseProps {
+  status: number
+  message: string
+  data: string
+}
+
+// // 게임방 나가기
+// const patchExit = async (
+//   data: PatchExitRequestProps,
+// ): Promise<PatchExitResponseProps> => {
+//   try {
+//     const response = await api.patch<PatchExitRequestProps>(
+//       API_PATH.GAME.MULTI.ROOM.EXIT,
+//       data,
+//     )
+//     if (response.status === 400) {
+//       throw new Error(`오류: ${response.data.message}`)
+//     }
+//     return response.data.data
+//   } catch (error) {
+//     console.error(error)
+//     throw error
+//   }
+// }
+
+// export default patchExit

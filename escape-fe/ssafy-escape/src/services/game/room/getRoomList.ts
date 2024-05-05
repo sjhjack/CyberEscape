@@ -33,11 +33,16 @@ interface paginationDataProps {
   existNextPage: boolean
 }
 
+interface getRoomRequestProps {
+  page: number
+  keyword: string
+}
 // // 친구 목록 조회
-// const getRoomList = async (): Promise<GetRoomListDataProps> => {
+// const getRoomList = async (data:getRoomRequestProps): Promise<GetRoomListDataProps> => {
 //   try {
 //     const response = await api.get<GetRoomListBodyProps>(
 //       API_PATH.GAME.MULTI.ROOM.LIST,
+//        data
 //     )
 //     if (response.status === 400) {
 //       throw new Error(`오류: ${response.data.message}`)
