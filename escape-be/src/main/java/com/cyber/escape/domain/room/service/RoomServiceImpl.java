@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RoomServiceImpl implements RoomCreateService, RoomReadService, RoomUpdateService, RoomDeleteService {
+public class RoomServiceImpl implements RoomService {
 	private final Map<String, RoomDto.StompResponse> roomMap = new ConcurrentHashMap<>();
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
