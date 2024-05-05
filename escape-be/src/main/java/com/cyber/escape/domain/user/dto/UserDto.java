@@ -4,6 +4,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import com.cyber.escape.domain.quiz.entity.FinalAnswer;
 import com.cyber.escape.domain.user.entity.User;
+import com.cyber.escape.global.common.util.FileUtil;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -24,8 +25,8 @@ public class UserDto {
 		public void setInfo(final String password, final String nickname) {
 			this.password = password;
 			this.nickname = nickname;
-			this.profileUrl = "url";
-			this.savedFileName = "file";
+			this.profileUrl = FileUtil.DEFAULT_FILE_URL;
+			this.savedFileName = FileUtil.DEFAULT_FILE_NAME;
 		}
 	}
 

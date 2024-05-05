@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PatchMapping("/auth/quit")
-    public ApiResponse<String> quit() {
+    public ApiResponse<String> quit() throws IOException {
         return new ApiResponse<>(HttpStatus.OK.value(), "회원 탈퇴 성공", authService.quit());
     }
 
@@ -77,5 +77,10 @@ public class UserController {
     @PatchMapping("/user/image/delete")
     public ApiResponse<String> deleteProfileImage() throws IOException {
         return new ApiResponse<>(HttpStatus.OK.value(), "프로필 이미지 삭제 완료", userService.deleteProfileImage());
+    }
+
+    @PostMapping("/user/dummy/image")
+    public ApiResponse<String> putDummyImage(@RequestPart MultipartFile multipartFile) throws IOException {
+        return new ApiResponse<>(HttpStatus.OK.value(), "더미 이미지 등록 완료", userService.putDummyImage(multipartFile));
     }
 }

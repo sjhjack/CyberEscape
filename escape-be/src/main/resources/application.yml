@@ -16,6 +16,9 @@ spring:
       host: ${REDIS_HOST} # Redis 서버 호스트 주소
       port: 6379      # Redis 서버 포트
       database: 0
+  servlet:
+    multipart:
+      max-file-size: 10MB
 #    mongodb:
 #      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority&appName=${MONGO_APPNAME}
 #      database: ${MONGO_DBNAME}
@@ -40,5 +43,8 @@ cloud:
       auto: false
     stack:
       auto: false
+    file:
+      name: ${DEFAULT_FILE_NAME}
+      url: ${DEFAULT_FILE_URL}
 
 secretKeyPlain: ${KEY}

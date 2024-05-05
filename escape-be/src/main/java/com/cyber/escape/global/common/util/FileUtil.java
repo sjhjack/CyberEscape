@@ -18,12 +18,24 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class FileUtil {
-	// Todo : default 파일 업로드 후 변경
-	public static final String DEFAULT_FILE_NAME = "default_name";
-	public static final String DEFAULT_FILE_URL = "default_url";
+	// @Value("${cloud.aws.file.name}")
+	public static String DEFAULT_FILE_NAME;
+	// @Value("${cloud.aws.file.url}")
+	public static String DEFAULT_FILE_URL;
 
 	@Value("${cloud.aws.s3.bucket}")
 	private static String bucket;
+
+	@Value("${cloud.aws.file.name}")
+	public void setDefaultFileName(String name) {
+		DEFAULT_FILE_NAME = name;
+	}
+
+	@Value("${cloud.aws.file.url}")
+	public void setDefaultFileUrl(String url) {
+		DEFAULT_FILE_URL = url;
+	}
+
 	@Value("${cloud.aws.s3.bucket}")
 	public void setBucket(String bucketName) {
 		bucket = bucketName;
@@ -40,7 +52,7 @@ public class FileUtil {
 		UUID uuid = UUID.randomUUID();
 
 		String savedFileName = uuid + "_" + originalFileName;
-		if(savedFileName.length() >= 50)
+		if(savedFileName.length() > 100)
 			throw new FileException(ExceptionCodeSet.FILE_NAME_TOO_LONG);
 		return savedFileName;
 	}
