@@ -1,6 +1,7 @@
 package com.cyber.escape.domain.user.util;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.RestTemplate;
 
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
@@ -50,6 +51,13 @@ public class UserUtil {
 
     private static String getLoginIdFromContextHolder() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public static String randomNickname(){
+        // nickname 랜덤 생성 -> API 서버 속도 따라서 다른 듯 (5초까지 봤음,,)
+        String url = "https://nickname.hwanmoo.kr/?format=text&count=1&max_length=20";
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForObject(url, String.class);
     }
 
 }
