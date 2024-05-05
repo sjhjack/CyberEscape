@@ -25,6 +25,7 @@ public class User extends BaseEntity {
 
 	private boolean withdrawal;
 	private String profileUrl;
+	private String savedFileName;
 
 	public static User from(final UserDto.SignupRequest signupRequest){
 		return User.builder()
@@ -32,6 +33,7 @@ public class User extends BaseEntity {
 			.password(signupRequest.getPassword())
 			.nickname(signupRequest.getNickname())
 			.profileUrl(signupRequest.getProfileUrl())
+			.savedFileName(signupRequest.getSavedFileName())
 			.build();
 	}
 
@@ -43,5 +45,10 @@ public class User extends BaseEntity {
 		this.withdrawal = true;
 		// this.profileUrl = "";
 		// Todo : S3에서 사진 삭제
+	}
+
+	public void changeProfileImage(final String savedFileName, final String profileUrl) {
+		this.savedFileName = savedFileName;
+		this.profileUrl = profileUrl;
 	}
 }

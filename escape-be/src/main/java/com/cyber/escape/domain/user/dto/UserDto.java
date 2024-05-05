@@ -19,6 +19,14 @@ public class UserDto {
 		private String password;
 		private String nickname;
 		private String profileUrl;
+		private String savedFileName;
+
+		public void setInfo(final String password, final String nickname) {
+			this.password = password;
+			this.nickname = nickname;
+			this.profileUrl = "url";
+			this.savedFileName = "file";
+		}
 	}
 
 	@Builder

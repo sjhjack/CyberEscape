@@ -1,5 +1,6 @@
 package com.cyber.escape.domain.user.service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cyber.escape.domain.friend.entity.Friend;
 import com.cyber.escape.domain.friend.repository.FriendRepository;
@@ -18,6 +20,9 @@ import com.cyber.escape.domain.user.jwt.TokenProvider;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.TokenUtil;
 import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.common.util.FileUtil;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.FileException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +45,14 @@ public class UserServiceImpl implements UserService, AuthService {
         // loginId 중복 체크
         loginIdValidationCheck(signupRequest.getLoginId());
         // 비밀번호 암호화
-        signupRequest.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
+        String encodedPassword = bCryptPasswordEncoder.encode(signupRequest.getPassword());
         // nickname 랜덤 생성 -> API 서버 속도 따라서 다른 듯 (5초까지 봤음,,)
-        signupRequest.setNickname(randomNickname());
+        signupRequest.setInfo(encodedPassword, randomNickname());
         // Todo : profile image 더미 데이터로 세팅
         // Todo : profile image S3에 저장 및 url 가져오기
+
+        String defaultFileName = "";
+        String defaultFileUrl = "";
 
         return userRepository.save(User.from(signupRequest)).getLoginId();
     }
@@ -155,6 +163,43 @@ public class UserServiceImpl implements UserService, AuthService {
         userRepository.save(user);
 
         return newNickname;
+    }
+
+    @Transactional
+    public String changeProfileImage(MultipartFile multipartFile) throws IOException {
+        User findUser = UserUtil.getLoginUser(userRepository);
+
+        deleteBeforeFile(findUser.getSavedFileName());
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        String savedFileName = FileUtil.makeFileName(originalFileName);
+        String profileUrl = FileUtil.uploadFile(multipartFile, savedFileName);
+
+        findUser.changeProfileImage(savedFileName, profileUrl);
+
+        return profileUrl;
+    }
+
+    @Transactional
+    public String deleteProfileImage() throws IOException {
+        User findUser = UserUtil.getLoginUser(userRepository);
+
+        if(findUser.getSavedFileName().equals(FileUtil.DEFAULT_FILE_NAME)) {
+            throw new FileException(ExceptionCodeSet.DELETE_DEFAULT_FILE);
+        }
+
+        FileUtil.deleteFile(findUser.getSavedFileName());
+        findUser.changeProfileImage(FileUtil.DEFAULT_FILE_NAME, FileUtil.DEFAULT_FILE_URL);
+        return "";
+    }
+
+    private static void deleteBeforeFile(String savedFileName) throws IOException {
+        // Todo : 이걸 근데 삭제하는게 맞을까? 다른 사용자가 같은 이름으로 파일을 등록할 수도 있는 거잖아..?
+        if(!savedFileName.equals(FileUtil.DEFAULT_FILE_NAME)) {
+            log.info("이전 파일 삭제");
+            // 현재 프로필 사진이 default가 아니면 S3에서 삭제
+            FileUtil.deleteFile(savedFileName);
+        }
     }
 
     private void loginIdValidationCheck(String loginId) {
