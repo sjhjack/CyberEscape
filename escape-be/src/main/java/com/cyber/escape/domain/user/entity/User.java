@@ -2,6 +2,7 @@ package com.cyber.escape.domain.user.entity;
 
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.global.common.entity.BaseEntity;
+import com.cyber.escape.global.common.util.FileUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,8 +44,8 @@ public class User extends BaseEntity {
 		this.nickname = "탈퇴한 사용자";
 		this.point = 0;
 		this.withdrawal = true;
-		// this.profileUrl = "";
-		// Todo : S3에서 사진 삭제
+		this.profileUrl = FileUtil.DEFAULT_FILE_URL;
+		this.savedFileName = FileUtil.DEFAULT_FILE_NAME;
 	}
 
 	public void changeProfileImage(final String savedFileName, final String profileUrl) {

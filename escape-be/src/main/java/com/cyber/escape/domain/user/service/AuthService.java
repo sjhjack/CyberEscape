@@ -1,5 +1,7 @@
 package com.cyber.escape.domain.user.service;
 
+import java.io.IOException;
+
 import com.cyber.escape.domain.user.dto.UserDto;
 
 public interface AuthService {
@@ -8,5 +10,5 @@ public interface AuthService {
 	UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest);
 	UserDto.SigninResponse reIssue(UserDto.SigninResponse tokenRequest);
 	String logout();
-	String quit();
+	String quit() throws IOException;
 }

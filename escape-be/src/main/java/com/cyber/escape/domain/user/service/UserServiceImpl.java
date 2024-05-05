@@ -46,13 +46,8 @@ public class UserServiceImpl implements UserService, AuthService {
         loginIdValidationCheck(signupRequest.getLoginId());
         // 비밀번호 암호화
         String encodedPassword = bCryptPasswordEncoder.encode(signupRequest.getPassword());
-        // nickname 랜덤 생성 -> API 서버 속도 따라서 다른 듯 (5초까지 봤음,,)
-        signupRequest.setInfo(encodedPassword, randomNickname());
-        // Todo : profile image 더미 데이터로 세팅
-        // Todo : profile image S3에 저장 및 url 가져오기
 
-        String defaultFileName = "";
-        String defaultFileUrl = "";
+        signupRequest.setInfo(encodedPassword, randomNickname());
 
         return userRepository.save(User.from(signupRequest)).getLoginId();
     }
@@ -104,8 +99,10 @@ public class UserServiceImpl implements UserService, AuthService {
 
     @Transactional
     @Override
-    public String quit() {
+    public String quit() throws IOException{
         User findUser = UserUtil.getLoginUser(userRepository);
+
+        deleteBeforeFile(findUser.getSavedFileName());
         findUser.initializeUserInfo();
 
         log.info("회원 탈퇴 성공 !!");
@@ -209,9 +206,19 @@ public class UserServiceImpl implements UserService, AuthService {
     }
 
     private String randomNickname(){
+        // nickname 랜덤 생성 -> API 서버 속도 따라서 다른 듯 (5초까지 봤음,,)
         String url = "https://nickname.hwanmoo.kr/?format=text&count=1&max_length=20";
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(url, String.class);
     }
 
+    public String putDummyImage(MultipartFile multipartFile) throws IOException {
+        String originalFileName = multipartFile.getOriginalFilename();
+        String savedFileName = FileUtil.makeFileName(originalFileName);
+        String profileUrl = FileUtil.uploadFile(multipartFile, savedFileName);
+
+        log.info("originalFileName : {}, savedFileName : {}, profileUrl : {}", originalFileName, savedFileName, profileUrl);
+
+        return "";
+    }
 }

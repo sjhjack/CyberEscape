@@ -14,4 +14,5 @@ public interface UserService {
 	String changeNickname(UserDto.UpdateNicknameRequest dto);
 	String changeProfileImage(MultipartFile multipartFile) throws IOException;
 	String deleteProfileImage() throws IOException;
+	String putDummyImage(MultipartFile multipartFile) throws IOException;
 }
