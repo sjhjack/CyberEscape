@@ -1,7 +1,7 @@
 package com.cyber.escape.domain.friend.repository;
 
 import com.cyber.escape.domain.friend.dto.FriendDto;
-import com.cyber.escape.domain.friend.dto.QFriendDto_friendListResponse;
+import com.cyber.escape.domain.friend.dto.QFriendDto_FriendListResponse;
 import com.cyber.escape.domain.friend.entity.Friend;
 import com.cyber.escape.domain.friend.entity.QFriend;
 import com.cyber.escape.domain.user.entity.QUser;
@@ -24,15 +24,15 @@ public class FriendRepositoryImpl {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public List<FriendDto.friendListResponse> findFriendList(Long senderId){
+    public List<FriendDto.FriendListResponse> findFriendList(Long senderId){
 
         QFriend friend = QFriend.friend;
         QFriend other = QFriend.friend;
 
 
-        // 현재 유저의 친구 목록 가져오는
+        // 더미데이터 잘못 넣었네
         return jpaQueryFactory
-                .select(new QFriendDto_friendListResponse(friend.toUser.uuid, friend.toUser.nickname))
+                .select(new QFriendDto_FriendListResponse(friend.toUser.uuid, friend.toUser.nickname))
                 .from(friend)
                 .where(friend.fromUser.id.eq(senderId)
                         .and(
