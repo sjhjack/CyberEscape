@@ -30,8 +30,8 @@ const Theme = () => {
     >
       <h1>테마 선택</h1>
       <ThemeCarousel
-        width={500}
-        height={350}
+        width={400}
+        height={300}
         navigation={true}
         pagination={false}
       />
