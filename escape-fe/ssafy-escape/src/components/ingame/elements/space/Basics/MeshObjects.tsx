@@ -1,4 +1,4 @@
-import BaseBox from "../common/BaseBox"
+import BaseBox from "../../common/BaseBox"
 
 const MeshObjects = () => {
   return (

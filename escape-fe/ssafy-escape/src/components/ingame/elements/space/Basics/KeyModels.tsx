@@ -24,11 +24,14 @@ const KeyModels = ({ onClick, position, active }: KeyProps) => {
                 position={position}
                 scale={[0.05, 0.05, 0.05]}
                 onClick={onClick}
-                onPointerOver={() => {
-                  document.body.style.cursor = "pointer"
-                }}
-                onPointerOut={() => {
-                  document.body.style.cursor = "auto"
+                // onPointerOver={() => {
+                //   document.body.style.cursor = "pointer"
+                // }}
+                // onPointerOut={() => {
+                //   document.body.style.cursor = "auto"
+                // }}
+                onPointerOver={(e) => {
+                  console.log("on")
                 }}
               />
             )
