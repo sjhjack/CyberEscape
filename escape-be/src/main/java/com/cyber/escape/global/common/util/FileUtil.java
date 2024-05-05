@@ -94,4 +94,12 @@ public class FileUtil {
 		return "";
 	}
 
+	public static void deleteBeforeFile(String savedFileName) throws IOException {
+		if(!savedFileName.equals(FileUtil.DEFAULT_FILE_NAME)) {
+			log.info("이전 파일 삭제");
+			// 현재 프로필 사진이 default가 아니면 S3에서 삭제
+			FileUtil.deleteFile(savedFileName);
+		}
+	}
+
 }

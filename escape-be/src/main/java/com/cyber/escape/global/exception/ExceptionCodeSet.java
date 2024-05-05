@@ -17,6 +17,7 @@ public enum ExceptionCodeSet {
     RANKING_NOT_FOUND(HttpStatus.NOT_FOUND, 4041, "랭킹 정보가 존재하지 않습니다."),
 
     NICKNAME_DUPLICATED(HttpStatus.CONFLICT, 4090, "이미 존재하는 닉네임입니다."),
+    LOGINID_DUPLICATED(HttpStatus.NOT_FOUND, 4091, "이미 존재하는 아이디입니다."),
 
     ENTITY_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "정보가 존재하지 않습니다."),
 
