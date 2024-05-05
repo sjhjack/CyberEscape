@@ -7,12 +7,15 @@ import com.cyber.escape.global.common.dto.ApiResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+    // Todo : Auth랑 User 나누자
+
     private final AuthService authService;
     private final UserService userService;
 
@@ -62,5 +65,10 @@ public class UserController {
     public ApiResponse<String> changeNickname(@RequestBody UserDto.UpdateNicknameRequest req) {
         String newNickname = userService.changeNickname(req);
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 변경 완료", newNickname);
+    }
+
+    @PatchMapping("/user/image")
+    public ApiResponse<String> changeProfileImage(@RequestPart MultipartFile file) {
+        return null;
     }
 }
