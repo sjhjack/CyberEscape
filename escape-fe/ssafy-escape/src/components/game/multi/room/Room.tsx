@@ -5,6 +5,8 @@ import getRoomList from "@/services/game/room/getRoomList"
 import Container from "@/components/common/Container"
 import RoomList from "./RoomList"
 import CustomPagination from "./CustomPagination"
+import CircularProgress from "@mui/material/CircularProgress"
+
 const Room = () => {
   const [page, setPage] = useState<number>(1)
   const { data: roomData, isLoading } = useQuery({
@@ -24,7 +26,7 @@ const Room = () => {
         alignItems="center"
         flexDirection="column"
       >
-        로딩중입니다
+        <CircularProgress />
       </Container>
     )
   }
