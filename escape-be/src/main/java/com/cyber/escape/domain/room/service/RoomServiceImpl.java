@@ -20,6 +20,7 @@ import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.domain.user.util.UserUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -62,9 +63,8 @@ public class RoomServiceImpl implements RoomService {
 		// Todo : Security 적용 후 주석 해제
 		// String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 
-		log.info("hostUuid : {}", postRequest.getHostUuid());
-		User host = userRepository.findUserByUuid(postRequest.getHostUuid())
-			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+		User host = UserUtil.getLoginUser(userRepository);
+		log.info("hostUuid : {}", host.getUuid());
 
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
@@ -94,11 +94,9 @@ public class RoomServiceImpl implements RoomService {
 		// 방장이 나갔을 때 말고는 삭제할 일이 없는거 아닌가?
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
+		User findUser = UserUtil.getLoginUser(userRepository);
 
-		User user = userRepository.findUserByUuid(request.getUserUuid())
-			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
-
-		if(user.getId() == findRoom.getHostId()){
+		if(findUser.getId() == findRoom.getHostId()){
 			roomRepository.delete(findRoom);
 			// Todo : 연결된 채팅방까지 삭제 ???
 			// Todo : 방에 남아있는 Guest는 추방 조치
@@ -150,8 +148,7 @@ public class RoomServiceImpl implements RoomService {
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
-		User user = userRepository.findUserByUuid(request.getUserUuid())
-			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+		User user = UserUtil.getLoginUser(userRepository);
 
 		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
@@ -173,8 +170,7 @@ public class RoomServiceImpl implements RoomService {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
 		// Todo : Context Holder에 저장된 UserUuid 값으로 방장 여부 확인
-		// User host = userRepository.findUserByUuid(UserUtil.getUserUuid())
-		// 	.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+		User host = UserUtil.getLoginUser(userRepository);
 
 		// if (host.getId() == findRoom.getHostId()) {
 		// 	log.info("RoomServiceImpl ========== 방장입니다.");
