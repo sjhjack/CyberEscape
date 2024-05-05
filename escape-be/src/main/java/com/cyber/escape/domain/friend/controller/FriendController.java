@@ -23,21 +23,26 @@ public class FriendController {
     private final FriendService friendService;
 
 
-    @PostMapping("/addition")
-    public ApiResponse<String> makeFriend(@RequestBody FriendDto.friendRelationRequest req){
+    @PostMapping("/acceptance")
+    public ApiResponse<String> makeFriend(@RequestBody FriendDto.FriendRelationRequest req){
         friendService.makeFriend(req);
         return new ApiResponse<>(HttpStatus.OK.value(), "친구 등록 성공", "");
     }
 
     @PostMapping("/request")
-    public ApiResponse<String> askToFriend(@RequestBody FriendDto.friendRequest req){
+    public ApiResponse<String> askToFriend(@RequestBody FriendDto.FriendRequest req){
         String result = friendService.sendToRequest(req);
-        return new ApiResponse<>(HttpStatus.OK.value(), "친구 요청을 보냈습니다.");
+        return new ApiResponse<>(HttpStatus.OK.value(), "친구 요청을 보냈습니다.", "");
     }
 
     // 친구 목록
     @PostMapping("/list")
-    public ApiResponse<List<NotifyDto.Response>> getMyNotificationList(){
+    public ApiResponse<List<FriendDto.FriendListResponse>> getMyFriendList(){
+        return new ApiResponse<>(HttpStatus.OK.value(), "내 친구 목록을 가져왔습니다.", friendService.getMyFriendList());
+    }
+
+    @PostMapping("/remove")
+    public ApiResponse removeRelationship(){
         return null;
     }
 
