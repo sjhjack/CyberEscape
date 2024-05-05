@@ -18,6 +18,7 @@ public class NotifyDto {
     @Builder
     public static class Response {
         String id;
+        String senderUuid;
         String receiverUuid;
         String content;
         String type;
@@ -25,8 +26,9 @@ public class NotifyDto {
         LocalDateTime createdAt;
 
         public static NotifyDto.Response from(Notify notify){
-            return NotifyDto.Response.builder()
+            return Response.builder()
                     .id(notify.getId().toString())
+                    .senderUuid(notify.getSenderUuid())
                     .receiverUuid(notify.getReceiverUuid())
                     .content(notify.getContent())
                     .type(notify.getNotificationType().name())

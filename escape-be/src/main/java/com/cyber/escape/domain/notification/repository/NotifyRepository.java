@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface NotifyRepository extends MongoRepository<Notify, String> {
 
     List<Notify> findByReceiverUuidAndIsRead(String receiverUuid, char isRead);
+    Notify findBySenderUuidAndReceiverUuid(String senderUuid, String receiverUuid);
     Optional<Notify> findById(ObjectId id);
 }
 
