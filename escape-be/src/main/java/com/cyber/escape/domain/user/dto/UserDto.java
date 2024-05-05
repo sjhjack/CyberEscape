@@ -115,7 +115,7 @@ public class UserDto {
 		// private String password;		// 이건 필요 없잖아? 오히려 있으면 보안에 안 좋아.
 		private String nickname;
 		private int point;
-		private long characterId;
+		// private long characterId;
 		// private boolean withdrawal;
 
 		public static Response from(User user){
