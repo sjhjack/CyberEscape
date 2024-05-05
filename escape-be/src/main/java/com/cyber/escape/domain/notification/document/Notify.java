@@ -16,6 +16,7 @@ import lombok.Getter;
 public class Notify {
     @Id
     private ObjectId id;
+    private String senderUuid;
     private String receiverUuid;
     private String content;
     private NotificationType notificationType;

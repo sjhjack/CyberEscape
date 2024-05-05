@@ -9,6 +9,8 @@ import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.dto.NotifyDto;
 import com.cyber.escape.domain.notification.repository.EmitterRepositoryImpl;
 import com.cyber.escape.domain.notification.repository.NotifyRepository;
+import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.common.util.IdFinder;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationService {
     private static final Long DEFAULT_TIMEOUT = 60L * 60 * 1000;
     private final EmitterRepositoryImpl emitterRepository;
-    // private final NoteRepository noteRepository;
+    // CRUD, FIND, 동적 쿼리 
     private final NotifyRepository notifyRepository;
-    // private final ObjectMapper objectMapper;
-    //private final NotifyMapper notifyMapper;
+    // 복잡한 수준 쿼리, 세밀한 제어에는 TEMPLATE 사용
     private final MongoTemplate mongoTemplate;
 
     // subscribe
@@ -36,7 +37,6 @@ public class NotificationService {
         String id = userUuid + "_" + System.currentTimeMillis();
         log.info("NotificationService ============ id : {}, lastEventId: {}", id, lastEventId);
         SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
-        // SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
 
         log.info("NotificationService ============ save emitter completed");
 
@@ -65,28 +65,42 @@ public class NotificationService {
     public void send(String receiverUuid, Notify.NotificationType notificationType, String content){
         log.info("NotificationService ============= send() 시작");
 
-        Notify notification = notifyRepository.save(createNotify(receiverUuid, notificationType, content));
-        // Notify notification = createNotify(receiverId, notificationType, content);
+        // 알림 내역 저장
+        // 중복 처리가 된다
 
-        // receiver = 현재 로그인 한 유저 = 알림 받을 사람
-        // String receiverId = receiver.getMemberId();
 
-        // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
-        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
-        sseEmitters.forEach(
-                (key, sseEmitter) -> {
-                    emitterRepository.saveEventCache(key, notification);
-                    sendToClient(sseEmitter, key, NotifyDto.Response.from(notification));
-                }
-        );
+        String senderUuid = UserUtil.getUserUuid();
+        // 이미 저장된 내역 없으면 생성
+        Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuid(senderUuid, receiverUuid);
 
+        // 보낸 내역이 없으면
+        if(existNotification == null) {
+            
+            // 새로 생성해서 전송
+            Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, notificationType, content));
+
+            // Notify notification = createNotify(receiverId, notificationType, content);
+
+            // receiver = 현재 로그인 한 유저 = 알림 받을 사람
+            // String receiverId = receiver.getMemberId();
+
+            // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
+            Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
+            sseEmitters.forEach(
+                    (key, sseEmitter) -> {
+                        emitterRepository.saveEventCache(key, notification);
+                        sendToClient(sseEmitter, key, NotifyDto.Response.from(notification));
+                    }
+            );
+        }
         log.info("NotificationService ============= send() 끝");
+
     }
 
-    private Notify createNotify(String receiverUuid, Notify.NotificationType notificationType, String content) {
+    private Notify createNotify(String senderUuid, String receiverUuid, Notify.NotificationType notificationType, String content) {
         // Todo : sender 있는 경우, 없는 경우 나누기
         return Notify.builder()
-                // .sender(sender)
+                .senderUuid(senderUuid)
                 .receiverUuid(receiverUuid)
                 .notificationType(notificationType)
                 .content(content)
@@ -110,10 +124,10 @@ public class NotificationService {
     }
 
     // 안 읽은 목록들 추출
-    public List<NotifyDto.Response> getNotifyList(String userUuid){
+    public List<NotifyDto.Response> getNotifyList(){
+        String userUuid = UserUtil.getAnotherUserUuid();
         List<Notify> notifyList = notifyRepository.findByReceiverUuidAndIsRead(userUuid, 'F');
-        //return notifyMapper.NotifyToNotifyDtoResponse(notifyList);
-        return null;
+        return notifyList.stream().map(NotifyDto.Response::from).toList();
     }
 
     // mongoDB에서 read 처리 지정
@@ -125,6 +139,7 @@ public class NotificationService {
 
             Notify readNotify = Notify.builder()
                     .id(unreadNotify.getId())
+                    .senderUuid(unreadNotify.getSenderUuid())
                     .receiverUuid(unreadNotify.getReceiverUuid())  // Maintain other fields
                     .content(unreadNotify.getContent())      	// Maintain other fields
                     .notificationType(unreadNotify.getNotificationType())  // Maintain other fields
