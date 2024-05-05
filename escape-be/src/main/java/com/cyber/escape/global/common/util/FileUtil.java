@@ -18,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class FileUtil {
+	// Todo : default 파일 업로드 후 변경
+	public static final String DEFAULT_FILE_NAME = "default_name";
+	public static final String DEFAULT_FILE_URL = "default_url";
 
 	@Value("${cloud.aws.s3.bucket}")
 	private static String bucket;
@@ -32,40 +35,47 @@ public class FileUtil {
 	}
 	// S3 링크 반환
 
-	public static String makeFileName(String fileName) {
+	public static String makeFileName(String originalFileName) {
 
 		UUID uuid = UUID.randomUUID();
 
-		String savedName = uuid + "_" + fileName;
-		if(savedName.length() >= 50)
+		String savedFileName = uuid + "_" + originalFileName;
+		if(savedFileName.length() >= 50)
 			throw new FileException(ExceptionCodeSet.FILE_NAME_TOO_LONG);
-		return savedName;
+		return savedFileName;
 	}
 
 	// S3 링크 반환
-	public static String uploadFile(MultipartFile multipartFile, String savedName) throws IOException {
-
-		if(multipartFile == null || multipartFile.isEmpty())
-			throw new FileException(ExceptionCodeSet.FILE_NOT_EXISTS);
+	public static String uploadFile(MultipartFile multipartFile, String savedFileName) throws IOException {
+		checkFileValidation(multipartFile, savedFileName);
 
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setContentLength(multipartFile.getSize());
 		metadata.setContentType(multipartFile.getContentType());
 
-		amazonS3.putObject(bucket, "profiles/" + savedName, multipartFile.getInputStream(), metadata);
-		String url = amazonS3.getUrl(bucket, "profiles/" + savedName).toString();
+		amazonS3.putObject(bucket, "profiles/" + savedFileName, multipartFile.getInputStream(), metadata);
+		String url = amazonS3.getUrl(bucket, "profiles/" + savedFileName).toString();
 
 		return url;
 	}
 
-	public static String deleteFile(String fileName) throws IOException{
+	private static void checkFileValidation(MultipartFile multipartFile, String savedFileName) {
+		if(multipartFile == null || multipartFile.isEmpty()) {
+			throw new FileException(ExceptionCodeSet.FILE_NOT_EXISTS);
+		}
+		if(amazonS3.doesObjectExist(bucket, "profiles/" + savedFileName)) {
+			throw new FileException(ExceptionCodeSet.FILE_DUPLICATED);
+		}
+	}
+
+	public static String deleteFile(String savedFileName) throws IOException{
 
 		try{
 			// 삭제할 게 없으면 에러가 안 뜨네?
-			amazonS3.deleteObject(bucket, "profiles/" + fileName);
+			amazonS3.deleteObject(bucket, "profiles/" + savedFileName);
 		}
 		catch (SdkClientException e){
-			log.info("ERROR -- path : {} , message : {}", "profiles/" + fileName, e.getMessage());
+			log.info("ERROR -- path : {} , message : {}", "profiles/" + savedFileName, e.getMessage());
 			throw new IOException("ERROR deleting file from S3", e);
 		}
 

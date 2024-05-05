@@ -26,7 +26,9 @@ public enum ExceptionCodeSet {
 
     // 파일
     FILE_NOT_EXISTS(HttpStatus.BAD_REQUEST, 7000, "파일이 존재하지 않습니다."),
-    FILE_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, 7001, "파일 이름이 너무 깁니다.")
+    FILE_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, 7001, "파일 이름이 너무 깁니다."),
+    FILE_DUPLICATED(HttpStatus.CONFLICT, 7002, "현재 지정된 파일입니다."),
+    DELETE_DEFAULT_FILE(HttpStatus.BAD_REQUEST, 7003, "기본 파일은 삭제할 수 없습니다.")
     ;
 
 

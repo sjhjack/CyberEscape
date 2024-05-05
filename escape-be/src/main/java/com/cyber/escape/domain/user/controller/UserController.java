@@ -1,5 +1,7 @@
 package com.cyber.escape.domain.user.controller;
 
+import java.io.IOException;
+
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.service.AuthService;
 import com.cyber.escape.domain.user.service.UserService;
@@ -67,8 +69,8 @@ public class UserController {
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 변경 완료", newNickname);
     }
 
-    @PatchMapping("/user/image")
-    public ApiResponse<String> changeProfileImage(@RequestPart MultipartFile file) {
-        return null;
+    @PatchMapping("/user/image/change")
+    public ApiResponse<String> changeProfileImage(@RequestPart MultipartFile multipartFile) throws IOException {
+        return new ApiResponse<>(HttpStatus.OK.value(), "프로필 이미지 변경 완료", userService.changeProfileImage(multipartFile));
     }
 }
