@@ -73,4 +73,9 @@ public class UserController {
     public ApiResponse<String> changeProfileImage(@RequestPart MultipartFile multipartFile) throws IOException {
         return new ApiResponse<>(HttpStatus.OK.value(), "프로필 이미지 변경 완료", userService.changeProfileImage(multipartFile));
     }
+
+    @PatchMapping("/user/image/delete")
+    public ApiResponse<String> deleteProfileImage() throws IOException {
+        return new ApiResponse<>(HttpStatus.OK.value(), "프로필 이미지 삭제 완료", userService.deleteProfileImage());
+    }
 }
