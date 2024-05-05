@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.user.dto;
+package com.cyber.escape.domain.auth.dto;
 
 import java.util.Collection;
 

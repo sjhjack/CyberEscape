@@ -11,8 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.cyber.escape.domain.user.jwt.JwtFilter;
-import com.cyber.escape.domain.user.jwt.TokenProvider;
+import com.cyber.escape.domain.auth.jwt.JwtFilter;
+import com.cyber.escape.domain.auth.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

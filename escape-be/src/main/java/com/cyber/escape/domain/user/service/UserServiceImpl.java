@@ -12,13 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cyber.escape.domain.auth.service.AuthService;
 import com.cyber.escape.domain.friend.entity.Friend;
 import com.cyber.escape.domain.friend.repository.FriendRepository;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
-import com.cyber.escape.domain.user.jwt.TokenProvider;
+import com.cyber.escape.domain.auth.jwt.TokenProvider;
 import com.cyber.escape.domain.user.repository.UserRepository;
-import com.cyber.escape.domain.user.util.TokenUtil;
+import com.cyber.escape.domain.auth.util.TokenUtil;
 import com.cyber.escape.domain.user.util.UserUtil;
 import com.cyber.escape.global.common.util.FileUtil;
 import com.cyber.escape.global.exception.ExceptionCodeSet;

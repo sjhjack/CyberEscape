@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.user.service;
+package com.cyber.escape.domain.auth.service;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.cyber.escape.domain.user.dto.CustomUser;
+import com.cyber.escape.domain.auth.dto.CustomUser;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
