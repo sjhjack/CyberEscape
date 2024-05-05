@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.user.jwt;
+package com.cyber.escape.domain.auth.jwt;
 
 import java.io.IOException;
 import java.util.Arrays;

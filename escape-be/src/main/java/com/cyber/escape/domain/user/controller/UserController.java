@@ -3,7 +3,7 @@ package com.cyber.escape.domain.user.controller;
 import java.io.IOException;
 
 import com.cyber.escape.domain.user.dto.UserDto;
-import com.cyber.escape.domain.user.service.AuthService;
+import com.cyber.escape.domain.auth.service.AuthService;
 import com.cyber.escape.domain.user.service.UserService;
 import com.cyber.escape.global.common.dto.ApiResponse;
 
@@ -15,71 +15,44 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserController {
-    // Todo : Auth랑 User 나누자
-
-    private final AuthService authService;
     private final UserService userService;
 
-    @PostMapping("/auth/signup")
-    public ApiResponse<String> signup(@RequestBody UserDto.SignupRequest signupRequest) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "회원가입 완료", authService.signup(signupRequest));
-    }
-
-    @PostMapping("/auth/signin")
-    public ApiResponse<UserDto.SigninResponse> signin(@RequestBody UserDto.SigninRequest signinRequest) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "로그인 완료", authService.signin(signinRequest));
-    }
-
-    @PostMapping("/auth/refresh")
-    public ApiResponse<UserDto.SigninResponse> reIssue(@RequestBody UserDto.SigninResponse tokenRequest) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "생성 성공", authService.reIssue(tokenRequest));
-    }
-
-    @PostMapping("/auth/logout")
-    public ApiResponse<String> logout() {
-        return new ApiResponse<>(HttpStatus.OK.value(), "로그아웃 성공", authService.logout());
-    }
-
-    @PatchMapping("/auth/quit")
-    public ApiResponse<String> quit() throws IOException {
-        return new ApiResponse<>(HttpStatus.OK.value(), "회원 탈퇴 성공", authService.quit());
-    }
-
-    @PostMapping("/user/nickname")
+    @PostMapping("/nickname")
     public ApiResponse<String> generateNickname() {
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 랜덤 생성 완료", userService.generateNickname());
     }
 
-    @PostMapping("/user/search")
+    @PostMapping("/search")
     public ApiResponse<UserDto.SearchNicknameResponse> searchUser(@RequestBody UserDto.SearchNicknameRequest req){
         UserDto.SearchNicknameResponse response = userService.searchNickname(req);
         return new ApiResponse<>(HttpStatus.OK.value(),"닉네임 검색 완료", response);
     }
 
-    @PostMapping("/user/nickname/duplication")
+    @PostMapping("/nickname/duplication")
     public ApiResponse<UserDto.CheckNicknameResponse> checkNickname(@RequestBody UserDto.CheckNicknameRequest request) {
         UserDto.CheckNicknameResponse response = userService.checkNickname(request);
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 중복 검사 완료", response);
     }
 
-    @PatchMapping("/user/change")
+    @PatchMapping("/change")
     public ApiResponse<String> changeNickname(@RequestBody UserDto.UpdateNicknameRequest req) {
         String newNickname = userService.changeNickname(req);
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 변경 완료", newNickname);
     }
 
-    @PatchMapping("/user/image/change")
+    @PatchMapping("/image/change")
     public ApiResponse<String> changeProfileImage(@RequestPart MultipartFile multipartFile) throws IOException {
         return new ApiResponse<>(HttpStatus.OK.value(), "프로필 이미지 변경 완료", userService.changeProfileImage(multipartFile));
     }
 
-    @PatchMapping("/user/image/delete")
+    @PatchMapping("/image/delete")
     public ApiResponse<String> deleteProfileImage() throws IOException {
         return new ApiResponse<>(HttpStatus.OK.value(), "프로필 이미지 삭제 완료", userService.deleteProfileImage());
     }
 
-    @PostMapping("/user/dummy/image")
+    @PostMapping("/dummy/image")
     public ApiResponse<String> putDummyImage(@RequestPart MultipartFile multipartFile) throws IOException {
         return new ApiResponse<>(HttpStatus.OK.value(), "더미 이미지 등록 완료", userService.putDummyImage(multipartFile));
     }

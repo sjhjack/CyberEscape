@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.user.service;
+package com.cyber.escape.domain.auth.service;
 
 import java.io.IOException;
 
