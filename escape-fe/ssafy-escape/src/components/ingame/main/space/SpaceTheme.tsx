@@ -1,15 +1,16 @@
-import RoomModel from "@/components/ingame/elements/space/RoomModel"
+import { useState } from "react"
+import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"
-import MeshObjects from "../../elements/space/MeshObjects"
-import Lights from "../../elements/space/Lights"
+import MeshObjects from "../../elements/space/Basics/MeshObjects"
+import Lights from "../../elements/space/Basics/Lights"
 import Floor from "../../elements/common/Floor"
-import Stars from "../../elements/space/Stars"
-import Asteroids from "../../elements/space/Asteroids"
-import Venus from "../../elements/space/Venus"
-import KeyModels from "../../elements/space/KeyModels"
-import { useState } from "react"
+import Stars from "../../elements/space/Backgrounds/Stars"
+import Asteroids from "../../elements/space/Backgrounds/Asteroids"
+import Venus from "../../elements/space/Backgrounds/Venus"
+import KeyModels from "../../elements/space/Basics/KeyModels"
 import Keys from "@/data/ingame/space/Keys"
+import Interactions from "../../elements/space/Basics/Interactions"
 
 interface KeyData {
   active: boolean
@@ -41,6 +42,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           onClick={() => onClick(index)}
         />
       ))}
+      <Interactions />
       <Asteroids />
       <RoomModel onLoaded={setIsModelLoaded} />
     </BasicScene>
