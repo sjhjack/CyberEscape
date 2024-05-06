@@ -14,6 +14,7 @@ interface ButtonProps {
   text: string
   theme: "success" | "fail" | "game"
   width?: string
+  height?: string
   backgroundColor?: string
   type?: "button" | "submit"
   disabled?: boolean
@@ -24,11 +25,13 @@ interface ButtonStyleProps {
   theme: "success" | "fail" | "game"
   backgroundColor?: string
   width?: string
+  height?: string
 }
 
 const Button = ({
   theme,
   width,
+  height,
   backgroundColor,
   text,
   type,
@@ -39,6 +42,7 @@ const Button = ({
     <ButtonStyle
       theme={theme}
       width={width}
+      height={height}
       backgroundColor={backgroundColor}
       type={type}
       disabled={disabled}
@@ -53,6 +57,7 @@ export default Button
 
 const ButtonStyle = styled.button<ButtonStyleProps>`
   width: ${(props) => props.width || "100%"};
+  height: ${(props) => props.height || "100%"};
   padding: 10px;
   border: none;
   border-radius: 0.25rem;

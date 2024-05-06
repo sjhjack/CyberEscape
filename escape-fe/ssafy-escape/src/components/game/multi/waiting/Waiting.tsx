@@ -8,7 +8,9 @@ import { Stomp } from "@stomp/stompjs"
 import Container from "@/components/common/Container"
 import * as S from "@/app/(isLogIn)/game/multi/waiting/waitingStyle"
 import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
+import InviteModal from "@/components/game/multi/waiting/InviteModal"
 import useIngameThemeStore from "@/stores/IngameTheme"
+import Button from "@/components/common/Button"
 
 // import Openvidu from "./Openvidu"
 
@@ -25,6 +27,10 @@ const Waiting = () => {
   >(undefined)
   const [chatData, setChatData] = useState<Array<object>>([])
   const { selectedTheme } = useIngameThemeStore()
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const handleModalClose = (): void => {
+    setShowModal(false)
+  }
   useEffect(() => {
     console.log(selectedTheme)
   }, [])
@@ -182,6 +188,7 @@ const Waiting = () => {
   }
   return (
     <Container display="flex" justifyContent="center" alignItems="center">
+      <InviteModal open={showModal} handleClose={handleModalClose} />
       <S.UserBox style={{ marginRight: "20px" }}>
         <S.CharacterBox></S.CharacterBox>
         <S.Nickname>{userName}</S.Nickname>
@@ -199,7 +206,19 @@ const Waiting = () => {
         <ChattingBox session={session} chatData={chatData}></ChattingBox>
       </S.MainBox>
       <S.UserBox style={{ marginLeft: "20px" }}>
-        <S.CharacterBox></S.CharacterBox>
+        <S.CharacterBox>
+          <S.CharacterBoxContent>
+            <Button
+              text="초대하기"
+              theme="success"
+              width="100px"
+              height="40px"
+              onClick={() => {
+                setShowModal(true)
+              }}
+            />
+          </S.CharacterBoxContent>
+        </S.CharacterBox>
         <S.Nickname></S.Nickname>
       </S.UserBox>
     </Container>

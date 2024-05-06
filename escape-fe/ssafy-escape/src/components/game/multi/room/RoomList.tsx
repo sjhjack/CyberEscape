@@ -11,7 +11,6 @@ const Room = ({ roomData }: any) => {
   const router = useRouter()
   const thema = ["", "공포", "싸피", "우주"]
   const handleModalClose = (): void => {
-    console.log("닫기")
     setShowModal(false)
   }
   const enterRoom = (): void => {
