@@ -6,6 +6,7 @@ import com.cyber.escape.domain.rank.entity.GameHistory;
 import com.cyber.escape.domain.rank.entity.Ranking;
 import com.cyber.escape.domain.rank.repository.GameHistoryRepository;
 import com.cyber.escape.domain.rank.repository.RankingRepository;
+import com.cyber.escape.domain.thema.dto.ThemaDto;
 import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.entity.User;
@@ -139,7 +140,7 @@ public class GameHistoryService {
                     .rank(-1)
                     .nickname("")
                     .bestTime(Time.valueOf("00:00:00"))
-                    .category(-1)
+                    .category(ThemaDto.ThemaType.getNameByOrder(myCategory))
                     .build();
             return dto;
         }
@@ -180,7 +181,7 @@ public class GameHistoryService {
                  .rank(myRank)
                  .nickname(myNickname)
                  .bestTime(myBestTime)
-                 .category(myCategory)
+                 .category(ThemaDto.ThemaType.getNameByOrder(myCategory))
                  .build();
     }
 }
