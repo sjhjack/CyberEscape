@@ -32,3 +32,9 @@ interface PostInviteResponseProps {
 // }
 
 // export default postInvite
+const postInvite = async () => {
+  const response = 1
+  return response
+}
+
+export default postInvite
