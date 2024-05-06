@@ -2,6 +2,7 @@ package com.cyber.escape.domain.notification.service;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,18 +67,29 @@ public class NotificationService {
         log.info("NotificationService ============= send() 시작");
 
         // 알림 내역 저장
-        // 중복 처리가 된다
-
-
         String senderUuid = UserUtil.getUserUuid();
-        // 이미 저장된 내역 없으면 생성
-        Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuid(senderUuid, receiverUuid);
 
-        // 보낸 내역이 없으면
-        if(existNotification == null) {
-            
-            // 새로 생성해서 전송
-            Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, notificationType, content));
+        // 친구 요청이라면
+        if(notificationType.equals(Notify.NotificationType.FRIEND)) {
+            // sender가 receiver에게 친구 요청을 보낸 적이 있는지를 판별
+            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotifycationType(senderUuid, receiverUuid, Notify.NotificationType.FRIEND.name());
+            sendNotifcation(receiverUuid, "", notificationType, content, senderUuid, existNotification);
+        }
+        // 게임 요청이 들어왔다면
+        else {
+            String roomUuid = "";
+            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotifycationType(senderUuid, receiverUuid, Notify.NotificationType.GAME.name());
+            sendNotifcation(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
+        }
+        log.info("NotificationService ============= send() 끝");
+
+    }
+
+    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, Notify existNotification) {
+        if (existNotification == null) {
+
+            // roomUuid 자리는 비워놓는다.
+            Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
 
             // Notify notification = createNotify(receiverId, notificationType, content);
 
@@ -89,19 +101,18 @@ public class NotificationService {
             sseEmitters.forEach(
                     (key, sseEmitter) -> {
                         emitterRepository.saveEventCache(key, notification);
-                        sendToClient(sseEmitter, key, NotifyDto.Response.from(notification));
+                        sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
                     }
             );
         }
-        log.info("NotificationService ============= send() 끝");
-
     }
 
-    private Notify createNotify(String senderUuid, String receiverUuid, Notify.NotificationType notificationType, String content) {
+    private Notify createNotify(String senderUuid, String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content) {
         // Todo : sender 있는 경우, 없는 경우 나누기
         return Notify.builder()
                 .senderUuid(senderUuid)
                 .receiverUuid(receiverUuid)
+                .roomUuid(roomUuid)
                 .notificationType(notificationType)
                 .content(content)
                 .isRead('F')
@@ -124,10 +135,22 @@ public class NotificationService {
     }
 
     // 안 읽은 목록들 추출
-    public List<NotifyDto.Response> getNotifyList(){
-        String userUuid = UserUtil.getAnotherUserUuid();
+    public List<Object> getNotifyList(){
+        String userUuid = "c83ec6b2-0470-11ef-9c95-0242ac101404";
         List<Notify> notifyList = notifyRepository.findByReceiverUuidAndIsRead(userUuid, 'F');
-        return notifyList.stream().map(NotifyDto.Response::from).toList();
+
+        List<Object> response = new ArrayList<>();
+
+        for(Notify notify : notifyList){
+            if(notify.getNotificationType().equals(Notify.NotificationType.FRIEND)){
+                response.add(NotifyDto.FriendResponse.from(notify));
+            }
+            else if(notify.getNotificationType().equals(Notify.NotificationType.GAME)){
+                response.add(NotifyDto.GameResponse.from(notify));
+            }
+        }
+
+        return response;
     }
 
     // mongoDB에서 read 처리 지정

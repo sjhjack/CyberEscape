@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class FriendService {
     private final IdFinder idFinder;
 
     public void makeFriend(FriendDto.FriendRelationRequest dto){
-        String currentUserUuid = UserUtil.getUserUuid();
+        String currentUserUuid = "c83ec6b2-0470-11ef-9c95-0242ac101404";
         User fromUser = userRepository.findUserByUuid(currentUserUuid)
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
         User toUser = userRepository.findUserByUuid(dto.getToUserUuid())
@@ -44,15 +45,7 @@ public class FriendService {
 
     public String sendToRequest(FriendDto.FriendRequest req){
 
-        // 요청을 보낸다.
-        // DB에 저장한다.
-        if(req.getNotifyType().equals("GAME")){
-            notificationService.send(req.getReceiverUuid(), Notify.NotificationType.GAME, "게임 요청입니다.");
-        }
-
-        if(req.getNotifyType().equals("FRIEND")){
-            notificationService.send(req.getReceiverUuid(), Notify.NotificationType.FRIEND, "친구 요청입니다.");
-        }
+        notificationService.send(req.getReceiverUuid(), Notify.NotificationType.FRIEND, "친구 요청입니다.");
 
         return "";
     }
@@ -63,5 +56,14 @@ public class FriendService {
         Long userId = idFinder.findIdByUuid(userUuid, User.class);
 
         return friendRepositoryImpl.findFriendList(userId);
+    }
+
+    public String removeFriend(Map<String, String> req){
+        Long currentUserId = idFinder.findIdByUuid(UserUtil.getUserUuid(), User.class);
+        Long friendId = idFinder.findIdByUuid(req.get("friendUuid"), User.class);
+
+        friendRepositoryImpl.removeFriend(currentUserId, friendId);
+
+        return "";
     }
 }

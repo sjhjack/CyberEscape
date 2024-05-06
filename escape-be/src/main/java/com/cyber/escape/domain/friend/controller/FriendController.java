@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -42,8 +43,8 @@ public class FriendController {
     }
 
     @PostMapping("/remove")
-    public ApiResponse removeRelationship(){
-        return null;
+    public ApiResponse removeRelationship(@RequestBody Map<String, String> friendInfo){
+        return new ApiResponse<>(HttpStatus.OK.value(), "내 친구 목록을 가져왔습니다.", friendService.removeFriend(friendInfo));
     }
 
 
