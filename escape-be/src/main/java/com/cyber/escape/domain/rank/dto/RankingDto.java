@@ -1,5 +1,7 @@
 package com.cyber.escape.domain.rank.dto;
 
+import com.cyber.escape.domain.thema.dto.ThemaDto;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -49,6 +51,7 @@ public class RankingDto {
         private int rank;
         private String nickname;
         private Time bestTime;
-        private int category;
+        private ThemaDto.ThemaType category;
     }
+
 }
