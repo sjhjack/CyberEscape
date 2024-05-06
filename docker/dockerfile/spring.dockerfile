@@ -4,7 +4,7 @@ ENV TZ Asia/Seoul
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
 
-COPY ./escape-be/build/libs/escape-0.0.1-SNAPSHOT.jar .
+COPY escape-be/build/libs/escape-be-0.0.1-SNAPSHOT.jar .
 
 COPY docker/wait-for-it.sh /wait-for-it.sh
 
