@@ -4,7 +4,7 @@ import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.user.dto.UserDto;
 
 public interface RoomModifyService {
-	void addPlayerToMatchingQueue(String userUuid);
+	void addPlayerToMatchingQueue();
 
 	RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest);
 
