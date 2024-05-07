@@ -19,7 +19,7 @@ const Multi = () => {
       <S.ImageContainer>
         <S.MenuContainer
           onClick={() => {
-            router.push("/game/multi/create")
+            router.push("/main/multi/create")
           }}
         >
           <S.MultiImage
@@ -32,7 +32,7 @@ const Multi = () => {
         </S.MenuContainer>
         <S.MenuContainer
           onClick={() => {
-            router.push("/game/multi/room")
+            router.push("/main/multi/room")
           }}
         >
           <S.MultiImage

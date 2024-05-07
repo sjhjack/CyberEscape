@@ -31,7 +31,7 @@ const Mode = () => {
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/game/multi")
+            router.push("/main/multi")
           }}
         >
           <Image src="/image/multi.png" alt="" width={300} height={300} />
