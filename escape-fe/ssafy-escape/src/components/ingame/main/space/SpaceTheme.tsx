@@ -38,7 +38,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       <Subtitle text={subtitle} />
       <BasicScene>
         <Lights />
-        <Player position={[3, 1, 0]} />
+        <Player position={[3, 1, 0]} speed={15} />
         <MeshObjects />
         <Floor rotation={[Math.PI / -2, 0, 0]} color="white" />
         <Stars />
