@@ -37,7 +37,7 @@ interface getRoomRequestProps {
   page: number
   keyword: string
 }
-// // 친구 목록 조회
+// // 방 목록 조회
 // const getRoomList = async (data:getRoomRequestProps): Promise<GetRoomListDataProps> => {
 //   try {
 //     const response = await api.get<GetRoomListBodyProps>(

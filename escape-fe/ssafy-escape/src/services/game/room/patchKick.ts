@@ -12,7 +12,7 @@ interface PatchKickResponseProps {
   data: string
 }
 
-// // 게임방 나가기
+// // 게임방 강퇴시키기
 // const patchKick = async (
 //   data: PatchKickRequestProps,
 // ): Promise<PatchKickResponseProps> => {

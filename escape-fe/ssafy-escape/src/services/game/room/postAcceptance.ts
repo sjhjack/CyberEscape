@@ -12,7 +12,7 @@ interface PostAcceptanceResponseProps {
   data: string
 }
 
-// // 친구 초대하기
+// // 게임방 초대 응하기
 // const postAcceptance = async (
 //   data: PostAcceptanceRequestProps,
 // ): Promise<PostAcceptanceResponseProps> => {

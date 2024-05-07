@@ -19,7 +19,7 @@ interface PatchChangeHostResponseProps {
   data: ChangeHostDataProps[]
 }
 
-// // 게임방 나가기
+// // 호스트 변경
 // const patchChangeHost = async (
 //   data: PatchChangeHostRequestProps,
 // ): Promise<PatchChangeHostResponseProps> => {

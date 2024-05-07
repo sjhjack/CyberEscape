@@ -17,7 +17,7 @@ interface postCreateRoomRequestProps {
   hostUuid: string
 }
 
-// // 친구 목록 조회
+// // 게임방 생성하기
 // const postCreateRoom = async (
 //   data: postCreateRoomRequestProps,
 // ): Promise<postCreateRoomResponseProps> => {
