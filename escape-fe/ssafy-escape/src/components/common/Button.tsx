@@ -4,6 +4,7 @@ import {
   MainColor,
   MainColorDarker,
   RedColor,
+  RedColorBrighter,
   RedColorDarker,
 } from "@/styles/palette"
 
@@ -11,37 +12,44 @@ import {
 
 interface ButtonProps {
   text: string
-  theme: "success" | "fail"
+  theme: "success" | "fail" | "game"
   width?: string
+  height?: string
   fontSize?: string
   backgroundColor?: string
   type?: "button" | "submit"
+  disabled?: boolean
   onClick?: () => void
 }
 
 interface ButtonStyleProps {
-  theme: "success" | "fail"
+  theme: "success" | "fail" | "game"
   backgroundColor?: string
   width?: string
+  height?: string
   fontSize?: string
 }
 
 const Button = ({
   theme,
   width,
+  height,
   backgroundColor,
   fontSize,
   text,
   type,
+  disabled,
   onClick,
 }: ButtonProps) => {
   return (
     <ButtonStyle
       theme={theme}
       width={width}
+      height={height}
       backgroundColor={backgroundColor}
       fontSize={fontSize}
       type={type}
+      disabled={disabled}
       onClick={onClick}
     >
       {text}
@@ -53,6 +61,7 @@ export default Button
 
 const ButtonStyle = styled.button<ButtonStyleProps>`
   width: ${(props) => props.width || "100%"};
+  height: ${(props) => props.height || "100%"};
   font-size: ${(props) => props.fontSize};
   padding: 10px;
   border: none;
@@ -62,7 +71,9 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
       ? MainColor
       : props.theme === "fail"
         ? RedColor
-        : props.backgroundColor};
+        : props.theme === "game"
+          ? RedColorBrighter
+          : props.backgroundColor};
   color: white;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;

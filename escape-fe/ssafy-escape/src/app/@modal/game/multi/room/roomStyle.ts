@@ -9,6 +9,7 @@ export const RoomBox = styled.div`
   margin-bottom: 2%;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `
 export const Menu = styled.div`
   margin-left: 2%;

@@ -41,17 +41,17 @@ const Page = () => {
 
   return (
     <S.Container>
-      {selectedTheme === "space" ? (
+      {selectedTheme === "3" ? (
         <SpaceTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === "horror" ? (
+      ) : selectedTheme === "1" ? (
         <HorrorTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === "ssafy" ? (
+      ) : selectedTheme === "2" ? (
         <SsafyTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}

@@ -1,9 +1,9 @@
 import { Suspense } from "react"
 import Theme from "@/components/game/theme/Theme"
-
+import CircularProgress from "@mui/material/CircularProgress"
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<CircularProgress />}>
       <Theme />
     </Suspense>
   )
