@@ -22,7 +22,7 @@ public class UserController {
     private final UserReadService userReadService;
     private final UserModifyService userModifyService;
 
-    @PostMapping("/nickname")
+    @GetMapping("/nickname")
     public ApiResponse<String> generateNickname() {
         return new ApiResponse<>(HttpStatus.OK.value(), "닉네임 랜덤 생성 완료", userReadService.generateNickname());
     }
