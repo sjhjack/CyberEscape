@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import * as S from "@/app/(isLogIn)/game/multi/room/roomStyle"
+import * as S from "@/app/@modal/game/multi/room/roomStyle"
 import Image from "next/image"
 import RoomPasswordModal from "./RoomPasswordModal"
 import useIngameThemeStore from "@/stores/IngameTheme"
