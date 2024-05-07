@@ -3,6 +3,7 @@ const API_PATH = {
     SIGNUP: "/auth/signup",
     LOGIN: "/auth/signin",
     LOGOUT: "/auth/logout",
+    REFRESH_ACCESSTOKEN: "/auth/refresh",
   },
   MAIN: {
     FRIEND: {
@@ -16,12 +17,27 @@ const API_PATH = {
     RANKING: {
       LIST: "/rankings",
       MY_RANK: "/rank/myrank",
-      UPDATE_RANK: "/rank/update"
+      UPDATE_RANK: "/rank/update",
     },
     NICKNAME: {
       DUPLICATION: "/user/nickname/duplication",
       AUTO_CREATE: "/user/nickname",
       CHANGE: "/user/change",
+    },
+  },
+  GAME: {
+    MULTI: {
+      ROOM: {
+        LIST: "/room",
+        INVITE: "/room/invite",
+        ACCEPT: "/room/acceptance",
+        JOIN: "/room/join",
+        EXIT: "/room/exit",
+        KICK: "/room/kick",
+        SETTING: "/room/setting",
+        CHANGE_HOST: "/room/change/host",
+        START: "/room/start",
+      },
     },
   },
   INVITE: {

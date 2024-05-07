@@ -11,6 +11,7 @@ import * as S from "./ingameStyle"
 import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
 import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
+import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
 
@@ -41,13 +42,18 @@ const Page = () => {
 
   return (
     <S.Container>
-      {selectedTheme === "space" ? (
+      {selectedTheme === "3" ? (
         <SpaceTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === "horror" ? (
+      ) : selectedTheme === "1" ? (
         <HorrorTheme
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : selectedTheme === "2" ? (
+        <SsafyTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
@@ -60,6 +66,26 @@ const Page = () => {
         // />
         <StartScene onFinish={handleGameStart} />
       ) : null}
+      {isModelLoaded ? (
+        <div>
+          <StartingCountDown
+            isModelLoaded={isModelLoaded}
+            onFinish={handleGameStart}
+          />
+          <Chat />
+          <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
+          <ExitGame>
+            <Image
+              src="/image/exitbutton.png"
+              alt="exit game image"
+              width="40"
+              height="40"
+            />
+          </ExitGame>
+        </div>
+      ) : (
+        <S.LoadingText>로딩 중...</S.LoadingText>
+      )}
       {showModal && (
         <MainModal
           children={1}
@@ -68,17 +94,11 @@ const Page = () => {
           onClose={handleModalClose}
         />
       )}
-      {isGameStart ? <CountdownTimer /> : null}
-      <Chat />
-      <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
-      <ExitGame>
-        <Image
-          src="/image/exitbutton.png"
-          alt="exit game image"
-          width="40"
-          height="40"
-        />
-      </ExitGame>
+      {isGameStart ? (
+        <div>
+          <CountdownTimer />
+        </div>
+      ) : null}
     </S.Container>
   )
 }

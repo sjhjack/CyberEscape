@@ -2,18 +2,23 @@
 
 import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
-import * as S from "@/app/(isLogIn)/game/mode/modeStyle"
+import * as S from "@/app/@modal/game/mode/modeStyle"
 import Image from "next/image"
-const Page = () => {
+const Mode = () => {
   const router = useRouter()
   return (
-    <Container>
+    <Container
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      flexDirection="column"
+    >
       <h1>모드 선택</h1>
       <S.MainContent>
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/game/theme")
+            router.push("theme?mode=single")
           }}
         >
           <Image src="/image/single.png" alt="" width={300} height={300} />
@@ -40,4 +45,4 @@ const Page = () => {
     </Container>
   )
 }
-export default Page
+export default Mode

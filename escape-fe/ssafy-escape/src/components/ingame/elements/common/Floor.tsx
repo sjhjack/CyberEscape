@@ -4,6 +4,7 @@ import { Mesh } from "three"
 const Floor = (props: any) => {
   const [ref] = usePlane((index) => ({
     type: "Static",
+    position: props.position,
     rotation: [-Math.PI / 2, 0, 0],
     mass: 0,
     ...props,
