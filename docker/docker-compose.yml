@@ -60,7 +60,7 @@ services:
 
     nextjs:
       build:
-        context: ../
+        context: ./
         dockerfile: "./docker/dockerfile/nextjs.dockerfile"
       ports:
         - "3000:3000"
