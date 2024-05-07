@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +34,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomService {
+	private static final String MATCHING_QUEUE_KEY = "matching_queue";
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
 	private final ThemaRepository themaRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
+	private final RedisTemplate<String, Object> redisTemplate;
+
+	@Transactional
+	public void addPlayerToMatchingQueue(String userUuid) {
+		ListOperations<String, Object> listOperations = redisTemplate.opsForList();
+		listOperations.rightPush(MATCHING_QUEUE_KEY, userUuid);
+	}
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
