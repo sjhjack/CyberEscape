@@ -63,7 +63,7 @@ public class NotificationService {
     }
 
     // 알림이 필요한 곳에서 이 함수를 호출하면 됩니다.
-    public void send(String receiverUuid, Notify.NotificationType notificationType, String content){
+    public void send(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content){
         log.info("NotificationService ============= send() 시작");
 
         // 알림 내역 저장
@@ -72,13 +72,12 @@ public class NotificationService {
         // 친구 요청이라면
         if(notificationType.equals(Notify.NotificationType.FRIEND)) {
             // sender가 receiver에게 친구 요청을 보낸 적이 있는지를 판별
-            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotifycationType(senderUuid, receiverUuid, Notify.NotificationType.FRIEND.name());
+            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.FRIEND);
             sendNotifcation(receiverUuid, "", notificationType, content, senderUuid, existNotification);
         }
         // 게임 요청이 들어왔다면
         else {
-            String roomUuid = "";
-            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotifycationType(senderUuid, receiverUuid, Notify.NotificationType.GAME.name());
+            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.GAME);
             sendNotifcation(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
         }
         log.info("NotificationService ============= send() 끝");

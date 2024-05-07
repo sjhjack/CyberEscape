@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.cyber.escape.domain.notification.document.Notify;
+import com.cyber.escape.domain.notification.service.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,8 @@ public class RoomServiceImpl implements RoomService {
 	private final UserRepository userRepository;
 	private final ThemaRepository themaRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
+	private NotificationService notificationService;
+	// private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
@@ -105,9 +109,11 @@ public class RoomServiceImpl implements RoomService {
 		}
 	}
 
-	public void inviteUserToRoom(final RoomDto.Request request) {
+	public String inviteUserToRoom(final RoomDto.Request request) {
 		// 알림 전송 및 MongoDB에 저장
 		// 이 부분에 알림 send 메소드 넣으면 끝
+		notificationService.send(request.getUserUuid(), request.getRoomUuid(), Notify.NotificationType.GAME, "게임 요청입니다.");
+		return "";
 	}
 
 	public void acceptInvitation(final RoomDto.Request request) {
