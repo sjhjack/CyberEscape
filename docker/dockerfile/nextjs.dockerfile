@@ -10,5 +10,9 @@ WORKDIR /app
 # Next.js 빌드 결과물과 정적 파일을 /app에 복사
 COPY ./escape-fe ./
 
+# package.json 및 package-lock.json 복사 후 npm install 실행
+COPY ./escape-fe/package.json ./escape-fe/package-lock.json ./
+RUN npm install
+
 # 애플리케이션 실행
 CMD ["npm", "start"]
