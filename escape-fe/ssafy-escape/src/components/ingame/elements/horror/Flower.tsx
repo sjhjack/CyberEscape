@@ -4,11 +4,7 @@ import { useEffect } from "react"
 import { Mesh } from "three"
 // import * as THREE from "three"
 
-type Props = {
-  onClick: () => void
-}
-
-const Flower = ({ onClick }: Props) => {
+const Flower = ({ onClick }: ClickObjectProps) => {
   const flower = useGLTF("/glb/horror/flower.glb", true)
   // const { scene } = useThree()
 

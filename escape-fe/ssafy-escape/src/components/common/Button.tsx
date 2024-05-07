@@ -13,6 +13,7 @@ interface ButtonProps {
   text: string
   theme: "success" | "fail"
   width?: string
+  fontSize?: string
   backgroundColor?: string
   type?: "button" | "submit"
   onClick?: () => void
@@ -22,12 +23,14 @@ interface ButtonStyleProps {
   theme: "success" | "fail"
   backgroundColor?: string
   width?: string
+  fontSize?: string
 }
 
 const Button = ({
   theme,
   width,
   backgroundColor,
+  fontSize,
   text,
   type,
   onClick,
@@ -37,6 +40,7 @@ const Button = ({
       theme={theme}
       width={width}
       backgroundColor={backgroundColor}
+      fontSize={fontSize}
       type={type}
       onClick={onClick}
     >
@@ -49,6 +53,7 @@ export default Button
 
 const ButtonStyle = styled.button<ButtonStyleProps>`
   width: ${(props) => props.width || "100%"};
+  font-size: ${(props) => props.fontSize};
   padding: 10px;
   border: none;
   border-radius: 0.25rem;
