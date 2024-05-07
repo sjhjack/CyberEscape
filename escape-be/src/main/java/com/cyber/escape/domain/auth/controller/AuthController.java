@@ -25,7 +25,7 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ApiResponse<String> signup(@RequestBody UserDto.SignupRequest signupRequest) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "회원가입 완료", authModifyService.signup(signupRequest));
+		return new ApiResponse<>(HttpStatus.CREATED.value(), "회원가입 완료", authModifyService.signup(signupRequest));
 	}
 
 	@PostMapping("/signin")
