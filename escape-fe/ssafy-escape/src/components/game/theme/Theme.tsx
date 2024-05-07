@@ -39,6 +39,7 @@ const Theme = () => {
       <Button
         theme="game"
         width="200px"
+        height="40px"
         text="시작하기"
         onClick={() => {
           console.log("게임시작")
