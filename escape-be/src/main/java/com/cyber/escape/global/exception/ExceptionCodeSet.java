@@ -20,9 +20,20 @@ public enum ExceptionCodeSet {
     RANKING_NOT_FOUND(HttpStatus.NOT_FOUND, 4041, "랭킹 정보가 존재하지 않습니다."),
 
     NICKNAME_DUPLICATED(HttpStatus.CONFLICT, 4090, "이미 존재하는 닉네임입니다."),
+    LOGINID_DUPLICATED(HttpStatus.NOT_FOUND, 4091, "이미 존재하는 아이디입니다."),
 
-    ENTITY_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "정보가 존재하지 않습니다.");
+    ENTITY_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "정보가 존재하지 않습니다."),
 
+    // 토큰
+    TOKEN_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 6000, "토큰이 존재하지 않습니다."),
+    TOKEN_EXPIRED(HttpStatus.INTERNAL_SERVER_ERROR, 6001, "유효기간 만료된 토큰입니다."),
+
+    // 파일
+    FILE_NOT_EXISTS(HttpStatus.BAD_REQUEST, 7000, "파일이 존재하지 않습니다."),
+    FILE_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, 7001, "파일 이름이 너무 깁니다."),
+    FILE_DUPLICATED(HttpStatus.CONFLICT, 7002, "현재 지정된 파일입니다."),
+    DELETE_DEFAULT_FILE(HttpStatus.BAD_REQUEST, 7003, "기본 파일은 삭제할 수 없습니다.")
+    ;
 
     private final HttpStatus httpStatus;
     private final Integer status;
