@@ -3,10 +3,12 @@ package com.cyber.escape.domain.room.service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,8 @@ import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.UserException;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,16 +39,39 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RoomServiceImpl implements RoomService {
 	private static final String MATCHING_QUEUE_KEY = "matching_queue";
+	private static final Long[] themaIds = {1L, 2L, 3L};	// Todo : 값 변경
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
 	private final ThemaRepository themaRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
-	private final RedisTemplate<String, Object> redisTemplate;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	@Transactional
-	public void addPlayerToMatchingQueue(String userUuid) {
-		ListOperations<String, Object> listOperations = redisTemplate.opsForList();
-		listOperations.rightPush(MATCHING_QUEUE_KEY, userUuid);
+	public void addPlayerToMatchingQueue() {
+		ListOperations<String, String> listOperations = redisTemplate.opsForList();
+		listOperations.rightPush(MATCHING_QUEUE_KEY, UserUtil.getLoginUserUuid(userRepository));
+	}
+
+	public void matchPlayers() {
+		ListOperations<String, String> listOperations = redisTemplate.opsForList();
+
+		if(listOperations.size(MATCHING_QUEUE_KEY) > 2) {
+			String user1Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
+			String user2Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
+
+			User host = userRepository.findUserByUuid(user1Uuid)
+				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
+			int randomIndex = (int) (Math.random() * (themaIds.length - 1));
+			Long themaId = themaIds[randomIndex];
+
+			RoomDto.PostRequest postRequest = RoomDto.PostRequest.builder()
+				.title(host.getNickname() + "의 대기실")
+				.themaId(themaId)
+				.hostUuid(user1Uuid)
+				.build();
+
+			createRoom(postRequest);
+		}
 	}
 
 	@Override

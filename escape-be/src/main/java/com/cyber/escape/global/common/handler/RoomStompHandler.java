@@ -99,7 +99,7 @@ public class RoomStompHandler {
 	}
 
 	@MessageMapping("room.match")
-	public void handleMatchRequest(@Payload String userUuid) {
-		roomModifyService.addPlayerToMatchingQueue(userUuid);
+	public void handleMatchRequest() {
+		roomModifyService.addPlayerToMatchingQueue();
 	}
 }
