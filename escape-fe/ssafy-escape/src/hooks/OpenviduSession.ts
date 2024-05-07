@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
 import { OpenVidu, Session, StreamManager, Publisher } from "openvidu-browser"
-import useNicknameStore from "@/stores/NicknameStore"
 import axios from "axios"
 
 interface ChatData {
@@ -21,7 +20,6 @@ const useOpenViduSession = (
     StreamManager | undefined
   >(undefined)
   const [chatData, setChatData] = useState<ChatData[]>([])
-  const { nickname } = useNicknameStore()
   useEffect(() => {
     console.log("Session State:", session)
   }, [session])
@@ -53,7 +51,7 @@ const useOpenViduSession = (
     const joinSession = async () => {
       const token = await getToken(uuid)
       await newSession.connect(token, {
-        clientData: nickname,
+        clientData: "김싸피",
       })
       const newPublisher = await OV.initPublisherAsync(undefined, {
         audioSource: undefined,
