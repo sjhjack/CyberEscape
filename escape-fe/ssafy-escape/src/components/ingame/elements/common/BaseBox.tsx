@@ -19,6 +19,7 @@ const BaseBox = ({ ...props }) => {
     <mesh
       castShadow
       position={props.position}
+      rotation={props.rotation}
       ref={ref as React.MutableRefObject<Mesh>}
       renderOrder={props.renderOrder}
     >
@@ -26,7 +27,7 @@ const BaseBox = ({ ...props }) => {
       <meshStandardMaterial
         color={props.color}
         transparent={true}
-        opacity={props.opacity}
+        opacity={0}
       />
     </mesh>
   )

@@ -2,7 +2,7 @@
 
 import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
-import * as S from "@/app/(isLogIn)/game/mode/modeStyle"
+import * as S from "@/app/@modal/main/mode/modeStyle"
 import Image from "next/image"
 const Mode = () => {
   const router = useRouter()
@@ -31,7 +31,7 @@ const Mode = () => {
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/game/multi")
+            router.push("/main/multi")
           }}
         >
           <Image src="/image/multi.png" alt="" width={300} height={300} />

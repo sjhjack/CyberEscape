@@ -7,7 +7,7 @@ import PersonIcon from "@mui/icons-material/Person"
 import FlagIcon from "@mui/icons-material/Flag"
 import postRankingList from "@/services/main/ranking/postRankingList"
 import formatTime from "@/hooks/FormatTime"
-import * as S from "@/app/(isLogIn)/main/ranking/rankingStyle"
+import * as S from "@/app/@modal/main/ranking/rankingStyle"
 
 const Ranking = () => {
   const themeuuid = ["공포uuid", "싸피uuid", "일반uuid"]
