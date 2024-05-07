@@ -5,6 +5,8 @@ import Button from "@/components/common/Button"
 import styled from "styled-components"
 import postFriendList from "@/services/main/friends/postFriendList"
 import postInvite from "@/services/game/room/postInvite"
+import { useQuery } from "@tanstack/react-query"
+
 interface InviteModalProps {
   open: boolean
   handleClose: () => void
@@ -14,15 +16,10 @@ interface friendListProps {
   friendUuid: string
 }
 const InviteModal = ({ open, handleClose }: InviteModalProps) => {
-  const [friends, setFriends] = useState<Array<friendListProps>>([])
-  useEffect(() => {
-    async function fetchFriends() {
-      const data = await postFriendList()
-      setFriends(data.data)
-    }
-
-    fetchFriends()
-  }, [])
+  const { data: friendsData, isLoading } = useQuery({
+    queryKey: ["friendList"],
+    queryFn: postFriendList,
+  })
   return (
     <MainModal
       isOpen={open}
@@ -32,7 +29,7 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
       text="친구 초대"
       isFriendModal={false}
     >
-      {friends?.map((data, index) => {
+      {friendsData?.data.map((data, index) => {
         return (
           <FriendsList key={index}>
             <p>{data.friendNickname}</p>
