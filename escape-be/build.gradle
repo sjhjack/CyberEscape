@@ -19,6 +19,12 @@ configurations {
 	}
 }
 
+bootJar{
+	archivesBaseName = 'cyberescape'
+	archiveFileName = 'escape.jar'
+	archiveVersion = "0.0.1"
+}
+
 repositories {
 	mavenCentral()
 }
