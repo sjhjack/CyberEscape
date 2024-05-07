@@ -1,4 +1,3 @@
-
 FROM openjdk:21
 ENV TZ Asia/Seoul
 ENV APP_HOME=/app
@@ -12,4 +11,4 @@ RUN chmod +x /wait-for-it.sh
 # RUN dos2unix /wait-for-it.sh
 
 # 컨테이너를 구동할 때 실행할 명령어 지정(명렁어를 스페이스로 나눈것과 같다)
-ENTRYPOINT ["/wait-for-it.sh","mysql:3307", "--", "java", "-jar", "escape-0.0.1-SNAPSHOT.jar", "--spring.config.additional-location=classpath:/config-dev.yml"]
+ENTRYPOINT ["/wait-for-it.sh","mysql:3307", "--", "java", "-jar", "escape-be-0.0.1-SNAPSHOT.jar", "--spring.config.additional-location=classpath:/config-dev.yml"]
