@@ -17,7 +17,7 @@ interface PatchStartResponseProps {
 //   data: PatchStartRequestProps,
 // ): Promise<PatchStartResponseProps> => {
 //   try {
-//     const response = await api.patch<PatchStartRequestProps>(
+//     const response = await api.patch<PatchStartResponseProps>(
 //       API_PATH.GAME.MULTI.ROOM.START,
 //       data,
 //     )

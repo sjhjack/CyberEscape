@@ -24,7 +24,7 @@ interface PatchChangeHostResponseProps {
 //   data: PatchChangeHostRequestProps,
 // ): Promise<PatchChangeHostResponseProps> => {
 //   try {
-//     const response = await api.patch<PatchChangeHostRequestProps>(
+//     const response = await api.patch<PatchChangeHostResponseProps>(
 //       API_PATH.GAME.MULTI.ROOM.CHANGE_HOST,
 //       data,
 //     )

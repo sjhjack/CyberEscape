@@ -40,7 +40,7 @@ interface getRoomRequestProps {
 // // 방 목록 조회
 // const getRoomList = async (data:getRoomRequestProps): Promise<GetRoomListDataProps> => {
 //   try {
-//     const response = await api.get<GetRoomListBodyProps>(
+//     const response = await api.get<GetRoomListDataProps>(
 //       API_PATH.GAME.MULTI.ROOM.LIST,
 //        data
 //     )

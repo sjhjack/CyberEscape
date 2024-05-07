@@ -6,18 +6,12 @@ interface PostInviteRequestProps {
   userUuid: string
 }
 
-interface PostInviteResponseProps {
-  status: number
-  message: string
-  data: string
-}
-
 // // 친구 초대하기
 // const postInvite = async (
 //   data: PostInviteRequestProps,
-// ): Promise<PostInviteResponseProps> => {
+// ): Promise<NullBodyProps> => {
 //   try {
-//     const response = await api.post<PostInviteRequestProps>(
+//     const response = await api.post<NullBodyProps>(
 //       API_PATH.GAME.MULTI.ROOM.INVITE,
 //       data,
 //     )

@@ -6,18 +6,12 @@ interface PatchKickRequestProps {
   userUuid: string
 }
 
-interface PatchKickResponseProps {
-  status: number
-  message: string
-  data: string
-}
-
 // // 게임방 강퇴시키기
 // const patchKick = async (
 //   data: PatchKickRequestProps,
-// ): Promise<PatchKickResponseProps> => {
+// ): Promise<NullBodyProps> => {
 //   try {
-//     const response = await api.patch<PatchKickRequestProps>(
+//     const response = await api.patch<NullBodyProps>(
 //       API_PATH.GAME.MULTI.ROOM.KICK,
 //       data,
 //     )

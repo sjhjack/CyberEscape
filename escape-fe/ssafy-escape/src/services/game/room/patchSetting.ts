@@ -22,7 +22,7 @@ interface PatchSettingResponseProps {
 //   data: PatchSettingRequestProps,
 // ): Promise<PatchSettingResponseProps> => {
 //   try {
-//     const response = await api.patch<PatchSettingRequestProps>(
+//     const response = await api.patch<PatchSettingResponseProps>(
 //       API_PATH.GAME.MULTI.ROOM.SETTING,
 //       data,
 //     )
