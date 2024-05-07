@@ -3,12 +3,27 @@ import BaseBox from "../../common/BaseBox"
 const MeshObjects = () => {
   return (
     <>
-      {/* <BaseBox position={[4, 2, 13]} args={[21, 15, 19]} color={"red"} />
-      <BaseBox position={[21, 2, 13]} args={[5, 15, 50]} color={"red"} />
-      <BaseBox position={[2, 2, -20]} args={[50, 15, 5]} color={"red"} />
-      <BaseBox position={[19, 2, -15]} args={[10, 15, 10]} color={"red"} />
-      <BaseBox position={[-21, 2, -13]} args={[10, 15, 100]} color={"red"} />
-      <BaseBox position={[-11, 2, 21]} args={[10, 15, 4]} color={"red"} /> */}
+      <BaseBox position={[9, 2, 35]} args={[33, 15, 29]} color={"red"} />
+      <BaseBox position={[34, 2, 25]} args={[5, 15, 50]} color={"red"} />
+      <BaseBox position={[2, 2, -14]} args={[50, 15, 5]} color={"red"} />
+      <BaseBox position={[29, 2, -6]} args={[10, 15, 10]} color={"red"} />
+      <BaseBox position={[-26, 2, 5]} args={[10, 15, 80]} color={"red"} />
+      <BaseBox position={[-18, 2, 45]} args={[22, 15, 4]} color={"red"} />
+      <BaseBox position={[-18, 2, 48]} args={[22, 15, 4]} color={"red"} />
+      <BaseBox position={[-14, 2, 54]} args={[4, 15, 20]} color={"red"} />
+      <BaseBox position={[39, 2, 38]} args={[5, 15, 40]} color={"red"} />
+      <BaseBox position={[16, 2, 61]} args={[26, 15, 8]} color={"red"} />
+      <BaseBox position={[2, 2, 63]} args={[11, 15, 4]} color={"red"} />
+      <BaseBox position={[9, 2, 85]} args={[5, 15, 40]} color={"red"} />
+      <BaseBox position={[-4, 2, 96]} args={[39, 15, 8]} color={"red"} />
+      <BaseBox position={[-19, 2, 71]} args={[4, 15, 20]} color={"red"} />
+      <BaseBox position={[-29, 2, 70]} args={[20, 15, 20]} color={"red"} />
+      <BaseBox position={[-60, 2, 64]} args={[39, 15, 4]} color={"red"} />
+      <BaseBox position={[-29, 2, 98]} args={[23, 15, 20]} color={"red"} />
+      <BaseBox position={[-60, 2, 105]} args={[39, 15, 4]} color={"red"} />
+      <BaseBox position={[-99, 2, 99]} args={[40, 15, 20]} color={"red"} />
+      <BaseBox position={[-99, 2, 70]} args={[40, 15, 20]} color={"red"} />
+      <BaseBox position={[-130, 2, 90]} args={[20, 15, 20]} color={"red"} />
     </>
   )
 }

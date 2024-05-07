@@ -12,13 +12,14 @@ import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
 import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
+import StartScene from "@/components/ingame/StartScene"
 
 const Page = () => {
   const [showModal, setShowModal] = useState(false)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
   const { selectedTheme } = useIngameThemeStore()
-  
+
   const handleModalClose = () => {
     setShowModal(false)
   }
@@ -52,11 +53,12 @@ const Page = () => {
         />
       ) : null}
 
-      {isModelLoaded ? (
-        <StartingCountDown
-          isModelLoaded={isModelLoaded}
-          onFinish={handleGameStart}
-        />
+      {isModelLoaded && !isGameStart ? (
+        // <StartingCountDown
+        //   isModelLoaded={isModelLoaded}
+        //   onFinish={handleGameStart}
+        // />
+        <StartScene onFinish={handleGameStart} />
       ) : null}
       {showModal && (
         <MainModal
