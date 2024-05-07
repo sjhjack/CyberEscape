@@ -2,12 +2,15 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn"
+interface ChattingBoxProps {
+  session: any
+  chatData: ChatType[]
+}
 interface ChatType {
-  username: string
+  userName: string
   message: string
 }
-const ChattingBox = ({ session }: any) => {
-  const [chat, setChat] = useState<ChatType[]>([])
+const ChattingBox = ({ session, chatData }: ChattingBoxProps) => {
   const [text, setText] = useState<string>("")
   // 메시지 인풋 태그 값 최신화
   const handleChangeInput = (
@@ -21,7 +24,6 @@ const ChattingBox = ({ session }: any) => {
     session
       .signal({
         data: text,
-        to: [],
       })
       .then(() => {
         console.log("Message successfully sent")
@@ -31,16 +33,16 @@ const ChattingBox = ({ session }: any) => {
       })
   }
   const submitChat = () => {
-    // sendMessage()
+    sendMessage()
     setText("")
   }
   return (
     <MainContainer>
       <ChatBox>
-        {chat?.map((data: ChatType, index: number) => {
+        {chatData?.map((data: ChatType, index: number) => {
           return (
             <ChatContent key={index}>
-              {data.username}: {data.message}
+              {data.userName}: {data.message}
             </ChatContent>
           )
         })}

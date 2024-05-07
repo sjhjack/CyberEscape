@@ -1,5 +1,5 @@
-// import API_PATH from "@/constants/path"
-// import api from "/api"
+import API_PATH from "@/constants/path"
+import api from "@/services/api"
 
 interface GetRoomListBodyProps {
   status: number
@@ -33,16 +33,23 @@ interface paginationDataProps {
   existNextPage: boolean
 }
 
-// // 친구 목록 조회
-// const getRoomList = async (): Promise<GetRoomListDataProps> => {
+interface getRoomRequestProps {
+  page: number
+  keyword: string
+}
+// // 방 목록 조회
+// const getRoomList = async (
+//   data: getRoomRequestProps,
+// ): Promise<GetRoomListDataProps> => {
 //   try {
-//     const response = await api.get<GetRoomListBodyProps>(
+//     const response = await api.get<GetRoomListDataProps>(
 //       API_PATH.GAME.MULTI.ROOM.LIST,
+//       { data: data },
 //     )
 //     if (response.status === 400) {
-//       throw new Error(`오류: ${response.data.message}`)
+//       throw new Error(`오류: ${response.data}`)
 //     }
-//     return response.data.data
+//     return response.data
 //   } catch (error) {
 //     console.error(error)
 //     throw error

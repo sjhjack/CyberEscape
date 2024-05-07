@@ -1,148 +1,97 @@
 "use client"
-import React, { useState, useEffect, useRef } from "react"
-import SockJS from "sockjs-client"
-import { Stomp } from "@stomp/stompjs"
+import React, { useState, useEffect } from "react"
+import { useRouter, usePathname } from "next/navigation"
+import useOpenViduSession from "@/hooks/OpenviduSession"
 import Container from "@/components/common/Container"
-import * as S from "../../../../app/(isLogIn)/game/multi/waiting/waitingStyle"
+import * as S from "../../../../app/@modal/main/multi/waiting/waitingStyle"
 import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
-import Openvidu from "./Openvidu"
+import InviteModal from "@/components/game/multi/waiting/InviteModal"
+import useIngameThemeStore from "@/stores/IngameTheme"
+import Button from "@/components/common/Button"
 
+interface ChatType {
+  userName: string
+  message: string
+}
+interface userInfo {
+  nickname: string
+  img: string
+}
 const Waiting = () => {
-  const [session, setSession] = useState(null)
+  const pathname: string = usePathname()
+  const roomUuid: string = pathname.substring(20)
+  const [chatting, setChattting] = useState<Array<ChatType>>([])
+  const { session, subscribers, mainStreamManager } = useOpenViduSession(
+    roomUuid,
+    setChattting,
+  )
+  const [myInfo, setMyInfo] = useState<userInfo>({ nickname: "", img: "" })
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const handleModalClose = (): void => {
+    setShowModal(false)
+  }
+
+  const { selectedTheme } = useIngameThemeStore()
+
   // useEffect(() => {
-  //   // WebSocket 서버의 URL
-  //   const serverUrl = "ws://localhost:8080/ws-stomp"
-  //   const sock = new SockJS(serverUrl)
-  //   const client = Stomp.over(sock)
+  //   if (subscribers.length > 0 && mainStreamManager) {
+  //     const mainSubscriber = subscribers.find(
+  //       (subscriber) =>
+  //         subscriber.stream.connection.data ===
+  //         mainStreamManager?.stream.connection.data,
+  //     )
+  //     console.log("탐색중", subscribers[0].stream, mainStreamManager.stream)
 
-  //   // 디버그 모드를 false로 설정하여 콘솔에 로깅을 하지 않도록 할 수 있습니다.
-  //   client.debug = () => {}
-
-  //   const onConnect = () => {
-  //     console.log("Connected to WebSocket")
-
-  //     // 예를 들어, 메시지를 받는 구독을 추가
-  //     client.subscribe("/topic/messages", (message: any) => {
-  //       console.log("Received message", message.body)
-  //     })
+  //     if (mainSubscriber) {
+  //       const clientData = JSON.parse(mainSubscriber.stream.connection.data)
+  //       // 가정: `mainSubscriber` 객체에 nickname과 img 정보가 있다고 가정
+  //       setMyInfo({
+  //         nickname: clientData.nickname,
+  //         img: clientData.img,
+  //       })
+  //     }
   //   }
-
-  //   const onError = (error: Error) => {
-  //     console.error("Failed to connect to WebSocket", error)
-  //   }
-
-  //   // WebSocket 서버에 연결
-  //   client.connect({}, onConnect, onError)
-
-  //   // 컴포넌트 언마운트 시 연결 해제
-  //   return () => {
-  //     client.disconnect(() => {
-  //       console.log("Disconnected from WebSocket")
-  //     })
-  //   }
-  // }, [])
-
+  // }, [subscribers, mainStreamManager])
+  useEffect(() => {
+    console.log("구독자 목록", subscribers)
+  }, [subscribers])
   return (
     <Container display="flex" justifyContent="center" alignItems="center">
-      {/* <Openvidu /> */}
+      <InviteModal open={showModal} handleClose={handleModalClose} />
       <S.UserBox style={{ marginRight: "20px" }}>
         <S.CharacterBox></S.CharacterBox>
-        <S.Nickname>김싸피</S.Nickname>
+        <S.Nickname>{myInfo.nickname}</S.Nickname>
       </S.UserBox>
       <S.MainBox>
         <S.MainContentBox>
           <S.ThemeImage
-            src="/image/horror.jpg"
+            src={`/image/${selectedTheme}.png`}
             alt=""
             width={400}
             height={220}
             priority
           />
         </S.MainContentBox>
-        <ChattingBox session={session}></ChattingBox>
+        <ChattingBox session={session} chatData={chatting}></ChattingBox>
       </S.MainBox>
       <S.UserBox style={{ marginLeft: "20px" }}>
-        <S.CharacterBox></S.CharacterBox>
-        <S.Nickname>이싸피</S.Nickname>
+        <S.CharacterBox>
+          <S.CharacterBoxContent>
+            <Button
+              text="초대하기"
+              theme="success"
+              width="100px"
+              height="40px"
+              onClick={() => {
+                setShowModal(true)
+              }}
+            />
+          </S.CharacterBoxContent>
+        </S.CharacterBox>
+        <S.Nickname></S.Nickname>
       </S.UserBox>
     </Container>
   )
 }
 
 export default Waiting
-
-// setup() {
-//   const userType = ref('host');
-//   const roomUuid = ref('');
-//   const userUuid = ref('');
-//   const webSocket = ref(null);
-//   const stompClient = ref(null);
-//   const room = ref({
-//     host: null,
-//     guest: null,
-//   });
-//   const messages = ref([]);
-//   const kickedMessage = ref('d');
-
-//   const isHost = computed(() => userType.value === 'host');
-
-//   const connect = () => {
-//     const socket = new WebSocket(`ws://localhost:8080/ws-stomp`);
-//     webSocket.value = socket;
-//     stompClient.value = Stomp.over(socket);
-//     stompClient.value.connect({}, onConnected, onError);
-//   };
-
-//   const onConnected = () => {
-//     stompClient.value.subscribe(`/topic/${roomUuid.value}`, onRoomInfo);
-//     stompClient.value.subscribe('/user/queue/kick', onKicked);
-//     stompClient.value.send(
-//       '/pub/room.connect',
-//       {
-//         'userUuid': userUuid.value,
-//         'roomUuid': roomUuid.value,
-//         'userType': userType.value,
-//       }
-//     );
-//   };
-
-//   const onRoomInfo = (payload) => {
-//     const roomInfo = JSON.parse(payload.body);
-//     room.value = roomInfo;
-
-//     // 수신한 메시지를 messages 배열에 추가
-//     const message = `[${new Date().toLocaleTimeString()}] ${JSON.stringify(roomInfo)}`;
-//     messages.value.push(message);
-//   };
-
-//   // 수신한 메시지를 kickedMessage에 저장
-//   const onKicked = (payload) => {
-//     kickedMessage.value = payload.body;
-//   };
-
-//   const onError = (error) => {
-//     console.error(error);
-//   };
-
-//   const kickGuest = () => {
-//     stompClient.value.send('/pub/room.kickGuest', {}, roomUuid.value);
-//   };
-
-//   const delegateHost = () => {
-//     stompClient.value.send('/pub/room.delegateHost', {}, roomUuid.value);
-//   };
-
-//   return {
-//     userType,
-//     roomUuid,
-//     userUuid,
-//     room,
-//     isHost,
-//     messages,
-//     kickedMessage,
-//     connect,
-//     kickGuest,
-//     delegateHost,
-//   };
-// },
-// };

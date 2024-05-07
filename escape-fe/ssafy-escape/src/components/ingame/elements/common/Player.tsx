@@ -9,15 +9,13 @@ const Player = (props: any) => {
   const frontVector = new THREE.Vector3()
   const sideVector = new THREE.Vector3()
   const speed = new THREE.Vector3()
-  const SPEED = props.speed || 5
+  const SPEED = props.speed || 15
 
   const { camera } = useThree()
 
   const [ref, api] = useSphere((index) => ({
     mass: 1,
     type: "Dynamic",
-
-    position: [0, 10, 0],
     ...props,
   }))
 
@@ -28,7 +26,7 @@ const Player = (props: any) => {
   useFrame((state) => {
     if (ref.current) {
       ref.current.getWorldPosition(camera.position)
-      camera.position.y = props.position[1] + 2
+      camera.position.y = props.position[1] + 4
     }
     frontVector.set(0, 0, Number(backward) - Number(forward))
     sideVector.set(Number(left) - Number(right), 0, 0)

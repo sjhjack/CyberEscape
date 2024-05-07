@@ -1,6 +1,6 @@
 "use client"
 
-import * as S from "@/app/(isLogIn)/main/mainStyle"
+import * as S from "@/app/@modal/main/mainStyle"
 import MyProfile from "./MyProfile"
 import QuickStart from "./QuickStart"
 

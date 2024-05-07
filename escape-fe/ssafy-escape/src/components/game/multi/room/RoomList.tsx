@@ -1,24 +1,25 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import * as S from "@/app/(isLogIn)/game/multi/room/roomStyle"
+import { useRouter } from "next/navigation"
+import * as S from "@/app/@modal/main/multi/room/roomStyle"
 import Image from "next/image"
 import RoomPasswordModal from "./RoomPasswordModal"
-import { useRouter } from "next/navigation"
+import useIngameThemeStore from "@/stores/IngameTheme"
 const Room = ({ roomData }: any) => {
   const [showModal, setShowModal] = useState<boolean>(false)
+  const { setSelectedTheme } = useIngameThemeStore()
   const router = useRouter()
-  const thema = ["공포", "싸피", "우주"]
+  const thema = ["", "공포", "싸피", "우주"]
   const handleModalClose = (): void => {
-    console.log("닫기")
     setShowModal(false)
   }
   const enterRoom = (): void => {
     if (roomData.hasPassword) {
       setShowModal(true)
     } else {
-      router.push(`/game/multi/waiting`)
+      setSelectedTheme(roomData.themaId)
+      router.push(`/main/multi/waiting/${roomData.uuid}`)
     }
-    // router.push(`/game/multi/waiting/${roomData.uuid}`)
   }
   return (
     <>

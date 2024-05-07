@@ -13,6 +13,7 @@ import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
+import StartScene from "@/components/ingame/StartScene"
 
 const Page = () => {
   const [showModal, setShowModal] = useState(false)
@@ -41,23 +42,30 @@ const Page = () => {
 
   return (
     <S.Container>
-      {selectedTheme === "space" ? (
+      {selectedTheme === "3" ? (
         <SpaceTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === "horror" ? (
+      ) : selectedTheme === "1" ? (
         <HorrorTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === "ssafy" ? (
+      ) : selectedTheme === "2" ? (
         <SsafyTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
       ) : null}
 
+      {isModelLoaded && !isGameStart ? (
+        // <StartingCountDown
+        //   isModelLoaded={isModelLoaded}
+        //   onFinish={handleGameStart}
+        // />
+        <StartScene onFinish={handleGameStart} />
+      ) : null}
       {isModelLoaded ? (
         <div>
           <StartingCountDown

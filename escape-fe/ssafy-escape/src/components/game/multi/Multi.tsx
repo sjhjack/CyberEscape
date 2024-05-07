@@ -1,8 +1,8 @@
 "use client"
 
 import Container from "@/components/common/Container"
-import { useRouter, useParams } from "next/navigation"
-import * as S from "@/app/(isLogIn)/game/multi/mulitStyle"
+import { useRouter } from "next/navigation"
+import * as S from "@/app/@modal/main/multi/mulitStyle"
 const Multi = () => {
   const router = useRouter()
 
@@ -19,7 +19,7 @@ const Multi = () => {
       <S.ImageContainer>
         <S.MenuContainer
           onClick={() => {
-            router.push("/game/multi/create")
+            router.push("/main/multi/create")
           }}
         >
           <S.MultiImage
@@ -32,7 +32,7 @@ const Multi = () => {
         </S.MenuContainer>
         <S.MenuContainer
           onClick={() => {
-            router.push("/game/multi/room")
+            router.push("/main/multi/room")
           }}
         >
           <S.MultiImage
