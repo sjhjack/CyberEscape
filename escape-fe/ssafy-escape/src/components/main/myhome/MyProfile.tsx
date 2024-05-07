@@ -21,8 +21,8 @@ interface ImageProps {
 const MyProfile = () => {
   const currentNickname = "놀란 상어"
   const userUuid = "임시"
-  const themeuuid = ["공포uuid", "싸피uuid", "일반uuid"]
-  const themes = ["공포", "싸피", "일반"]
+  const themeuuid = ["공포uuid", "싸피uuid", "우주uuid"]
+  const themes = ["공포", "싸피", "우주"]
 
   const [activeTheme, setActiveTheme] = useState<number>(0)
   const [isActiveChangeNickname, setIsActiveChangeNickname] =
@@ -158,7 +158,7 @@ const MyProfile = () => {
         {themes.map((theme, index) => (
           <ThemeSubBox key={index} onClick={() => handleThemeClick(index)}>
             <ThemeIcon
-              src={`/image/${theme}.png`}
+              src={`/image/${themes.indexOf(theme) + 1}emoticon.png`}
               alt={theme}
               width={60}
               height={60}
