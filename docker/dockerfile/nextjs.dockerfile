@@ -8,7 +8,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # Next.js 빌드 결과물과 정적 파일을 /app에 복사
-COPY ./escape-fe ./ssafy-escape ./
+COPY . .
 
 # 애플리케이션 실행
 CMD ["npm", "start"]
