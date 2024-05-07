@@ -48,6 +48,11 @@ dependencies {
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
+	// JWT
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
 	// queryDSL
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
 	implementation "com.querydsl:querydsl-core:${queryDslVersion}"
@@ -61,6 +66,10 @@ dependencies {
 	implementation 'org.webjars:stomp-websocket:2.3.4'
 	// reactor netty
 	implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.6.4'
+
+	// aws
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.638'
+	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
 	// openvidu
 	implementation group: 'io.openvidu', name: 'openvidu-parent', version: '2.0.0', ext: 'pom'
