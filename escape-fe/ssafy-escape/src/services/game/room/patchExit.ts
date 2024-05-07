@@ -6,18 +6,12 @@ interface PatchExitRequestProps {
   userUuid: string
 }
 
-interface PatchExitResponseProps {
-  status: number
-  message: string
-  data: string
-}
-
 // // 게임방 나가기
 // const patchExit = async (
 //   data: PatchExitRequestProps,
-// ): Promise<PatchExitResponseProps> => {
+// ): Promise<NullBodyProps> => {
 //   try {
-//     const response = await api.patch<PatchExitRequestProps>(
+//     const response = await api.patch<NullBodyProps>(
 //       API_PATH.GAME.MULTI.ROOM.EXIT,
 //       data,
 //     )

@@ -4,7 +4,7 @@
 interface postCreateRoomResponseProps {
   status: number
   message: string
-  data: postCreateRoomDataProps
+  data: postCreateRoomDataProps[]
 }
 interface postCreateRoomDataProps {
   roomUuid: string
@@ -22,7 +22,7 @@ interface postCreateRoomRequestProps {
 //   data: postCreateRoomRequestProps,
 // ): Promise<postCreateRoomResponseProps> => {
 //   try {
-//     const response = await api.post<postCreateRoomRequestProps>(
+//     const response = await api.post<postCreateRoomResponseProps>(
 //       API_PATH.GAME.MULTI.ROOM.LIST,
 //       data,
 //     )

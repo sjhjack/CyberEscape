@@ -6,18 +6,12 @@ interface PostAcceptanceRequestProps {
   userUuid: string
 }
 
-interface PostAcceptanceResponseProps {
-  status: number
-  message: string
-  data: string
-}
-
 // // 게임방 초대 응하기
 // const postAcceptance = async (
 //   data: PostAcceptanceRequestProps,
-// ): Promise<PostAcceptanceResponseProps> => {
+// ): Promise<NullBodyProps> => {
 //   try {
-//     const response = await api.post<PostAcceptanceRequestProps>(
+//     const response = await api.post<NullBodyProps>(
 //       API_PATH.GAME.MULTI.ROOM.ACCEPT,
 //       data,
 //     )

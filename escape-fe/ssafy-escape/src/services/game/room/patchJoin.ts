@@ -6,18 +6,12 @@ interface PatchJoinRequestProps {
   userUuid: string
 }
 
-interface PatchJoinResponseProps {
-  status: number
-  message: string
-  data: string
-}
-
 // // 게임방 참여하기
 // const patchJoin = async (
 //   data: PatchJoinRequestProps,
-// ): Promise<PatchJoinResponseProps> => {
+// ): Promise<NullBodyProps> => {
 //   try {
-//     const response = await api.post<PatchJoinRequestProps>(
+//     const response = await api.post<NullBodyProps>(
 //       API_PATH.GAME.MULTI.ROOM.JOIN,
 //       data,
 //     )

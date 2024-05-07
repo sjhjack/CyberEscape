@@ -5,18 +5,13 @@ interface deleteRoomRequestProps {
   roomUuid: string
   userUuid: string
 }
-interface deleteRoomResponseProps {
-  status: number
-  message: string
-  data: string
-}
 
 // // 방 삭제하기
 // const deleteRoom = async (
 //   data: deleteRoomRequestProps,
-// ): Promise<deleteRoomResponseProps> => {
+// ): Promise<NullBodyProps> => {
 //   try {
-//     const response = await api.delete<deleteRoomRequestProps>(
+//     const response = await api.delete<NullBodyProps>(
 //       API_PATH.GAME.MULTI.ROOM.LIST,
 //       data,
 //     )
