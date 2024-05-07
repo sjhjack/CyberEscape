@@ -7,6 +7,8 @@ interface NullBodyProps {
 interface UserInfoProps {
   loginId: string
   grantType: string
+  nickname: string
+  imgUrl: string
   accessToken: string
   refreshToken: string
 }
