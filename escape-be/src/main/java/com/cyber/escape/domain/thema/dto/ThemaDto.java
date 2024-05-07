@@ -4,7 +4,7 @@ public class ThemaDto {
 
     public enum ThemaType{
 
-        UNKNOWN("테마가 선택되지 않았습니다", -1)
+        UNKNOWN("테마가 선택되지 않았습니다", -1),
         HORROR("공포 테마", 1),
         HORROR_VICTIM("공포 테마 - 실험체", 2),
         HORROR_SCIENTIST("공포 테마 - 과학자", 3),
@@ -13,7 +13,7 @@ public class ThemaDto {
         TALE_VILLAIN("동화 테마 - 빌런", 6),
         SSAFY("싸피 테마", 7),
         SSAFY_TRAINEE("싸피 테마 - 교육생", 8),
-        SSAFY_CONSULTANT("싸피 테마 - 컨설턴트", 9)
+        SSAFY_CONSULTANT("싸피 테마 - 컨설턴트", 9);
         private String name;
         private int order;
 
