@@ -19,6 +19,7 @@ const BaseBox = ({ ...props }) => {
     <mesh
       castShadow
       position={props.position}
+      rotation={props.rotation}
       ref={ref as React.MutableRefObject<Mesh>}
       renderOrder={props.renderOrder}
     >
