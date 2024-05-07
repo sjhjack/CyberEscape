@@ -65,7 +65,7 @@ services:
       ports:
         - "3000:3000"
       volumes:
-        - /home/ubuntu/test:./
+        - /home/ubuntu/test:~/app
 
     mongo:
       image: mongo
