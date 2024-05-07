@@ -26,7 +26,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -40,7 +40,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
-//	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	// JWT
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
@@ -64,6 +64,18 @@ dependencies {
 	// aws
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.638'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+
+	// openvidu
+	implementation group: 'io.openvidu', name: 'openvidu-parent', version: '2.0.0', ext: 'pom'
+
+	// Openvidu 의존성
+	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.29.0'
+
+	implementation 'org.webjars.bower:webrtc-adapter:7.4.0'
+	//Kurento (미디어서버) 관련 의존성 추가
+//	implementation 'org.kurento:kurento-client:6.16.0'
+//	implementation 'org.kurento:kurento-utils-js:6.15.0'
+
 }
 
 // QueryDsl 빌드 옵션 (선택)
