@@ -18,7 +18,7 @@ const BaseBox = ({ ...props }) => {
       ref={ref as React.MutableRefObject<Mesh>}
     >
       <boxGeometry args={props.args} />
-      <meshStandardMaterial color={props.color} />
+      <meshStandardMaterial color={props.color} transparent opacity={0} />
     </mesh>
   )
 }

@@ -5,13 +5,13 @@ const PlayMusic = () => {
   const [musicStarted, setMusicStarted] = useState(false)
 
   useEffect(() => {
-    function startMusic() {
+    const startMusic = () => {
       const audio = new Audio("music/SpeckInTime.mp3")
       audio.play()
       audio.loop = true
     }
 
-    function handleClick() {
+    const handleClick = () => {
       if (!musicStarted) {
         startMusic()
         setMusicStarted(true)

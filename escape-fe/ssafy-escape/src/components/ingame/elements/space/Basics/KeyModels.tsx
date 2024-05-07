@@ -22,7 +22,7 @@ const KeyModels = ({ onClick, position, active }: KeyProps) => {
                 geometry={child.geometry}
                 material={child.material}
                 position={position}
-                scale={[0.05, 0.05, 0.05]}
+                scale={[0.2, 0.2, 0.2]}
                 onClick={onClick}
                 // onPointerOver={() => {
                 //   document.body.style.cursor = "pointer"

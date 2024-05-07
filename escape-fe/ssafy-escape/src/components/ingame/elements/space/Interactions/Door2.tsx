@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useGLTF } from "@react-three/drei"
 import { AnimationMixer } from "three"
+import DoorBox from "../../common/DoorBox"
 
 const Door2 = ({ position, rotation }: any) => {
   const { scene, animations } = useGLTF("/glb/door4.glb", true)
@@ -55,14 +56,17 @@ const Door2 = ({ position, rotation }: any) => {
   }
 
   return isLoaded ? (
-    <primitive
-      object={scene}
-      ref={doorRef}
-      scale={20}
-      position={position}
-      rotation={rotation}
-      onClick={handleClick}
-    />
+    <>
+      <primitive
+        object={scene}
+        ref={doorRef}
+        scale={20}
+        position={position}
+        rotation={rotation}
+        onClick={handleClick}
+      />
+      <DoorBox position={position} args={[2, 10, 10]} color={"red"} />
+    </>
   ) : null
 }
 

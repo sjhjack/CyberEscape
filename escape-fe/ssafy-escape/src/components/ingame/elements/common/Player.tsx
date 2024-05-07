@@ -16,8 +16,6 @@ const Player = (props: any) => {
   const [ref, api] = useSphere((index) => ({
     mass: 1,
     type: "Dynamic",
-
-    position: [0, 10, 0],
     ...props,
   }))
 

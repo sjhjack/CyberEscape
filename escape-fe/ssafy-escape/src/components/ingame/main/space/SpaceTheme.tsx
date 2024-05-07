@@ -10,42 +10,57 @@ import Asteroids from "../../elements/space/Backgrounds/Asteroids"
 import Venus from "../../elements/space/Backgrounds/Venus"
 import KeyModels from "../../elements/space/Basics/KeyModels"
 import Keys from "@/data/ingame/space/Keys"
+import Sequences from "@/data/ingame/space/Sequences"
 import Interactions from "../../elements/space/Basics/Interactions"
-
-interface KeyData {
-  active: boolean
-  position: [number, number, number]
-}
+import Start from "../../elements/space/Interactions/Start"
+import Videos from "../../elements/space/Basics/Videos"
+import Subtitle from "../../elements/common/Subtitle"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
-  const [activeKeys, setActiveKeys] = useState<KeyData[]>(Keys)
+  const [sequences, setSequences] = useState(Sequences)
+  const [activeKeys, setActiveKeys] = useState(Keys)
+  const [subtitle, setSubtitle] = useState(null)
 
   const onClick = (index: number) => {
     const updatedKeys = [...activeKeys]
     updatedKeys[index] = { ...updatedKeys[index], active: false }
     setActiveKeys(updatedKeys)
+    if (index === 0) {
+      const updatedSequence = [...sequences]
+      updatedSequence[0] = { ...updatedSequence[0], done: true }
+      setSequences(updatedSequence)
+    }
   }
 
   return (
-    <BasicScene>
-      <Lights />
-      <Player position={[3, 1, 0]} />
-      <MeshObjects />
-      <Floor rotation={[Math.PI / -2, 0, 0]} color="white" />
-      <Stars />
-      <Venus />
-      {activeKeys.map(({ active, position }, index) => (
-        <KeyModels
-          key={index}
-          active={active}
-          position={position}
-          onClick={() => onClick(index)}
+    <>
+      {isGameStart ? <Start setSubtitle={setSubtitle} /> : null}
+      <Subtitle text={subtitle} />
+      <BasicScene>
+        <Lights />
+        <Player position={[3, 1, 0]} />
+        <MeshObjects />
+        <Floor rotation={[Math.PI / -2, 0, 0]} color="white" />
+        <Stars />
+        <Venus />
+        {activeKeys.map(({ active, position }, index) => (
+          <KeyModels
+            key={index}
+            active={active}
+            position={position}
+            onClick={() => onClick(index)}
+          />
+        ))}
+        <Interactions
+          sequences={sequences}
+          setSequences={setSequences}
+          setSubtitle={setSubtitle}
         />
-      ))}
-      <Interactions />
-      <Asteroids />
-      <RoomModel onLoaded={setIsModelLoaded} />
-    </BasicScene>
+        <Asteroids />
+        <Videos sequences={sequences} setSequences={setSequences} />
+        <RoomModel onLoaded={setIsModelLoaded} />
+      </BasicScene>
+    </>
   )
 }
 
