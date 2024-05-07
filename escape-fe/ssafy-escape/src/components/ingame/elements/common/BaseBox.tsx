@@ -27,7 +27,7 @@ const BaseBox = ({ ...props }) => {
       <meshStandardMaterial
         color={props.color}
         transparent={true}
-        opacity={props.opacity}
+        opacity={0}
       />
     </mesh>
   )

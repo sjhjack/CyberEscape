@@ -2,6 +2,7 @@ import { ReactNode, useState, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
 import { PointerLockControls } from "@react-three/drei"
 import { Physics } from "@react-three/cannon"
+import PlayMusic from "./PlayMusic"
 import Crosshair from "./Crosshair"
 
 const CustomPointerLockControls = () => {
@@ -25,6 +26,7 @@ const BasicScene = ({ children }: { children: ReactNode }) => {
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <PlayMusic />
       <Canvas shadows camera={{ fov: 50 }}>
         <Physics gravity={[0, -9.8, 0]}>{children}</Physics>
         <CustomPointerLockControls />
