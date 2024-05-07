@@ -12,7 +12,7 @@ interface PatchJoinResponseProps {
   data: string
 }
 
-// // 친구 초대하기
+// // 게임방 참여하기
 // const patchJoin = async (
 //   data: PatchJoinRequestProps,
 // ): Promise<PatchJoinResponseProps> => {

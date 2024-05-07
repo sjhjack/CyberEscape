@@ -12,7 +12,7 @@ interface PatchStartResponseProps {
   data: PatchStartRequestProps[]
 }
 
-// // 게임방 나가기
+// // 게임 시작하기
 // const patchStart = async (
 //   data: PatchStartRequestProps,
 // ): Promise<PatchStartResponseProps> => {

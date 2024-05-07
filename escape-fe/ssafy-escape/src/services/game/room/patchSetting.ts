@@ -17,7 +17,7 @@ interface PatchSettingResponseProps {
   data: PatchSettingDataProps[]
 }
 
-// // 게임방 나가기
+// // 게임방 설정 변경
 // const patchSetting = async (
 //   data: PatchSettingRequestProps,
 // ): Promise<PatchSettingResponseProps> => {
