@@ -64,8 +64,6 @@ services:
         dockerfile: "./docker/dockerfile/nextjs.dockerfile"
       ports:
         - "3000:3000"
-      volumes:
-        - /home/ubuntu/test:~/app
 
     mongo:
       image: mongo
