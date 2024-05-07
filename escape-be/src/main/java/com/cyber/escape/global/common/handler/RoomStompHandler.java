@@ -11,6 +11,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.manager.RoomManager;
+import com.cyber.escape.domain.room.service.RoomModifyService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RoomStompHandler {
 	private final SimpMessageSendingOperations messagingTemplate;
 	private final RoomManager roomManager;
+	private final RoomModifyService roomModifyService;
 
 	@EventListener
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -94,5 +96,10 @@ public class RoomStompHandler {
 		log.info("BroadCasting Info ========== roomUuid: {}, host : {}", roomUuid, room.getHost().getNickname());
 		// 대기방 정보 브로드캐스팅
 		messagingTemplate.convertAndSend("/topic/" + roomUuid, room);
+	}
+
+	@MessageMapping("room.match")
+	public void handleMatchRequest(@Payload String userUuid) {
+		roomModifyService.addPlayerToMatchingQueue(userUuid);
 	}
 }
