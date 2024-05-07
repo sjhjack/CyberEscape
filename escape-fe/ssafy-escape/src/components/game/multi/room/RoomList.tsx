@@ -18,7 +18,7 @@ const Room = ({ roomData }: any) => {
       setShowModal(true)
     } else {
       setSelectedTheme(roomData.themaId)
-      router.push(`/game/multi/waiting/${roomData.uuid}`)
+      router.push(`/main/multi/waiting/${roomData.uuid}`)
     }
   }
   return (

@@ -17,7 +17,7 @@ const QuickStart = () => {
         <SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/game/theme?mode=single")
+            router.push("/main/theme?mode=single")
           }}
         >
           <Image
@@ -32,7 +32,7 @@ const QuickStart = () => {
         <SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/game/multi")
+            router.push("/main/multi")
           }}
         >
           <Image
