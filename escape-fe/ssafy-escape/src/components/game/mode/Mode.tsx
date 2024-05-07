@@ -12,6 +12,7 @@ const Mode = () => {
       justifyContent="space-between"
       alignItems="center"
       flexDirection="column"
+      backgroundColor="none"
     >
       <h1>모드 선택</h1>
       <S.MainContent>

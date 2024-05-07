@@ -12,6 +12,7 @@ const Random = () => {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
+      backgroundColor="none"
     >
       <h1 style={{ marginBottom: "10%" }}>상대를 매칭 중입니다.</h1>
       <CircularProgress />
