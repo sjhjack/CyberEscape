@@ -9,7 +9,7 @@ const Player = (props: any) => {
   const frontVector = new THREE.Vector3()
   const sideVector = new THREE.Vector3()
   const speed = new THREE.Vector3()
-  const SPEED = props.speed || 15
+  const SPEED = props.speed || 5
 
   const { camera } = useThree()
 
