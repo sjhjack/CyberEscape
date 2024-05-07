@@ -21,4 +21,5 @@ export const MenuContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `

@@ -39,3 +39,9 @@ export const ChattingContainer = styled.div`
   justify-content: center;
   height: 30%;
 `
+
+export const CharacterBoxContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
