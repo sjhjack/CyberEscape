@@ -17,7 +17,7 @@ const QuickStart = () => {
         <SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/main/theme")
+            router.push("/main/theme?mode=single")
           }}
         >
           <Image
