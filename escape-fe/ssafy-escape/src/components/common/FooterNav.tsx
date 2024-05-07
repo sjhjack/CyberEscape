@@ -68,7 +68,7 @@ const Nav = () => {
           </IconBox>
         )}
 
-        <IconBox onClick={() => router.push("/game/mode")}>
+        <IconBox onClick={() => router.push("/main/mode")}>
           <MeetingRoomIcon
             sx={{ fontSize: "50px", cursor: "pointer", color: MainColor }}
           />
