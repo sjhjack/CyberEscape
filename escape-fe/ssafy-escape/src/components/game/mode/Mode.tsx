@@ -2,7 +2,7 @@
 
 import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
-import * as S from "@/app/(isLogIn)/game/mode/modeStyle"
+import * as S from "@/app/@modal/game/mode/modeStyle"
 import Image from "next/image"
 const Mode = () => {
   const router = useRouter()

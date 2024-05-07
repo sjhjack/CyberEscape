@@ -9,14 +9,19 @@ const notoSansKr = Noto_Sans_KR({
 
 const Layout = ({
   children,
+  modal,
 }: {
   children: React.ReactNode
+  modal: React.ReactNode
 }) => {
   return (
     <html>
       <body className={notoSansKr.className}>
         <QueryProvider>
-          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+          <StyledComponentsRegistry>
+            {children}
+            {modal}
+          </StyledComponentsRegistry>
         </QueryProvider>
       </body>
     </html>
