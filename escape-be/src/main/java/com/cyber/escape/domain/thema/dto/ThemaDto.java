@@ -11,11 +11,13 @@ import lombok.Getter;
 @Getter
 public class ThemaDto {
 
+    private final String themaUuid;
     private final ThemaType category;
     private final String description;
 
     public static ThemaDto from(Thema thema){
         return ThemaDto.builder()
+                .themaUuid(thema.getUuid())
                 .category(ThemaType.getNameByOrder(thema.getCategory()))
                 .description(thema.getDescription())
                 .build();
