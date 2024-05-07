@@ -47,9 +47,9 @@ public class NotificationController {
     }
 
     @GetMapping("/list")
-    public ApiResponse<List<NotifyDto.Response>> getUnreadNotifyList(@RequestParam String loginId){
+    public ApiResponse<List<Object>> getUnreadNotifyList(){
         log.info("NotificationController ========== getNotReadNoteList() start ..");
-        return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList(loginId));
+        return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList());
     }
 
     @PostMapping("/read")

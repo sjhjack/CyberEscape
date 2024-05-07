@@ -45,7 +45,7 @@ public class FriendService {
 
     public String sendToRequest(FriendDto.FriendRequest req){
 
-        notificationService.send(req.getReceiverUuid(), Notify.NotificationType.FRIEND, "친구 요청입니다.");
+        notificationService.send(req.getReceiverUuid(), "", Notify.NotificationType.FRIEND, "친구 요청입니다.");
 
         return "";
     }
