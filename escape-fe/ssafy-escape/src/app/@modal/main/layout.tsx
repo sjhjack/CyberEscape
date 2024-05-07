@@ -2,13 +2,21 @@
 import { styled } from "styled-components"
 import Container from "@/components/common/Container"
 import FooterNav from "@/components/common/FooterNav"
-
+import { usePathname } from "next/navigation"
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname()
+
   return (
     <Container>
       {children}
       <SubContainer>
-        <FooterNav />
+        {pathname === "/main" ||
+        pathname === "/main/ranking" ||
+        pathname === "/main/help" ? (
+          <>
+            <FooterNav />
+          </>
+        ) : null}
       </SubContainer>
     </Container>
   )
