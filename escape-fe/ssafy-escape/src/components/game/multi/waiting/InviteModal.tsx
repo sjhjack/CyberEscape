@@ -38,7 +38,9 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
               theme="success"
               width="60px"
               height="40px"
-              onClick={postInvite}
+              onClick={() => {
+                postInvite
+              }}
             />
           </FriendsList>
         )
