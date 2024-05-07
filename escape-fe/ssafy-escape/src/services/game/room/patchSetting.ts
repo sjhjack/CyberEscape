@@ -1,5 +1,5 @@
 import API_PATH from "@/constants/path"
-// import api from "/api"
+import api from "@/services/api"
 
 interface PatchSettingDataProps {
   title: string
@@ -17,23 +17,23 @@ interface PatchSettingResponseProps {
   data: PatchSettingDataProps[]
 }
 
-// // 게임방 설정 변경
-// const patchSetting = async (
-//   data: PatchSettingRequestProps,
-// ): Promise<PatchSettingResponseProps> => {
-//   try {
-//     const response = await api.patch<PatchSettingResponseProps>(
-//       API_PATH.GAME.MULTI.ROOM.SETTING,
-//       data,
-//     )
-//     if (response.status === 400) {
-//       throw new Error(`오류: ${response.data.message}`)
-//     }
-//     return response.data.data
-//   } catch (error) {
-//     console.error(error)
-//     throw error
-//   }
-// }
+// 게임방 설정 변경
+const patchSetting = async (
+  data: PatchSettingRequestProps,
+): Promise<PatchSettingResponseProps> => {
+  try {
+    const response = await api.patch<PatchSettingResponseProps>(
+      API_PATH.GAME.MULTI.ROOM.SETTING,
+      data,
+    )
+    if (response.status === 400) {
+      throw new Error(`오류: ${response.data.message}`)
+    }
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 
-// export default patchSetting
+export default patchSetting

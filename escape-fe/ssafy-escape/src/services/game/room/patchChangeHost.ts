@@ -1,5 +1,5 @@
 import API_PATH from "@/constants/path"
-// import api from "/api"
+import api from "@/services/api"
 
 interface ChangeHostDataProps {
   loginId: string
@@ -19,23 +19,23 @@ interface PatchChangeHostResponseProps {
   data: ChangeHostDataProps[]
 }
 
-// // 호스트 변경
-// const patchChangeHost = async (
-//   data: PatchChangeHostRequestProps,
-// ): Promise<PatchChangeHostResponseProps> => {
-//   try {
-//     const response = await api.patch<PatchChangeHostResponseProps>(
-//       API_PATH.GAME.MULTI.ROOM.CHANGE_HOST,
-//       data,
-//     )
-//     if (response.status === 400) {
-//       throw new Error(`오류: ${response.data.message}`)
-//     }
-//     return response.data.data
-//   } catch (error) {
-//     console.error(error)
-//     throw error
-//   }
-// }
+// 호스트 변경
+const patchChangeHost = async (
+  data: PatchChangeHostRequestProps,
+): Promise<PatchChangeHostResponseProps> => {
+  try {
+    const response = await api.patch<PatchChangeHostResponseProps>(
+      API_PATH.GAME.MULTI.ROOM.CHANGE_HOST,
+      data,
+    )
+    if (response.status === 400) {
+      throw new Error(`오류: ${response.data.message}`)
+    }
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 
-// export default patchChangeHost
+export default patchChangeHost
