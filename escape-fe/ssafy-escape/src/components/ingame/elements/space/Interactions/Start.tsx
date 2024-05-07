@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 
-const Container = styled.div`
+interface ContainerProps {
+  opacity: number
+}
+
+const Container = styled.div<ContainerProps>`
   position: fixed;
   top: 0;
   width: 100vw;

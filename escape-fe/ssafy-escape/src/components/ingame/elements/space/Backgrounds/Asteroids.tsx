@@ -4,7 +4,7 @@ import * as THREE from "three"
 
 const Asteroids = () => {
   const { scene } = useThree()
-  const asteroidsGroup = useRef()
+  const asteroidsGroup = useRef<THREE.Group>()
 
   useEffect(() => {
     const numAsteroids = 50
@@ -46,7 +46,9 @@ const Asteroids = () => {
     scene.add(asteroidsGroup.current)
 
     return () => {
-      scene.remove(asteroidsGroup.current)
+      if (asteroidsGroup.current) {
+        scene.remove(asteroidsGroup.current)
+      }
     }
   }, [])
 
