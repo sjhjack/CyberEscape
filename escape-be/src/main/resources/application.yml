@@ -48,3 +48,7 @@ cloud:
       url: ${DEFAULT_FILE_URL}
 
 secretKeyPlain: ${KEY}
+
+openvidu:
+  url: ${OPENVIDU_URL}
+  secret: ${OPENVIDU_SECRET}

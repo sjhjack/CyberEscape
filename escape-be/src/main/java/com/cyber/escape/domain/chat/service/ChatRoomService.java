@@ -97,7 +97,7 @@ public class ChatRoomService {
 
     public String exitRoom(ChatRoomDto.ExitChatRoomReqDto req) throws ChatException{
         // 여기서 나가려는 유저가 진짜 채팅방에 있는 유저인지를 확인
-        participantsRepository.findByUuid(req.getExitUserUuid())
+        participantsRepositoryImpl.existsByUserUuidAndChatRoomUuid(req.getExitUserUuid(), req.getChatRoomUuid())
                         .orElseThrow(() -> new ChatException(ExceptionCodeSet.BAD_REQUEST));
 
         participantsRepositoryImpl.exitRoom(req.getChatRoomUuid(), req.getExitUserUuid());

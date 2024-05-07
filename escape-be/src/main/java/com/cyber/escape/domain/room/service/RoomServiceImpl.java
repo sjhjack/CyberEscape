@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomService {
-	private final Map<String, RoomDto.StompResponse> roomMap = new ConcurrentHashMap<>();
 	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
 	private final ThemaRepository themaRepository;
@@ -119,6 +118,7 @@ public class RoomServiceImpl implements RoomService {
 		// Todo : capacity 변경
 	}
 
+	@Transactional
 	public void joinRoom(final RoomDto.JoinRequest joinRequest) {
 		// Todo : broadcasting 공부 후 입장 처리 개발
 
@@ -137,6 +137,7 @@ public class RoomServiceImpl implements RoomService {
 		}
 	}
 
+	@Transactional
 	public void exitRoom(final RoomDto.Request request) {
 		// Todo : broadcasting 공부 후 퇴장 및 자동강퇴 처리 개발
 		// host, guest 분기 필요
@@ -163,6 +164,7 @@ public class RoomServiceImpl implements RoomService {
 		}
 	}
 
+	@Transactional
 	public void kickGuestFromRoom(final RoomDto.Request request) {
 		// Todo : broadcasting 공부 후 강퇴 개발
 		// host인 경우만 강퇴 가능 -> validation check 필요
