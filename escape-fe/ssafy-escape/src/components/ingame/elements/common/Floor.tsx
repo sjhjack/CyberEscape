@@ -17,7 +17,7 @@ const Floor = (props: any) => {
       ref={ref as React.MutableRefObject<Mesh>}
     >
       <planeGeometry args={[1000, 1000]} />
-      <meshStandardMaterial color={props.color} />
+      <meshStandardMaterial color={props.color} transparent opacity={0} />
     </mesh>
   )
 }
