@@ -20,22 +20,22 @@ const themeData: CardInfo[] = [
     title: "공포",
     time: "10-15분",
     content: "무서운 거임",
-    image: "/image/horror.jpg",
+    image: "/image/1.png",
   },
   {
     title: "SSAFY",
     time: "10-15분",
     content: "탈출 마렵다",
-    image: "/image/ssafy.png",
+    image: "/image/2.png",
   },
   {
     title: "우주",
     time: "10-15분",
     content: "우주선에서 탈출하라!",
-    image: "/image/space.png",
+    image: "/image/3.png",
   },
 ]
-const themes: Array<string> = ["horror", "ssafy", "space"]
+
 const ThemeCarousel = ({
   width,
   height,
@@ -45,7 +45,7 @@ const ThemeCarousel = ({
   const [currentCard, setCurrentCard] = useState<number>(0)
   const { setSelectedTheme } = useIngameThemeStore()
   useEffect(() => {
-    setSelectedTheme(themes[currentCard])
+    setSelectedTheme((currentCard + 1).toString())
   }, [currentCard])
   return (
     <MainContainer style={{ borderRadius: "20px" }}>
@@ -64,7 +64,7 @@ const ThemeCarousel = ({
         {themeData?.map((item: CardInfo, index: number) => {
           return (
             <SwiperSlide key={index}>
-              <ThemeCard themeData={item} width={width} height={height} />
+              <ThemeCard themeData={item} $width={width} $height={height} />
             </SwiperSlide>
           )
         })}
