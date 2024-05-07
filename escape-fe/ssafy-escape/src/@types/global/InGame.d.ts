@@ -8,3 +8,11 @@ interface IngameMainProps {
 interface RoomProps {
   onLoaded: (isLoaded: boolean) => void
 }
+
+interface ProblemProps {
+  onClose: () => void
+}
+
+interface ClickObjectProps {
+  onClick: () => void
+}
