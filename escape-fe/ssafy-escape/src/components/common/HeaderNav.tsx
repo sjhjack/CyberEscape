@@ -29,7 +29,7 @@ const MainHeader = () => {
   const [friendModalopen, setfriendModalOpen] = useState<boolean>(false)
   const [notificationModalopen, setNotificationModalopen] =
     useState<boolean>(false)
-  
+
   const handleFriendModalClose = () => {
     setfriendModalOpen(false)
   }
@@ -110,7 +110,7 @@ const MainHeader = () => {
   )
 
   return (
-    <div>
+    <ParentDiv>
       <MainContainer>
         {headerItems.map(({ Icon, text, onClick }, index) => (
           <HeaderItem key={index} Icon={Icon} text={text} onClick={onClick} />
@@ -128,12 +128,17 @@ const MainHeader = () => {
         open={notificationModalopen}
         onClose={handleNotificationModalClose}
       />
-    </div>
+    </ParentDiv>
   )
 }
 
 export default MainHeader
 
+const ParentDiv = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`
 const MainContainer = styled.div`
   display: flex;
   align-items: center;

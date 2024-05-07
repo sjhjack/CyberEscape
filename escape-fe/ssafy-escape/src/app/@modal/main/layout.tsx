@@ -1,14 +1,14 @@
 "use client"
 import { styled } from "styled-components"
 import Container from "@/components/common/Container"
-import Nav from "@/components/common/FooterNav"
+import FooterNav from "@/components/common/FooterNav"
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Container>
       {children}
       <SubContainer>
-        <Nav />
+        <FooterNav />
       </SubContainer>
     </Container>
   )
