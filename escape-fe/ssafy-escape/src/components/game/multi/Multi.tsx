@@ -2,7 +2,7 @@
 
 import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
-import * as S from "@/app/@modal/game/multi/mulitStyle"
+import * as S from "@/app/@modal/main/multi/mulitStyle"
 const Multi = () => {
   const router = useRouter()
 
