@@ -52,6 +52,7 @@ public class RoomServiceImpl implements RoomService {
 		listOperations.rightPush(MATCHING_QUEUE_KEY, UserUtil.getLoginUserUuid(userRepository));
 	}
 
+	@Scheduled(fixedDelay = 1000) // 1초마다 실행
 	public void matchPlayers() {
 		ListOperations<String, String> listOperations = redisTemplate.opsForList();
 
