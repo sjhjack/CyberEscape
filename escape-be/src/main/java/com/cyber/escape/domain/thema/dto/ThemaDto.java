@@ -30,12 +30,10 @@ public class ThemaDto {
         HORROR("공포 테마", 1),
         HORROR_VICTIM("공포 테마 - 실험체", 2),
         HORROR_SCIENTIST("공포 테마 - 과학자", 3),
-        TALE("동화 테마", 4),
-        TALE_HERO("동화 테마 - 주인공", 5),
-        TALE_VILLAIN("동화 테마 - 빌런", 6),
-        SSAFY("싸피 테마", 7),
-        SSAFY_TRAINEE("싸피 테마 - 교육생", 8),
-        SSAFY_CONSULTANT("싸피 테마 - 컨설턴트", 9);
+        TALE("싸피 테마", 4),
+        TALE_HERO("싸피 테마 - 교육생", 5),
+        TALE_VILLAIN("싸피 테마 - 컨설턴트", 6),
+        SSAFY("우주 테마", 7);
         private String name;
         private int order;
 
