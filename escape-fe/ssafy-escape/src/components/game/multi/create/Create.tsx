@@ -7,6 +7,8 @@ import ThemeCarousel from "@/components/common/ThemeCarousel"
 import Button from "@/components/common/Button"
 import Checkbox from "@mui/material/Checkbox"
 import * as S from "@/app/@modal/game/multi/create/createStyle"
+import useIngameThemeStore from "@/stores/IngameTheme"
+import postCreateRoom from "@/services/game/room/postCreateRoom"
 import { useState, useEffect } from "react"
 interface postCreateRoomRequestProps {
   title: string

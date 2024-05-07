@@ -4,7 +4,7 @@ import api from "@/services/api"
 interface postCreateRoomResponseProps {
   status: number
   message: string
-  data: postCreateRoomDataProps[]
+  data: postCreateRoomDataProps
 }
 interface postCreateRoomDataProps {
   roomUuid: string
