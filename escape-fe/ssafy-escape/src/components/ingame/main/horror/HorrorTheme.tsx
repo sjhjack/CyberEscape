@@ -5,7 +5,7 @@ import BasicScene from "../../BasicScene"
 import Player from "../../elements/common/Player"
 import MeshObjects from "../../elements/horror/MeshObjects"
 import Floor from "../../elements/common/Floor"
-// import Blood from "../../elements/horror/Blood"
+import Blood from "../../elements/horror/Blood"
 import { useEffect, useState } from "react"
 import Skull from "../../elements/horror/Skull"
 import Flower from "../../elements/horror/Flower"
@@ -21,6 +21,9 @@ import ThirdProblemModal from "../../elements/horror/ThirdProblemModal"
 import ThirdProblemObject from "../../elements/horror/ThirdProblemObject"
 import Knob from "../../elements/horror/Knob"
 import KnobObject from "../../elements/horror/KnobObject"
+import Start from "../../elements/horror/Start"
+import Subtitle from "../../elements/common/Subtitle"
+import PlaySound from "../../elements/horror/PlaySound"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -31,16 +34,18 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [isKnobClicked, setIsKnobClicked] = useState<boolean>(false)
   const [twoMinLater, setTwoMinLater] = useState<boolean>(false)
   const [fiveMinLater, setFiveMinLater] = useState<boolean>(false)
-  const [isFanalty, setIsFanalty] = useState<boolean>(false)
+  const [fanalty, setFanalty] = useState<number>(0)
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
-  const { solved, setSolved } = useIngameSolvedStore()
+  const { solved } = useIngameSolvedStore()
+  const [subtitle, setSubtitle] = useState<string>("")
+  const [soundNum, setSoundNum] = useState<number>(0)
 
   useEffect(() => {
     // 2분 경과 시
     const twoMintimer = setTimeout(() => {
-      setIsFanalty(true)
+      setFanalty(fanalty + 1)
       setTwoMinLater(true)
     }, 60000 * 2)
 
@@ -54,14 +59,24 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     }
   }, [])
 
+  // 침대 위 꽃 클릭 시 이벤트
   const handleFlowerClick = () => {
     setIsFlowerClicked(true)
   }
 
+  // 숨겨진 문고리 찾아서 클릭 시 이벤트
   const handleKnobClick = () => {
     setIsKnobClicked(true)
+    setSubtitle("얼른, 얼른 밖으로 나가야 해.")
+    setTimeout(() => {
+      setSubtitle("제발 열려라, 제발...")
+      setTimeout(() => {
+        setSubtitle("")
+      }, 4000)
+    }, 4000)
   }
 
+  // 문고리 클릭 시 이벤트
   const handleFinal = () => {
     // 탈출 성공 로직
     console.log("탈출성공")
@@ -69,23 +84,57 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
-    setShowFirstProblem(!showFirstProblem)
-    setSolved(solved + 1)
+    if (solved === 0) {
+      setShowFirstProblem(!showFirstProblem)
+    }
   }
+
   // 두 번째 문제 모달
   const handleSecondProblem = () => {
-    setShowSecondProblem(!showSecondProblem)
+    if (solved === 1) {
+      setShowSecondProblem(!showSecondProblem)
+    }
   }
+  
   // 세 번째 문제 모달
   const handleThirdProblem = () => {
-    setShowThirdProblem(!showThirdProblem)
+    if (solved === 2) {
+      setShowThirdProblem(!showThirdProblem)
+    }
   }
 
   return (
     <>
+      {isGameStart ? <Start setSubtitle={setSubtitle} /> : null}
+      <Subtitle text={subtitle} />
+      {showFirstProblem ? (
+        <FirstProblemModal
+          onClose={handleFirstProblem}
+          fanalty={fanalty}
+          setFanalty={setFanalty}
+          setSubtitle={setSubtitle}
+        />
+      ) : null}
+      {showSecondProblem ? (
+        <SecondProblemModal
+          onClose={handleSecondProblem}
+          fanalty={fanalty}
+          setFanalty={setFanalty}
+          setSubtitle={setSubtitle}
+        />
+      ) : null}
+      {showThirdProblem ? (
+        <ThirdProblemModal
+          onClose={handleThirdProblem}
+          fanalty={fanalty}
+          setFanalty={setFanalty}
+          setSubtitle={setSubtitle}
+        />
+      ) : null}
+      <PlaySound soundNum={soundNum} fanalty={fanalty} />
       <BasicScene>
-        <Lights isFanalty={isFanalty} />
-        <Player position={[3, 50, 0]} speed={100} args={[2, 100, 5]} />
+        <Lights fanalty={fanalty} solved={solved} />
+        <Player position={[3, 50, 0]} speed={100} />
         <Floor
           rotation={[Math.PI / -2, 0, 0]}
           color="white"
@@ -111,19 +160,11 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           solved={solved}
         />
 
+        <Blood fanalty={fanalty} />
         <HorrorRoom onLoaded={setIsModelLoaded} />
         <SecondProblemObject onClick={handleSecondProblem} />
         <ThirdProblemObject onClick={handleThirdProblem} />
       </BasicScene>
-      {showFirstProblem ? (
-        <FirstProblemModal onClose={handleFirstProblem} />
-      ) : null}
-      {showSecondProblem ? (
-        <SecondProblemModal onClose={handleSecondProblem} />
-      ) : null}
-      {showThirdProblem ? (
-        <ThirdProblemModal onClose={handleThirdProblem} />
-      ) : null}
     </>
   )
 }

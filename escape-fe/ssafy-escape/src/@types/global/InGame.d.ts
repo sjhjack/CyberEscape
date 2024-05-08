@@ -11,6 +11,9 @@ interface RoomProps {
 
 interface ProblemProps {
   onClose: () => void
+  fanalty: number
+  setFanalty: (fanalty: number) => void
+  setSubtitle: (subtitle: string) => void
 }
 
 interface ClickObjectProps {
