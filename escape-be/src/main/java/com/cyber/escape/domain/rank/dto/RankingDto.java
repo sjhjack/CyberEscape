@@ -1,5 +1,7 @@
 package com.cyber.escape.domain.rank.dto;
 
+import com.cyber.escape.domain.thema.dto.ThemaDto;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +13,7 @@ public class RankingDto {
     @Builder
     public static class Request{
         private String userUuid;
-        private String themaUuid;
+        private int themaCategory;
         private LocalTime bestTime;
     }
 
@@ -19,7 +21,7 @@ public class RankingDto {
     @Builder
     public static class GetRanking{
         private int pageNumber;
-        private String themaUuid;
+        private int themaCategory;
 //        public GetRanking(){
 //        }
 //        public GetRanking(String themaUuid){
@@ -31,7 +33,7 @@ public class RankingDto {
     @Builder
     public static class GetMyRanking{
         private String userUuid;
-        private String themaUuid;
+        private int themaCategory;
     }
 
     @Getter
@@ -47,8 +49,10 @@ public class RankingDto {
     @Builder
     public static class UserRankingDto {
         private int rank;
+        private String profileUrl;
         private String nickname;
         private Time bestTime;
-        private int category;
+        private ThemaDto.ThemaType thema;
     }
+
 }
