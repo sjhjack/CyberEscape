@@ -79,6 +79,9 @@ const useOpenViduSession = (
       if (session) {
         session.disconnect()
       }
+      if (mainStreamManager) {
+        deleteSubscriber(mainStreamManager)
+      }
       // 상태 리셋, 리디렉션 등
       setSession(undefined)
       setSubscribers([])

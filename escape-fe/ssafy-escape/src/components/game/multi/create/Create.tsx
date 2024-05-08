@@ -57,6 +57,7 @@ const Create = () => {
       justifyContent="space-evenly"
       alignItems="center"
       flexDirection="column"
+      backgroundColor="none"
     >
       <S.CreateContainer>
         <S.MenuBox>

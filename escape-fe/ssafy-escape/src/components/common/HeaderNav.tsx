@@ -7,7 +7,7 @@ import LogoutIcon from "@mui/icons-material/Logout"
 import GroupIcon from "@mui/icons-material/Group"
 import { useEffect, useState } from "react"
 import FriendMainModal from "../main/friends/FriendMainModal"
-// import useUserStore from "@/stores/UserStore"
+import useUserStore from "@/stores/UserStore"
 import {
   QueryClient,
   HydrationBoundary,
@@ -16,6 +16,7 @@ import {
 import postFriendList from "@/services/main/friends/postFriendList"
 import NotificationModal from "../notification/NotificationModal"
 import postInvitedList from "@/services/notification/postInvitedList"
+import Swal from "sweetalert2"
 
 interface HeaderProps {
   Icon: React.ElementType
@@ -25,7 +26,7 @@ interface HeaderProps {
 
 const MainHeader = () => {
   const router = useRouter()
-  // const { logout } = useUserStore()
+  const { logout } = useUserStore()
   const [friendModalopen, setfriendModalOpen] = useState<boolean>(false)
   const [notificationModalopen, setNotificationModalopen] =
     useState<boolean>(false)
@@ -49,19 +50,23 @@ const MainHeader = () => {
       })
   }, [])
 
-  // // 로그아웃 버튼 클릭 시
-  // const handleLogout = async () => {
-  //   try {
-  //     await logout()
-  //     alert("로그아웃 성공!")
-  //     router.push("/")
-  //   } catch (error) {
-  //     console.error(error)
-  //     if (error instanceof Error) {
-  //       alert(error.message)
-  //     }
-  //   }
-  // }
+  // 로그아웃 버튼 클릭 시
+  const handleLogout = async () => {
+    try {
+      await logout()
+      Swal.fire("로그아웃 완료")
+      router.push("/")
+    } catch (error) {
+      console.error(error)
+      if (error instanceof Error) {
+        Swal.fire(
+          "로그아웃 실패",
+          error instanceof Error ? error.message : "",
+          "error",
+        )
+      }
+    }
+  }
 
   const headerItems = [
     { Icon: HomeIcon, text: "홈", onClick: () => router.push("/main") },
@@ -69,7 +74,7 @@ const MainHeader = () => {
       Icon: LogoutIcon,
       text: "로그아웃",
       onClick: () => {
-        // handleLogout()
+        handleLogout()
       },
     },
     {
