@@ -65,6 +65,7 @@ public class Room extends BaseEntity {
 	public void updateSetting(final RoomUpdateSetting setting) {
 		title = setting.title();
 		password = setting.password();
+		updator = host;
 	}
 
 	// host id 캡슐화

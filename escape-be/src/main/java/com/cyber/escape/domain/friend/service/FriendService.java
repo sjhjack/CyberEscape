@@ -3,8 +3,8 @@ package com.cyber.escape.domain.friend.service;
 import com.cyber.escape.domain.friend.dto.FriendDto;
 import com.cyber.escape.domain.friend.entity.Friend;
 import com.cyber.escape.domain.friend.repository.FriendRepository;
+import com.cyber.escape.domain.friend.repository.FriendRepositoryImpl;
 import com.cyber.escape.domain.notification.document.Notify;
-import com.cyber.escape.domain.notification.dto.NotifyDto;
 import com.cyber.escape.domain.notification.service.NotificationService;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +24,16 @@ public class FriendService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
     private final NotificationService notificationService;
+    private final FriendRepositoryImpl friendRepositoryImpl;
+    private final UserUtil userUtil;
 
-    public void makeFriend(FriendDto.friendRelationRequest dto){
-        User fromUser = userRepository.findUserByUuid(dto.getFromUserUuid())
+
+    private final IdFinder idFinder;
+
+    public void makeFriend(FriendDto.FriendRelationRequest dto){
+        String currentUserUuid = userUtil.getLoginUserUuid();
+
+        User fromUser = userRepository.findUserByUuid(currentUserUuid)
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
         User toUser = userRepository.findUserByUuid(dto.getToUserUuid())
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
@@ -38,23 +46,27 @@ public class FriendService {
         friendRepository.save(toUserFromUser);
     }
 
-    public String sendToRequest(FriendDto.friendRequest req){
+    public String sendToRequest(FriendDto.FriendRequest req){
 
-        // 요청을 보낸다.
-        // DB에 저장한다.
-        if(req.getNotifyType().equals("GAME")){
-            notificationService.send(req.getReceiverUuid(), Notify.NotificationType.GAME, "게임 요청입니다.");
-        }
-
-        if(req.getNotifyType().equals("FRIEND")){
-            notificationService.send(req.getReceiverUuid(), Notify.NotificationType.FRIEND, "친구 요청입니다.");
-        }
+        notificationService.send(req.getReceiverUuid(), "", Notify.NotificationType.FRIEND, "친구 요청입니다.");
 
         return "";
     }
 
-    public List<NotifyDto.Response> getMyFriendList(){
-        String userUuid = UserUtil.getUserUuid();
-        return null;
+    public List<FriendDto.FriendListResponse> getMyFriendList(){
+        String userUuid = userUtil.getLoginUserUuid();
+
+        Long userId = idFinder.findIdByUuid(userUuid, User.class);
+
+        return friendRepositoryImpl.findFriendList(userId);
+    }
+
+    public String removeFriend(Map<String, String> req){
+        Long currentUserId = idFinder.findIdByUuid(userUtil.getLoginUserUuid(), User.class);
+        Long friendId = idFinder.findIdByUuid(req.get("friendUuid"), User.class);
+
+        friendRepositoryImpl.removeFriend(currentUserId, friendId);
+
+        return "";
     }
 }

@@ -16,9 +16,14 @@ spring:
       host: ${REDIS_HOST} # Redis 서버 호스트 주소
       port: 6379      # Redis 서버 포트
       database: 0
-#    mongodb:
-#      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority&appName=${MONGO_APPNAME}
-#      database: ${MONGO_DBNAME}
+    mongodb:
+      uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority
+      database: ${MONGO_DBNAME}
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
 rabbit:
   chat-queue-name: ${MQ_QUEUE_NAME}
   exchange-name: ${MQ_EXCHANGE_NAME}
@@ -26,6 +31,25 @@ rabbit:
   port: ${MQ_PORT}
   username: ${MQ_USER_NAME}
   password: ${MQ_PASSWORD}
+
+# S3 설정 추가
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    file:
+      name: ${DEFAULT_FILE_NAME}
+      url: ${DEFAULT_FILE_URL}
+
+secretKeyPlain: ${KEY}
 
 openvidu:
   url: ${OPENVIDU_URL}
