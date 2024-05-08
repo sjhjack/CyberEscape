@@ -13,12 +13,13 @@ import postMyRanking from "@/services/main/ranking/postMyRanking"
 import postAutoCreateNickname from "@/services/main/nickname/postAutoCreateNickname"
 // import postIsDuplicationNickname from "@/services/main/nickname/postIsDuplicationNickname"
 // import patchNicknameChange from "@/services/main/nickname/patchNicknameChange"
-
+import useUserStore from "@/stores/UserStore"
 interface ImageProps {
   $isActive: boolean
 }
 
 const MyProfile = () => {
+  const { nickname, profileUrl } = useUserStore()
   const currentNickname = "놀란 상어"
   const userUuid = "임시"
   const themeuuid = ["공포uuid", "싸피uuid", "우주uuid"]
@@ -98,7 +99,7 @@ const MyProfile = () => {
               <ShuffleIcon sx={{ fontSize: "30px" }} />
             </ShuffleIconBox>
             <Input
-              placeholder={currentNickname}
+              placeholder={nickname ? nickname : "닉네임을 입력하세요"}
               value={newNickname}
               onChange={(event) => setNewNickname(event.target.value)}
             />
@@ -124,7 +125,7 @@ const MyProfile = () => {
           </EditBox>
         ) : (
           <NicknameSubBox>
-            <SubText>{currentNickname}</SubText>
+            <SubText>{nickname}</SubText>
             <BlackEditIcon
               src="/image/edit_black.png"
               alt="닉네임 수정 아이콘"
@@ -137,7 +138,9 @@ const MyProfile = () => {
       </NicknameMainBox>
 
       <ImageContainer>
-        <ProfileImg src={profileImg} alt="내 프로필 이미지" />
+        {profileUrl ? (
+          <ProfileImg src={profileUrl} alt="내 프로필 이미지" />
+        ) : null}
         <WhiteEditIcon
           src="/image/edit_white.png"
           alt="프로필 이미지 수정 아이콘"
