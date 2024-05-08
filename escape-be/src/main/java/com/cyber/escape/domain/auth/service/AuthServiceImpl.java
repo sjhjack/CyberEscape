@@ -56,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
+		signinResponse.setUserInfo(UserUtil.getLoginUser(userRepository));
 
 		// Refresh Token Redis에 저장
 		tokenUtil.setRefreshToken(signinResponse.getRefreshToken());
