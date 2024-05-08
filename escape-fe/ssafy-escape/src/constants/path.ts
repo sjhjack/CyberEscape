@@ -4,6 +4,7 @@ const API_PATH = {
     LOGIN: "/auth/signin",
     LOGOUT: "/auth/logout",
     REFRESH_ACCESSTOKEN: "/auth/refresh",
+    QUIT: "/auth/quit",
   },
   MAIN: {
     FRIEND: {
