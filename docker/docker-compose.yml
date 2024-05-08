@@ -49,21 +49,12 @@ services:
         - "61613:61613"
         - "15672:15672"
 
-    openvidu:
-      image: openvidu/openvidu-dev:2.28.0
-      networks:
-        - backend
-      ports:
-        - "4443:4443"
-      env_file:
-        - ".env"
-
     nextjs:
       build:
         context: ../
         dockerfile: "./docker/dockerfile/nextjs.dockerfile"
       ports:
-        - "3000:3000"
+        - "5442:3000"
 
     mongo:
       image: mongo
