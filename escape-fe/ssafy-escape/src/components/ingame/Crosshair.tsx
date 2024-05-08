@@ -1,6 +1,11 @@
+import Image from "next/image"
 import styled from "styled-components"
 
-const Crosshair = styled.div`
+interface CrosshairProp {
+  interactNum: number
+}
+
+const Crosshair1 = styled.div`
   position: fixed;
   left: 50%;
   top: 50%;
@@ -29,5 +34,32 @@ const Crosshair = styled.div`
     height: 2px;
   }
 `
+
+const Crosshair2 = styled.image`
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1000;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+`
+
+const Crosshair = ({ interactNum }: CrosshairProp) => {
+  const imageURL = "/image/selection.png"
+  const imageURL_2 = "/image/open_door.png"
+
+  return interactNum === 1 ? (
+    <Crosshair1></Crosshair1>
+  ) : interactNum === 2 ? (
+    <Crosshair2>
+      <Image src={imageURL} alt={"Crosshair"} width={50} height={50} />
+    </Crosshair2>
+  ) : (
+    <Crosshair2>
+      <Image src={imageURL_2} alt={"Crosshair"} width={50} height={50} />
+    </Crosshair2>
+  )
+}
 
 export default Crosshair
