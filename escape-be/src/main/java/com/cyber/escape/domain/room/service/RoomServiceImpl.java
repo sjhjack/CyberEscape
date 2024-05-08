@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class RoomServiceImpl implements RoomService {
 	private final NotificationService notificationService;
 	private final UserUtil userUtil;
 	private final RedisTemplate<String, String> redisTemplate;
+	private final SimpMessageSendingOperations messagingTemplate;
 
 	@Transactional
 	public void addPlayerToMatchingQueue() {
@@ -79,7 +81,11 @@ public class RoomServiceImpl implements RoomService {
 				.hostUuid(user1Uuid)
 				.build();
 
-			createRoom(postRequest, 2);
+			RoomDto.PostResponse createdRoom = createRoom(postRequest, 2);
+
+			// 매칭된 플레이어들에게 대기방 정보 전송
+			messagingTemplate.convertAndSendToUser(user1Uuid, "/queue/match", createdRoom);
+			messagingTemplate.convertAndSendToUser(user2Uuid, "/queue/match", createdRoom);
 		}
 	}
 
