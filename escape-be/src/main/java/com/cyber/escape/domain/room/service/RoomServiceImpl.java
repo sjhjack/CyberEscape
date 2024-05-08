@@ -2,17 +2,17 @@ package com.cyber.escape.domain.room.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import com.cyber.escape.domain.user.repository.UserRepository;
-import com.cyber.escape.domain.user.util.UserUtil;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import com.cyber.escape.domain.notification.document.Notify;
-import com.cyber.escape.domain.notification.service.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cyber.escape.domain.notification.document.Notify;
+import com.cyber.escape.domain.notification.service.NotificationService;
 import com.cyber.escape.domain.room.data.RoomUpdateSetting;
 import com.cyber.escape.domain.room.dto.Pagination;
 import com.cyber.escape.domain.room.dto.PagingDto;
@@ -24,6 +24,10 @@ import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
+import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.UserException;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +38,57 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomService {
+	private static final String MATCHING_QUEUE_KEY = "matching_queue";
+	private static final Long[] themaIds = {1L, 2L, 3L};	// Todo : 값 변경
 	private final UserRepository userRepository;
 	private final RoomRepository roomRepository;
 	private final ThemaRepository themaRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
-	private NotificationService notificationService;
+	private final NotificationService notificationService;
 	private final UserUtil userUtil;
+	private final RedisTemplate<String, String> redisTemplate;
+	private final SimpMessageSendingOperations messagingTemplate;
+
+	@Transactional
+	public void addPlayerToMatchingQueue() {
+		ListOperations<String, String> listOperations = redisTemplate.opsForList();
+		listOperations.rightPush(MATCHING_QUEUE_KEY, userUtil.getLoginUserUuid());
+		// listOperations.rightPush(MATCHING_QUEUE_KEY, userUuid);
+	}
+
+	@Scheduled(fixedDelay = 1000) // 1초마다 실행
+	@Transactional
+	public void matchPlayers() {
+		log.info("매치 메이킹 탐색");
+		ListOperations<String, String> listOperations = redisTemplate.opsForList();
+
+		if(listOperations.size(MATCHING_QUEUE_KEY) > 2) {
+			String user1Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
+			String user2Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
+
+			log.info("user1Uuid : {}", user1Uuid);
+			log.info("user2Uuid : {}", user2Uuid);
+
+			User host = userRepository.findUserByUuid(user1Uuid)
+				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
+			int randomIndex = (int) (Math.random() * (themaIds.length - 1));
+			Long themaId = themaIds[randomIndex];
+
+			RoomDto.PostRequest postRequest = RoomDto.PostRequest.builder()
+				.title(host.getNickname() + "의 대기실")
+				.themaId(themaId)
+				.password("")
+				.hostUuid(user1Uuid)
+				.build();
+
+			RoomDto.PostResponse createdRoom = createRoom(postRequest, 2);
+
+			// 매칭된 플레이어들에게 대기방 정보 전송
+			messagingTemplate.convertAndSendToUser(user1Uuid, "/queue/match", createdRoom);
+			messagingTemplate.convertAndSendToUser(user2Uuid, "/queue/match", createdRoom);
+		}
+	}
+
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
@@ -63,10 +112,12 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	@Override
-	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
+	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest, int capacity) {
 		String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 
 		User host = userUtil.getLoginUser();
+		// User host = userRepository.findUserByUuid(postRequest.getHostUuid())
+		// 	.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
 		log.info("hostUuid : {}", host.getUuid());
 
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
@@ -76,7 +127,7 @@ public class RoomServiceImpl implements RoomService {
 			.title(postRequest.getTitle())
 			// .password(postRequest.getPassword())
 			.password(encryptPassword)
-			.capacity(1)
+			.capacity(capacity)
 			.thema(thema)
 			.host(host)
 			.creator(host)
@@ -88,6 +139,12 @@ public class RoomServiceImpl implements RoomService {
 		// Todo : 채팅방 생성해서 저장하고 채팅방 Uuid 가져오기
 
 		return RoomDto.PostResponse.of(newRoom.getUuid(), "chatRoomuuid");
+	}
+
+	@Transactional
+	@Override
+	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
+		return createRoom(postRequest, 1);
 	}
 
 	@Transactional

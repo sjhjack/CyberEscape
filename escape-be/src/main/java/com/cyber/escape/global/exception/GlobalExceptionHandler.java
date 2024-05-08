@@ -20,6 +20,11 @@ public class GlobalExceptionHandler {
         return makeResponseFormat(e.getExceptionCode());
     }
 
+    @ExceptionHandler(FileException.class)
+    public ApiResponse handleVoiceChatException(FileException e) {
+        return makeResponseFormat(e.getExceptionCode());
+    }
+
     @ExceptionHandler(VoiceChatException.class)
     public ApiResponse handleVoiceChatException(VoiceChatException e) {
         return makeResponseFormat(e.getExceptionCode());
@@ -28,6 +33,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RankingException.class)
     public ApiResponse handleRecruitmentException(RankingException e) {
+        return makeResponseFormat(e.getExceptionCode());
+    }
+
+    @ExceptionHandler(TokenException.class)
+    public ApiResponse handleVoiceChatException(TokenException e) {
+        return makeResponseFormat(e.getExceptionCode());
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ApiResponse handleVoiceChatException(UserException e) {
         return makeResponseFormat(e.getExceptionCode());
     }
 
