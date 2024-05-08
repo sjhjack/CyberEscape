@@ -1,7 +1,5 @@
 import API_PATH from "@/constants/path"
 import api from "@/services/api"
-import { useRouter } from "next/navigation"
-import Swal from "sweetalert2"
 interface PostLoginBodyProps {
   status: number
   message: string
@@ -13,7 +11,6 @@ const postLogin = async (
   loginId: string,
   password: string,
 ): Promise<UserInfoProps> => {
-  const router = useRouter()
   try {
     const response = await api.post<PostLoginBodyProps>(API_PATH.AUTH.LOGIN, {
       loginId,
@@ -30,10 +27,9 @@ const postLogin = async (
     // if (!response.user) {
     //   throw new Error("사용자를 찾을 수 없습니다.")
     // }
-    Swal.fire("로그인 성공")
+
     sessionStorage.setItem("access_token", response.data.data.accessToken)
     sessionStorage.setItem("refresh_token", response.data.data.refreshToken)
-    router.push("/main")
     return response.data.data
   } catch (error) {
     console.error(error)

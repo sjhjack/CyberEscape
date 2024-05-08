@@ -34,13 +34,15 @@ const Login = ({ handleLoginback }: LoginProps) => {
     const idRegex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/
     // 아이디 유효성 검사
     if (!idRegex.test(loginId)) {
-      alert("아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!")
+      Swal.fire("아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!")
       return
     }
 
     // 아이디 유효성 검사 통과 시
     try {
       login(loginId, password)
+      Swal.fire("로그인 성공")
+      router.push("/main")
     } catch (error) {
       console.error(error)
       if (error instanceof Error) {
@@ -52,10 +54,16 @@ const Login = ({ handleLoginback }: LoginProps) => {
   // 회원가입 버튼 클릭 시
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const idRegex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/
+    // 아이디 유효성 검사
+    if (!idRegex.test(loginId)) {
+      Swal.fire("아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!")
+      return
+    }
     try {
       await postSignUp(loginId, password)
       Swal.fire("회원가입 성공!")
-      router.push("/login")
+      handleLoginback()
     } catch (error) {
       console.error(error)
       if (error instanceof Error) {
