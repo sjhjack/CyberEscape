@@ -1,11 +1,7 @@
 import { useGLTF } from "@react-three/drei"
 import { useEffect } from "react"
 
-type SkullProps = {
-  onClick: () => void
-}
-
-const Skull = ({ onClick }: SkullProps) => {
+const Skull = ({ onClick }: ClickObjectProps) => {
   const skull = useGLTF("/glb/horror/skull.glb", true)
 
   useEffect(() => {

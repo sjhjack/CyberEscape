@@ -9,7 +9,7 @@ import ProgressBar from "@/components/ingame/ProgressBar"
 import Image from "next/image"
 import * as S from "./ingameStyle"
 import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
-import StartingCountDown from "@/components/ingame/StartingCountDown"
+// import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
@@ -68,10 +68,10 @@ const Page = () => {
       ) : null}
       {isModelLoaded ? (
         <div>
-          <StartingCountDown
+          {/* <StartingCountDown
             isModelLoaded={isModelLoaded}
             onFinish={handleGameStart}
-          />
+          /> */}
           <Chat />
           <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
           <ExitGame>

@@ -23,8 +23,8 @@ const ThirdProblemModal = ({ onClose }: ProblemProps) => {
       <Image
         src="/image/diary.png"
         alt="일기장 이미지"
-        width={700}
-        height={700}
+        width={630}
+        height={530}
       />
       <IconBox onClick={onClose}>
         <CloseIcon sx={{ fontSize: 40 }} />
@@ -75,7 +75,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
@@ -110,7 +110,7 @@ const ChoiceBox = styled.div`
 const IconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 168px;
-  top: 65px;
+  right: 150px;
+  top: 55px;
   z-index: 10;
 `
