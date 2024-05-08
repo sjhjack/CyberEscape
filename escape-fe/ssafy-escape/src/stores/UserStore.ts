@@ -6,8 +6,8 @@ import postLogin from "../services/user/postLogin"
 interface UserState {
   loginId: string | null
   isLogin: boolean
-  nickname: string | null
-  imgUrl: string | null
+  // nickname: string | null
+  // imgUrl: string | null
   accessToken: string | null
   setAccessToken: (token: string | null) => void
   login: (loginId: string, password: string) => void
@@ -18,8 +18,8 @@ const useUserStore = create<UserState>()(
     (set): UserState => ({
       loginId: null,
       isLogin: false,
-      nickname: null,
-      imgUrl: null,
+      // nickname: null,
+      // imgUrl: null,
       accessToken: null,
       setAccessToken: (token) => set({ accessToken: token }),
 
@@ -29,8 +29,8 @@ const useUserStore = create<UserState>()(
           if (response.accessToken) {
             set({
               isLogin: true,
-              nickname: response.nickname,
-              imgUrl: response.imgUrl,
+              // nickname: response.nickname,
+              // imgUrl: response.imgUrl,
               accessToken: response.accessToken,
             })
           } else {
@@ -48,12 +48,13 @@ const useUserStore = create<UserState>()(
           set({
             loginId: null,
             isLogin: false,
-            nickname: null,
-            imgUrl: null,
+            // nickname: null,
+            // imgUrl: null,
             accessToken: null,
           })
         } catch (error) {
           console.error(error)
+          throw error
         }
       },
     }),
