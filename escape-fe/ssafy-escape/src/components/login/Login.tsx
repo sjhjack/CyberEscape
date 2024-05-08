@@ -136,7 +136,8 @@ const Login = ({ handleLoginback }: LoginProps) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              maxLength={10}
+              minLength={6}
+              maxLength={20}
               required
             />
             <Button text="회원가입" theme="success" type="submit" />
