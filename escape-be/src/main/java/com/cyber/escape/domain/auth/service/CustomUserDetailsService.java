@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.cyber.escape.domain.auth.dto.CustomUser;
 import com.cyber.escape.domain.user.entity.User;
-import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
-	private final UserRepository userRepository;
+	private final UserUtil userUtil;
 
 	/**
 	 *
@@ -27,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-		User findUser = UserUtil.findByLoginId(userRepository, loginId);
+		User findUser = userUtil.findByLoginId(loginId);
 
 		return new CustomUser(
 			findUser.getLoginId(),

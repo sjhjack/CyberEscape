@@ -25,11 +25,14 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final NotificationService notificationService;
     private final FriendRepositoryImpl friendRepositoryImpl;
+    private final UserUtil userUtil;
+
 
     private final IdFinder idFinder;
 
     public void makeFriend(FriendDto.FriendRelationRequest dto){
-        String currentUserUuid = "c83ec6b2-0470-11ef-9c95-0242ac101404";
+        String currentUserUuid = userUtil.getLoginUserUuid();
+
         User fromUser = userRepository.findUserByUuid(currentUserUuid)
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
         User toUser = userRepository.findUserByUuid(dto.getToUserUuid())
@@ -51,7 +54,7 @@ public class FriendService {
     }
 
     public List<FriendDto.FriendListResponse> getMyFriendList(){
-        String userUuid = UserUtil.getUserUuid();
+        String userUuid = userUtil.getLoginUserUuid();
 
         Long userId = idFinder.findIdByUuid(userUuid, User.class);
 
@@ -59,7 +62,7 @@ public class FriendService {
     }
 
     public String removeFriend(Map<String, String> req){
-        Long currentUserId = idFinder.findIdByUuid(UserUtil.getUserUuid(), User.class);
+        Long currentUserId = idFinder.findIdByUuid(userUtil.getLoginUserUuid(), User.class);
         Long friendId = idFinder.findIdByUuid(req.get("friendUuid"), User.class);
 
         friendRepositoryImpl.removeFriend(currentUserId, friendId);

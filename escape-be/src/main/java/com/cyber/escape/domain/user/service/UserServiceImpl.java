@@ -35,10 +35,11 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
+    private final UserUtil userUtil;
 
     @Override
     public String generateNickname(){
-        return UserUtil.randomNickname();
+        return userUtil.randomNickname();
     }
 
     @Override
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public String changeProfileImage(MultipartFile multipartFile) throws IOException {
-        User findUser = UserUtil.getLoginUser(userRepository);
+        User findUser = userUtil.getLoginUser();
 
         FileUtil.deleteBeforeFile(findUser.getSavedFileName());
 
@@ -108,7 +109,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public String deleteProfileImage() throws IOException {
-        User findUser = UserUtil.getLoginUser(userRepository);
+        User findUser = userUtil.getLoginUser();
 
         if(findUser.getSavedFileName().equals(FileUtil.DEFAULT_FILE_NAME)) {
             throw new FileException(ExceptionCodeSet.DELETE_DEFAULT_FILE);

@@ -38,9 +38,7 @@ public class NotificationController {
     public SseEmitter subscribe(@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId){
         // Long id = 12L;
         //Long id = jwtUtil.getLoginMemberId();
-        String uuid = UserUtil.getUserUuid();
-        log.info("subscribe !!! uuid : {}, Last-Event-ID : {}", uuid, lastEventId);
-        SseEmitter sseEmitter = notificationService.subscribe(uuid, lastEventId);
+        SseEmitter sseEmitter = notificationService.subscribe(lastEventId);
 
         log.info("NotificationController ============ subscribe completed, sseEmitter : {}", sseEmitter);
         return sseEmitter;

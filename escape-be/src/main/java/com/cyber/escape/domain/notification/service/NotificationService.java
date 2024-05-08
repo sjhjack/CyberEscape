@@ -31,9 +31,11 @@ public class NotificationService {
     private final NotifyRepository notifyRepository;
     // 복잡한 수준 쿼리, 세밀한 제어에는 TEMPLATE 사용
     private final MongoTemplate mongoTemplate;
+    private final UserUtil userUtil;
 
     // subscribe
-    public SseEmitter subscribe(String userUuid, String lastEventId){
+    public SseEmitter subscribe(String lastEventId){
+        String userUuid = userUtil.getLoginUserUuid();
         log.info("NotificationService ============ start subscribe..");
         String id = userUuid + "_" + System.currentTimeMillis();
         log.info("NotificationService ============ id : {}, lastEventId: {}", id, lastEventId);
@@ -67,7 +69,7 @@ public class NotificationService {
         log.info("NotificationService ============= send() 시작");
 
         // 알림 내역 저장
-        String senderUuid = UserUtil.getUserUuid();
+        String senderUuid = userUtil.getLoginUserUuid();
 
         // 친구 요청이라면
         if(notificationType.equals(Notify.NotificationType.FRIEND)) {
