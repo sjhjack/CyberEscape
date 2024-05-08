@@ -8,7 +8,7 @@ interface ChatData {
 }
 
 const APPLICATION_SERVER_URL = "http://localhost:8080/"
-
+const accessToken = sessionStorage.getItem("access_token")
 const useOpenViduSession = (
   uuid: string,
   setMessage: (data: ChatData[]) => void,
@@ -109,6 +109,10 @@ const useOpenViduSession = (
     const response = await axios.post(
       `${APPLICATION_SERVER_URL}voice/session`,
       { roomUuid: uuid },
+
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      },
     )
     return response.data.data.sessionId
   }

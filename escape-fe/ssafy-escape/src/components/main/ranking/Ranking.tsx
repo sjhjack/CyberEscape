@@ -11,7 +11,7 @@ import * as S from "@/app/@modal/main/ranking/rankingStyle"
 
 const Ranking = () => {
   const themeuuid = ["공포uuid", "싸피uuid", "일반uuid"]
-  const themes = ["공포", "싸피", "일반"]
+  const themes = ["공포", "싸피", "우주"]
   const [activeTheme, setActiveTheme] = useState<number>(0)
 
   // 무한 스크롤 테스트 시 해당 영역 overflow 속성 추가 필요
@@ -79,7 +79,7 @@ const Ranking = () => {
         {themes.map((theme, index) => (
           <S.ThemeSubBox key={index} onClick={() => handleClick(index)}>
             <S.CustomImage
-              src={`/image/${theme}.png`}
+              src={`/image/${index + 1}emoticon.png`}
               alt={theme}
               width={60}
               height={60}
