@@ -16,3 +16,9 @@ interface ProblemProps {
 interface ClickObjectProps {
   onClick: () => void
 }
+
+interface KnobProps {
+  onClick: () => void
+  isFind: boolean
+  solved: number
+}

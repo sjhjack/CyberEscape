@@ -19,6 +19,8 @@ import SecondProblemObject from "../../elements/horror/SecondProblemObject"
 import SecondProblemModal from "../../elements/horror/SecondProblemModal"
 import ThirdProblemModal from "../../elements/horror/ThirdProblemModal"
 import ThirdProblemObject from "../../elements/horror/ThirdProblemObject"
+import Knob from "../../elements/horror/Knob"
+import KnobObject from "../../elements/horror/KnobObject"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -26,6 +28,7 @@ import ThirdProblemObject from "../../elements/horror/ThirdProblemObject"
 
 const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [isFlowerClicked, setIsFlowerClicked] = useState<boolean>(false)
+  const [isKnobClicked, setIsKnobClicked] = useState<boolean>(false)
   const [twoMinLater, setTwoMinLater] = useState<boolean>(false)
   const [fiveMinLater, setFiveMinLater] = useState<boolean>(false)
   const [isFanalty, setIsFanalty] = useState<boolean>(false)
@@ -55,9 +58,19 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     setIsFlowerClicked(true)
   }
 
+  const handleKnobClick = () => {
+    setIsKnobClicked(true)
+  }
+
+  const handleFinal = () => {
+    // 탈출 성공 로직
+    console.log("탈출성공")
+  }
+
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
     setShowFirstProblem(!showFirstProblem)
+    setSolved(solved + 1)
   }
   // 두 번째 문제 모달
   const handleSecondProblem = () => {
@@ -86,6 +99,18 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         <Art twoMinLater={twoMinLater} />
         <Portrait twoMinLater={twoMinLater} fiveMinLater={fiveMinLater} />
         <HangedDoll />
+
+        <Knob
+          onClick={handleKnobClick}
+          isFind={isKnobClicked}
+          solved={solved}
+        />
+        <KnobObject
+          onClick={handleFinal}
+          isFind={isKnobClicked}
+          solved={solved}
+        />
+
         <HorrorRoom onLoaded={setIsModelLoaded} />
         <SecondProblemObject onClick={handleSecondProblem} />
         <ThirdProblemObject onClick={handleThirdProblem} />
