@@ -2,6 +2,7 @@ package com.cyber.escape.domain.notification.service;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.dto.NotifyDto;
 import com.cyber.escape.domain.notification.repository.EmitterRepositoryImpl;
 import com.cyber.escape.domain.notification.repository.NotifyRepository;
+import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.common.util.IdFinder;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -24,19 +27,19 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationService {
     private static final Long DEFAULT_TIMEOUT = 60L * 60 * 1000;
     private final EmitterRepositoryImpl emitterRepository;
-    // private final NoteRepository noteRepository;
+    // CRUD, FIND, 동적 쿼리 
     private final NotifyRepository notifyRepository;
-    // private final ObjectMapper objectMapper;
-    //private final NotifyMapper notifyMapper;
+    // 복잡한 수준 쿼리, 세밀한 제어에는 TEMPLATE 사용
     private final MongoTemplate mongoTemplate;
+    private final UserUtil userUtil;
 
     // subscribe
-    public SseEmitter subscribe(String userUuid, String lastEventId){
+    public SseEmitter subscribe(String lastEventId){
+        String userUuid = userUtil.getLoginUserUuid();
         log.info("NotificationService ============ start subscribe..");
         String id = userUuid + "_" + System.currentTimeMillis();
         log.info("NotificationService ============ id : {}, lastEventId: {}", id, lastEventId);
         SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
-        // SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
 
         log.info("NotificationService ============ save emitter completed");
 
@@ -62,32 +65,55 @@ public class NotificationService {
     }
 
     // 알림이 필요한 곳에서 이 함수를 호출하면 됩니다.
-    public void send(String receiverUuid, Notify.NotificationType notificationType, String content){
+    public void send(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content){
         log.info("NotificationService ============= send() 시작");
 
-        Notify notification = notifyRepository.save(createNotify(receiverUuid, notificationType, content));
-        // Notify notification = createNotify(receiverId, notificationType, content);
+        // 알림 내역 저장
+        String senderUuid = userUtil.getLoginUserUuid();
 
-        // receiver = 현재 로그인 한 유저 = 알림 받을 사람
-        // String receiverId = receiver.getMemberId();
-
-        // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
-        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
-        sseEmitters.forEach(
-                (key, sseEmitter) -> {
-                    emitterRepository.saveEventCache(key, notification);
-                    sendToClient(sseEmitter, key, NotifyDto.Response.from(notification));
-                }
-        );
-
+        // 친구 요청이라면
+        if(notificationType.equals(Notify.NotificationType.FRIEND)) {
+            // sender가 receiver에게 친구 요청을 보낸 적이 있는지를 판별
+            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.FRIEND);
+            sendNotifcation(receiverUuid, "", notificationType, content, senderUuid, existNotification);
+        }
+        // 게임 요청이 들어왔다면
+        else {
+            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.GAME);
+            sendNotifcation(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
+        }
         log.info("NotificationService ============= send() 끝");
+
     }
 
-    private Notify createNotify(String receiverUuid, Notify.NotificationType notificationType, String content) {
+    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, Notify existNotification) {
+        if (existNotification == null) {
+
+            // roomUuid 자리는 비워놓는다.
+            Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
+
+            // Notify notification = createNotify(receiverId, notificationType, content);
+
+            // receiver = 현재 로그인 한 유저 = 알림 받을 사람
+            // String receiverId = receiver.getMemberId();
+
+            // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
+            Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
+            sseEmitters.forEach(
+                    (key, sseEmitter) -> {
+                        emitterRepository.saveEventCache(key, notification);
+                        sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
+                    }
+            );
+        }
+    }
+
+    private Notify createNotify(String senderUuid, String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content) {
         // Todo : sender 있는 경우, 없는 경우 나누기
         return Notify.builder()
-                // .sender(sender)
+                .senderUuid(senderUuid)
                 .receiverUuid(receiverUuid)
+                .roomUuid(roomUuid)
                 .notificationType(notificationType)
                 .content(content)
                 .isRead('F')
@@ -110,10 +136,22 @@ public class NotificationService {
     }
 
     // 안 읽은 목록들 추출
-    public List<NotifyDto.Response> getNotifyList(String userUuid){
+    public List<Object> getNotifyList(){
+        String userUuid = "c83ec6b2-0470-11ef-9c95-0242ac101404";
         List<Notify> notifyList = notifyRepository.findByReceiverUuidAndIsRead(userUuid, 'F');
-        //return notifyMapper.NotifyToNotifyDtoResponse(notifyList);
-        return null;
+
+        List<Object> response = new ArrayList<>();
+
+        for(Notify notify : notifyList){
+            if(notify.getNotificationType().equals(Notify.NotificationType.FRIEND)){
+                response.add(NotifyDto.FriendResponse.from(notify));
+            }
+            else if(notify.getNotificationType().equals(Notify.NotificationType.GAME)){
+                response.add(NotifyDto.GameResponse.from(notify));
+            }
+        }
+
+        return response;
     }
 
     // mongoDB에서 read 처리 지정
@@ -125,6 +163,7 @@ public class NotificationService {
 
             Notify readNotify = Notify.builder()
                     .id(unreadNotify.getId())
+                    .senderUuid(unreadNotify.getSenderUuid())
                     .receiverUuid(unreadNotify.getReceiverUuid())  // Maintain other fields
                     .content(unreadNotify.getContent())      	// Maintain other fields
                     .notificationType(unreadNotify.getNotificationType())  // Maintain other fields
