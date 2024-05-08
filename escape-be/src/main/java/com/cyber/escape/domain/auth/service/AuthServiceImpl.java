@@ -35,6 +35,7 @@ public class AuthServiceImpl implements AuthService {
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final TokenProvider tokenProvider;
 	private final TokenUtil tokenUtil;
+	private final UserUtil userUtil;
 
 	@Transactional
 	@Override
@@ -44,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 		// 비밀번호 암호화
 		String encodedPassword = bCryptPasswordEncoder.encode(signupRequest.getPassword());
 
-		signupRequest.setInfo(encodedPassword, UserUtil.randomNickname());
+		signupRequest.setInfo(encodedPassword, userUtil.randomNickname());
 
 		return userRepository.save(User.from(signupRequest)).getLoginId();
 	}
@@ -98,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
 	@Transactional
 	@Override
 	public String quit() throws IOException {
-		User findUser = UserUtil.getLoginUser(userRepository);
+		User findUser = userUtil.getLoginUser();
 
 		FileUtil.deleteBeforeFile(findUser.getSavedFileName());
 		findUser.initializeUserInfo();

@@ -12,4 +12,5 @@ public interface RoomModifyService {
 	RoomDto.TimeResponse setStartTime(RoomDto.TimeRequest timeRequest);
 
 	void deleteRoom(final RoomDto.Request request);
+	String inviteUserToRoom(RoomDto.Request request);
 }

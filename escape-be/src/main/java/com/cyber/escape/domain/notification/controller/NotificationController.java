@@ -38,18 +38,16 @@ public class NotificationController {
     public SseEmitter subscribe(@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId){
         // Long id = 12L;
         //Long id = jwtUtil.getLoginMemberId();
-        String uuid = UserUtil.getUserUuid();
-        log.info("subscribe !!! uuid : {}, Last-Event-ID : {}", uuid, lastEventId);
-        SseEmitter sseEmitter = notificationService.subscribe(uuid, lastEventId);
+        SseEmitter sseEmitter = notificationService.subscribe(lastEventId);
 
         log.info("NotificationController ============ subscribe completed, sseEmitter : {}", sseEmitter);
         return sseEmitter;
     }
 
     @GetMapping("/list")
-    public ApiResponse<List<NotifyDto.Response>> getUnreadNotifyList(@RequestParam String loginId){
+    public ApiResponse<List<Object>> getUnreadNotifyList(){
         log.info("NotificationController ========== getNotReadNoteList() start ..");
-        return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList(loginId));
+        return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList());
     }
 
     @PostMapping("/read")
