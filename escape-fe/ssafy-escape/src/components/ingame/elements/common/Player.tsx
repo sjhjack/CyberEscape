@@ -16,10 +16,12 @@ const Player = (props: any) => {
   const [ref, api] = useSphere((index) => ({
     mass: 1,
     type: "Dynamic",
+    restitution: 0,
     ...props,
   }))
 
-  const { forward, backward, left, right, jump } = usePlayerControls()
+  // const { forward, backward, left, right, jump } = usePlayerControls()
+  const { forward, backward, left, right } = usePlayerControls()
   const velocity = useRef([0, 0, 0])
   useEffect(() => api.velocity.subscribe((v) => (velocity.current = v)), [])
 
@@ -38,8 +40,8 @@ const Player = (props: any) => {
     speed.fromArray(velocity.current)
 
     api.velocity.set(direction.x, velocity.current[1], direction.z)
-    if (jump && Math.abs(Number(velocity.current[1].toFixed(2))) < 0.05)
-      api.velocity.set(velocity.current[0], 5, velocity.current[2])
+    // if (jump && Math.abs(Number(velocity.current[1].toFixed(2))) < 0.05)
+    //   api.velocity.set(velocity.current[0], 5, velocity.current[2])
   })
 
   return (
