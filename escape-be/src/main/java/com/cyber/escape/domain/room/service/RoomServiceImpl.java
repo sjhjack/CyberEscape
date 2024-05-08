@@ -2,9 +2,6 @@ package com.cyber.escape.domain.room.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cyber.escape.domain.notification.document.Notify;
+import com.cyber.escape.domain.notification.service.NotificationService;
 import com.cyber.escape.domain.room.data.RoomUpdateSetting;
 import com.cyber.escape.domain.room.dto.Pagination;
 import com.cyber.escape.domain.room.dto.PagingDto;
@@ -40,20 +39,23 @@ import lombok.extern.slf4j.Slf4j;
 public class RoomServiceImpl implements RoomService {
 	private static final String MATCHING_QUEUE_KEY = "matching_queue";
 	private static final Long[] themaIds = {1L, 2L, 3L};	// Todo : 값 변경
-	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
+	private final RoomRepository roomRepository;
 	private final ThemaRepository themaRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
+	private final NotificationService notificationService;
+	private final UserUtil userUtil;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	@Transactional
 	public void addPlayerToMatchingQueue() {
 		ListOperations<String, String> listOperations = redisTemplate.opsForList();
-		listOperations.rightPush(MATCHING_QUEUE_KEY, UserUtil.getLoginUserUuid(userRepository));
+		listOperations.rightPush(MATCHING_QUEUE_KEY, userUtil.getLoginUserUuid());
 	}
 
 	@Scheduled(fixedDelay = 1000) // 1초마다 실행
 	public void matchPlayers() {
+		log.info("매치 메이킹 탐색");
 		ListOperations<String, String> listOperations = redisTemplate.opsForList();
 
 		if(listOperations.size(MATCHING_QUEUE_KEY) > 2) {
@@ -74,6 +76,7 @@ public class RoomServiceImpl implements RoomService {
 			createRoom(postRequest);
 		}
 	}
+
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
@@ -100,7 +103,7 @@ public class RoomServiceImpl implements RoomService {
 	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
 		String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 
-		User host = UserUtil.getLoginUser(userRepository);
+		User host = userUtil.getLoginUser();
 		log.info("hostUuid : {}", host.getUuid());
 
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
@@ -131,7 +134,7 @@ public class RoomServiceImpl implements RoomService {
 		// 방장이 나갔을 때 말고는 삭제할 일이 없는거 아닌가?
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
-		User findUser = UserUtil.getLoginUser(userRepository);
+		User findUser = userUtil.getLoginUser();
 
 		if(findUser.getId() == findRoom.getHostId()){
 			roomRepository.delete(findRoom);
@@ -143,9 +146,11 @@ public class RoomServiceImpl implements RoomService {
 		}
 	}
 
-	public void inviteUserToRoom(final RoomDto.Request request) {
+	public String inviteUserToRoom(final RoomDto.Request request) {
 		// 알림 전송 및 MongoDB에 저장
 		// 이 부분에 알림 send 메소드 넣으면 끝
+		notificationService.send(request.getUserUuid(), request.getRoomUuid(), Notify.NotificationType.GAME, "게임 요청입니다.");
+		return "";
 	}
 
 	public void acceptInvitation(final RoomDto.Request request) {
@@ -187,7 +192,7 @@ public class RoomServiceImpl implements RoomService {
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
-		User user = UserUtil.getLoginUser(userRepository);
+		User user = userUtil.getLoginUser();
 
 		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
@@ -208,7 +213,7 @@ public class RoomServiceImpl implements RoomService {
 		// host인 경우만 강퇴 가능 -> validation check 필요
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
-		User host = UserUtil.getLoginUser(userRepository);
+		User host = userUtil.getLoginUser();
 
 		if (host.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
@@ -237,7 +242,7 @@ public class RoomServiceImpl implements RoomService {
 	public UserDto.Response changeHost(final RoomDto.Request request) {
 		// host인 경우만 변경 가능 -> validation check 필요
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
-		User host = UserUtil.getLoginUser(userRepository);
+		User host = userUtil.getLoginUser();
 
 		if(host.getId() == findRoom.getHostId()){
 			log.info("RoomServiceImpl ========== 방장입니다.");

@@ -21,6 +21,8 @@ public enum ExceptionCodeSet {
 
     NICKNAME_DUPLICATED(HttpStatus.CONFLICT, 4090, "이미 존재하는 닉네임입니다."),
     LOGINID_DUPLICATED(HttpStatus.NOT_FOUND, 4091, "이미 존재하는 아이디입니다."),
+    INVALID_LOGINID_FORMAT(HttpStatus.BAD_REQUEST, 4092, "아이디 형식이 올바르지 않습니다."),
+    INVALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, 4093, "비밀번호 형식이 올바르지 않습니다."),
 
     ENTITY_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "정보가 존재하지 않습니다."),
 
