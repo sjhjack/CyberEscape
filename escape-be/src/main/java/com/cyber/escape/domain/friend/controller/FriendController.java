@@ -25,7 +25,7 @@ public class FriendController {
 
 
     @PostMapping("/acceptance")
-    public ApiResponse<String> makeFriend(@RequestBody FriendDto.FriendRelationRequest req){
+    public ApiResponse<String> makeFriendRelationship(@RequestBody FriendDto.FriendRelationRequest req){
         friendService.makeFriend(req);
         return new ApiResponse<>(HttpStatus.OK.value(), "친구 등록 성공", "");
     }
@@ -43,8 +43,8 @@ public class FriendController {
     }
 
     @PostMapping("/remove")
-    public ApiResponse removeRelationship(@RequestBody Map<String, String> friendInfo){
-        return new ApiResponse<>(HttpStatus.OK.value(), "내 친구 목록을 가져왔습니다.", friendService.removeFriend(friendInfo));
+    public ApiResponse removeFriendRelationship(@RequestBody Map<String, String> friendInfo){
+        return new ApiResponse<>(HttpStatus.OK.value(), "친구를 삭제했습니다.", friendService.removeFriend(friendInfo));
     }
 
 

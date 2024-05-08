@@ -9,16 +9,13 @@ public class FriendDto {
     @Getter
     @Builder
     public static class FriendRelationRequest{
-        //private final String fromUserUuid;
         private String toUserUuid;
 
         public FriendRelationRequest(){
-
         }
 
         public FriendRelationRequest(String toUserUuid){
             this.toUserUuid = toUserUuid;
-
         }
     }
 
@@ -44,6 +41,4 @@ public class FriendDto {
             this.nickname = nickname;
         }
     }
-
-
 }
