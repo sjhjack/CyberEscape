@@ -40,7 +40,7 @@ public class GameHistoryService {
         User user = userRepository.findUserByUuid(gameHistoryDto.getUserUuid())
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
 
-        Thema thema = themaRepository.findByUuid(gameHistoryDto.getThemaUuid())
+        Thema thema = themaRepository.findByCategory(gameHistoryDto.getThemaCategory())
                 .orElseThrow(() -> new RuntimeException("일치하는 테마 없음"));
 
         GameHistory gameHistory = GameHistory.builder()
@@ -52,9 +52,9 @@ public class GameHistoryService {
         //조건문 최고기록 넘는지?
 
         String userUuid = user.getUuid();
-        String themaUuid = thema.getUuid();
+        int themaCategory = thema.getCategory();
 
-        Optional<Ranking> existingRanking = rankingRepository.findByUserUuidAndThemaUuid(userUuid, themaUuid);
+        Optional<Ranking> existingRanking = rankingRepository.findByUserUuidAndThemaCategory(userUuid, themaCategory);
         if (existingRanking.isPresent()) {
             Ranking ranking = existingRanking.get();
             // 최고 기록을 갱신해야 하는지 확인
@@ -82,7 +82,7 @@ public class GameHistoryService {
 
 
         //전체 랭킹
-        List<Object> rankingObjects = rankingRepository.findAllByThemaUuidOrderByBestTimeAsc(req.getThemaUuid());
+        List<Object> rankingObjects = rankingRepository.findAllByCategoryOrderByBestTimeAsc(req.getThemaCategory());
 
         List<RankingDto.Response> rankings = new ArrayList<>();
         int rank = startIndex + 1;
@@ -121,17 +121,20 @@ public class GameHistoryService {
 
     public RankingDto.UserRankingDto getMyRankingByUuid(RankingDto.GetMyRanking req){
         //내 랭킹
-        Optional<Object> myRankingObject = rankingRepository.getUserRankings(req.getUserUuid(), req.getThemaUuid());
+        // Todo : themauuid -> thema id로 변경
+        Optional<Object> myRankingObject = rankingRepository.getUserRankings(req.getUserUuid(), req.getThemaCategory());
         String myNickname = "";
+        String profileUrl = "";
         Time myBestTime = null;
-        int myCategory = 0;
+        int myCategory = -1;
         int myRank = 0; // 내 랭킹 초기화
         // 내 랭킹 정보가 있는 경우에만 값을 설정
         if (myRankingObject.isPresent()) {
             Object[] myRankingArr = (Object[]) myRankingObject.get();
             myNickname = (String) myRankingArr[0];
-            myBestTime = (Time) myRankingArr[1];
-            myCategory = (int) myRankingArr[2];
+            profileUrl = (String) myRankingArr[1];
+            myBestTime = (Time) myRankingArr[2];
+            myCategory = (int) myRankingArr[3];
         }
         else {
             // 내 랭킹 정보가 없는 경우
@@ -139,13 +142,14 @@ public class GameHistoryService {
             RankingDto.UserRankingDto dto = RankingDto.UserRankingDto.builder()
                     .rank(-1)
                     .nickname("")
+                    .profileUrl("")
                     .bestTime(Time.valueOf("00:00:00"))
-                    .category(ThemaDto.ThemaType.getNameByOrder(myCategory))
+                    .thema(ThemaDto.ThemaType.getNameByOrder(myCategory))
                     .build();
             return dto;
         }
         //전체 랭킹
-        List<Object> rankingObjects = rankingRepository.findAllByThemaUuidOrderByBestTimeAsc(req.getThemaUuid());
+        List<Object> rankingObjects = rankingRepository.findAllByCategoryOrderByBestTimeAsc(req.getThemaCategory());
 
         int rank = 1;
         int rankCount = 0;
@@ -179,9 +183,10 @@ public class GameHistoryService {
         //내 랭킹 + 최고기록 정보
         return RankingDto.UserRankingDto.builder()
                  .rank(myRank)
+                .profileUrl(profileUrl)
                  .nickname(myNickname)
                  .bestTime(myBestTime)
-                 .category(ThemaDto.ThemaType.getNameByOrder(myCategory))
+                 .thema(ThemaDto.ThemaType.getNameByOrder(myCategory))
                  .build();
     }
 }
