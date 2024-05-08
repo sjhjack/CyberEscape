@@ -9,6 +9,7 @@ const Door3 = ({
   position,
   rotation,
   setSubtitle,
+  setInteractNum,
 }: any) => {
   const { scene, animations } = useGLTF("/glb/door5.glb", true)
   const doorRef = useRef()
@@ -93,6 +94,12 @@ const Door3 = ({
         position={position}
         rotation={rotation}
         onClick={handleClick}
+        onPointerOver={() => {
+          setInteractNum(3)
+        }}
+        onPointerOut={() => {
+          setInteractNum(1)
+        }}
       />
       <CockpitDoorBox
         sequences={sequences}

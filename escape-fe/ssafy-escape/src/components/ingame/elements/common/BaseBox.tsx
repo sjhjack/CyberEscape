@@ -7,7 +7,7 @@ const BaseBox = ({ ...props }) => {
     type: "Static",
     mass: 10,
     onCollide: (e) => {
-      console.log(e)
+      // console.log(e)
     },
     ...props,
   }))
