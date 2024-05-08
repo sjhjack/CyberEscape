@@ -40,7 +40,7 @@ const Login = ({ handleLoginback }: LoginProps) => {
 
     // 아이디 유효성 검사 통과 시
     try {
-      login(loginId, password)
+      await login(loginId, password)
       Swal.fire("로그인 성공")
       router.push("/main")
     } catch (error) {

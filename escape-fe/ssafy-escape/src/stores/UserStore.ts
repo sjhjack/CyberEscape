@@ -4,10 +4,10 @@ import postLogout from "../services/user/postLogout"
 import postLogin from "../services/user/postLogin"
 
 interface UserState {
-  loginId: string | null
   isLogin: boolean
-  // nickname: string | null
-  // imgUrl: string | null
+  userUuid: string | null
+  nickname: string | null
+  profileUrl: string | null
   accessToken: string | null
   setAccessToken: (token: string | null) => void
   login: (loginId: string, password: string) => void
@@ -16,10 +16,10 @@ interface UserState {
 const useUserStore = create<UserState>()(
   persist(
     (set): UserState => ({
-      loginId: null,
       isLogin: false,
-      // nickname: null,
-      // imgUrl: null,
+      userUuid: null,
+      nickname: null,
+      profileUrl: null,
       accessToken: null,
       setAccessToken: (token) => set({ accessToken: token }),
 
@@ -29,8 +29,9 @@ const useUserStore = create<UserState>()(
           if (response.accessToken) {
             set({
               isLogin: true,
-              // nickname: response.nickname,
-              // imgUrl: response.imgUrl,
+              userUuid: response.userUuid,
+              nickname: response.nickname,
+              profileUrl: response.profileUrl,
               accessToken: response.accessToken,
             })
           } else {
@@ -46,10 +47,10 @@ const useUserStore = create<UserState>()(
         try {
           await postLogout()
           set({
-            loginId: null,
             isLogin: false,
-            // nickname: null,
-            // imgUrl: null,
+            userUuid: null,
+            nickname: null,
+            profileUrl: null,
             accessToken: null,
           })
         } catch (error) {
