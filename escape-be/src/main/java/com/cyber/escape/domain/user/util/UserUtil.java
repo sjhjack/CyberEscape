@@ -14,7 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class UserUtil {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserUtil(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * login_id로 사용자 검색
