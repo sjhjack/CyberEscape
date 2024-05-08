@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ThemaRepository extends JpaRepository<Thema, Long> {
     Optional<Thema> findByUuid(String uuid);
+    Optional<Thema> findByCategory(int category);
 
     @Query(value = "SELECT * FROM thema " +
                     "WHERE category IN (1, 4, 7)", nativeQuery = true)
