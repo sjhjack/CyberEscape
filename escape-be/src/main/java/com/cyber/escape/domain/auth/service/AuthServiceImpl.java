@@ -27,6 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @Slf4j
 public class AuthServiceImpl implements AuthService {
+	private static final String LOGIN_ID_PATTERN = "^[a-zA-Z0-9]{3,20}$";
+	private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9]{6,20}$";
+
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -37,8 +40,8 @@ public class AuthServiceImpl implements AuthService {
 	@Transactional
 	@Override
 	public String signup(UserDto.SignupRequest signupRequest) {
-		// loginId 중복 체크
-		loginIdValidationCheck(signupRequest.getLoginId());
+		// 유효성 검사
+		signupValidationCheck(signupRequest);
 		// 비밀번호 암호화
 		String encodedPassword = bCryptPasswordEncoder.encode(signupRequest.getPassword());
 
@@ -57,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
-		signinResponse.setUserInfo(UserUtil.getLoginUser(userRepository));
+		signinResponse.setUserInfo(userUtil.getLoginUser());
 
 		// Refresh Token Redis에 저장
 		tokenUtil.setRefreshToken(signinResponse.getRefreshToken());
@@ -105,9 +108,23 @@ public class AuthServiceImpl implements AuthService {
 		return "";
 	}
 
+	private void signupValidationCheck(UserDto.SignupRequest signupRequest) {
+		loginIdValidationCheck(signupRequest.getLoginId());
+		passwordValidationCheck(signupRequest.getPassword());
+	}
+
 	private void loginIdValidationCheck(String loginId) {
 		if(userRepository.existsByLoginId(loginId)) {
 			throw new UserException(ExceptionCodeSet.LOGINID_DUPLICATED);
+		}
+		if (!loginId.matches(LOGIN_ID_PATTERN)) {
+			throw new UserException(ExceptionCodeSet.INVALID_LOGINID_FORMAT);
+		}
+	}
+
+	private void passwordValidationCheck(String password) {
+		if (!password.matches(PASSWORD_PATTERN)) {
+			throw new UserException(ExceptionCodeSet.INVALID_PASSWORD_FORMAT);
 		}
 	}
 }
