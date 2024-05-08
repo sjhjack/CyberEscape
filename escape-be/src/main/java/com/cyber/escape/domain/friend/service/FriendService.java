@@ -57,11 +57,11 @@ public class FriendService {
     }
 
     public List<FriendDto.FriendListResponse> getMyFriendList(int pageNumber){
-        //String userUuid = userUtil.getLoginUserUuid();
-        String userUuid = "c83e73a6-0470-11ef-9c95-0242ac101404";
+        String userUuid = userUtil.getLoginUserUuid();
+
         Long userId = idFinder.findIdByUuid(userUuid, User.class);
 
-        int pageSize = 20;
+        int pageSize = 10;
         int startIndex = (pageNumber - 1) * pageSize;
         //전체 랭킹
 
