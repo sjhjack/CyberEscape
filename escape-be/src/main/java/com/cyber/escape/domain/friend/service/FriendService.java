@@ -6,6 +6,7 @@ import com.cyber.escape.domain.friend.repository.FriendRepository;
 import com.cyber.escape.domain.friend.repository.FriendRepositoryImpl;
 import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.service.NotificationService;
+import com.cyber.escape.domain.rank.dto.RankingDto;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,12 +56,24 @@ public class FriendService {
         return "";
     }
 
-    public List<FriendDto.FriendListResponse> getMyFriendList(){
-        String userUuid = userUtil.getLoginUserUuid();
-
+    public List<FriendDto.FriendListResponse> getMyFriendList(int pageNumber){
+        //String userUuid = userUtil.getLoginUserUuid();
+        String userUuid = "c83e73a6-0470-11ef-9c95-0242ac101404";
         Long userId = idFinder.findIdByUuid(userUuid, User.class);
 
-        return friendRepositoryImpl.findFriendList(userId);
+        int pageSize = 20;
+        int startIndex = (pageNumber - 1) * pageSize;
+        //전체 랭킹
+
+        List<FriendDto.FriendListResponse> friendList = friendRepositoryImpl.findFriendList(userId);
+
+        int endIndex = Math.min(startIndex + pageSize, friendList.size());
+
+        for (int i = startIndex; i < endIndex; i++) {
+            friendList.add(friendList.get(i));
+        }
+
+        return friendList;
     }
 
     public String removeFriend(Map<String, String> req){
