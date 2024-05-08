@@ -4,7 +4,8 @@ import StyledComponentsRegistry from "../lib/registry"
 import QueryProvider from "../hooks/QueryClientProvider"
 import "./globals.css"
 import { usePathname } from "next/navigation"
-
+import useUserStore from "@/stores/UserStore"
+useUserStore
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
 })
@@ -17,13 +18,14 @@ const Layout = ({
   modal: React.ReactNode
 }) => {
   const pathname = usePathname()
+  const { isLogin } = useUserStore()
   return (
     <html>
       <body className={notoSansKr.className}>
         <QueryProvider>
           <StyledComponentsRegistry>
             {children}
-            {pathname !== "/ingame" && modal}
+            {pathname !== "/ingame" && isLogin && modal}
           </StyledComponentsRegistry>
         </QueryProvider>
       </body>

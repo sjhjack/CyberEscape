@@ -36,6 +36,7 @@ const Room = () => {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
+      backgroundColor="none"
     >
       {roomData?.data.roomList.map((room) => (
         <RoomList key={room.uuid} roomData={room} />
