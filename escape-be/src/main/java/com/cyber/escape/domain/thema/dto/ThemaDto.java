@@ -22,8 +22,6 @@ public class ThemaDto {
                 .description(thema.getDescription())
                 .build();
     }
-
-
     public enum ThemaType{
 
         UNKNOWN("테마가 선택되지 않았습니다", -1),
@@ -34,6 +32,7 @@ public class ThemaDto {
         TALE_HERO("싸피 테마 - 교육생", 5),
         TALE_VILLAIN("싸피 테마 - 컨설턴트", 6),
         SSAFY("우주 테마", 7);
+
         private String name;
         private int order;
 
