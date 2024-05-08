@@ -9,20 +9,21 @@ import Checkbox from "@mui/material/Checkbox"
 import * as S from "@/app/@modal/main/multi/create/createStyle"
 import { useState, useEffect } from "react"
 import useIngameThemeStore from "@/stores/IngameTheme"
+import useUserStore from "@/stores/UserStore"
 import postCreateRoom from "@/services/game/room/postCreateRoom"
 interface postCreateRoomRequestProps {
   title: string
-  themaId: number
+  themaId: string
   password: string
   hostUuid: string
 }
-const themes: Array<string> = ["horror", "ssafy", "space"]
 const Create = () => {
   const router = useRouter()
   const [title, setTitle] = useState<string>("")
   const [secretMode, setSecretMode] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
   const { selectedTheme } = useIngameThemeStore()
+  const { userUuid } = useUserStore()
   const handleSecretMode = (secretMode: boolean): void => {
     setSecretMode(!secretMode)
   }
@@ -36,12 +37,11 @@ const Create = () => {
     return title.trim() === "" || (secretMode && password.trim() === "")
   }
 
-  const hostUuid: string = ""
   const data: postCreateRoomRequestProps = {
     title: title,
-    themaId: selectedTheme ? themes.indexOf(selectedTheme) : 1,
+    themaId: selectedTheme ? selectedTheme : "1",
     password: password,
-    hostUuid: hostUuid,
+    hostUuid: userUuid ? userUuid : "",
   }
   const createRoom = async () => {
     if (buttonDisabled()) {

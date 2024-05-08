@@ -18,20 +18,21 @@ interface CarouselProps {
 const themeData: CardInfo[] = [
   {
     title: "공포",
-    time: "10-15분",
-    content: "무서운 거임",
+    time: "10분",
+    content: "정신을 차려보니 폐병원에 누워있다. 어서 이 곳을 탈출해",
     image: "/image/1.png",
   },
   {
     title: "SSAFY",
-    time: "10-15분",
-    content: "탈출 마렵다",
+    time: "10분",
+    content:
+      "날씨도 좋은데 도망가고 싶은 걸? 프로님의 눈길을 피해 멀티캠퍼스를 탈출하라!",
     image: "/image/2.png",
   },
   {
     title: "우주",
-    time: "10-15분",
-    content: "우주선에서 탈출하라!",
+    time: "10분",
+    content: "오희주의 걸작품 Spaceship! 우주선에서 탈출하라!",
     image: "/image/3.png",
   },
 ]
