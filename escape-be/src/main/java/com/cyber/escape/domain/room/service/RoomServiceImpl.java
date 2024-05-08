@@ -51,9 +51,11 @@ public class RoomServiceImpl implements RoomService {
 	public void addPlayerToMatchingQueue() {
 		ListOperations<String, String> listOperations = redisTemplate.opsForList();
 		listOperations.rightPush(MATCHING_QUEUE_KEY, userUtil.getLoginUserUuid());
+		// listOperations.rightPush(MATCHING_QUEUE_KEY, userUuid);
 	}
 
 	@Scheduled(fixedDelay = 1000) // 1초마다 실행
+	@Transactional
 	public void matchPlayers() {
 		log.info("매치 메이킹 탐색");
 		ListOperations<String, String> listOperations = redisTemplate.opsForList();
@@ -61,6 +63,9 @@ public class RoomServiceImpl implements RoomService {
 		if(listOperations.size(MATCHING_QUEUE_KEY) > 2) {
 			String user1Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
 			String user2Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
+
+			log.info("user1Uuid : {}", user1Uuid);
+			log.info("user2Uuid : {}", user2Uuid);
 
 			User host = userRepository.findUserByUuid(user1Uuid)
 				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
@@ -70,10 +75,11 @@ public class RoomServiceImpl implements RoomService {
 			RoomDto.PostRequest postRequest = RoomDto.PostRequest.builder()
 				.title(host.getNickname() + "의 대기실")
 				.themaId(themaId)
+				.password("")
 				.hostUuid(user1Uuid)
 				.build();
 
-			createRoom(postRequest);
+			createRoom(postRequest, 2);
 		}
 	}
 
@@ -100,10 +106,12 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	@Override
-	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
+	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest, int capacity) {
 		String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 
 		User host = userUtil.getLoginUser();
+		// User host = userRepository.findUserByUuid(postRequest.getHostUuid())
+		// 	.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
 		log.info("hostUuid : {}", host.getUuid());
 
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
@@ -113,7 +121,7 @@ public class RoomServiceImpl implements RoomService {
 			.title(postRequest.getTitle())
 			// .password(postRequest.getPassword())
 			.password(encryptPassword)
-			.capacity(1)
+			.capacity(capacity)
 			.thema(thema)
 			.host(host)
 			.creator(host)
@@ -125,6 +133,12 @@ public class RoomServiceImpl implements RoomService {
 		// Todo : 채팅방 생성해서 저장하고 채팅방 Uuid 가져오기
 
 		return RoomDto.PostResponse.of(newRoom.getUuid(), "chatRoomuuid");
+	}
+
+	@Transactional
+	@Override
+	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
+		return createRoom(postRequest, 1);
 	}
 
 	@Transactional
