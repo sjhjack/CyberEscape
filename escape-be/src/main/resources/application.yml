@@ -16,12 +16,14 @@ spring:
       host: ${REDIS_HOST} # Redis 서버 호스트 주소
       port: 6379      # Redis 서버 포트
       database: 0
+    mongodb:
+      uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority
+      database: ${MONGO_DBNAME}
+
   servlet:
     multipart:
       max-file-size: 10MB
-#    mongodb:
-#      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority&appName=${MONGO_APPNAME}
-#      database: ${MONGO_DBNAME}
+
 rabbit:
   chat-queue-name: ${MQ_QUEUE_NAME}
   exchange-name: ${MQ_EXCHANGE_NAME}

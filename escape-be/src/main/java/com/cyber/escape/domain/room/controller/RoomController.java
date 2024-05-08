@@ -62,4 +62,9 @@ public class RoomController {
 	public ApiResponse<RoomDto.TimeResponse> setStartTime(@RequestBody RoomDto.TimeRequest timeRequest) {
 		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 게임 시작 시간 저장 성공", roomModifyService.setStartTime(timeRequest));
 	}
+
+	@PostMapping("/invitation")
+	public ApiResponse<String> inviteUser(@RequestBody RoomDto.Request inviteRequest){
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실로 초대 요청을 전송했습니다.", roomModifyService.inviteUserToRoom(inviteRequest));
+	}
 }

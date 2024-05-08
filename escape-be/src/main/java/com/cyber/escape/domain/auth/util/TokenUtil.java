@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TokenUtil {
 	private final RedisTemplate<String, String> redisTemplate;
-	private final UserRepository userRepository;
+	private final UserUtil userUtil;
 
 	public void setRefreshToken(String refreshToken) {
 		redisTemplate.opsForValue().set(getKey(), refreshToken);
@@ -29,7 +29,7 @@ public class TokenUtil {
 	}
 
 	private String getKey() {
-		return "token" + UserUtil.getLoginUserUuid(userRepository);
+		return "token" + userUtil.getLoginUserUuid();
 	}
 
 	public void checkRefreshTokenEquals(String refreshToken) {
