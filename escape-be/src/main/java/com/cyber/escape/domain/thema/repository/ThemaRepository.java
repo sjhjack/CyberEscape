@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ThemaRepository extends JpaRepository<Thema, Long> {
     Optional<Thema> findByUuid(String uuid);
+    Optional<Thema> findByCategory(int category);
 }
