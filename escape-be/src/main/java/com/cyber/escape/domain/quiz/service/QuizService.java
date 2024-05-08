@@ -32,13 +32,13 @@ public class QuizService {
     private RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz;
     private RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore;
 //    private RedisTemplate<String, List<Boolean>> solvedQuiz;
-    private UserUtil userUtil;
+    private final UserUtil userUtil;
     public QuizService(QuizRepository quizRepository,
                        FinalAnswerRepository finalAnswerRepository,
                        QuizMapper quizMapper,
                        IdFinder idFinder,
                        RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz,
-                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore) {
+                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore, UserUtil userUtil) {
 
         this.quizRepository = quizRepository;
         this.finalAnswerRepository = finalAnswerRepository;
@@ -46,20 +46,31 @@ public class QuizService {
         this.idFinder = idFinder;
         this.mappedClueWithQuiz = mappedClueWithQuiz;
         this.finalAnswerStore = finalAnswerStore;
+        this.userUtil = userUtil;
     }
 
     // 퀴즈를 뽑는 로직
     // 여기서 주어지는 themaUuid는 설명 칸에 있는 uuid일 것이므로 무조건 role 정보가 필요함
-    public List<QuizDto.QuizSubmissionResDto> getQuizzes(String themaUuid, int role) throws QuizException{
+    public List<QuizDto.QuizSubmissionResDto> getQuizzes(int category) throws QuizException{
         List<QuizDto.QuizSubmissionResDto> result = new ArrayList<>();
 
-        String userUuid = userUtil.getLoginUserUuid();
+        String userUuid = "c83e73a6-0470-11ef-9c95-0242ac101404";
 
-        Long themaId = idFinder.findIdByUuid(themaUuid, Thema.class) + role;
-        log.info("themaId : {}", themaId);
 
-        List<Quiz> quizList = quizRepository.getQuizzes(themaId)
-                .orElseThrow(()-> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+        List<Quiz> diff1 = quizRepository.getQuizzezByCategory(category, 1)
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+
+        List<Quiz> diff2 = quizRepository.getQuizzezByCategory(category, 2)
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+
+        List<Quiz> diff3 = quizRepository.getQuizzezByCategory(category, 3)
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+
+        List<Quiz> quizList = new ArrayList<>();
+
+        quizList.add(getRandomQuiz(diff1));
+        quizList.add(getRandomQuiz(diff2));
+        quizList.add(getRandomQuiz(diff3));
 
         FinalAnswer finalAnswer = finalAnswerRepository.findRandomAnswer()
                 .orElseThrow(()-> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
@@ -67,17 +78,27 @@ public class QuizService {
         // 레디스에 최종정답 및 현재 정답 정보 저장
         storeAnswersToRedis(userUuid, quizList, finalAnswer);
 
-        for(Quiz q : quizList){
-            result.add(quizMapper.toDto(q));
+        for(Quiz quiz : quizList){
+            result.add(quizMapper.toDto(quiz));
         }
         //result = quizList.stream().map(quizMapper::toDto).toList();
         result.add(new QuizDto.QuizSubmissionResDto(finalAnswer.getUuid(), "마지막 문제입니다. 풀고 탈출하세요.", "", 4));
 
         return result;
-
     }
 
-    public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
+    public Quiz getRandomQuiz(List<Quiz> quizList){
+            Random random = new Random();
+
+            int size = quizList.size();
+
+            // 0 ~ size - 1의 값을 반환한다.
+            int randomIdx = random.nextInt(size);
+            return quizList.get(randomIdx);
+        }
+
+
+        public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
         String userUuid = userUtil.getLoginUserUuid();
 
         // 현재 제출한 퀴즈 데이터 불러오기
