@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.domain.user.util.UserUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.service.NotificationService;
@@ -22,8 +24,6 @@ import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
-import com.cyber.escape.domain.user.repository.UserRepository;
-import com.cyber.escape.domain.user.util.UserUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +34,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomService {
-	private final RoomRepository roomRepository;
 	private final UserRepository userRepository;
+	private final RoomRepository roomRepository;
 	private final ThemaRepository themaRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
 	private NotificationService notificationService;
-	// private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
+	private final UserUtil userUtil;
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
@@ -66,7 +66,7 @@ public class RoomServiceImpl implements RoomService {
 	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest) {
 		String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 
-		User host = UserUtil.getLoginUser(userRepository);
+		User host = userUtil.getLoginUser();
 		log.info("hostUuid : {}", host.getUuid());
 
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
@@ -97,7 +97,7 @@ public class RoomServiceImpl implements RoomService {
 		// 방장이 나갔을 때 말고는 삭제할 일이 없는거 아닌가?
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
-		User findUser = UserUtil.getLoginUser(userRepository);
+		User findUser = userUtil.getLoginUser();
 
 		if(findUser.getId() == findRoom.getHostId()){
 			roomRepository.delete(findRoom);
@@ -155,7 +155,7 @@ public class RoomServiceImpl implements RoomService {
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
-		User user = UserUtil.getLoginUser(userRepository);
+		User user = userUtil.getLoginUser();
 
 		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
@@ -176,7 +176,7 @@ public class RoomServiceImpl implements RoomService {
 		// host인 경우만 강퇴 가능 -> validation check 필요
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
-		User host = UserUtil.getLoginUser(userRepository);
+		User host = userUtil.getLoginUser();
 
 		if (host.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
@@ -205,7 +205,7 @@ public class RoomServiceImpl implements RoomService {
 	public UserDto.Response changeHost(final RoomDto.Request request) {
 		// host인 경우만 변경 가능 -> validation check 필요
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
-		User host = UserUtil.getLoginUser(userRepository);
+		User host = userUtil.getLoginUser();
 
 		if(host.getId() == findRoom.getHostId()){
 			log.info("RoomServiceImpl ========== 방장입니다.");
