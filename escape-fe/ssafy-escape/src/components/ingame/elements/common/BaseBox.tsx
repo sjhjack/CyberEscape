@@ -6,6 +6,7 @@ const BaseBox = ({ ...props }) => {
   const [ref] = useBox((index) => ({
     type: "Static",
     mass: 10,
+    restitution: 0,
     onCollide: (e) => {
       // console.log(e)
     },
