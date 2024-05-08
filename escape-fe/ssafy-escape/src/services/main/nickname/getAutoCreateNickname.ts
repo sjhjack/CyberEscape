@@ -1,35 +1,30 @@
 import API_PATH from "@/constants/path"
 import api from "@/services/api"
 
-interface postAutoCreateNicknameBodyProps {
+interface getAutoCreateNicknameBodyProps {
   status: number
   message: string
-  data: postAutoCreateNicknameDataProps
-}
-
-interface postAutoCreateNicknameDataProps {
-  words: string[]
-  seed: string
+  data: string
 }
 
 // 닉네임 자동 생성
-const postAutoCreateNickname =
-  async (): Promise<postAutoCreateNicknameDataProps> => {
+const getAutoCreateNickname =
+  async (): Promise<getAutoCreateNicknameBodyProps> => {
     try {
-      const response = await api.post<postAutoCreateNicknameBodyProps>(
+      const response = await api.get<getAutoCreateNicknameBodyProps>(
         API_PATH.MAIN.NICKNAME.AUTO_CREATE,
       )
       if (response.status === 400) {
         throw new Error(`오류: ${response.data.message}`)
       }
-      return response.data.data
+      return response.data
     } catch (error) {
       console.error(error)
       throw error
     }
   }
 
-export default postAutoCreateNickname
+export default getAutoCreateNickname
 
 // import dummy from "./postAutoCreateNickname.json"
 // const postAutoCreateNickname = async () => {

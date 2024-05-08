@@ -10,7 +10,7 @@ import FormatTime from "@/hooks/FormatTime"
 import Input from "@/components/common/Input"
 import Button from "@/components/common/Button"
 import postMyRanking from "@/services/main/ranking/postMyRanking"
-import postAutoCreateNickname from "@/services/main/nickname/postAutoCreateNickname"
+import getAutoCreateNickname from "@/services/main/nickname/getAutoCreateNickname"
 import postIsDuplicationNickname from "@/services/main/nickname/postIsDuplicationNickname"
 import patchNicknameChange from "@/services/main/nickname/patchNicknameChange"
 import useUserStore from "@/stores/UserStore"
@@ -86,8 +86,9 @@ const MyProfile = () => {
 
   // 닉네임 자동 생성 버튼 클릭 시
   const handleAutoNicknameClick = async () => {
-    const newNickname = await postAutoCreateNickname()
-    setNewNickname(newNickname.words[0])
+    const response = await getAutoCreateNickname()
+    console.log(response.data)
+    setNewNickname(response.data)
   }
 
   if (isLoading) {
