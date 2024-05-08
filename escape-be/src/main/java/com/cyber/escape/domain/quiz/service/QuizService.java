@@ -32,6 +32,7 @@ public class QuizService {
     private RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz;
     private RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore;
 //    private RedisTemplate<String, List<Boolean>> solvedQuiz;
+    private UserUtil userUtil;
     public QuizService(QuizRepository quizRepository,
                        FinalAnswerRepository finalAnswerRepository,
                        QuizMapper quizMapper,
@@ -52,7 +53,7 @@ public class QuizService {
     public List<QuizDto.QuizSubmissionResDto> getQuizzes(String themaUuid, int role) throws QuizException{
         List<QuizDto.QuizSubmissionResDto> result = new ArrayList<>();
 
-        String userUuid = UserUtil.getUserUuid();
+        String userUuid = userUtil.getLoginUserUuid();
 
         Long themaId = idFinder.findIdByUuid(themaUuid, Thema.class) + role;
         log.info("themaId : {}", themaId);
@@ -77,7 +78,7 @@ public class QuizService {
     }
 
     public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
-        String userUuid = UserUtil.getUserUuid();
+        String userUuid = userUtil.getLoginUserUuid();
 
         // 현재 제출한 퀴즈 데이터 불러오기
         Quiz quiz = quizRepository.findByUuid(req.getQuizUuid())
@@ -125,7 +126,7 @@ public class QuizService {
     }
 
     public QuizDto.QuizHintResDto getHint(String quizUuid){
-        String userUuid = UserUtil.getUserUuid();
+        String userUuid = userUtil.getLoginUserUuid();
 
         Map<String, QuizDataInRedis.MapQuizWithClueData> map = mappedClueWithQuiz.opsForValue().get(userUuid);
 
@@ -163,7 +164,7 @@ public class QuizService {
         String realAnswer = answerInfo.getFinalAnswer().replace(" ", "").trim();
 
         if(realAnswer.equals(submitAnswer)){
-            String userUuid = UserUtil.getUserUuid();
+            String userUuid = userUtil.getLoginUserUuid();
 
             // 레디스에서 유저가 풀던 문제 삭제
             mappedClueWithQuiz.delete(userUuid);
