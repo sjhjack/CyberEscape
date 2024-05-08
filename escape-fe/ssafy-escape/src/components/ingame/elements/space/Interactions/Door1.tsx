@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei"
 import { AnimationMixer } from "three"
 import DoorBox from "../../common/DoorBox"
 
-const Door1 = ({ position, rotation }: any) => {
+const Door1 = ({ position, rotation, setInteractNum }: any) => {
   const { scene, animations } = useGLTF("/glb/door3.glb", true)
   const doorRef = useRef()
   const [isLoaded, setIsLoaded] = useState(false)
@@ -64,6 +64,12 @@ const Door1 = ({ position, rotation }: any) => {
         position={position}
         rotation={rotation}
         onClick={handleClick}
+        onPointerOver={() => {
+          setInteractNum(3)
+        }}
+        onPointerOut={() => {
+          setInteractNum(1)
+        }}
       />
       <DoorBox position={position} args={[10, 15, 2]} color={"red"} />
     </>
