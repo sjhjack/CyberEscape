@@ -54,7 +54,7 @@ services:
         context: ../
         dockerfile: "./docker/dockerfile/nextjs.dockerfile"
       ports:
-        - "5442:3000"
+        - "3000:3000"
 
     mongo:
       image: mongo
