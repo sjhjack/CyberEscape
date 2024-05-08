@@ -69,7 +69,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public String changeNickname(UserDto.UpdateNicknameRequest dto){
-        User user = userRepository.findUserByUuid(dto.getUserUuid())
+
+        String currentUserUuid = userUtil.getLoginUserUuid();
+        User user = userRepository.findUserByUuid(currentUserUuid)
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
 
         String newNickname = dto.getNewNickname();
