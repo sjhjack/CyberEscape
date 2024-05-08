@@ -20,7 +20,7 @@ const SecondProblemModal = ({ onClose }: ProblemProps) => {
   }
   return (
     <MainContainer>
-      <Image src="/image/note.png" alt="노트 이미지" width={600} height={600} />
+      <Image src="/image/note.png" alt="노트 이미지" width={550} height={550} />
       <IconBox onClick={onClose}>
         <CloseIcon sx={{ fontSize: 40 }} />
       </IconBox>
@@ -105,6 +105,7 @@ const ChoiceBox = styled.div`
 const IconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 62px;
-  top: 98px;
+  right: 60px;
+  top: 92px;
+  z-index: 10;
 `
