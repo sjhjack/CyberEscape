@@ -113,6 +113,12 @@ public class UserDto {
     @Builder
     public static class UpdateNicknameRequest{
         private String newNickname;
+		public UpdateNicknameRequest(){
+
+		}
+		public UpdateNicknameRequest(String newNickname){
+			this.newNickname = newNickname;
+		}
     }
 
 
