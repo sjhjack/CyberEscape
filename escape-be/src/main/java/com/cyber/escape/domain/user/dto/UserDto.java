@@ -48,6 +48,9 @@ public class UserDto {
 		private String grantType;
 		private String accessToken;
 		private String refreshToken;
+		private String userUuid;
+		private String nickname;
+		private String profileUrl;
 
 		public static SigninResponse of(
 			final String loginId,
@@ -61,6 +64,12 @@ public class UserDto {
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
 				.build();
+		}
+
+		public void setUserInfo(User user) {
+			this.userUuid = user.getUuid();
+			this.nickname = user.getNickname();
+			this.profileUrl = user.getProfileUrl();
 		}
 	}
 
