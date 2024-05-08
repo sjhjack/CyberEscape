@@ -44,6 +44,12 @@ const API_PATH = {
     INVITED_LIST: "/notification/game",
     INVITED_ACCEPT: "/room/acceptance",
   },
+  INGAME: {
+    QUIZ: "/game/quiz",
+    HINT: "/game/quiz/hint",
+    ANSWER: "/game/quiz/answer",
+    FINAL_ANSWER: "/game/quiz/final/answer",
+  },
 }
 
 export default API_PATH
