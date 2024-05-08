@@ -12,7 +12,7 @@ interface postCreateRoomDataProps {
 }
 interface postCreateRoomRequestProps {
   title: string
-  themaId: number
+  themaId: string
   password: string
   hostUuid: string
 }

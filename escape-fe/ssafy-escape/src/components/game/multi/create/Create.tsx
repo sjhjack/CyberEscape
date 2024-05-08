@@ -12,7 +12,7 @@ import useIngameThemeStore from "@/stores/IngameTheme"
 import postCreateRoom from "@/services/game/room/postCreateRoom"
 interface postCreateRoomRequestProps {
   title: string
-  themaId: number
+  themaId: string
   password: string
   hostUuid: string
 }
@@ -39,7 +39,7 @@ const Create = () => {
   const hostUuid: string = ""
   const data: postCreateRoomRequestProps = {
     title: title,
-    themaId: selectedTheme ? themes.indexOf(selectedTheme) : 1,
+    themaId: selectedTheme ? selectedTheme : "1",
     password: password,
     hostUuid: hostUuid,
   }
