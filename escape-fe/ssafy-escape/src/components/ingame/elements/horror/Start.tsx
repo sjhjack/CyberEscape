@@ -1,42 +1,16 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-
-interface ContainerProps {
-  opacity: number
-}
+import { useEffect, useState } from "react"
 
 interface StartProps {
   setSubtitle: (subtitle: string) => void
 }
 
-const Container = styled.div<ContainerProps>`
-  position: fixed;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-family: Arial, sans-serif;
-  z-index: 10;
-  opacity: ${(props) => props.opacity};
-  transition: opacity 0.5s ease;
-`
-
-const Instructions = styled.div`
-  text-align: center;
-`
-
 const Start = ({ setSubtitle }: StartProps) => {
-  const [isNull, setIsNull] = useState(false)
-  const [showInstruction, setShowInstruction] = useState(true)
   const [sequence, setSequence] = useState(1)
-  const [containerOpacity, setContainerOpacity] = useState(1)
 
   useEffect(() => {
-    if (sequence === 2) {
+    if (sequence === 1) {
+      dub1()
+    } else if (sequence === 2) {
       dub2()
     } else if (sequence === 3) {
       dub3()
@@ -49,18 +23,10 @@ const Start = ({ setSubtitle }: StartProps) => {
     }
   }, [sequence])
 
-  const handleClick = () => {
-    if (sequence === 1) {
-      setShowInstruction(false)
-      dub1()
-    }
-  }
-
   const dub1 = () => {
     setSubtitle("... ... ...")
     setTimeout(() => {
       setSequence((n) => n + 1)
-      setContainerOpacity(0)
       setSubtitle("")
     }, 4000)
   }
@@ -84,9 +50,8 @@ const Start = ({ setSubtitle }: StartProps) => {
   }
 
   const dub4 = () => {
-    // // 비명소리 들어갈 곳
-    // const audio = new Audio("dubbing/space/start/start_5.mp3")
-    // audio.play()
+    const audio = new Audio("sound/man_scream.mp3")
+    audio.play()
     setTimeout(() => {
       setSubtitle("무슨 소리지?!")
       setTimeout(() => {
@@ -111,18 +76,9 @@ const Start = ({ setSubtitle }: StartProps) => {
     setTimeout(() => {
       setSubtitle("")
     }, 10000)
-    setIsNull(true)
   }
 
-  return !isNull ? (
-    <Container opacity={containerOpacity} onClick={handleClick}>
-      {showInstruction ? (
-        <Instructions>
-          <p>Click to start</p>
-        </Instructions>
-      ) : null}
-    </Container>
-  ) : null
+  return <></>
 }
 
 export default Start
