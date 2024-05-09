@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class IdFinder {
     private final EntityManager entityManager;
-
     public IdFinder(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

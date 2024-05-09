@@ -28,17 +28,19 @@ public class ChatRoomService {
     private final ParticipantsRepository participantsRepository;
     private final ParticipantsRepositoryImpl participantsRepositoryImpl;
     private final UserRepository userRepository;
+    private final UserUtil userUtil;
 
-    public ChatRoomService(ChatRoomRepository chatRoomRepository, ParticipantsRepository participantsRepository, ParticipantsRepositoryImpl participantsRepositoryImpl, UserRepository userRepository) {
+    public ChatRoomService(ChatRoomRepository chatRoomRepository, ParticipantsRepository participantsRepository, ParticipantsRepositoryImpl participantsRepositoryImpl, UserRepository userRepository, UserUtil userUtil) {
         this.chatRoomRepository = chatRoomRepository;
         this.participantsRepository = participantsRepository;
         this.participantsRepositoryImpl = participantsRepositoryImpl;
         this.userRepository = userRepository;
+        this.userUtil = userUtil;
     }
 
     @Transactional
     public ChatRoomDto.CreateChatRoomResDto createChatRoom(ChatRoomDto.CreateChatRoomReqDto chatroomInfo)  throws ChatException{
-            String userUuid = UserUtil.getUserUuid();
+            String userUuid = userUtil.getLoginUserUuid();
             String friendUuid = chatroomInfo.getUserUuid();
 
             log.info("현재 들어온 user의 uuid : {}", friendUuid);
@@ -105,7 +107,7 @@ public class ChatRoomService {
     }
 
     public List<ChatRoomDto.MyChatListDto> getMyChatList(){
-        String userUuid = UserUtil.getUserUuid();
+        String userUuid = userUtil.getLoginUserUuid();
         return participantsRepositoryImpl.getMyChatList(userUuid);
     }
 
