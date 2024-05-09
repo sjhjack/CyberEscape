@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import MainModal from "@/components/common/MainModal"
 import Button from "@/components/common/Button"
 import styled from "styled-components"
-import postFriendList from "@/services/main/friends/postFriendList"
+import getFriendList from "@/services/main/friends/getFriendList"
 import postInvite from "@/services/game/room/postInvite"
 import { useQuery } from "@tanstack/react-query"
 
@@ -18,7 +18,7 @@ interface friendListProps {
 const InviteModal = ({ open, handleClose }: InviteModalProps) => {
   const { data: friendsData, isLoading } = useQuery({
     queryKey: ["friendList"],
-    queryFn: postFriendList,
+    queryFn: getFriendList,
   })
   return (
     <MainModal
