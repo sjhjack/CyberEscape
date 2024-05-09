@@ -41,6 +41,9 @@ services:
     rabbitmq:
       container_name: rabbitmq
       image: rabbitmq
+      build:
+        context: ../
+        dockerfile: "./docker/dockerfile/rabbitmq.dockerfile"
       env_file: ".env"
       networks:
         - backend
@@ -52,6 +55,7 @@ services:
         - "15672:15672"
 
     nextjs:
+      container_name: nextjs
       build:
         context: ../
         dockerfile: "./docker/dockerfile/nextjs.dockerfile"
