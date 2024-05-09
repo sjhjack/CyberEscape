@@ -107,7 +107,7 @@ const useOpenViduSession = (
 
   const createSession = async (uuid: string): Promise<string> => {
     const response = await axios.post(
-      `${APPLICATION_SERVER_URL}voice/session`,
+      `${APPLICATION_SERVER_URL}voice/init/session`,
       { roomUuid: uuid },
 
       {
