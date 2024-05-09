@@ -1,0 +1,81 @@
+"use client"
+import React, { useState, useEffect } from "react"
+import { Navigation, Pagination } from "swiper/modules"
+import { Swiper, SwiperSlide } from "swiper/react"
+import ThemeCard from "./ThemeCard"
+import useIngameThemeStore from "@/stores/IngameTheme"
+import styled from "styled-components"
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+
+interface CarouselProps {
+  width?: number
+  height?: number
+  navigation?: boolean
+  pagination?: boolean
+}
+const themeData: CardInfo[] = [
+  {
+    title: "공포",
+    time: "10-15분",
+    content: "무서운 거임",
+    image: "/image/1.png",
+  },
+  {
+    title: "SSAFY",
+    time: "10-15분",
+    content: "탈출 마렵다",
+    image: "/image/2.png",
+  },
+  {
+    title: "우주",
+    time: "10-15분",
+    content: "우주선에서 탈출하라!",
+    image: "/image/3.png",
+  },
+]
+
+const ThemeCarousel = ({
+  width,
+  height,
+  navigation,
+  pagination,
+}: CarouselProps) => {
+  const [currentCard, setCurrentCard] = useState<number>(0)
+  const { setSelectedTheme } = useIngameThemeStore()
+  useEffect(() => {
+    setSelectedTheme((currentCard + 1).toString())
+  }, [currentCard])
+  return (
+    <MainContainer style={{ borderRadius: "20px" }}>
+      <Swiper
+        modules={[Navigation, Pagination]}
+        slidesPerView={1}
+        threshold={1}
+        onSlideChange={(e) => setCurrentCard(e.activeIndex)}
+        spaceBetween={100}
+        centeredSlides={true}
+        navigation={navigation ? navigation : false}
+        pagination={
+          pagination ? (pagination === true ? { clickable: true } : {}) : false
+        }
+      >
+        {themeData?.map((item: CardInfo, index: number) => {
+          return (
+            <SwiperSlide key={index}>
+              <ThemeCard themeData={item} $width={width} $height={height} />
+            </SwiperSlide>
+          )
+        })}
+      </Swiper>
+    </MainContainer>
+  )
+}
+
+export default ThemeCarousel
+
+const MainContainer = styled.div`
+  margin-top: 3%;
+  width: 90%;
+`
