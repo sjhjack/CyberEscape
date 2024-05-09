@@ -1,5 +1,7 @@
 package com.cyber.escape.global.common.handler;
 
+import java.security.Principal;
+
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -99,7 +101,8 @@ public class RoomStompHandler {
 	}
 
 	@MessageMapping("room.match")
-	public void handleMatchRequest() {
-		roomModifyService.addPlayerToMatchingQueue();
+	public void handleMatchRequest(Principal principal) {
+		log.info("매칭 시도한 principal의 UUID : {}", principal.getName());
+		roomModifyService.addPlayerToMatchingQueue(principal.getName());
 	}
 }

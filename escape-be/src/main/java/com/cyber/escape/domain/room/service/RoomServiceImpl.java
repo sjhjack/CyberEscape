@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.service.NotificationService;
 import com.cyber.escape.domain.room.data.RoomUpdateSetting;
+import com.cyber.escape.domain.room.dto.MatchUser;
 import com.cyber.escape.domain.room.dto.Pagination;
 import com.cyber.escape.domain.room.dto.PagingDto;
 import com.cyber.escape.domain.room.dto.RoomDto;
@@ -46,30 +48,30 @@ public class RoomServiceImpl implements RoomService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;	// security의 암호화 라이브러리
 	private final NotificationService notificationService;
 	private final UserUtil userUtil;
-	private final RedisTemplate<String, String> redisTemplate;
-	private final SimpMessageSendingOperations messagingTemplate;
+	private final RedisTemplate<String, MatchUser> redisTemplate;
+	private final SimpMessagingTemplate messagingTemplate;
 
 	@Transactional
-	public void addPlayerToMatchingQueue() {
-		ListOperations<String, String> listOperations = redisTemplate.opsForList();
-		listOperations.rightPush(MATCHING_QUEUE_KEY, userUtil.getLoginUserUuid());
-		// listOperations.rightPush(MATCHING_QUEUE_KEY, userUuid);
+	public void addPlayerToMatchingQueue(String principalUuid) {
+		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
+		listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUtil.getLoginUserUuid()));
+		log.info("listOperations size : {}", listOperations.size(MATCHING_QUEUE_KEY));
 	}
 
 	@Scheduled(fixedDelay = 1000) // 1초마다 실행
 	@Transactional
 	public void matchPlayers() {
-		log.info("매치 메이킹 탐색");
-		ListOperations<String, String> listOperations = redisTemplate.opsForList();
+		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
 
-		if(listOperations.size(MATCHING_QUEUE_KEY) > 2) {
-			String user1Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
-			String user2Uuid = listOperations.leftPop(MATCHING_QUEUE_KEY);
+		if(listOperations.size(MATCHING_QUEUE_KEY) >= 2) {
+			MatchUser user1 = listOperations.leftPop(MATCHING_QUEUE_KEY);
+			MatchUser user2 = listOperations.leftPop(MATCHING_QUEUE_KEY);
 
-			log.info("user1Uuid : {}", user1Uuid);
-			log.info("user2Uuid : {}", user2Uuid);
+			log.info("user1Uuid : {}", user1.getUserUuid());
+			log.info("user2Uuid : {}", user2.getUserUuid());
+			log.info("listOperations size after matching : {}", listOperations.size(MATCHING_QUEUE_KEY));
 
-			User host = userRepository.findUserByUuid(user1Uuid)
+			User host = userRepository.findUserByUuid(user1.getUserUuid())
 				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
 			int randomIndex = (int) (Math.random() * (themaIds.length - 1));
 			Long themaId = themaIds[randomIndex];
@@ -78,14 +80,41 @@ public class RoomServiceImpl implements RoomService {
 				.title(host.getNickname() + "의 대기실")
 				.themaId(themaId)
 				.password("")
-				.hostUuid(user1Uuid)
+				.hostUuid(user1.getUserUuid())
 				.build();
 
 			RoomDto.PostResponse createdRoom = createRoom(postRequest, 2);
 
 			// 매칭된 플레이어들에게 대기방 정보 전송
-			messagingTemplate.convertAndSendToUser(user1Uuid, "/queue/match", createdRoom);
-			messagingTemplate.convertAndSendToUser(user2Uuid, "/queue/match", createdRoom);
+			sendMatchResultToUser(user1, createdRoom);
+			sendMatchResultToUser(user2, createdRoom);
+		}
+	}
+
+	@Async
+	public void sendMatchResultToUser(MatchUser matchUser, RoomDto.PostResponse createdRoom) {
+		try {
+			messagingTemplate.convertAndSendToUser(matchUser.getPrincipalUuid(), "/queue/match", createdRoom);
+			log.info("매칭 정보 전송 할 Client의 session Uuid: {}", matchUser.getPrincipalUuid());
+		} catch (Exception e) {
+			log.error("Failed to send match result to user: {}", matchUser.getPrincipalUuid(), e);
+			// 실패한 경우 재시도 로직 추가
+			retryMatchResultSend(matchUser, createdRoom, 3); // 최대 3번 재시도
+		}
+	}
+
+	private void retryMatchResultSend(MatchUser matchUser, RoomDto.PostResponse createdRoom, int retryCount) {
+		if (retryCount <= 0) {
+			log.error("Failed to send match result after retries for user: {}", matchUser.getUserUuid());
+			return;
+		}
+
+		try {
+			messagingTemplate.convertAndSendToUser(matchUser.getPrincipalUuid(), "/queue/match", createdRoom);
+			log.info("Retry successful for user: {}", matchUser.getPrincipalUuid());
+		} catch (Exception e) {
+			log.error("Retry failed for user: {}", matchUser.getPrincipalUuid(), e);
+			retryMatchResultSend(matchUser, createdRoom, retryCount - 1);
 		}
 	}
 
