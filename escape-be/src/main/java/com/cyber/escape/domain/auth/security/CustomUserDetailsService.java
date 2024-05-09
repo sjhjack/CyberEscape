@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.auth.service;
+package com.cyber.escape.domain.auth.security;
 
 import java.util.ArrayList;
 
