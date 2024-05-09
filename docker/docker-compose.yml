@@ -31,6 +31,7 @@ services:
         - "3307:3306"
 
     redis:
+      container_name: redis
       image: redis
       networks:
         - backend
@@ -38,6 +39,7 @@ services:
         - "6379:6379"
 
     rabbitmq:
+      container_name: rabbitmq
       image: rabbitmq
       env_file: ".env"
       networks:
@@ -57,6 +59,7 @@ services:
         - "3000:3000"
 
     mongo:
+      container_name: mongo
       image: mongo
       networks:
         - backend

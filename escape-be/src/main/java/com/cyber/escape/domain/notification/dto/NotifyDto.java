@@ -1,6 +1,7 @@
 package com.cyber.escape.domain.notification.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.cyber.escape.domain.notification.document.Notify;
 import lombok.Builder;
@@ -14,20 +15,48 @@ public class NotifyDto {
     // Todo : member의 unique 값을 뭐로 저장하냐에 따라서 id 타입 바꾸기
     // 지금은 Long id를 참조
 
+    public static class Response{
+        List<FriendResponse> friendResponse;
+
+    }
+
     @Getter
     @Builder
-    public static class Response {
+    public static class FriendResponse {
         String id;
-        String receiverUuid;
+        String senderUuid;
+        String nickname;
         String content;
         String type;
         char isRead;
         LocalDateTime createdAt;
 
-        public static NotifyDto.Response from(Notify notify){
-            return NotifyDto.Response.builder()
+        public static NotifyDto.FriendResponse from(Notify notify){
+            return FriendResponse.builder()
                     .id(notify.getId().toString())
-                    .receiverUuid(notify.getReceiverUuid())
+                    .senderUuid(notify.getSenderUuid())
+                    .content(notify.getContent())
+                    .type(notify.getNotificationType().name())
+                    .isRead(notify.getIsRead())
+                    .createdAt(notify.getCreatedAt())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class GameResponse {
+        String id;
+        String gameUuid;
+        String nickname;
+        String content;
+        String type;
+        char isRead;
+        LocalDateTime createdAt;
+
+        public static NotifyDto.GameResponse from(Notify notify){
+            return GameResponse.builder()
+                    .id(notify.getId().toString())
                     .content(notify.getContent())
                     .type(notify.getNotificationType().name())
                     .isRead(notify.getIsRead())
