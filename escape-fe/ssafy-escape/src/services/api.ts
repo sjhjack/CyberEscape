@@ -1,13 +1,22 @@
 "use client"
 import axios from "axios"
-const accessToken = sessionStorage.getItem("access_token")
+import useUserStore from "@/stores/UserStore"
 const api = axios.create({
   baseURL: "http://localhost:8080",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${accessToken}`,
   },
 })
+api.interceptors.request.use(
+  (config) => {
+    const { accessToken } = useUserStore.getState()
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error),
+)
 api.interceptors.response.use(
   (response) => response, // 성공 응답은 그대로 반환
   async (error) => {

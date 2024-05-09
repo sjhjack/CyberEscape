@@ -10,14 +10,7 @@ interface PostLogoutBodyProps {
 // 로그아웃
 const postLogout = async (): Promise<null> => {
   try {
-    const accessToken = sessionStorage.getItem("access_token")
-    const response = await api.post<PostLogoutBodyProps>(
-      API_PATH.AUTH.LOGOUT,
-      {},
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
-    )
+    const response = await api.post<PostLogoutBodyProps>(API_PATH.AUTH.LOGOUT)
     if (response.data.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
