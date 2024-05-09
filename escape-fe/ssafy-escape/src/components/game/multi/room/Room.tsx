@@ -9,9 +9,10 @@ import CircularProgress from "@mui/material/CircularProgress"
 
 const Room = () => {
   const [page, setPage] = useState<number>(1)
+  const [keyword, setKeyword] = useState<string>("")
   const { data: roomData, isLoading } = useQuery({
-    queryKey: ["roomList", page],
-    queryFn: () => getRoomList(),
+    queryKey: ["roomList", page, keyword],
+    queryFn: () => getRoomList({ page: page, keyword: keyword }),
   })
 
   const handlePageChange = (newPage: number) => {

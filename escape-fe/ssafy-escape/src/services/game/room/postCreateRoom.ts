@@ -12,7 +12,7 @@ interface postCreateRoomDataProps {
 }
 interface postCreateRoomRequestProps {
   title: string
-  themaId: string
+  themaId: number
   password: string
   hostUuid: string
 }
@@ -21,18 +21,15 @@ interface postCreateRoomRequestProps {
 const postCreateRoom = async (
   data: postCreateRoomRequestProps,
 ): Promise<postCreateRoomResponseProps> => {
-  const accessToken = sessionStorage.getItem("access_token")
   try {
     const response = await api.post<postCreateRoomResponseProps>(
       API_PATH.GAME.MULTI.ROOM.LIST,
       data,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
     )
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
+    console.log("방 생성 완료")
     return response.data
   } catch (error) {
     console.error(error)
