@@ -31,6 +31,7 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
     enabled: false,
   })
 
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     console.log(keyword + "로 검색")
@@ -65,7 +66,7 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
           <EmptyText>결과가 없습니다.</EmptyText>
         ) : (
           <div>
-            {searchData?.data.map((user, i) => (
+            {searchData.map((user, i) => (
               <div key={i}>
                 <MainContainer>
                   <ProfileBox>
