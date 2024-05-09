@@ -14,7 +14,7 @@ interface PostUserSearchDataProps {
 // 유저 닉네임 검색
 const postUserSearch = async (
   nickname: string,
-): Promise<PostUserSearchDataProps> => {
+): Promise<PostUserSearchDataProps[]> => {
   const accessToken = sessionStorage.getItem("access_token");
   try {
     const response = await api.post<PostUserSearchBodyProps>(
@@ -27,7 +27,7 @@ const postUserSearch = async (
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
-    return response.data.data
+    return response.data.data;
   } catch (error) {
     console.error(error)
     throw error
