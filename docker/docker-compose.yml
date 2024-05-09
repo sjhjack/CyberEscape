@@ -50,16 +50,6 @@ services:
         - "61613:61613"
         - "15672:15672"
 
-    openvidu:
-      container_name: openvidu
-      image: openvidu/openvidu-dev:2.29.0
-      networks:
-        - backend
-      ports:
-        - "4443:4443"
-      env_file:
-        - ".env"
-
     nextjs:
       container_name: nextjs
       build:
