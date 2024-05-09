@@ -11,8 +11,9 @@ interface RoomProps {
 
 interface ProblemProps {
   onClose: () => void
-  fanalty: number
-  setFanalty: (fanalty: number) => void
+  penalty: number
+  timePenalty : () => void
+  setPenalty: (penalty: number) => void
   setSubtitle: (subtitle: string) => void
 }
 
@@ -24,4 +25,11 @@ interface KnobProps {
   onClick: () => void
   isFind: boolean
   solved: number
+}
+
+interface QuizDataProps {
+  quizUuid: string
+  content: string
+  url: string
+  difficulty: number
 }

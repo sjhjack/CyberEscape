@@ -2,8 +2,8 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 interface ThemeState {
-  selectedTheme: string | null
-  setSelectedTheme: (theme: string | null) => void
+  selectedTheme: number | null
+  setSelectedTheme: (theme: number | null) => void
 }
 
 const useIngameThemeStore = create<ThemeState>()(

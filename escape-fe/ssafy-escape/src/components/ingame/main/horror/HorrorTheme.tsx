@@ -6,7 +6,7 @@ import Player from "../../elements/common/Player"
 import MeshObjects from "../../elements/horror/MeshObjects"
 import Floor from "../../elements/common/Floor"
 import Blood from "../../elements/horror/Blood"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Skull from "../../elements/horror/Skull"
 import Flower from "../../elements/horror/Flower"
 import Wall from "../../elements/horror/Wall"
@@ -14,7 +14,7 @@ import Portrait from "../../elements/horror/Portrait"
 import Art from "../../elements/horror/Art"
 import BloodPool from "../../elements/horror/BloodPool"
 import FirstProblemModal from "../../elements/horror/FirstProblemModal"
-import useIngameSolvedStore from "@/stores/IngameSolved"
+import useIngameSolvedStore from "@/stores/IngameQuizStore"
 import SecondProblemObject from "../../elements/horror/SecondProblemObject"
 import SecondProblemModal from "../../elements/horror/SecondProblemModal"
 import ThirdProblemModal from "../../elements/horror/ThirdProblemModal"
@@ -24,6 +24,11 @@ import KnobObject from "../../elements/horror/KnobObject"
 import Start from "../../elements/horror/Start"
 import Subtitle from "../../elements/common/Subtitle"
 import PlaySound from "../../elements/horror/PlaySound"
+import { useQuery } from "@tanstack/react-query"
+import useIngameThemeStore from "@/stores/IngameTheme"
+import getQuiz from "@/services/ingame/getQuiz"
+import useIngameQuizStore from "@/stores/IngameQuizStore"
+import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -34,23 +39,49 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [isKnobClicked, setIsKnobClicked] = useState<boolean>(false)
   const [twoMinLater, setTwoMinLater] = useState<boolean>(false)
   const [fiveMinLater, setFiveMinLater] = useState<boolean>(false)
-  const [fanalty, setFanalty] = useState<number>(0)
+  const [penalty, setPenalty] = useState<number>(0)
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
   const { solved } = useIngameSolvedStore()
+  const { selectedTheme } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const [soundNum, setSoundNum] = useState<number>(0)
+  const setQuizData = useIngameQuizStore((state) => state.setQuizData)
+
+  const { data: quizData } = useQuery({
+    queryKey: ["quizList"],
+    queryFn: () =>
+      selectedTheme !== null
+        ? getQuiz(selectedTheme)
+        : Promise.reject(new Error("selectedTheme is null")),
+  })
+  const timerRef = useRef<CountdownTimerHandle | null>(null)
+
+  // 시간 깎는 패널티 함수
+  const timePenalty = () => {
+    if (timerRef.current) {
+      timerRef.current.applyPenalty()
+    }
+  }
+
+  // 가져온 퀴즈 데이터를 스토어에 저장
+  useEffect(() => {
+    if (quizData) {
+      setQuizData(quizData)
+    }
+  }, [quizData, setQuizData])
 
   useEffect(() => {
     // 2분 경과 시
     const twoMintimer = setTimeout(() => {
-      setFanalty(fanalty + 1)
+      setPenalty(penalty + 1)
       setTwoMinLater(true)
     }, 60000 * 2)
 
     // 5분 경과 시
     const fiveMintimer = setTimeout(() => {
+      setSoundNum(2)
       setFiveMinLater(true)
     }, 60000 * 5)
 
@@ -79,7 +110,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   // 문고리 클릭 시 이벤트
   const handleFinal = () => {
     // 탈출 성공 로직
-    console.log("탈출성공")
+    alert("탈출성공")
   }
 
   // 첫 번째 문제 모달
@@ -95,7 +126,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       setShowSecondProblem(!showSecondProblem)
     }
   }
-  
+
   // 세 번째 문제 모달
   const handleThirdProblem = () => {
     if (solved === 2) {
@@ -105,35 +136,43 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
   return (
     <>
-      {isGameStart ? <Start setSubtitle={setSubtitle} /> : null}
+      {isGameStart ? (
+        <>
+          <CountdownTimer ref={timerRef} />
+          <Start setSubtitle={setSubtitle} />
+        </>
+      ) : null}
       <Subtitle text={subtitle} />
       {showFirstProblem ? (
         <FirstProblemModal
           onClose={handleFirstProblem}
-          fanalty={fanalty}
-          setFanalty={setFanalty}
+          penalty={penalty}
+          setPenalty={setPenalty}
           setSubtitle={setSubtitle}
+          timePenalty={timePenalty}
         />
       ) : null}
       {showSecondProblem ? (
         <SecondProblemModal
           onClose={handleSecondProblem}
-          fanalty={fanalty}
-          setFanalty={setFanalty}
+          penalty={penalty}
+          setPenalty={setPenalty}
           setSubtitle={setSubtitle}
+          timePenalty={timePenalty}
         />
       ) : null}
       {showThirdProblem ? (
         <ThirdProblemModal
           onClose={handleThirdProblem}
-          fanalty={fanalty}
-          setFanalty={setFanalty}
+          penalty={penalty}
+          setPenalty={setPenalty}
           setSubtitle={setSubtitle}
+          timePenalty={timePenalty}
         />
       ) : null}
-      <PlaySound soundNum={soundNum} fanalty={fanalty} />
-      <BasicScene>
-        <Lights fanalty={fanalty} solved={solved} />
+      <PlaySound soundNum={soundNum} penalty={penalty} />
+      <BasicScene interactNum={1}>
+        <Lights penalty={penalty} solved={solved} />
         <Player position={[3, 50, 0]} speed={100} />
         <Floor
           rotation={[Math.PI / -2, 0, 0]}
@@ -160,7 +199,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           solved={solved}
         />
 
-        <Blood fanalty={fanalty} />
+        <Blood penalty={penalty} />
         <HorrorRoom onLoaded={setIsModelLoaded} />
         <SecondProblemObject onClick={handleSecondProblem} />
         <ThirdProblemObject onClick={handleThirdProblem} />
