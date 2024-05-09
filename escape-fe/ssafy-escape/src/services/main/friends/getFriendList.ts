@@ -13,12 +13,12 @@ interface PostFriendListDataProps {
 }
 
 // 친구 목록 조회
-const postFriendList = async (): Promise<PostFriendListDataProps> => {
+const getFriendList = async (): Promise<PostFriendListDataProps> => {
   
   const accessToken = sessionStorage.getItem("access_token")
   try {
-    const response = await api.post<PostFriendListBodyProps>(
-      API_PATH.MAIN.FRIEND.LIST,
+    const response = await api.get<PostFriendListBodyProps>(
+      API_PATH.MAIN.FRIEND.LIST + "?pageNumber=1",
       {
         headers: { Authorization: `Bearer ${accessToken}` },
       }
@@ -26,7 +26,6 @@ const postFriendList = async (): Promise<PostFriendListDataProps> => {
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
-    
     return response.data.data
   } catch (error) {
     console.error(error)
@@ -41,4 +40,4 @@ const postFriendList = async (): Promise<PostFriendListDataProps> => {
 //   return dummy
 // }
 
-export default postFriendList
+export default getFriendList

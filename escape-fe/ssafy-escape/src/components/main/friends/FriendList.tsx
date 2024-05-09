@@ -4,7 +4,7 @@ import { styled } from "styled-components"
 import { useQuery } from "@tanstack/react-query"
 import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
-import postFriendList from "@/services/main/friends/postFriendList"
+import getFriendList from "@/services/main/friends/getFriendList"
 import useModalStore from "@/stores/ModalStore"
 // import deleteFriend from "@/services/main/friends/deleteFriend"
 
@@ -12,9 +12,12 @@ import useModalStore from "@/stores/ModalStore"
 const FriendList = () => {
   const { data: friendsData, isLoading } = useQuery({
     queryKey: ["friendList"],
-    queryFn: postFriendList,
+    queryFn: getFriendList,
   })
   const { isDeleteMode } = useModalStore()
+
+  console.log("friendsData : ");
+  console.log(friendsData);
 
   // 친구 삭제 버튼 클릭 시
   // const handleDelete = async (friendUuid: string) => {
@@ -34,7 +37,7 @@ const FriendList = () => {
 
   return (
     <div>
-      {friendsData.data.map((friend, i) => (
+      {friendsData.map((friend, i) => (
         <div key={i}>
           <SubContainer>
             <ProfileBox>
