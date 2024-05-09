@@ -1,9 +1,9 @@
 interface LightProps {
-  fanalty: number
+  penalty: number
   solved: number
 }
 
-const Lights = ({ fanalty, solved }: LightProps) => {
+const Lights = ({ penalty, solved }: LightProps) => {
   return (
     <>
       {solved >= 2 ? (
@@ -11,7 +11,7 @@ const Lights = ({ fanalty, solved }: LightProps) => {
       ) : (
         <ambientLight intensity={0.5} />
       )}
-      {fanalty <= 1 ? (
+      {penalty <= 1 ? (
         <directionalLight position={[6, 15, 5]} intensity={1} receiveShadow />
       ) : null}
     </>
