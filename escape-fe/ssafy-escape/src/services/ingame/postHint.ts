@@ -1,10 +1,6 @@
 import API_PATH from "@/constants/path"
 import api from "@/services/api"
 
-interface postHintProps {
-  quizUuid: string
-}
-
 interface postQuizDataProps {
   hint: string
 }
@@ -12,24 +8,22 @@ interface postQuizDataProps {
 interface postQuizResponseProps {
   status: number
   message: string
-  data: postQuizDataProps[]
+  data: postQuizDataProps
 }
 
 // 힌트 가져오기
-const postHint = async (
-  data: postHintProps,
-): Promise<postQuizResponseProps> => {
+const postHint = async (quizUuid: string): Promise<postQuizDataProps> => {
   try {
-    const response = await api.get<postQuizResponseProps>(
+    const response = await api.post<postQuizResponseProps>(
       API_PATH.INGAME.HINT,
       {
-        data: data,
+        quizUuid,
       },
     )
     if (response.status === 400) {
       throw new Error(`오류: ${response.data}`)
     }
-    return response.data
+    return response.data.data
   } catch (error) {
     console.error(error)
     throw error

@@ -2,19 +2,19 @@ import { useGLTF } from "@react-three/drei"
 import { useEffect } from "react"
 
 interface BloodProps {
-  fanalty: number
+  penalty: number
 }
 
-const Blood = ({ fanalty }: BloodProps) => {
+const Blood = ({ penalty }: BloodProps) => {
   const blood = useGLTF("/glb/horror/blood.glb", true)
   useEffect(() => {
     if (blood.scene) {
       blood.scene.position.set(50, 43.3, -86)
       blood.scene.renderOrder = 10
     }
-  }, [fanalty, blood])
+  }, [penalty, blood])
 
-  return fanalty >= 3 && <primitive object={blood.scene} scale={34} />
+  return penalty >= 3 && <primitive object={blood.scene} scale={34} />
 }
 
 export default Blood
