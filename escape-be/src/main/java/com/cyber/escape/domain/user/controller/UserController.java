@@ -1,6 +1,7 @@
 package com.cyber.escape.domain.user.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.auth.service.AuthService;
@@ -28,9 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/search")
-    public ApiResponse<UserDto.SearchNicknameResponse> searchUser(@RequestBody UserDto.SearchNicknameRequest req){
-        UserDto.SearchNicknameResponse response = userReadService.searchNickname(req);
-        return new ApiResponse<>(HttpStatus.OK.value(),"닉네임 검색 완료", response);
+    public ApiResponse<List<UserDto.SearchNicknameResponse>> searchUser(@RequestBody UserDto.SearchNicknameRequest req){
+        return new ApiResponse<>(HttpStatus.OK.value(),"닉네임 검색 완료", userReadService.searchNickname(req));
     }
 
     @PostMapping("/nickname/duplication")
