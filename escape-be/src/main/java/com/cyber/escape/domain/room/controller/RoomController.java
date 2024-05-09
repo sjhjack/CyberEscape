@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cyber.escape.domain.room.dto.PagingDto;
 import com.cyber.escape.domain.room.dto.RoomDto;
-import com.cyber.escape.domain.room.service.RoomCreateService;
-import com.cyber.escape.domain.room.service.RoomDeleteService;
+import com.cyber.escape.domain.room.service.RoomModifyService;
 import com.cyber.escape.domain.room.service.RoomReadService;
-import com.cyber.escape.domain.room.service.RoomUpdateService;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.global.common.dto.ApiResponse;
 
@@ -24,10 +22,8 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/room")
 public class RoomController {
-	private final RoomCreateService roomCreateService;
 	private final RoomReadService roomReadService;
-	private final RoomUpdateService roomUpdateService;
-	private final RoomDeleteService roomDeleteService;
+	private final RoomModifyService roomModifyService;
 
 	/**
 	 * keyword가 주어지지 않으면 전체 리스트를 반환합니다.
@@ -43,27 +39,32 @@ public class RoomController {
 
 	@PostMapping
 	public ApiResponse<RoomDto.PostResponse> createRoom(@RequestBody RoomDto.PostRequest postRequest) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 생성 완료", roomCreateService.createRoom(postRequest));
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 생성 완료", roomModifyService.createRoom(postRequest));
 	}
 
 	@DeleteMapping
 	public ApiResponse<String> deleteRoom(@RequestBody RoomDto.Request request) {
-		roomDeleteService.deleteRoom(request);
+		roomModifyService.deleteRoom(request);
 		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 삭제 완료", "");
 	}
 
 	@PatchMapping("/setting")
 	public ApiResponse<RoomDto.InfoResponse> changeRoomSetting(@RequestBody RoomDto.InfoRequest infoRequest) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 설정 변경 성공", roomUpdateService.changeRoomSetting(infoRequest));
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 설정 변경 성공", roomModifyService.changeRoomSetting(infoRequest));
 	}
 
 	@PatchMapping("/change/host")
 	public ApiResponse<UserDto.Response> changeHost(@RequestBody RoomDto.Request request) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 방장 변경 성공", roomUpdateService.changeHost(request));
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 방장 변경 성공", roomModifyService.changeHost(request));
 	}
 
 	@PatchMapping("/start")
 	public ApiResponse<RoomDto.TimeResponse> setStartTime(@RequestBody RoomDto.TimeRequest timeRequest) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 게임 시작 시간 저장 성공", roomUpdateService.setStartTime(timeRequest));
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 게임 시작 시간 저장 성공", roomModifyService.setStartTime(timeRequest));
+	}
+
+	@PostMapping("/invitation")
+	public ApiResponse<String> inviteUser(@RequestBody RoomDto.Request inviteRequest){
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실로 초대 요청을 전송했습니다.", roomModifyService.inviteUserToRoom(inviteRequest));
 	}
 }
