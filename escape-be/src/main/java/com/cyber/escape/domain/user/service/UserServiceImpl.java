@@ -1,6 +1,8 @@
 package com.cyber.escape.domain.user.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -43,18 +45,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto.SearchNicknameResponse searchNickname(UserDto.SearchNicknameRequest dto){
-        User toUser = userRepository.findUserByNickname(dto.getNickname())
-                .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));// 검색 당한 사람
+    public List<UserDto.SearchNicknameResponse> searchNickname(UserDto.SearchNicknameRequest dto){
+        // 검색한 사람
+        List<User> toUser = userRepository.findByNicknameContainingIgnoreCase(dto.getNickname());
 
         String fromUserUuid = dto.getFromUserUuid();
-        Optional<Friend> friend = friendRepository.getFriend(fromUserUuid, toUser.getUuid());
-        String relationship = friend.isPresent() ? "친구" : "추가";
+        List<UserDto.SearchNicknameResponse> userSearchList = new ArrayList<>();
 
-        return UserDto.SearchNicknameResponse.builder()
-                .nickname(dto.getNickname())
-                .relationship(relationship)
-                .build();
+        for(User user : toUser){
+            log.info("nickname : {}, loginId : {}", user.getNickname(), user.getLoginId());
+
+            Optional<Friend> friend = friendRepository.getFriend(fromUserUuid, user.getUuid());
+            String relationship = friend.isPresent() ? "친구" : "추가";
+
+            UserDto.SearchNicknameResponse result =
+                    UserDto.SearchNicknameResponse.builder()
+                    .nickname(user.getNickname())
+                    .relationship(relationship)
+                    .build();
+
+            userSearchList.add(result);
+        }
+
+        return userSearchList;
     }
 
     @Override
@@ -69,7 +82,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public String changeNickname(UserDto.UpdateNicknameRequest dto){
-        User user = userRepository.findUserByUuid(dto.getUserUuid())
+
+        String currentUserUuid = userUtil.getLoginUserUuid();
+        User user = userRepository.findUserByUuid(currentUserUuid)
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
 
         String newNickname = dto.getNewNickname();

@@ -11,14 +11,12 @@ import java.util.Optional;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
-    @Query(value = "SELECT * FROM ("
-            + "(SELECT * FROM quiz WHERE difficulty = 1 AND thema_id = :themaId ORDER BY RAND() LIMIT 1)"
-            + " UNION ALL "
-            + "(SELECT * FROM quiz WHERE difficulty = 2 AND thema_id = :themaId ORDER BY RAND() LIMIT 1)"
-            + " UNION ALL "
-            + "(SELECT * FROM quiz WHERE difficulty = 3 AND thema_id = :themaId ORDER BY RAND() LIMIT 1)"
-            + ") as sub", nativeQuery = true)
-    public Optional<List<Quiz>> getQuizzes(@Param("themaId") Long themaId);
+
+    @Query(value = "SELECT q.* FROM quiz q "
+                    + "INNER JOIN thema t ON q.thema_id = t.id "
+                    + "WHERE t.category = :category AND q.difficulty = :difficulty", nativeQuery = true)
+    public Optional<List<Quiz>> getQuizzezByCategory(int category, int difficulty);
 
     public Optional<Quiz> findByUuid(String uuid);
+
 }
