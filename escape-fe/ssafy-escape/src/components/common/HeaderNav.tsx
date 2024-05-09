@@ -13,7 +13,7 @@ import {
   HydrationBoundary,
   dehydrate,
 } from "@tanstack/react-query"
-import postFriendList from "@/services/main/friends/postFriendList"
+import getFriendList from "@/services/main/friends/getFriendList"
 import NotificationModal from "../notification/NotificationModal"
 import postInvitedList from "@/services/notification/postInvitedList"
 import Swal from "sweetalert2"
@@ -42,7 +42,7 @@ const MainHeader = () => {
   useEffect(() => {
     queryClient.prefetchQuery({
       queryKey: ["friendList"],
-      queryFn: postFriendList,
+      queryFn: getFriendList,
     }),
       queryClient.prefetchQuery({
         queryKey: ["invitedList"],
