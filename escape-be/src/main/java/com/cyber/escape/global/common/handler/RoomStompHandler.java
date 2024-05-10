@@ -1,11 +1,15 @@
 package com.cyber.escape.global.common.handler;
 
 import java.security.Principal;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
@@ -26,6 +30,7 @@ public class RoomStompHandler {
 	private final SimpMessageSendingOperations messagingTemplate;
 	private final RoomManager roomManager;
 	private final RoomModifyService roomModifyService;
+	private Map<String, String> sessionRoomMap = new ConcurrentHashMap<>();
 
 	@EventListener
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -35,18 +40,23 @@ public class RoomStompHandler {
 
 	@EventListener
 	public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-		String roomUuid = headerAccessor.getNativeHeader("roomUuid").get(0);
+		// StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+		// String roomUuid = headerAccessor.getNativeHeader("roomUuid").get(0);
+		// String roomUuid = headerAccessor.getFirstNativeHeader("roomUuid");
 
-		log.info("Disconnected roomUuid : {}", roomUuid);
+		// log.info("Disconnected roomUuid : {}", roomUuid);
 
-		RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, headerAccessor.getSessionId());
+		// RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, headerAccessor.getSessionId());
+		//
+		// sendRoomInfo(roomUuid, room);
 
-		sendRoomInfo(roomUuid, room);
+		log.info("RoomStompHandler === sessionUuid : {}", event.getSessionId());
+		handleDisconnectSession(event.getSessionId());
 	}
 
-	@MessageMapping("room.connect")
+	@MessageMapping("/room/connect")
 	public void handleRoomConnect(StompHeaderAccessor headerAccessor) {
+		log.info("connect 해보자..");
 		String userUuid = headerAccessor.getFirstNativeHeader("userUuid");
 		String roomUuid = headerAccessor.getFirstNativeHeader("roomUuid");
 		String userType = headerAccessor.getFirstNativeHeader("userType");
@@ -62,9 +72,10 @@ public class RoomStompHandler {
 		}
 
 		sendRoomInfo(roomUuid, room);
+		log.info("connect 됐어..");
 	}
 
-	@MessageMapping("room.kickGuest")
+	@MessageMapping("/room/kickGuest")
 	public void kickGuest(@Payload String roomUuid, StompHeaderAccessor headerAccessor) {
 		log.info("강퇴 시작해볼까??");
 
@@ -82,7 +93,7 @@ public class RoomStompHandler {
 		log.info("guest 강퇴 됐나? {}", room.getGuestSessionId() == null);
 	}
 
-	@MessageMapping("room.delegateHost")
+	@MessageMapping("/room/delegateHost")
 	public void delegateHost(@Payload String roomUuid, StompHeaderAccessor headerAccessor) {
 		log.info("방장 변경 해볼까??");
 
@@ -100,9 +111,28 @@ public class RoomStompHandler {
 		messagingTemplate.convertAndSend("/topic/" + roomUuid, room);
 	}
 
-	@MessageMapping("room.match")
+	@MessageMapping("/room/match")
 	public void handleMatchRequest(Principal principal) {
 		log.info("매칭 시도한 principal의 UUID : {}", principal.getName());
 		roomModifyService.addPlayerToMatchingQueue(principal.getName());
+	}
+
+	@SubscribeMapping("/topic/{roomUuid}")
+	public void handleRoomSubscription(@DestinationVariable String roomUuid, Principal principal) {
+		String sessionUuid = principal.getName();
+		log.info("handleRoomSubscription === roomUuid : {}, sessionUuid : {}", roomUuid, sessionUuid);
+		// sessionUuid와 roomUuid 맵핑
+		sessionRoomMap.put(sessionUuid, roomUuid);
+	}
+
+	@MessageMapping("/room/exit/{roomUuid}")
+	public void exitRoom(@DestinationVariable String roomUuid, Principal principal) {
+		log.info("exitRoom === roomUuid : {}, sessionUuid : {}", roomUuid, principal.getName());
+		roomManager.leaveRoom(roomUuid, principal.getName());
+	}
+
+	private void handleDisconnectSession(String sessionUuid) {
+		String roomUuid = sessionRoomMap.get(sessionUuid);
+		roomManager.leaveRoom(roomUuid, sessionUuid);
 	}
 }
