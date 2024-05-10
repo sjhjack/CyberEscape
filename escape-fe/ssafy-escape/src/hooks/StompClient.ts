@@ -9,9 +9,10 @@ const useStompClient = (url: string): Client => {
     debug: (str) => console.log(str),
   })
 
-  client.onConnect = () => console.log("Connected to STOMP")
   client.onStompError = (frame) => console.error(`STOMP error: ${frame.body}`)
-
+  client.onConnect = () => {
+    console.log("Connected to STOMP")
+  }
   return client
 }
 

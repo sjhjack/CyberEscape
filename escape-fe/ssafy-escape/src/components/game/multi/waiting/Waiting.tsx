@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
+import { Client } from "@stomp/stompjs"
 import useOpenViduSession from "@/hooks/OpenviduSession"
 import Container from "@/components/common/Container"
 import * as S from "../../../../app/@modal/main/multi/waiting/waitingStyle"
@@ -10,13 +11,20 @@ import Button from "@/components/common/Button"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
 import useStompClient from "@/hooks/StompClient"
-import { pubSubscribe } from "@/services/game/room/roomSocket"
-
+// import {
+//   connectToRoom,
+//   subscribeToParticipants,
+//   forceExitRoom,
+//   changeHost,
+// } from "@/services/game/room/roomSocket"
 interface ChatType {
   userName: string
   message: string
 }
 const Waiting = () => {
+  const baseUrl = process.env.NEXT_PUBLIC_URL
+  const { nickname, profileUrl, accessToken } = useUserStore()
+
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
   // 콜백 함수 정의: 구독한 메시지의 데이터를 상태로 업데이트
   const handleRoomData = (data: PubResponseData) => {
@@ -24,16 +32,15 @@ const Waiting = () => {
     console.log("Room data received:", data)
   }
 
-  // useEffect(() => {
-  //   pubSubscribe(roomUuid, handleRoomData)
-  // }, [])
-
+  useEffect(() => {
+    const client = useStompClient(`${baseUrl}/ws-stomp`)
+    client.activate()
+  }, [])
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
   const [chatting, setChattting] = useState<Array<ChatType>>([])
   // const { session } = useOpenViduSession(roomUuid, setChattting)
   const session = ""
-  const { nickname, profileUrl } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
   const handleModalClose = (): void => {
     setShowModal(false)
