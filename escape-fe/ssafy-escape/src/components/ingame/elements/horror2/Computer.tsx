@@ -1,7 +1,10 @@
 import { useGLTF } from "@react-three/drei"
 
 const Computer = ({ onClick, setInteractNum, solved }: ClickObjectProps) => {
-  const computer = useGLTF("/glb/horror2/computer.glb", true)
+  const computer = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror2/computer.glb",
+    true,
+  )
   const handlePointerOver = () => {
     if (solved === 0) {
       setInteractNum(2)
