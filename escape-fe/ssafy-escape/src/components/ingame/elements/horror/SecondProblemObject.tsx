@@ -3,7 +3,11 @@ import { Box } from "@react-three/drei"
 
 // 두 번째 문제가 숨겨진 곳(랜덤)
 // 서랍장 위치 3곳, 서랍 4가지(시간 남으면 더 추가할 예정)
-const SecondProblemObject = ({ onClick }: ClickObjectProps) => {
+const SecondProblemObject = ({
+  onClick,
+  setInteractNum,
+  solved,
+}: ClickObjectProps) => {
   const objectArr: [number, number, number][][] = [
     [
       [-45, 18, 48],
@@ -36,7 +40,7 @@ const SecondProblemObject = ({ onClick }: ClickObjectProps) => {
     return { firstRandomIndex, secondRandomIndex }
   }, [])
 
-  return (
+  return solved === 1 ? (
     <>
       <Box
         position={objectArr[firstRandomIndex][secondRandomIndex]}
@@ -46,6 +50,8 @@ const SecondProblemObject = ({ onClick }: ClickObjectProps) => {
             ? [14, 5, 2]
             : [6, 4, 2]
         }
+        onPointerOver={() => setInteractNum(2)}
+        onPointerOut={() => setInteractNum(1)}
         onClick={() => onClick()}
       >
         <meshStandardMaterial
@@ -56,7 +62,7 @@ const SecondProblemObject = ({ onClick }: ClickObjectProps) => {
         />
       </Box>
     </>
-  )
+  ) : null
 }
 
 export default SecondProblemObject

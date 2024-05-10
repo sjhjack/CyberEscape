@@ -6,61 +6,53 @@ import Container from "@/components/common/Container"
 import * as S from "../../../../app/@modal/main/multi/waiting/waitingStyle"
 import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
 import InviteModal from "@/components/game/multi/waiting/InviteModal"
-import useIngameThemeStore from "@/stores/IngameTheme"
 import Button from "@/components/common/Button"
+import useIngameThemeStore from "@/stores/IngameTheme"
+import useUserStore from "@/stores/UserStore"
+import useStompClient from "@/hooks/StompClient"
+import { pubSubscribe } from "@/services/game/room/roomSocket"
 
 interface ChatType {
   userName: string
   message: string
 }
-interface userInfo {
-  nickname: string
-  img: string
-}
 const Waiting = () => {
+  const [roomData, setRoomData] = useState<PubResponseData | null>(null)
+  // 콜백 함수 정의: 구독한 메시지의 데이터를 상태로 업데이트
+  const handleRoomData = (data: PubResponseData) => {
+    setRoomData(data)
+    console.log("Room data received:", data)
+  }
+
+  // useEffect(() => {
+  //   pubSubscribe(roomUuid, handleRoomData)
+  // }, [])
+
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
   const [chatting, setChattting] = useState<Array<ChatType>>([])
-  const { session, subscribers, mainStreamManager } = useOpenViduSession(
-    roomUuid,
-    setChattting,
-  )
-  const [myInfo, setMyInfo] = useState<userInfo>({ nickname: "", img: "" })
+  // const { session } = useOpenViduSession(roomUuid, setChattting)
+  const session = ""
+  const { nickname, profileUrl } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
   const handleModalClose = (): void => {
     setShowModal(false)
   }
-
   const { selectedTheme } = useIngameThemeStore()
 
-  // useEffect(() => {
-  //   if (subscribers.length > 0 && mainStreamManager) {
-  //     const mainSubscriber = subscribers.find(
-  //       (subscriber) =>
-  //         subscriber.stream.connection.data ===
-  //         mainStreamManager?.stream.connection.data,
-  //     )
-  //     console.log("탐색중", subscribers[0].stream, mainStreamManager.stream)
-
-  //     if (mainSubscriber) {
-  //       const clientData = JSON.parse(mainSubscriber.stream.connection.data)
-  //       // 가정: `mainSubscriber` 객체에 nickname과 img 정보가 있다고 가정
-  //       setMyInfo({
-  //         nickname: clientData.nickname,
-  //         img: clientData.img,
-  //       })
-  //     }
-  //   }
-  // }, [subscribers, mainStreamManager])
-  useEffect(() => {
-    console.log("구독자 목록", subscribers)
-  }, [subscribers])
   return (
     <Container display="flex" justifyContent="center" alignItems="center">
       <InviteModal open={showModal} handleClose={handleModalClose} />
       <S.UserBox style={{ marginRight: "20px" }}>
-        <S.CharacterBox></S.CharacterBox>
-        <S.Nickname>{myInfo.nickname}</S.Nickname>
+        <S.CharacterBox>
+          <S.ProfileImage
+            src={profileUrl ? profileUrl : ""}
+            alt=""
+            width={100}
+            height={100}
+          />
+        </S.CharacterBox>
+        <S.Nickname>{nickname}</S.Nickname>
       </S.UserBox>
       <S.MainBox>
         <S.MainContentBox>

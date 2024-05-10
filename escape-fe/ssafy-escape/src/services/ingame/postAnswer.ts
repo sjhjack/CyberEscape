@@ -1,39 +1,39 @@
 import API_PATH from "@/constants/path"
 import api from "@/services/api"
 
-interface postHintProps {
-  quizUuid: string
+interface PostAnswerDataProps {
+  clue: string
+  order: number
+  right: boolean
 }
 
-interface postHintDataProps {
-  hint: string
-}
-
-interface postHintResponseProps {
+interface PostAnswerResponseProps {
   status: number
   message: string
-  data: postHintDataProps[]
+  data: PostAnswerDataProps
 }
 
-// 힌트 가져오기
-const postHint = async (
-  data: postHintProps,
-): Promise<postHintResponseProps> => {
+// 정답 전송
+const postAnswer = async (
+  quizUuid: string,
+  answer: string,
+): Promise<PostAnswerDataProps> => {
   try {
-    const response = await api.get<postHintResponseProps>(
-      API_PATH.INGAME.HINT,
+    const response = await api.post<PostAnswerResponseProps>(
+      API_PATH.INGAME.ANSWER,
       {
-        data: data,
+        quizUuid,
+        answer,
       },
     )
-    if (response.status === 400) {
-      throw new Error(`오류: ${response.data}`)
+    if (response.data.status === 400) {
+      throw new Error(`오류: ${response.data.message}`)
     }
-    return response.data
+    return response.data.data
   } catch (error) {
     console.error(error)
     throw error
   }
 }
 
-export default postHint
+export default postAnswer

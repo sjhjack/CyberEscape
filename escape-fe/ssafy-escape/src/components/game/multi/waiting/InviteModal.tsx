@@ -6,7 +6,9 @@ import styled from "styled-components"
 import postFriendList from "@/services/main/friends/postFriendList"
 import postInvite from "@/services/game/room/postInvite"
 import { useQuery } from "@tanstack/react-query"
-
+import { useRouter, usePathname } from "next/navigation"
+import useUserStore from "@/stores/UserStore"
+import Swal from "sweetalert2"
 interface InviteModalProps {
   open: boolean
   handleClose: () => void
@@ -16,10 +18,20 @@ interface friendListProps {
   friendUuid: string
 }
 const InviteModal = ({ open, handleClose }: InviteModalProps) => {
+  const pathname: string = usePathname()
+  const roomUuid: string = pathname.substring(20)
   const { data: friendsData, isLoading } = useQuery({
     queryKey: ["friendList"],
     queryFn: postFriendList,
   })
+  const sendInvitation = (roomUuid: string, userUuid: string) => {
+    postInvite({
+      roomUuid: roomUuid,
+      userUuid: userUuid ? userUuid : "",
+    })
+    Swal.fire("초대 요청을 보냈습니다!")
+    handleClose()
+  }
   return (
     <MainModal
       isOpen={open}
@@ -39,7 +51,7 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
               width="60px"
               height="40px"
               onClick={() => {
-                postInvite
+                sendInvitation(roomUuid, data.friendUuid)
               }}
             />
           </FriendsList>
