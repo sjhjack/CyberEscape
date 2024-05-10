@@ -3,6 +3,7 @@ package com.cyber.escape.domain.room.service.impl;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -41,8 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomService {
-	private static final String MATCHING_QUEUE_KEY = "matching_queue";
 	private static final Long[] themaIds = {1L, 2L, 3L};	// Todo : 값 변경
+
 	private final UserRepository userRepository;
 	private final RoomRepository roomRepository;
 	private final ThemaRepository themaRepository;
@@ -51,6 +52,13 @@ public class RoomServiceImpl implements RoomService {
 	private final UserUtil userUtil;
 	private final RedisTemplate<String, MatchUser> redisTemplate;
 	private final SimpMessagingTemplate messagingTemplate;
+
+	@Value("${room.matching-key}")
+	private String MATCHING_QUEUE_KEY;
+
+	public void logMATCHING_QUEUE_KEY() {
+		log.info("MATCHING_QUEUE_KEY : {}", MATCHING_QUEUE_KEY);
+	}
 
 	@Transactional
 	public void addPlayerToMatchingQueue(String principalUuid) {
@@ -143,7 +151,6 @@ public class RoomServiceImpl implements RoomService {
 	@Transactional
 	@Override
 	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest, int capacity) {
-		String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 
 		User host = userUtil.getLoginUser();
 		// User host = userRepository.findUserByUuid(postRequest.getHostUuid())
@@ -153,16 +160,12 @@ public class RoomServiceImpl implements RoomService {
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
 
-		Room newRoom = Room.builder()
-			.title(postRequest.getTitle())
-			// .password(postRequest.getPassword())
-			.password(encryptPassword)
-			.capacity(capacity)
-			.thema(thema)
-			.host(host)
-			.creator(host)
-			.updator(host)
-			.build();
+		Room newRoom = Room.of(postRequest.getTitle(), capacity, host, thema);
+
+		if(!postRequest.getPassword().isEmpty()) {
+			String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
+			newRoom.setPassword(encryptPassword);
+		}
 
 		newRoom = roomRepository.save(newRoom);
 
@@ -213,12 +216,9 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	public void joinRoom(final RoomDto.JoinRequest joinRequest) {
-		// Todo : broadcasting 공부 후 입장 처리 개발
-
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, joinRequest.getRoomUuid());
 
 		if(findRoom.getPassword() != null){
-			// Todo : Security 적용 후 주석 해제
 			// 비밀번호 check
 			if(bCryptPasswordEncoder.matches(joinRequest.getPassword(), findRoom.getPassword())){
 				findRoom.setCapacity(2);
@@ -232,7 +232,6 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	public void exitRoom(final RoomDto.Request request) {
-		// Todo : broadcasting 공부 후 퇴장 및 자동강퇴 처리 개발
 		// host, guest 분기 필요
 
 		// host : 연결 끊고, 방 폭파
