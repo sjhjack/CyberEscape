@@ -127,6 +127,7 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
+		log.info("keyword : {}", pageRequest.getKeyword());
 		// 4개씩 페이지네이션
 		int totalRecordCount = (int)roomRepository.countAllByTitleLike(pageRequest.getKeyword());
 
