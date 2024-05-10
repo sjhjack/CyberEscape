@@ -53,13 +53,13 @@ services:
         - "61613:61613"
         - "15672:15672"
 
-    nextjs:
-      container_name: nextjs
-      build:
-        context: ../
-        dockerfile: "./docker/dockerfile/nextjs.dockerfile"
-      ports:
-        - "3000:3000"
+#    nextjs:
+#      container_name: nextjs
+#      build:
+#        context: ../
+#        dockerfile: "./docker/dockerfile/nextjs.dockerfile"
+#      ports:
+#        - "3000:3000"
 
     mongo:
       container_name: mongo
@@ -71,6 +71,17 @@ services:
       env_file: ".env"
       ports:
         - "27017:27017"
+    mongo-express:
+      image: mongo-express
+      container_name: mongo-express
+      restart: always
+      networks:
+        - backend
+      ports:
+        - "8082:8081"
+      env_file: ".env"
+      depends_on:
+        - mongo
 
     nginx:
       container_name: nginx-file

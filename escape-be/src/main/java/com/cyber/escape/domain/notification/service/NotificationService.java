@@ -44,10 +44,12 @@ public class NotificationService {
         log.info("NotificationService ============ save emitter completed");
 
         // 시간이 만료된 경우에 대해 자동으로 레포지토리에서 삭제 처리해줄 수 있는 콜백을 등록해놓을 수 있다.
-        sseEmitter.onCompletion(() -> emitterRepository.deleteById(id));
+        //sseEmitter.onCompletion(() -> emitterRepository.deleteById(id));
         sseEmitter.onTimeout(() -> emitterRepository.deleteById(id));
         sseEmitter.onError((e) -> emitterRepository.deleteById(id));
         // sseEmitter.onError();
+
+        log.info("SSE DATA : {}", sseEmitter.toString());
 
         // sendToClient(sseEmitter, id, "EventStream Created. memberId = {" + memberId + "}");
         sendToClient(sseEmitter, id, "SSE 구독 요청이 완료되었습니다.");
@@ -71,6 +73,9 @@ public class NotificationService {
         // 알림 내역 저장
         String senderUuid = userUtil.getLoginUserUuid();
 
+        log.info("RECEIVER UUID : {}", receiverUuid);
+        log.info("NOTIFYCATION : {}", notificationType);
+
         // 친구 요청이라면
         if(notificationType.equals(Notify.NotificationType.FRIEND)) {
             // sender가 receiver에게 친구 요청을 보낸 적이 있는지를 판별
@@ -90,8 +95,9 @@ public class NotificationService {
         if (existNotification == null) {
 
             // roomUuid 자리는 비워놓는다.
+            //저장 확인
             Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
-
+            log.info("::::::::::::::::::::::::::::::::::  친구 요청 ");
             // Notify notification = createNotify(receiverId, notificationType, content);
 
             // receiver = 현재 로그인 한 유저 = 알림 받을 사람
@@ -99,6 +105,17 @@ public class NotificationService {
 
             // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
             Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
+
+            //sseEmitter가 null이다
+            //log.info("상대방의 SSE EMITTER : {} ", sseEmitters.get(String.valueOf(receiverUuid)));
+            if( sseEmitters.get(String.valueOf(receiverUuid)) == null){
+                String userUuid = userUtil.getLoginUserUuid();
+                log.info("NotificationService ============ start subscribe..");
+                String id = userUuid + "_" + System.currentTimeMillis();
+                log.info("NotificationService ============ id : {}, lastEventId: {}", id, "");
+                SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+            }
+
             sseEmitters.forEach(
                     (key, sseEmitter) -> {
                         emitterRepository.saveEventCache(key, notification);
@@ -123,21 +140,26 @@ public class NotificationService {
     private void sendToClient(SseEmitter sseEmitter, String id, Object data){
         try{
             log.info("sendToClient ============ sendToClient start");
+            log.info("sseEmitter INFO : {}", sseEmitter);
             sseEmitter.send(SseEmitter.event()
                     .id(id)
                     .name("sse")
                     .data(data));
+            sseEmitter.complete();
             log.info("sendToClient ============ sendToClient completed");
         } catch (IOException e){
             log.info("sendToClient ============ sendToClient failed");
             emitterRepository.deleteById(id);
             throw new RuntimeException("연결 오류");
         }
+        catch (Exception e){
+            log.error("ERROR : {}", e.getMessage());
+        }
     }
 
     // 안 읽은 목록들 추출
     public List<Object> getNotifyList(){
-        String userUuid = "c83ec6b2-0470-11ef-9c95-0242ac101404";
+        String userUuid = userUtil.getLoginUserUuid();
         List<Notify> notifyList = notifyRepository.findByReceiverUuidAndIsRead(userUuid, 'F');
 
         List<Object> response = new ArrayList<>();
