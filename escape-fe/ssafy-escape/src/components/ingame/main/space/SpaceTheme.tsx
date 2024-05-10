@@ -16,6 +16,7 @@ import Start from "../../elements/space/Interactions/Start"
 import Videos from "../../elements/space/Basics/Videos"
 import Subtitle from "../../elements/common/Subtitle"
 import Problems from "../../elements/space/Basics/Problems"
+import CountdownTimer from "../../CountdownTimer"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [sequences, setSequences] = useState(Sequences)
@@ -37,7 +38,12 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
   return (
     <>
-      {isGameStart ? <Start setSubtitle={setSubtitle} /> : null}
+      {isGameStart ? (
+        <>
+          <CountdownTimer />
+          <Start setSubtitle={setSubtitle} />
+        </>
+      ) : null}
       <Subtitle text={subtitle} />
       <BasicScene interactNum={interactNum}>
         <Lights />

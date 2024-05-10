@@ -3,7 +3,11 @@ import { Box } from "@react-three/drei"
 
 // 세 번째 문제가 숨겨진 곳(랜덤)
 // 책장의 책이 놓여있는 8곳(시간 남으면 더 추가할 예정)
-const ThirdProblemObject = ({ onClick }: ClickObjectProps) => {
+const ThirdProblemObject = ({
+  onClick,
+  solved,
+  setInteractNum,
+}: ClickObjectProps) => {
   const objectArr: [number, number, number][][] = [
     [
       [73, 25, 22],
@@ -44,11 +48,13 @@ const ThirdProblemObject = ({ onClick }: ClickObjectProps) => {
     return { randomIndex }
   }, [])
 
-  return (
+  return solved === 2 ? (
     <>
       <Box
         position={objectArr[randomIndex][0]}
         args={objectArr[randomIndex][1]}
+        onPointerOver={() => setInteractNum(2)}
+        onPointerOut={() => setInteractNum(1)}
         onClick={() => onClick()}
       >
         <meshStandardMaterial
@@ -59,7 +65,7 @@ const ThirdProblemObject = ({ onClick }: ClickObjectProps) => {
         />
       </Box>
     </>
-  )
+  ) : null
 }
 
 export default ThirdProblemObject

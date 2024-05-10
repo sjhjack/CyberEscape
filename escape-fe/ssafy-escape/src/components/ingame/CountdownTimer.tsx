@@ -1,14 +1,37 @@
-import React, { useState, useEffect } from "react"
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  forwardRef,
+  useImperativeHandle,
+} from "react"
 import styled from "styled-components"
 
-// for merge request
+export interface CountdownTimerHandle {
+  applyPenalty: () => void
+}
 
-const CountdownTimer = () => {
+const CountdownTimer = forwardRef<CountdownTimerHandle | null>((_, ref) => {
   const [time, setTime] = useState({
     minutes: 10,
     seconds: 0,
   })
 
+  const applyPenalty = useCallback(() => {
+    setTime((prevTime) => {
+      let { minutes, seconds } = prevTime
+      const totalSeconds = minutes * 60 + seconds
+      const newTotalSeconds = Math.max(totalSeconds - 30, 0) // 최소 0초까지 감산
+
+      const newMinutes = Math.floor(newTotalSeconds / 60)
+      const newSeconds = newTotalSeconds % 60
+
+      return { minutes: newMinutes, seconds: newSeconds }
+    })
+  }, [])
+  useImperativeHandle(ref, () => ({
+    applyPenalty,
+  }))
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prevTime) => {
@@ -38,7 +61,7 @@ const CountdownTimer = () => {
       <TimerDigit>{time.seconds.toString().padStart(2, "0")}</TimerDigit>
     </Container>
   )
-}
+})
 
 export default CountdownTimer
 
@@ -52,6 +75,7 @@ const Container = styled.div`
   justify-content: center;
   font-size: 58px;
   color: white;
+  z-index: 99;
 `
 
 const TimerDigit = styled.span`
