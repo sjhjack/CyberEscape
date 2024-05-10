@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.auth.service;
+package com.cyber.escape.domain.auth.service.impl;
 
 import java.io.IOException;
 
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cyber.escape.domain.auth.jwt.TokenProvider;
+import com.cyber.escape.domain.auth.service.AuthService;
 import com.cyber.escape.domain.auth.util.TokenUtil;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.entity.User;
