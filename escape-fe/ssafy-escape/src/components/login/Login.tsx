@@ -3,13 +3,13 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { styled } from "styled-components"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
-// import postSignUp from "@/services/user/postSignUp"
-// import useUserStore from "@/stores/UserStore"
+import postSignUp from "@/services/user/postSignUp"
+import useUserStore from "@/stores/UserStore"
 import Button from "@/components/common/Button"
 import Input from "@/components/common/Input"
 import Container from "@/components/common/Container"
 import { MainColor } from "@/styles/palette"
-
+import Swal from "sweetalert2"
 /*
 추후 리팩토링 사항
 1. disabled 버튼 스타일 적용 고려 2. return 이후 중복 코드 수정 고려
@@ -21,7 +21,7 @@ interface LoginProps {
 
 const Login = ({ handleLoginback }: LoginProps) => {
   const router = useRouter()
-  // const { login } = useUserStore()
+  const { login } = useUserStore()
   const [loginId, setLoginId] = useState<string>("")
   const [password, setPassword] = useState<string>("")
 
@@ -34,15 +34,15 @@ const Login = ({ handleLoginback }: LoginProps) => {
     const idRegex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/
     // 아이디 유효성 검사
     if (!idRegex.test(loginId)) {
-      alert("아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!")
+      Swal.fire("아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!")
       return
     }
 
     // 아이디 유효성 검사 통과 시
     try {
-      // await login(loginId, password)
+      await login(loginId, password)
+      Swal.fire("로그인 성공")
       router.push("/main")
-      alert("로그인 성공!")
     } catch (error) {
       console.error(error)
       if (error instanceof Error) {
@@ -54,10 +54,16 @@ const Login = ({ handleLoginback }: LoginProps) => {
   // 회원가입 버튼 클릭 시
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const idRegex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/
+    // 아이디 유효성 검사
+    if (!idRegex.test(loginId)) {
+      Swal.fire("아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!")
+      return
+    }
     try {
-      // await postSignUp(loginId, password)
-      alert("회원가입 성공!")
-      router.push("/login")
+      await postSignUp(loginId, password)
+      Swal.fire("회원가입 성공!")
+      handleLoginback()
     } catch (error) {
       console.error(error)
       if (error instanceof Error) {
@@ -130,7 +136,8 @@ const Login = ({ handleLoginback }: LoginProps) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              maxLength={10}
+              minLength={6}
+              maxLength={20}
               required
             />
             <Button text="회원가입" theme="success" type="submit" />

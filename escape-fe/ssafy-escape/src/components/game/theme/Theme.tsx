@@ -27,6 +27,7 @@ const Theme = () => {
       justifyContent="space-between"
       flexDirection="column"
       alignItems="center"
+      backgroundColor="none"
     >
       <h1>테마 선택</h1>
       <ThemeCarousel

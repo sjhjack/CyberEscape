@@ -7,9 +7,18 @@ interface BloodPoolProps {
 }
 
 const BloodPool = memo(({ solved, isFlowerClicked }: BloodPoolProps) => {
-  const { scene: bloodPool1 } = useGLTF("/glb/horror/pool_blood1.glb", true)
-  const { scene: bloodPool2 } = useGLTF("/glb/horror/pool_blood2.glb", true)
-  const { scene: bloodPool3 } = useGLTF("/glb/horror/pool_blood3.glb", true)
+  const { scene: bloodPool1 } = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/pool_blood1.glb",
+    true,
+  )
+  const { scene: bloodPool2 } = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/pool_blood2.glb",
+    true,
+  )
+  const { scene: bloodPool3 } = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/pool_blood3.glb",
+    true,
+  )
 
   const bloodPools = useMemo(() => {
     const pools = []
@@ -28,7 +37,7 @@ const BloodPool = memo(({ solved, isFlowerClicked }: BloodPoolProps) => {
       bloodPool1.position.set(-35, 0, -22)
     }
     if (bloodPool2) {
-      bloodPool2.position.set(-36, 20, 40)
+      bloodPool2.position.set(-36, 20, 44)
     }
     if (bloodPool3) {
       bloodPool3.position.set(113, 0, -80)
