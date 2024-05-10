@@ -4,7 +4,10 @@ import { useEffect } from "react"
 import * as THREE from "three"
 
 const HangedDoll = () => {
-  const doll = useGLTF("/glb/horror/hanged_doll.glb", true)
+  const doll = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/hanged_doll.glb",
+    true,
+  )
   const { scene } = useThree()
 
   useEffect(() => {

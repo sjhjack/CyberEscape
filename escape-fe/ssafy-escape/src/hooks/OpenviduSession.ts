@@ -8,7 +8,7 @@ interface ChatData {
 }
 
 const APPLICATION_SERVER_URL = "http://localhost:8080/"
-
+const accessToken = sessionStorage.getItem("access_token")
 const useOpenViduSession = (
   uuid: string,
   setMessage: (data: ChatData[]) => void,
@@ -79,6 +79,9 @@ const useOpenViduSession = (
       if (session) {
         session.disconnect()
       }
+      if (mainStreamManager) {
+        deleteSubscriber(mainStreamManager)
+      }
       // 상태 리셋, 리디렉션 등
       setSession(undefined)
       setSubscribers([])
@@ -106,6 +109,10 @@ const useOpenViduSession = (
     const response = await axios.post(
       `${APPLICATION_SERVER_URL}voice/session`,
       { roomUuid: uuid },
+
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      },
     )
     return response.data.data.sessionId
   }

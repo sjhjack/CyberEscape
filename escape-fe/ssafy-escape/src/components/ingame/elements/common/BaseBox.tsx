@@ -6,8 +6,9 @@ const BaseBox = ({ ...props }) => {
   const [ref] = useBox((index) => ({
     type: "Static",
     mass: 10,
+    restitution: 0,
     onCollide: (e) => {
-      console.log(e)
+      // console.log(e)
     },
     ...props,
   }))
@@ -27,7 +28,7 @@ const BaseBox = ({ ...props }) => {
       <meshStandardMaterial
         color={props.color}
         transparent={true}
-        opacity={0}
+        opacity={props.opacity}
       />
     </mesh>
   )
