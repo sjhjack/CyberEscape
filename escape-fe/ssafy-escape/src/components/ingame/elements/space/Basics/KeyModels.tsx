@@ -6,10 +6,11 @@ interface KeyProps {
   onClick: any
   position: [number, number, number]
   active: boolean
+  setInteractNum: any
 }
 
-const KeyModels = ({ onClick, position, active }: KeyProps) => {
-  const { scene } = useGLTF("/glb/key.glb")
+const KeyModels = ({ onClick, position, active, setInteractNum }: KeyProps) => {
+  const { scene } = useGLTF(process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key.glb")
 
   return (
     <>
@@ -24,14 +25,11 @@ const KeyModels = ({ onClick, position, active }: KeyProps) => {
                 position={position}
                 scale={[0.2, 0.2, 0.2]}
                 onClick={onClick}
-                // onPointerOver={() => {
-                //   document.body.style.cursor = "pointer"
-                // }}
-                // onPointerOut={() => {
-                //   document.body.style.cursor = "auto"
-                // }}
-                onPointerOver={(e) => {
-                  console.log("on")
+                onPointerOver={() => {
+                  setInteractNum(2)
+                }}
+                onPointerOut={() => {
+                  setInteractNum(1)
                 }}
               />
             )

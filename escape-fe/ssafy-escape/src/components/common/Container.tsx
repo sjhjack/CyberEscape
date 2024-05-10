@@ -11,12 +11,14 @@ interface ContainerProps {
   flexDirection?: string
   justifyContent?: string
   alignItems?: string
+  backgroundColor?: string
 }
 interface ContainerStyleProps {
   $display?: string
   $flexDirection?: string
   $justifyContent?: string
   $alignItems?: string
+  $backgroundColor?: string
 }
 const Container = ({
   isBackButton = true,
@@ -25,6 +27,7 @@ const Container = ({
   flexDirection,
   justifyContent,
   alignItems,
+  backgroundColor,
 }: ContainerProps) => {
   const router = useRouter()
   return (
@@ -33,6 +36,7 @@ const Container = ({
       $flexDirection={flexDirection}
       $justifyContent={justifyContent}
       $alignItems={alignItems}
+      $backgroundColor={backgroundColor}
     >
       {isBackButton ? (
         <BackIcon onClick={() => router.back()}>
@@ -53,7 +57,8 @@ const ContainerStyle = styled.div<ContainerStyleProps>`
   top: 50%;
   left: 50%;
   border-radius: 30px;
-  background: rgba(255, 255, 255, 0.8);
+  background: ${(props) =>
+    props.$backgroundColor ? `none` : `rgba(255, 255, 255, 0.8)`};
   transform: translate(-50%, -50%);
   padding: 20px;
   display: ${(props) => props.$display};
