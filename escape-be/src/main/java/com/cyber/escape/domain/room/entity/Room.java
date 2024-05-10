@@ -2,10 +2,12 @@ package com.cyber.escape.domain.room.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.cyber.escape.domain.room.data.RoomUpdateSetting;
+import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.global.common.entity.BaseEntity;
@@ -62,6 +64,9 @@ public class Room extends BaseEntity {
 	@JoinColumn(name = "updated_user", referencedColumnName = "id")
 	private User updator;
 
+	@ColumnDefault("0")
+	private boolean hasPassword;
+
 	public void updateSetting(final RoomUpdateSetting setting) {
 		title = setting.title();
 		password = setting.password();
@@ -71,5 +76,26 @@ public class Room extends BaseEntity {
 	// host id 캡슐화
 	public long getHostId() {
 		return host.getId();
+	}
+
+	public static Room of(
+		final String title,
+		final int capacity,
+		final User host,
+		final Thema thema
+	) {
+		return Room.builder()
+			.title(title)
+			.capacity(capacity)
+			.thema(thema)
+			.host(host)
+			.creator(host)
+			.updator(host)
+			.build();
+	}
+
+	public void setPassword(final String encryptPassword) {
+		password = encryptPassword;
+		hasPassword = true;
 	}
 }

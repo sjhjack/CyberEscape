@@ -54,3 +54,6 @@ secretKeyPlain: ${KEY}
 openvidu:
   url: ${OPENVIDU_URL}
   secret: ${OPENVIDU_SECRET}
+
+room:
+  matching-key: ${MATCHING_QUEUE_KEY}
