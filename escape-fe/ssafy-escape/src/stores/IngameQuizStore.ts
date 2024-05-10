@@ -8,7 +8,7 @@ interface IngameQuizProps {
 }
 
 const useIngameQuizStore = create<IngameQuizProps>((set) => ({
-  solved: 2,
+  solved: 0,
   setSolved: (solved: number) => set({ solved }),
   quizData: null,
   setQuizData: (quizData) => set({ quizData }),

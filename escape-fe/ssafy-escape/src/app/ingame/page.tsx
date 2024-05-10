@@ -12,6 +12,7 @@ import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
+import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
 
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
@@ -48,6 +49,11 @@ const Page = () => {
         />
       ) : selectedTheme === 2 ? (
         <SsafyTheme
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : selectedTheme === 4 ? (
+        <HorrorTheme2
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />

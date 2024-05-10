@@ -11,7 +11,7 @@ const Lights = ({ penalty, solved }: LightProps) => {
       ) : (
         <ambientLight intensity={0.5} />
       )}
-      {penalty <= 1 ? (
+      {penalty === 0 ? (
         <directionalLight position={[6, 15, 5]} intensity={1} receiveShadow />
       ) : null}
     </>

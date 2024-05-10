@@ -2,7 +2,7 @@ import { useGLTF } from "@react-three/drei"
 import { useEffect, useMemo } from "react"
 
 // 마지막 탈출 키인 문고리 오브젝트(랜덤, 시간 남으면 추가 예정)
-const Knob = ({ onClick, isFind, solved }: KnobProps) => {
+const Knob = ({ onClick, isFind, solved, setInteractNum }: ClickObjectProps) => {
   const knob = useGLTF("/glb/horror/knob.glb", true)
   const knobPosition: [number, number, number][] = [
     [-60, -30, 20],
@@ -27,10 +27,15 @@ const Knob = ({ onClick, isFind, solved }: KnobProps) => {
       }
     }
   }, [knob, isFind, solved])
-  
-  // 테스트 끝나면 3 이상이 아니라 3으로 변경 예정
-  return solved >= 3 ? (
-    <primitive object={knob.scene} scale={35} onClick={onClick} />
+
+  return solved === 3 ? (
+    <primitive
+      object={knob.scene}
+      scale={35}
+      onPointerOver={() => setInteractNum(2)}
+      onPointerOut={() => setInteractNum(1)}
+      onClick={onClick}
+    />
   ) : null
 }
 
