@@ -3,35 +3,53 @@ import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
 import extractSubstring from "@/hooks/extractSubstring"
-// import useIngameSolvedStore from "@/stores/IngameSolved"
+import useIngameQuizStore from "@/stores/IngameQuizStore"
+import postAnswer from "@/services/ingame/postAnswer"
+import HintModal from "../common/HintModal"
+import { useState } from "react"
 
 // 첫 번째 문제 모달
 // 문제 모달 중복 코드 많아서 추후 리팩토링 필요
 const FirstProblemModal = ({
   onClose,
-  fanalty,
-  setFanalty,
+  penalty,
+  setPenalty,
   setSubtitle,
+  timePenalty,
 }: ProblemProps) => {
+  // 더미 삭제 후 문제 부분 코드 수정 필요
   const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
   const choices = ["1", "3", "5", "7"]
-  // const { solved, setSolved } = useIngameSolvedStore()
-  const handleAnswerCheck = (choice: string) => {
-    // 정답이면
-    // setSolved(solved + 1)
-    // onClose()
-    setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
-    setTimeout(() => {
-      setSubtitle("서랍장을 한번 뒤져볼까?")
-      setTimeout(() => {
-        setSubtitle("")
-      }, 10000)
-    }, 4000)
+  const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
+  const { solved, setSolved, quizData } = useIngameQuizStore()
 
-    // 오답이면
-    // alert("오답입니다")
-    // + 패널티 추가(시간 깎거나 무서운 연출)
-    setFanalty(fanalty + 1)
+  if (!quizData) {
+    return <div>퀴즈 데이터가 없습니다.</div>
+  }
+
+  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
+  const handleOpenModal = () => {
+    setHintModalOpen(true)
+    timePenalty()
+  }
+  const handleCloseModal = () => {
+    setHintModalOpen(false)
+  }
+  const handleAnswerCheck = async (answer: string) => {
+    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+      setSolved(solved + 1)
+      onClose()
+      setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
+      setTimeout(() => {
+        setSubtitle("서랍장을 한번 뒤져볼까?")
+        setTimeout(() => {
+          setSubtitle("")
+        }, 10000)
+      }, 4000)
+    } else {
+      alert("오답입니다")
+      setPenalty(penalty + 1)
+    }
   }
   return (
     <MainContainer>
@@ -83,6 +101,20 @@ const FirstProblemModal = ({
       <GuideText>
         ※ ALT 또는 ESC 버튼을 누르면 마우스 커서가 나타납니다.
       </GuideText>
+      <HintIconBox onClick={handleOpenModal}>
+        <Image
+          src={"/image/hint.png"}
+          alt="힌트 아이콘"
+          width={35}
+          height={35}
+        />
+        <div>힌트보기</div>
+      </HintIconBox>
+      <HintModal
+        open={hintModalopen}
+        onClose={handleCloseModal}
+        quizUuid={quizData[0].quizUuid}
+      />
     </MainContainer>
   )
 }
@@ -139,4 +171,15 @@ const IconBox = styled.div`
   right: 110px;
   top: 75px;
   z-index: 10;
+`
+
+const HintIconBox = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  left: 165px;
+  top: 72px;
+  z-index: 10;
+  font-size: 16px;
 `

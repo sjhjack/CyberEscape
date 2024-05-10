@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import CountdownTimer from "@/components/ingame/CountdownTimer"
 import Chat from "@/components/ingame/Chat"
 import ExitGame from "@/components/ingame/ExitGame"
 import ProgressBar from "@/components/ingame/ProgressBar"
@@ -13,6 +12,7 @@ import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
+import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
 
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
@@ -37,18 +37,23 @@ const Page = () => {
   return (
     <S.Container>
       {/* 멀티인지 확인 후 수정*/}
-      {selectedTheme === "3" ? (
+      {selectedTheme === 3 ? (
         <SpaceTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === "1" ? (
+      ) : selectedTheme === 1 ? (
         <HorrorTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === "2" ? (
+      ) : selectedTheme === 2 ? (
         <SsafyTheme
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : selectedTheme === 4 ? (
+        <HorrorTheme2
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
@@ -82,11 +87,6 @@ const Page = () => {
       ) : (
         <S.LoadingText>로딩 중...</S.LoadingText>
       )}
-      {isGameStart ? (
-        <div>
-          <CountdownTimer />
-        </div>
-      ) : null}
     </S.Container>
   )
 }

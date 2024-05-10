@@ -4,71 +4,86 @@ import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
 import extractSubstring from "@/hooks/extractSubstring"
 import { useEffect, useMemo, useState } from "react"
-// import useIngameSolvedStore from "@/stores/IngameSolved"
+import postAnswer from "@/services/ingame/postAnswer"
+import useIngameQuizStore from "@/stores/IngameQuizStore"
+import HintModal from "../common/HintModal"
 
 // 세 번째 문제 모달
 const ThirdProblemModal = ({
   onClose,
-  fanalty,
-  setFanalty,
+  penalty,
+  setPenalty,
   setSubtitle,
+  timePenalty,
 }: ProblemProps) => {
   const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
   const choices = ["1", "3", "5", "7"]
   const [showExtraImage, setShowExtraImage] = useState(false)
-  // const { solved, setSolved } = useIngameSolvedStore()
+  const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
 
-  const horrorImages = [
-    "/image/ghost/ghost1.jpg",
-    "/image/ghost/ghost2.jpg",
-    "/image/ghost/ghost3.jpg",
-    "/image/ghost/ghost4.jpg",
-  ]
-
-  const randomImage = useMemo(() => {
-    const randomIndex = Math.floor(Math.random() * horrorImages.length)
-    return horrorImages[randomIndex]
-  }, [horrorImages])
-
-  useEffect(() => {
-    const showImg = setTimeout(() => {
-      // const audio = new Audio("dubbing/space/start/start_5.mp3")
-      // audio.play()
-      setShowExtraImage(true)
-      const hideImg = setTimeout(() => {
-        setShowExtraImage(false)
-      }, 900)
-      return () => clearTimeout(hideImg)
-    }, 8000)
-    return () => clearTimeout(showImg)
+  const randomIndex = useMemo(() => {
+    const randomIndex = Math.floor(Math.random() * 4)
+    return randomIndex
   }, [])
 
-  const handleAnswerCheck = (choice: string) => {
-    // 정답이면
-    // setSolved(solved + 1)
-    // onClose()
-    setSubtitle("...그러고 보니 처음부터 문고리가 없었던 것 같은데.")
-    setTimeout(() => {
-      setSubtitle("마지막 희망이야.")
-      setTimeout(() => {
-        setSubtitle("문고리...문고리를 찾아야 해.")
-        setTimeout(() => {
-          setSubtitle("")
-        }, 10000)
-      }, 10000)
-    }, 4000)
-    // 오답이면
-    // alert("오답입니다")
-    // + 패널티 추가(시간 깎거나 무서운 연출)
-    setFanalty(fanalty + 1)
+  useEffect(() => {
+    const playAudio = setTimeout(() => {
+      const audio = new Audio("sound/woman_scream.mp3")
+      audio.play()
+      const showImg = setTimeout(() => {
+        setShowExtraImage(true)
+        const hideImg = setTimeout(() => {
+          setShowExtraImage(false)
+        }, 900)
+        return () => clearTimeout(hideImg)
+      }, 300)
+      return () => clearTimeout(showImg)
+    }, 8000)
+    return () => clearTimeout(playAudio)
+  }, [])
+
+  const { solved, setSolved, quizData } = useIngameQuizStore()
+
+  if (!quizData) {
+    return <div>퀴즈 데이터가 없습니다.</div>
   }
+
+  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
+  const handleOpenModal = () => {
+    setHintModalOpen(true)
+    timePenalty()
+  }
+  const handleCloseModal = () => {
+    setHintModalOpen(false)
+  }
+
+  const handleAnswerCheck = async (answer: string) => {
+    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+      setSolved(solved + 1)
+      onClose()
+      setSubtitle("...그러고 보니 처음부터 문고리가 없었던 것 같은데.")
+      setTimeout(() => {
+        setSubtitle("마지막 희망이야.")
+        setTimeout(() => {
+          setSubtitle("문고리...문고리를 찾아야 해.")
+          setTimeout(() => {
+            setSubtitle("")
+          }, 10000)
+        }, 10000)
+      }, 4000)
+    } else {
+      alert("오답입니다")
+      setPenalty(penalty + 1)
+    }
+  }
+
   return (
     <>
       {showExtraImage && (
         <BlackBackground>
           <HorrorImageBox>
             <Image
-              src={randomImage}
+              src={`/image/ghost/ghost${randomIndex}.jpg`}
               alt="귀신 이미지"
               layout="fill"
               objectFit="cover"
@@ -80,8 +95,8 @@ const ThirdProblemModal = ({
         <Image
           src="/image/diary.png"
           alt="일기장 이미지"
-          width={650}
-          height={650}
+          width={620}
+          height={580}
         />
         <IconBox onClick={onClose}>
           <CloseIcon sx={{ fontSize: 40 }} />
@@ -124,6 +139,20 @@ const ThirdProblemModal = ({
             />
           </ChoiceBox>
         </SubContainer>
+        <HintIconBox onClick={handleOpenModal}>
+          <Image
+            src={"/image/hint.png"}
+            alt="힌트 아이콘"
+            width={35}
+            height={35}
+          />
+          <div>힌트보기</div>
+        </HintIconBox>
+        <HintModal
+          open={hintModalopen}
+          onClose={handleCloseModal}
+          quizUuid={quizData[2].quizUuid}
+        />
       </MainContainer>
     </>
   )
@@ -170,8 +199,8 @@ const ChoiceBox = styled.div`
 const IconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 138px;
-  top: 45px;
+  right: 130px;
+  top: 40px;
   z-index: 24;
 `
 
@@ -191,4 +220,15 @@ const BlackBackground = styled.div`
   height: 100vh;
   background-color: black;
   z-index: 24;
+`
+
+const HintIconBox = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  left: 165px;
+  top: 42px;
+  z-index: 10;
+  font-size: 16px;
 `
