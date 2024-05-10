@@ -12,22 +12,15 @@ const postLogin = async (
   password: string,
 ): Promise<UserInfoProps> => {
   try {
-    const accessToken = sessionStorage.getItem("access_token")
-    const response = await api.post<PostLoginBodyProps>(
-      API_PATH.AUTH.LOGIN,
-      {
-        loginId,
-        password,
-      },
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
-    )
-    // 아이디 중복시 상태코드 변경
+    const response = await api.post<PostLoginBodyProps>(API_PATH.AUTH.LOGIN, {
+      loginId,
+      password,
+    })
+    // 로그인에서 에러 발생할 때. 현재는 아이디나 비밀번호 잘못 입력하면 AxiosError로 뜬다.
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     } // 존재하지 않는 사용자 or 비밀번호 틀릴 시
-    else if (response.status === 403) {
+    else if (response.status === 4040) {
       throw new Error("사용자를 찾을 수 없습니다.")
     }
 
