@@ -127,6 +127,7 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public PagingDto.Response findAllRoomsByKeyword(PagingDto.PageRequest pageRequest) {
+		log.info("keyword : {}", pageRequest.getKeyword());
 		// 4개씩 페이지네이션
 		int totalRecordCount = (int)roomRepository.countAllByTitleLike(pageRequest.getKeyword());
 
@@ -236,12 +237,8 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	public void exitRoom(final RoomDto.Request request) {
-		// host, guest 분기 필요
-
-		// host : 연결 끊고, 방 폭파
-		// guest : 연결 끊기
-
-		// 연결 끊기는 front에서 하는 건가?
+		// host : 방 삭제 (소켓 : 연결 끊고, 방 폭파, Todo : 게스트한테는 방폭 메시지 전송)
+		// guest : capacity 변경 (소켓 : 연결 끊기)
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 
@@ -250,8 +247,7 @@ public class RoomServiceImpl implements RoomService {
 		if (user.getId() == findRoom.getHostId()) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
 			roomRepository.delete(findRoom);
-			// Todo : 연결된 채팅방까지 삭제 ???
-			// Todo : 방에 남아있는 Guest는 자동강퇴 조치
+			// Todo : 방에 남아있는 Guest에게 방폭 메시지 전송
 			log.info("RoomServiceImpl ========== 방 삭제 성공");
 		} else {
 			log.info("RoomServiceImpl ========== 게스트입니다.");
