@@ -9,7 +9,9 @@ import InviteModal from "@/components/game/multi/waiting/InviteModal"
 import Button from "@/components/common/Button"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
-import pubSubscribe from "@/services/game/room/pubSubscribe"
+import useStompClient from "@/hooks/StompClient"
+import { pubSubscribe } from "@/services/game/room/roomSocket"
+
 interface ChatType {
   userName: string
   message: string
@@ -22,9 +24,9 @@ const Waiting = () => {
     console.log("Room data received:", data)
   }
 
-  useEffect(() => {
-    pubSubscribe(roomUuid, handleRoomData)
-  }, [])
+  // useEffect(() => {
+  //   pubSubscribe(roomUuid, handleRoomData)
+  // }, [])
 
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
