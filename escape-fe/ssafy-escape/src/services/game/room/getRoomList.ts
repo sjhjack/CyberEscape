@@ -36,13 +36,14 @@ interface getRoomRequestProps {
   keyword: string
 }
 // 방 목록 조회
-const getRoomList = async (
-  data: getRoomRequestProps,
-): Promise<GetRoomListBodyProps> => {
+const getRoomList = async ({
+  page,
+  keyword,
+}: getRoomRequestProps): Promise<GetRoomListBodyProps> => {
   try {
     const response = await api.get<GetRoomListBodyProps>(
       API_PATH.GAME.MULTI.ROOM.LIST,
-      { data: data },
+      { params: { page, keyword } },
     )
     if (response.status === 400) {
       throw new Error(`오류: ${response.data}`)
