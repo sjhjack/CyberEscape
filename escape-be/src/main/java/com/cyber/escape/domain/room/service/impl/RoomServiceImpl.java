@@ -56,10 +56,6 @@ public class RoomServiceImpl implements RoomService {
 	@Value("${room.matching-key}")
 	private String MATCHING_QUEUE_KEY;
 
-	public void logMATCHING_QUEUE_KEY() {
-		log.info("MATCHING_QUEUE_KEY : {}", MATCHING_QUEUE_KEY);
-	}
-
 	@Transactional
 	public void addPlayerToMatchingQueue(String principalUuid) {
 		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
