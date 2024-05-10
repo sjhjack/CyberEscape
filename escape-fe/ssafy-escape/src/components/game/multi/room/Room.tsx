@@ -6,13 +6,17 @@ import Container from "@/components/common/Container"
 import RoomList from "./RoomList"
 import CustomPagination from "./CustomPagination"
 import CircularProgress from "@mui/material/CircularProgress"
-
+interface RequestData {
+  page: number
+  keyword: string
+}
 const Room = () => {
   const [page, setPage] = useState<number>(1)
   const [keyword, setKeyword] = useState<string>("")
+  const searchData: RequestData = { page: page, keyword: keyword }
   const { data: roomData, isLoading } = useQuery({
-    queryKey: ["roomList", page, keyword],
-    queryFn: () => getRoomList({ page: page, keyword: keyword }),
+    queryKey: ["roomList", searchData],
+    queryFn: () => getRoomList(searchData),
   })
 
   const handlePageChange = (newPage: number) => {
