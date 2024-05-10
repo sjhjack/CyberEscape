@@ -27,15 +27,15 @@ public class RoomDto {
 		private final String userUuid;
 		private final String password;
 
-		public JoinRequest(final String roomUuid, final String userUuid, final String password){
-			this.roomUuid = roomUuid;
-			this.userUuid = userUuid;
-			this.password = password;
-		}
-
-		public JoinRequest(final String roomUuid, final String userUuid){
-			this(roomUuid, userUuid, "");
-		}
+		// public JoinRequest(final String roomUuid, final String userUuid, final String password){
+		// 	this.roomUuid = roomUuid;
+		// 	this.userUuid = userUuid;
+		// 	this.password = password;
+		// }
+		//
+		// public JoinRequest(final String roomUuid, final String userUuid){
+		// 	this(roomUuid, userUuid, "");
+		// }
 	}
 
 	@Builder
