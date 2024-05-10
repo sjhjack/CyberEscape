@@ -16,4 +16,5 @@ public interface RoomModifyService {
 
 	void deleteRoom(final RoomDto.Request request);
 	String inviteUserToRoom(RoomDto.Request request);
+	String joinRoom(final RoomDto.JoinRequest joinRequest);
 }
