@@ -39,6 +39,10 @@ const API_PATH = {
         CHANGE_HOST: "/room/change/host",
         START: "/room/start",
       },
+      VOICE: {
+        SESSION: "/voice/init/session",
+        CONNECTION: "/voice/connection",
+      },
     },
   },
   INVITE: {
