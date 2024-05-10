@@ -84,6 +84,7 @@ public class UserDto {
     @Builder
     public static class SearchNicknameResponse{
         private String nickname;
+		private String userUuid;
         private String relationship;
     }
 
