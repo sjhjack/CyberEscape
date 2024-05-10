@@ -5,7 +5,7 @@ import QueryProvider from "../hooks/QueryClientProvider"
 import "./globals.css"
 import { usePathname } from "next/navigation"
 import useUserStore from "@/stores/UserStore"
-useUserStore
+
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
 })
