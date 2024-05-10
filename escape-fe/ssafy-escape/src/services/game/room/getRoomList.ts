@@ -56,10 +56,3 @@ const getRoomList = async ({
 }
 
 export default getRoomList
-
-// import dummy from "./getRoomList.json"
-// const getRoomList = async () => {
-//   return dummy
-// }
-
-// export default getRoomList

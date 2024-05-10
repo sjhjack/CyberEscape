@@ -1,8 +1,9 @@
 "use client"
 import axios from "axios"
 import useUserStore from "@/stores/UserStore"
+const baseURL = process.env.NEXT_PUBLIC_URL
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -31,7 +32,7 @@ api.interceptors.response.use(
       const refreshToken = sessionStorage.getItem("refresh_token")
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/refresh",
+          "https://k10a303.p.ssafy.io/api/auth/refresh",
           {
             refresh_token: refreshToken,
           },
