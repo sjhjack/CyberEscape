@@ -15,9 +15,11 @@ public class NotifyDto {
     // Todo : member의 unique 값을 뭐로 저장하냐에 따라서 id 타입 바꾸기
     // 지금은 Long id를 참조
 
-    public static class Response{
-        List<FriendResponse> friendResponse;
-
+    public static class FriendNotifyResponse{
+        List<Object> friendResponse;
+    }
+    public static class GameNotifyResponse{
+        List<Object> gameResponse;
     }
 
     @Getter
