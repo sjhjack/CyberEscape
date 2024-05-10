@@ -2,7 +2,9 @@ import { useBox } from "@react-three/cannon"
 import { useGLTF, Sparkles } from "@react-three/drei"
 
 const Computer = ({ ...props }) => {
-  const { nodes, materials } = useGLTF("/glb/key.glb")
+  const { nodes, materials } = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key.glb",
+  )
   const [ref] = useBox((index) => ({
     type: "Static",
     mass: 1,

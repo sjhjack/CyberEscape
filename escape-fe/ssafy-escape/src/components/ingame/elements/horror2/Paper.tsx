@@ -5,8 +5,14 @@ interface PaperProps {
 }
 
 const Paper = ({ twoMinLater }: PaperProps) => {
-  const paper = useGLTF("/glb/horror2/paper.glb", true)
-  const horrorPaper = useGLTF("/glb/horror2/after_paper.glb", true)
+  const paper = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror2/paper.glb",
+    true,
+  )
+  const horrorPaper = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror2/after_paper.glb",
+    true,
+  )
   return (
     <>
       {twoMinLater ? (

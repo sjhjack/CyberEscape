@@ -3,8 +3,15 @@ import { useEffect, useMemo } from "react"
 
 // 두 번째 문제 오브젝트
 // 구겨서 뭉친 종이(랜덤 6곳, 시간 남으면 추가 예정)
-const ScrunchedPaper = ({ onClick, setInteractNum, solved }: ClickObjectProps) => {
-  const scrunchedPaper = useGLTF("/glb/horror2/scrunched_paper.glb", true)
+const ScrunchedPaper = ({
+  onClick,
+  setInteractNum,
+  solved,
+}: ClickObjectProps) => {
+  const scrunchedPaper = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror2/scrunched_paper.glb",
+    true,
+  )
   const scrunchedPaperPosition: [number, number, number][] = [
     [88, 10, -26],
     [97, 11, 44],
