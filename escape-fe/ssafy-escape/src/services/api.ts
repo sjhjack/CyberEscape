@@ -31,12 +31,9 @@ api.interceptors.response.use(
       // 리프레시 토큰을 가져오기 위한 API 요청
       const refreshToken = sessionStorage.getItem("refresh_token")
       try {
-        const response = await axios.post(
-          "https://k10a303.p.ssafy.io/api/auth/refresh",
-          {
-            refresh_token: refreshToken,
-          },
-        )
+        const response = await axios.post(`${baseURL}/auth/refresh`, {
+          refresh_token: refreshToken,
+        })
 
         // 새 액세스 토큰을 세션 스토리지에 저장
         const newAccessToken = response.data.access_token
