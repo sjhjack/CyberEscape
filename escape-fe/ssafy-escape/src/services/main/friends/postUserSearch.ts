@@ -8,7 +8,9 @@ interface PostUserSearchBodyProps {
 }
 
 interface PostUserSearchDataProps {
-  nickname: string
+  nickname: string,
+  userUuid: string,
+  relationship: string
 }
 
 // 유저 닉네임 검색

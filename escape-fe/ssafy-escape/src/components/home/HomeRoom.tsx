@@ -7,7 +7,7 @@ interface RoomProps {
 }
 
 const HomeRoom = ({ onLoaded }: RoomProps) => {
-  const gltf = useGLTF("/glb/home_room.glb", true)
+  const gltf = useGLTF("/glb/home_Room.glb", true)
 
   useEffect(() => {
     if (gltf) {

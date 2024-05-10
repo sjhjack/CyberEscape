@@ -1,5 +1,7 @@
 import axios from "axios"
 // const accessToken = sessionStorage.getItem("access_token")
+
+  //baseURL: "https://k10a303.p.ssafy.io/api",
 const api = axios.create({
   baseURL: "http://localhost:8080",
   headers: {

@@ -16,9 +16,6 @@ const FriendList = () => {
   })
   const { isDeleteMode } = useModalStore()
 
-  console.log("friendsData : ");
-  console.log(friendsData);
-
   // 친구 삭제 버튼 클릭 시
   // const handleDelete = async (friendUuid: string) => {
   //   await deleteFriend(userUuid, friendUuid)
