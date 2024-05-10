@@ -34,12 +34,12 @@ public class JwtFilter extends OncePerRequestFilter {
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
 		List<String> list = Arrays.asList(
 			"/auth/signup",		// 회원가입 페이지
-			"/auth/signin"		// 로그인 페이지
-			// "/auth/check-id",	// 아이디 중복 검사
+			"/auth/signin",		// 로그인 페이지
+			"/ws-stomp"			// STOMP
 		);
 
 		// 2. 토큰이 필요하지 않은 API URL의 경우 -> 로직 처리없이 다음 필터로 이동한다.
-		if (list.contains(request.getRequestURI())) {
+		if (list.contains(request.getRequestURI()) || request.getRequestURI().startsWith("/pub")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
