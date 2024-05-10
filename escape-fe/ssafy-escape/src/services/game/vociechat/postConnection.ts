@@ -14,7 +14,7 @@ interface PostDataProps {
   voiceChatToken: string
 }
 // 게임방 초대 응하기
-const postAcceptance = async (
+const postConnection = async (
   data: PostRequestProps,
 ): Promise<PostResponseProps> => {
   try {
@@ -32,4 +32,4 @@ const postAcceptance = async (
   }
 }
 
-export default postAcceptance
+export default postConnection
