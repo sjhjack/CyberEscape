@@ -1,4 +1,6 @@
 import { Canvas } from "@react-three/fiber"
+import { useEffect, useRef, useState } from "react"
+
 import Lights from "@/components/ingame/elements/ssafy/Lights"
 import BasicScene from "@/components/ingame/BasicScene"
 import Player from "@/components/ingame/elements/common/Player"
@@ -9,8 +11,9 @@ import SsafyClassRoom from "../../elements/ssafy/SsafyClassRoom"
 // const lookAt = { x: -4, y: 2, z: 2 }
 
 const SsafyTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+  const [interactNum, setInteractNum] = useState<number>(1)
   return (
-    <BasicScene>
+    <BasicScene interactNum={interactNum}>
       <Lights />
       <Player position={[-3, 3, -10]} speed={20} args={[0, 0, 0]} />
       <Floor

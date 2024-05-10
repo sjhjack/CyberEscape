@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from "react"
 import { OpenVidu, Session, StreamManager, Publisher } from "openvidu-browser"
-import axios from "axios"
-
+import postInitSession from "@/services/game/vociechat/postInitSession"
+import postConnection from "@/services/game/vociechat/postConnection"
+import useUserStore from "@/stores/UserStore"
 interface ChatData {
   userName: string
   message: string
 }
 
-const APPLICATION_SERVER_URL = "http://localhost:8080/"
-const accessToken = sessionStorage.getItem("access_token")
 const useOpenViduSession = (
   uuid: string,
   setMessage: (data: ChatData[]) => void,
@@ -20,6 +19,7 @@ const useOpenViduSession = (
     StreamManager | undefined
   >(undefined)
   const [chatData, setChatData] = useState<ChatData[]>([])
+  const { nickname } = useUserStore()
   useEffect(() => {
     console.log("Session State:", session)
   }, [session])
@@ -51,7 +51,7 @@ const useOpenViduSession = (
     const joinSession = async () => {
       const token = await getToken(uuid)
       await newSession.connect(token, {
-        clientData: "김싸피",
+        clientData: nickname,
       })
       const newPublisher = await OV.initPublisherAsync(undefined, {
         audioSource: undefined,
@@ -106,23 +106,13 @@ const useOpenViduSession = (
   }
 
   const createSession = async (uuid: string): Promise<string> => {
-    const response = await axios.post(
-      `${APPLICATION_SERVER_URL}voice/session`,
-      { roomUuid: uuid },
-
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
-    )
-    return response.data.data.sessionId
+    const response = await postInitSession({ roomUuid: uuid })
+    return response.data.sessionId
   }
 
   const createToken = async (sessionId: string): Promise<string> => {
-    const response = await axios.post(
-      `${APPLICATION_SERVER_URL}voice/connection`,
-      { sessionId },
-    )
-    return response.data.data.voiceChatToken
+    const response = await postConnection({ sessionId: sessionId })
+    return response.data.voiceChatToken
   }
 
   return { session, subscribers, publisher, mainStreamManager, chatData }

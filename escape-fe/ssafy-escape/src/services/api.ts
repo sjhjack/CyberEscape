@@ -1,10 +1,23 @@
+"use client"
 import axios from "axios"
+import useUserStore from "@/stores/UserStore"
+const baseURL = process.env.NEXT_PUBLIC_URL
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },
 })
+api.interceptors.request.use(
+  (config) => {
+    const { accessToken } = useUserStore.getState()
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error),
+)
 api.interceptors.response.use(
   (response) => response, // 성공 응답은 그대로 반환
   async (error) => {
@@ -18,12 +31,9 @@ api.interceptors.response.use(
       // 리프레시 토큰을 가져오기 위한 API 요청
       const refreshToken = sessionStorage.getItem("refresh_token")
       try {
-        const response = await axios.post(
-          "http://localhost:8080/auth/refresh",
-          {
-            refresh_token: refreshToken,
-          },
-        )
+        const response = await axios.post(`${baseURL}/auth/refresh`, {
+          refresh_token: refreshToken,
+        })
 
         // 새 액세스 토큰을 세션 스토리지에 저장
         const newAccessToken = response.data.access_token
