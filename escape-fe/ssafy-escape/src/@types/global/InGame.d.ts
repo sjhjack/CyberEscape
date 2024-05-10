@@ -17,19 +17,20 @@ interface ProblemProps {
   setSubtitle: (subtitle: string) => void
 }
 
-interface ClickObjectProps {
-  onClick: () => void
-}
-
-interface KnobProps {
-  onClick: () => void
-  isFind: boolean
-  solved: number
-}
-
 interface QuizDataProps {
   quizUuid: string
   content: string
   url: string
   difficulty: number
+}
+
+interface ClickObjectProps {
+  onClick: () => void
+  isFind?: boolean
+  solved?: number
+  setInteractNum: (interactNum: number) => void
+}
+
+interface StartProps {
+  setSubtitle: (subtitle: string) => void
 }

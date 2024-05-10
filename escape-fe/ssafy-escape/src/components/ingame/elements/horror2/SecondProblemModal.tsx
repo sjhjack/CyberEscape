@@ -3,13 +3,13 @@ import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
 import extractSubstring from "@/hooks/extractSubstring"
-import { useEffect, useMemo, useState } from "react"
-import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
+import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
+import { useEffect, useMemo, useState } from "react"
 
-// 세 번째 문제 모달
-const ThirdProblemModal = ({
+// 두 번째 문제 모달
+const SecondProblemModal = ({
   onClose,
   penalty,
   setPenalty,
@@ -53,6 +53,7 @@ const ThirdProblemModal = ({
     setHintModalOpen(true)
     timePenalty()
   }
+
   const handleCloseModal = () => {
     setHintModalOpen(false)
   }
@@ -61,14 +62,11 @@ const ThirdProblemModal = ({
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("...그러고 보니 처음부터 문고리가 없었던 것 같은데.")
+      setSubtitle("...아, 기록하려면 노트도 챙겨야지.")
       setTimeout(() => {
-        setSubtitle("마지막 희망이야.")
+        setSubtitle("책장 어디에 꽂아놨던 것 같은데...")
         setTimeout(() => {
-          setSubtitle("문고리...문고리를 찾아야 해.")
-          setTimeout(() => {
-            setSubtitle("")
-          }, 10000)
+          setSubtitle("")
         }, 10000)
       }, 4000)
     } else {
@@ -91,12 +89,13 @@ const ThirdProblemModal = ({
           </HorrorImageBox>
         </BlackBackground>
       )}
+
       <MainContainer>
         <Image
-          src="/image/diary.png"
-          alt="일기장 이미지"
-          width={620}
-          height={580}
+          src="/image/paper.png"
+          alt="쪽지 이미지"
+          width={600}
+          height={550}
         />
         <IconBox onClick={onClose}>
           <CloseIcon sx={{ fontSize: 40 }} />
@@ -151,32 +150,33 @@ const ThirdProblemModal = ({
         <HintModal
           open={hintModalopen}
           onClose={handleCloseModal}
-          quizUuid={quizData[2].quizUuid}
+          quizUuid={quizData[0].quizUuid}
         />
       </MainContainer>
     </>
   )
 }
 
-export default ThirdProblemModal
+export default SecondProblemModal
 
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding: 20px;
   z-index: 20;
 `
 
 const SubContainer = styled.div`
   position: absolute;
-  top: 48%;
-  left: 50%;
+  top: 50%;
+  left: 51%;
   transform: translate(-45%, -50%);
-  width: 380px;
-  height: 580px;
+  width: 395px;
+  height: 440px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -199,9 +199,9 @@ const ChoiceBox = styled.div`
 const IconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 130px;
-  top: 40px;
-  z-index: 24;
+  right: 110px;
+  top: 75px;
+  z-index: 10;
 `
 
 const HorrorImageBox = styled.div`
@@ -228,7 +228,7 @@ const HintIconBox = styled.div`
   align-items: center;
   cursor: pointer;
   left: 165px;
-  top: 42px;
+  top: 72px;
   z-index: 10;
   font-size: 16px;
 `
