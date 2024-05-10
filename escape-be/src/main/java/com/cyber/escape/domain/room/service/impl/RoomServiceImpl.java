@@ -31,6 +31,7 @@ import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.RoomException;
 import com.cyber.escape.global.exception.UserException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -211,18 +212,25 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Transactional
-	public void joinRoom(final RoomDto.JoinRequest joinRequest) {
+	public String joinRoom(final RoomDto.JoinRequest joinRequest) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, joinRequest.getRoomUuid());
 
-		if(findRoom.getPassword() != null){
-			// 비밀번호 check
-			if(bCryptPasswordEncoder.matches(joinRequest.getPassword(), findRoom.getPassword())){
-				findRoom.setCapacity(2);
-			} else {
-				throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+		checkJoinRoomValidation(findRoom, joinRequest.getPassword());
+		findRoom.setCapacity(2);
+
+		return findRoom.getUuid();
+	}
+
+	private void checkJoinRoomValidation(Room findRoom, String password) {
+		// 비밀번호 불일치
+		if(findRoom.getPassword() != null) {
+			if(!bCryptPasswordEncoder.matches(password, findRoom.getPassword())){
+				throw new RoomException(ExceptionCodeSet.ROOM_PASSWORD_MISMATCH);
 			}
-		} else {
-			findRoom.setCapacity(2);
+		}
+		// 정원 초과
+		if(findRoom.getCapacity() >= 2) {
+			throw new RoomException(ExceptionCodeSet.ROOM_CAPACITY_OVER);
 		}
 	}
 
