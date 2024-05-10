@@ -30,7 +30,7 @@ const API_PATH = {
     MULTI: {
       ROOM: {
         LIST: "/room",
-        INVITE: "/room/invite",
+        INVITE: "/room/invitation",
         ACCEPT: "/room/acceptance",
         JOIN: "/room/join",
         EXIT: "/room/exit",
@@ -38,6 +38,10 @@ const API_PATH = {
         SETTING: "/room/setting",
         CHANGE_HOST: "/room/change/host",
         START: "/room/start",
+      },
+      VOICE: {
+        SESSION: "/voice/init/session",
+        CONNECTION: "/voice/connection",
       },
     },
   },

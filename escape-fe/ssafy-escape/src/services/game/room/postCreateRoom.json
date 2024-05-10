@@ -1,8 +1,0 @@
-{
-  "status": 200,
-  "message": "대기실 생성 완료",
-  "data": {
-    "roomUuid": "roomUuidffdfdfdfdfdf",
-    "chatRoomUuid": "chatRoomUuidjsfkjfldkfj"
-  }
-}
