@@ -1,4 +1,4 @@
-package com.cyber.escape.domain.room.service;
+package com.cyber.escape.domain.room.service.impl;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +21,7 @@ import com.cyber.escape.domain.room.dto.PagingDto;
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.entity.Room;
 import com.cyber.escape.domain.room.repository.RoomRepository;
+import com.cyber.escape.domain.room.service.RoomService;
 import com.cyber.escape.domain.room.utils.RoomServiceUtils;
 import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.thema.repository.ThemaRepository;
