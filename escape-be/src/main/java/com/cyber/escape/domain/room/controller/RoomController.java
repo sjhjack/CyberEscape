@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cyber.escape.domain.room.dto.PagingDto;
@@ -29,11 +30,12 @@ public class RoomController {
 	 * keyword가 주어지지 않으면 전체 리스트를 반환합니다.
 	 * keyword가 주어지면 like 연산을 통한 리스트를 반환합니다.
 	 *
-	 * @param pageRequest (page 번호, 검색할 제목)
+	 * @param page : 페이지 번호, keyword : 검색할 제목
 	 * @return 대기실 정보 리스트
 	 */
 	@GetMapping
-	public ApiResponse<PagingDto.Response> findAllRoomsByKeyword(@RequestBody PagingDto.PageRequest pageRequest) {
+	public ApiResponse<PagingDto.Response> findAllRoomsByKeyword(@RequestParam int page, @RequestParam(defaultValue = "") String keyword) {
+		PagingDto.PageRequest pageRequest = new PagingDto.PageRequest(page, keyword);
 		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 전체 리스트를 가져왔습니다.", roomReadService.findAllRoomsByKeyword(pageRequest));
 	}
 

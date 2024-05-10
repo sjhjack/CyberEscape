@@ -45,7 +45,12 @@ public class PagingDto {
 			// this.pageSize = 5;
 		}
 
-		public void setKeyword(String keyword) {
+		public PageRequest(int page, String keyword) {
+			this.page = page;
+			setKeyword(keyword);
+		}
+
+		private void setKeyword(String keyword) {
 			this.keyword = "%" + keyword + "%";
 		}
 
