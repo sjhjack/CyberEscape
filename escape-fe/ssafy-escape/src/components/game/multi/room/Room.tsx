@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getRoomList from "@/services/game/room/getRoomList"
 import Container from "@/components/common/Container"
@@ -18,10 +18,20 @@ const Room = () => {
     queryKey: ["roomList", searchData],
     queryFn: () => getRoomList(searchData),
   })
-
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
   }
+  const defaultPagination = {
+    totalRecordCount: 0,
+    totalPageCount: 0,
+    startPage: 1,
+    endPage: 1,
+    limitStart: 0,
+    existPrevPage: false,
+    existNextPage: false,
+  }
+
+  const paginationData = roomData?.data.pagination || defaultPagination
 
   if (isLoading) {
     return (
@@ -47,19 +57,7 @@ const Room = () => {
         <RoomList key={room.uuid} roomData={room} />
       ))}
       <CustomPagination
-        pagination={
-          roomData
-            ? roomData.data.pagination
-            : {
-                totalRecordCount: 5,
-                totalPageCount: 2,
-                startPage: 1,
-                endPage: 2,
-                limitStart: 0,
-                existPrevPage: false,
-                existNextPage: false,
-              }
-        }
+        pagination={paginationData}
         onPageChange={handlePageChange}
       />
     </Container>
