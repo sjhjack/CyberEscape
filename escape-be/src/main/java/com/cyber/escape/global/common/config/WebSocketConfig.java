@@ -1,5 +1,6 @@
 package com.cyber.escape.global.common.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -10,6 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.messaging.simp.config.ChannelRegistration;
 
 import com.cyber.escape.global.common.handler.CustomHandshakeHandler;
+import com.cyber.escape.global.common.handler.RoomStompInterceptor;
 
 @Configuration
 
@@ -25,10 +27,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Value("${MQ_PASSWORD}")
 	String password;
 
+	@Autowired
+	private RoomStompInterceptor roomStompInterceptor;
+
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry){
-		registry.setPathMatcher(new AntPathMatcher("."));	// url을 chat/room/3 -> chat.room.3으로 참조하기 위한 설정
+		// registry.setPathMatcher(new AntPathMatcher("."));	// url을 chat/room/3 -> chat.room.3으로 참조하기 위한 설정
 		// client에서 SEND 요청을 처리한다.
 		registry.setApplicationDestinationPrefixes("/pub");		// 메시지 발행 요청 prefix (메시지 전송)
 
@@ -50,4 +55,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 				.setHandshakeHandler(new CustomHandshakeHandler())
 			.withSockJS();
 	}
+
+	// @Override
+	// public void configureClientInboundChannel(ChannelRegistration registration) {
+	// 	registration.interceptors(roomStompInterceptor);
+	// }
 }
