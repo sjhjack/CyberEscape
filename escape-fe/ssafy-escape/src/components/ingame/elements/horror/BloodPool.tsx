@@ -28,7 +28,7 @@ const BloodPool = memo(({ solved, isFlowerClicked }: BloodPoolProps) => {
       bloodPool1.position.set(-35, 0, -22)
     }
     if (bloodPool2) {
-      bloodPool2.position.set(-36, 20, 40)
+      bloodPool2.position.set(-36, 20, 44)
     }
     if (bloodPool3) {
       bloodPool3.position.set(113, 0, -80)

@@ -5,8 +5,8 @@ import Button from "@/components/common/Button"
 import extractSubstring from "@/hooks/extractSubstring"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
-import HintModal from "../common/HintModal"
 import { useState } from "react"
+import HintModal from "../common/HintModal"
 
 // 첫 번째 문제 모달
 // 문제 모달 중복 코드 많아서 추후 리팩토링 필요
@@ -39,9 +39,9 @@ const FirstProblemModal = ({
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
+      setSubtitle("이제 백업은 됐고...")
       setTimeout(() => {
-        setSubtitle("서랍장을 한번 뒤져볼까?")
+        setSubtitle("이 근처에 실험에 쓸 약물에 대해 적어놓은 종이가 있었던 것 같은데...버렸나?")
         setTimeout(() => {
           setSubtitle("")
         }, 10000)
@@ -54,8 +54,8 @@ const FirstProblemModal = ({
   return (
     <MainContainer>
       <Image
-        src="/image/paper.png"
-        alt="쪽지 이미지"
+        src="/image/monitor.png"
+        alt="모니터 이미지"
         width={600}
         height={550}
       />
@@ -125,7 +125,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 50%;
+  top: 52%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
@@ -136,9 +136,9 @@ const SubContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 51%;
-  transform: translate(-45%, -50%);
-  width: 395px;
-  height: 440px;
+  transform: translate(-50%, -68%);
+  width: 400px;
+  height: 310px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -150,11 +150,12 @@ const ProblemText = styled.div`
   margin-bottom: 20px;
   font-size: 24px;
   word-break: keep-all;
+  color: white;
 `
 
 const GuideText = styled.div`
   position: fixed;
-  bottom: 115px;
+  bottom: 188px;
   left: 175px;
   font-size: 13px;
 `
@@ -168,8 +169,8 @@ const ChoiceBox = styled.div`
 const IconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 110px;
-  top: 75px;
+  right: 65px;
+  top: 60px;
   z-index: 10;
 `
 
@@ -178,8 +179,8 @@ const HintIconBox = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  left: 165px;
-  top: 72px;
+  left: 70px;
+  top: 63px;
   z-index: 10;
   font-size: 16px;
 `

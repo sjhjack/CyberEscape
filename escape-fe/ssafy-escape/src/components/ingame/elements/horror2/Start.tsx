@@ -14,13 +14,11 @@ const Start = ({ setSubtitle }: StartProps) => {
       dub4()
     } else if (sequence === 5) {
       dub5()
-    } else if (sequence === 6) {
-      dub6()
     }
   }, [sequence])
 
   const dub1 = () => {
-    setSubtitle("... ... ...")
+    setSubtitle("...오랜만에 좋은 실험체를 손에 넣어서 기분이 좋군.")
     setTimeout(() => {
       setSequence((n) => n + 1)
       setSubtitle("")
@@ -29,7 +27,7 @@ const Start = ({ setSubtitle }: StartProps) => {
 
   const dub2 = () => {
     setTimeout(() => {
-      setSubtitle("여긴 어디지?")
+      setSubtitle("이번 실험은 반드시 성공시켜야 해. 반드시...!")
       setTimeout(() => {
         setSequence((n) => n + 1)
         setSubtitle("")
@@ -38,7 +36,7 @@ const Start = ({ setSubtitle }: StartProps) => {
   }
 
   const dub3 = () => {
-    setSubtitle("납치 당한건가?")
+    setSubtitle("...너무 흥분해버렸네. 자, 뭐가 필요하더라?")
     setTimeout(() => {
       setSequence((n) => n + 1)
       setSubtitle("")
@@ -46,32 +44,19 @@ const Start = ({ setSubtitle }: StartProps) => {
   }
 
   const dub4 = () => {
-    const audio = new Audio("sound/man_scream.mp3")
-    audio.play()
-    setTimeout(() => {
-      setSubtitle("무슨 소리지?!")
-      setTimeout(() => {
-        setSequence((n) => n + 1)
-        setSubtitle("")
-      }, 6000)
-    }, 3000)
-  }
-
-  const dub5 = () => {
-    setSubtitle("빨리 여기서 나가야 해.")
+    setSubtitle("마취가 깨기 전에 얼른 챙길 것만 챙겨서 나가야겠어.")
     setTimeout(() => {
       setSequence((n) => n + 1)
       setSubtitle("")
     }, 6000)
   }
 
-  const dub6 = () => {
-    setSubtitle(
-      "...근데 저 침대 밑의 물체는 뭐지? 안에 무언가가 들어있는 것 같아.",
-    )
+  const dub5 = () => {
+    setSubtitle("그 전에 데이터를 먼저 백업해두는 게 낫겠군.")
     setTimeout(() => {
+      setSequence((n) => n + 1)
       setSubtitle("")
-    }, 10000)
+    }, 6000)
   }
 
   return <></>

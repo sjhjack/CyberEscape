@@ -46,7 +46,7 @@ const ThemeCarousel = ({
   const [currentCard, setCurrentCard] = useState<number>(0)
   const { setSelectedTheme } = useIngameThemeStore()
   useEffect(() => {
-    setSelectedTheme((currentCard + 1).toString())
+    setSelectedTheme((currentCard + 1))
   }, [currentCard])
   return (
     <MainContainer style={{ borderRadius: "20px" }}>

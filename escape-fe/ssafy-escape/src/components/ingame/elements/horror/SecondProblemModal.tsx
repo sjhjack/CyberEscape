@@ -5,7 +5,7 @@ import Button from "@/components/common/Button"
 import extractSubstring from "@/hooks/extractSubstring"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
-import HintModal from "./HintModal"
+import HintModal from "../common/HintModal"
 import { useState } from "react"
 
 // 두 번째 문제 모달
