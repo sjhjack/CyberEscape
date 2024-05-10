@@ -3,24 +3,23 @@ import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
 import extractSubstring from "@/hooks/extractSubstring"
-import useIngameQuizStore from "@/stores/IngameQuizStore"
-import postAnswer from "@/services/ingame/postAnswer"
-import HintModal from "../common/HintModal"
 import { useState } from "react"
+import postAnswer from "@/services/ingame/postAnswer"
+import useIngameQuizStore from "@/stores/IngameQuizStore"
+import HintModal from "../common/HintModal"
 
-// 첫 번째 문제 모달
-// 문제 모달 중복 코드 많아서 추후 리팩토링 필요
-const FirstProblemModal = ({
+// 세 번째 문제 모달
+const ThirdProblemModal = ({
   onClose,
   penalty,
   setPenalty,
   setSubtitle,
   timePenalty,
 }: ProblemProps) => {
-  // 더미 삭제 후 문제 부분 코드 수정 필요
   const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
   const choices = ["1", "3", "5", "7"]
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
+
   const { solved, setSolved, quizData } = useIngameQuizStore()
 
   if (!quizData) {
@@ -35,29 +34,34 @@ const FirstProblemModal = ({
   const handleCloseModal = () => {
     setHintModalOpen(false)
   }
+
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
+      setSubtitle("이런, 시간이...서둘러 나가야겠군.")
       setTimeout(() => {
-        setSubtitle("서랍장을 한번 뒤져볼까?")
+        setSubtitle("...아, 제일 중요한 걸 놓고 갈 뻔했네.")
         setTimeout(() => {
-          setSubtitle("")
-        }, 10000)
+          setSubtitle("주사기랑 망치가 어디있지?")
+          setTimeout(() => {
+            setSubtitle("")
+          }, 10000)
+        }, 4000)
       }, 4000)
     } else {
       alert("오답입니다")
       setPenalty(penalty + 1)
     }
   }
+
   return (
     <MainContainer>
       <Image
-        src="/image/paper.png"
-        alt="쪽지 이미지"
-        width={600}
-        height={550}
+        src="/image/diary.png"
+        alt="일기장 이미지"
+        width={620}
+        height={580}
       />
       <IconBox onClick={onClose}>
         <CloseIcon sx={{ fontSize: 40 }} />
@@ -98,9 +102,6 @@ const FirstProblemModal = ({
           />
         </ChoiceBox>
       </SubContainer>
-      <GuideText>
-        ※ ALT 또는 ESC 버튼을 누르면 마우스 커서가 나타납니다.
-      </GuideText>
       <HintIconBox onClick={handleOpenModal}>
         <Image
           src={"/image/hint.png"}
@@ -113,32 +114,31 @@ const FirstProblemModal = ({
       <HintModal
         open={hintModalopen}
         onClose={handleCloseModal}
-        quizUuid={quizData[0].quizUuid}
+        quizUuid={quizData[2].quizUuid}
       />
     </MainContainer>
   )
 }
 
-export default FirstProblemModal
+export default ThirdProblemModal
 
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 20px;
   z-index: 20;
 `
 
 const SubContainer = styled.div`
   position: absolute;
-  top: 50%;
-  left: 51%;
+  top: 48%;
+  left: 50%;
   transform: translate(-45%, -50%);
-  width: 395px;
-  height: 440px;
+  width: 380px;
+  height: 580px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -152,13 +152,6 @@ const ProblemText = styled.div`
   word-break: keep-all;
 `
 
-const GuideText = styled.div`
-  position: fixed;
-  bottom: 115px;
-  left: 175px;
-  font-size: 13px;
-`
-
 const ChoiceBox = styled.div`
   display: flex;
   gap: 30px;
@@ -168,9 +161,9 @@ const ChoiceBox = styled.div`
 const IconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 110px;
-  top: 75px;
-  z-index: 10;
+  right: 130px;
+  top: 40px;
+  z-index: 24;
 `
 
 const HintIconBox = styled.div`
@@ -179,7 +172,7 @@ const HintIconBox = styled.div`
   align-items: center;
   cursor: pointer;
   left: 165px;
-  top: 72px;
+  top: 42px;
   z-index: 10;
   font-size: 16px;
 `

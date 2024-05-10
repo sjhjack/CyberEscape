@@ -15,6 +15,10 @@ const PlayMusic = () => {
         const audio = new Audio("music/HorrorBgm.mp3")
         audio.play()
         audio.loop = true
+      } else if (selectedTheme === 4) {
+        const audio = new Audio("music/HorrorBgm2.mp3")
+        audio.play()
+        audio.loop = true
       }
     }
 
