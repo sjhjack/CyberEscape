@@ -10,7 +10,7 @@ import Button from "@/components/common/Button"
 import MainModal from "@/components/common/MainModal"
 import Input from "@/components/common/Input"
 import postUserSearch from "@/services/main/friends/postUserSearch"
-// import postFriendRequest from "@/services/main/friends/postFriendRequest"
+import postFriendRequest from "@/services/main/friends/postFriendRequest"
 
 interface FriendRequestModalProps {
   open: boolean
@@ -37,10 +37,12 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
     console.log(keyword + "로 검색")
     refetch()
   }
-  // const handleRequest = async (id: string) => {
-  //   await postFriendRequest(myid, id)
-  //   console.log("친구 요청")
-  // }
+  const handleRequest = async (id: string) => {
+    console.log("ID : ")
+    console.log(id)
+    await postFriendRequest(id, "FRIEND")
+    console.log("친구 요청")
+  }
 
   return (
     <div>
@@ -74,10 +76,10 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
                     <div>{user.nickname}</div>
                   </ProfileBox>
                   <Button
-                    text="요청"
+                    text={user.relationship}
                     theme="success"
                     width="60px"
-                    // onClick={() => handleRequest(user.id)}
+                    onClick={() => handleRequest(user.userUuid)}
                   />
                 </MainContainer>
               </div>

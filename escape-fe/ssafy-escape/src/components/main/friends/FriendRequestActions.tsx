@@ -4,14 +4,14 @@ import { styled } from "styled-components"
 import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
 import { useQuery } from "@tanstack/react-query"
-import postNotificationFriend from "@/services/main/friends/postNotificationFriend"
+import getNotificationFriend from "@/services/main/friends/getNotificationFriend"
 // import postFriendRequest from "@/services/main/friends/postFriendAddition"
 
 // 받은 친구 요청 목록 조회
 const FriendRequestActions = () => {
   const { data: requestData } = useQuery({
     queryKey: ["friendRequestList"],
-    queryFn: () => postNotificationFriend(),
+    queryFn: () => getNotificationFriend(),
   })
   // myid는 현재 로그인된 나의 uuid
   //   const handleRequest = async (requestUserUuid: string) => {
@@ -22,8 +22,8 @@ const FriendRequestActions = () => {
   return (
     <div>
       <Text>받은 친구 요청</Text>
-      {requestData?.data.map((user) => (
-        <div key={user.requestUserUuid}>
+      {requestData?.map((user) => (
+        <div key={user.senderUuid}>
           <SubContainer>
             <ProfileBox>
               <PersonIcon sx={{ fontSize: "35px" }} />

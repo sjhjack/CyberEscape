@@ -1,23 +1,23 @@
 import API_PATH from "@/constants/path"
 import api from "@/services/api"
 
-interface PostFriendListBodyProps {
+interface GetFriendListBodyProps {
   status: number
   message: string
-  data: PostFriendListDataProps[]
+  data: GetFriendListDataProps[] 
 }
 
-interface PostFriendListDataProps {
+interface GetFriendListDataProps {
   friendNickname: string
   friendUuid: string
 }
 
 // 친구 목록 조회
-const getFriendList = async (): Promise<PostFriendListDataProps> => {
+const getFriendList = async (): Promise<GetFriendListDataProps[]> => {
   
   const accessToken = sessionStorage.getItem("access_token")
   try {
-    const response = await api.get<PostFriendListBodyProps>(
+    const response = await api.get<GetFriendListBodyProps>(
       API_PATH.MAIN.FRIEND.LIST + "?pageNumber=1",
       {
         headers: { Authorization: `Bearer ${accessToken}` },
