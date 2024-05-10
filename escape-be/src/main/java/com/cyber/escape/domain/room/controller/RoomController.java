@@ -50,6 +50,11 @@ public class RoomController {
 		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 삭제 완료", "");
 	}
 
+	@PatchMapping("/join")
+	public ApiResponse<String> joinRoom(@RequestBody RoomDto.JoinRequest joinRequest) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 참여 성공", roomModifyService.joinRoom(joinRequest));
+	}
+
 	@PatchMapping("/setting")
 	public ApiResponse<RoomDto.InfoResponse> changeRoomSetting(@RequestBody RoomDto.InfoRequest infoRequest) {
 		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 설정 변경 성공", roomModifyService.changeRoomSetting(infoRequest));
