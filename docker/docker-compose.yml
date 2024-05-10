@@ -23,8 +23,8 @@ services:
         dockerfile: "./docker/dockerfile/mysql.dockerfile"
       networks:
         - backend
-      #    volumes:
-      #      - /home/ubuntu/volume/mysql:/var/lib/mysql
+      volumes:
+        - /home/ubuntu/volume/mysql:/var/lib/mysql
       env_file: ".env"
       ports:
         - "3307:3306"
