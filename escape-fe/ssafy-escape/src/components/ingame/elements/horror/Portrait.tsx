@@ -7,8 +7,14 @@ interface PortraitProps {
 
 // 추후 중복 제거 리팩토링
 const Portrait = ({ twoMinLater, fiveMinLater }: PortraitProps) => {
-  const portrait = useGLTF("/glb/horror/before_portrait.glb", true)
-  const horrorPortrait = useGLTF("/glb/horror/after_portrait.glb", true)
+  const portrait = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/before_portrait.glb",
+    true,
+  )
+  const horrorPortrait = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/after_portrait.glb",
+    true,
+  )
   let horrorPortraitScale = 35
   if (fiveMinLater) {
     horrorPortrait.scene.rotation.set(3, 0, 0)

@@ -11,7 +11,10 @@ const Door3 = ({
   setSubtitle,
   setInteractNum,
 }: any) => {
-  const { scene, animations } = useGLTF("/glb/door5.glb", true)
+  const { scene, animations } = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door5.glb",
+    true,
+  )
   const doorRef = useRef()
   const [isLoaded, setIsLoaded] = useState(false)
   const [isAnimationActivated, setIsAnimationActivated] = useState(false)
