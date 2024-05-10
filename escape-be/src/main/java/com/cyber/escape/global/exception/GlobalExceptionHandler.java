@@ -46,6 +46,11 @@ public class GlobalExceptionHandler {
         return makeResponseFormat(e.getExceptionCode());
     }
 
+    @ExceptionHandler(RoomException.class)
+    public ApiResponse handleVoiceChatException(RoomException e) {
+        return makeResponseFormat(e.getExceptionCode());
+    }
+
     private ApiResponse makeResponseFormat(ExceptionCodeSet exceptionCode) {
         System.out.println("msg : " + exceptionCode.getMessage());
         return ApiResponse.error(exceptionCode.getStatus(), exceptionCode.getMessage());

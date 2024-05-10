@@ -34,7 +34,12 @@ public enum ExceptionCodeSet {
     FILE_NOT_EXISTS(HttpStatus.BAD_REQUEST, 7000, "파일이 존재하지 않습니다."),
     FILE_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, 7001, "파일 이름이 너무 깁니다."),
     FILE_DUPLICATED(HttpStatus.CONFLICT, 7002, "현재 지정된 파일입니다."),
-    DELETE_DEFAULT_FILE(HttpStatus.BAD_REQUEST, 7003, "기본 파일은 삭제할 수 없습니다.")
+    DELETE_DEFAULT_FILE(HttpStatus.BAD_REQUEST, 7003, "기본 파일은 삭제할 수 없습니다."),
+
+    // 대기방
+    ROOM_PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 8000, "대기방 비밀번호가 일치하지 않습니다."),
+    ROOM_CAPACITY_OVER(HttpStatus.BAD_REQUEST, 8001, "대기방 정원 초과로 인해 입장할 수 없습니다."),
+    ROOM_NOT_HOST(HttpStatus.BAD_REQUEST, 8002, "방장이 아닙니다.")
     ;
 
     private final HttpStatus httpStatus;
