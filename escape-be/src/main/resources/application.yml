@@ -4,13 +4,17 @@ spring:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10 # CP(active + idle)를 조정한다.
+      minimum-idle: 10 # 최소 idle connection 개수를 조정한다.
+      connection-timeout: 5000
+      validation-timeout: 2000
+      idle-timeout: 600000
+      max-lifetime: 1800000 # idle connection의 생존 시간.
   flyway:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 0
-  hikari:
-    maximum-pool-size:180
-    minimum-idle:10
   data:
     redis:
       host: ${REDIS_HOST} # Redis 서버 호스트 주소
