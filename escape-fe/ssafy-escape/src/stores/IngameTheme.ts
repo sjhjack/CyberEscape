@@ -3,14 +3,14 @@ import { persist } from "zustand/middleware"
 
 interface ThemeState {
   selectedTheme: number | null
-  setSelectedTheme: (theme: number | null) => void
+  setSelectedTheme: (theme: number) => void
 }
 
 const useIngameThemeStore = create<ThemeState>()(
   persist(
     (set): ThemeState => ({
       selectedTheme: null,
-      setSelectedTheme: (selectedTheme) => set({ selectedTheme }),
+      setSelectedTheme: (selectedTheme: number) => set({ selectedTheme }),
     }),
     {
       name: "theme-storage",

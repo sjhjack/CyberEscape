@@ -8,12 +8,21 @@ const postSignUp = async (loginId: string, password: string): Promise<null> => {
       loginId,
       password,
     })
-    if (response.data.status === 404) {
+    // 에러 처리
+    if (response.data.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
-    // 아이디 중복시 상태코드 변경(500은 임시)
-    else if (response.data.status === 500) {
+    // 아이디 중복시
+    else if (response.data.status === 4091) {
       throw new Error("중복된 아이디입니다.")
+    }
+    // 아이디 유효성 검사
+    else if (response.data.status === 4092) {
+      throw new Error(`아이디 형식이 올바르지 않습니다`)
+    }
+    // 아이디 유효성 검사
+    else if (response.data.status === 4093) {
+      throw new Error(`비밀번호 형식이 올바르지 않습니다`)
     }
     return null
   } catch (error) {
