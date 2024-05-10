@@ -6,7 +6,10 @@ interface BloodProps {
 }
 
 const Blood = ({ penalty }: BloodProps) => {
-  const blood = useGLTF("/glb/horror/blood.glb", true)
+  const blood = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/blood.glb",
+    true,
+  )
   useEffect(() => {
     if (blood.scene) {
       blood.scene.position.set(50, 43.3, -86)
