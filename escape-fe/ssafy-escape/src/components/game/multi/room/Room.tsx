@@ -52,6 +52,7 @@ const Room = () => {
         justifyContent="center"
         alignItems="center"
         flexDirection="column"
+        backgroundColor="none"
       >
         <CircularProgress />
       </Container>
