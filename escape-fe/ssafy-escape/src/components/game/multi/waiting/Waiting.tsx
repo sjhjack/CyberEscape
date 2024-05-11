@@ -12,6 +12,7 @@ import Button from "@/components/common/Button"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
 import { CircularProgress } from "@mui/material"
+import Swal from "sweetalert2"
 interface ChatType {
   userName: string
   message: string
@@ -24,13 +25,13 @@ const Waiting = () => {
   const { accessToken, userUuid, isHost } = useUserStore()
   const { selectedTheme } = useIngameThemeStore()
   const [chatting, setChattting] = useState<Array<ChatType>>([])
-  // const { session } = useOpenViduSession(roomUuid, setChattting)
-  const session = ""
+  const { session } = useOpenViduSession(roomUuid, setChattting)
   const [showModal, setShowModal] = useState<boolean>(false)
   const handleModalClose = (): void => {
     setShowModal(false)
   }
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isReady, setIsReady] = useState<boolean>(false)
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
@@ -41,7 +42,6 @@ const Waiting = () => {
   const onConnected = () => {
     client.current?.subscribe(`/topic/${roomUuid}`, (payload) => {
       const roomInfo = JSON.parse(payload.body)
-      console.log("구독 정보", roomInfo)
       setRoomData(roomInfo)
     })
     client.current?.publish({
@@ -65,7 +65,7 @@ const Waiting = () => {
       }),
     })
   }
-  //function2
+  // 입장 시 소켓 연결
   const connect = () => {
     client.current = new StompJs.Client({
       webSocketFactory: () => new SockJS(`${baseUrl}/ws-stomp`),
@@ -88,13 +88,20 @@ const Waiting = () => {
   }
   useEffect(() => {
     connect()
+    return () => {
+      client.current?.deactivate()
+    }
   }, [])
 
   useEffect(() => {
+    console.log("방 정보", roomData)
     if (roomData !== null) {
       setIsLoading(false)
     }
-    console.log("방 정보", roomData)
+    if (!isLoading && roomData?.host === null) {
+      Swal.fire("게임방이 종료되었습니다.")
+      router.back()
+    }
   }, [roomData])
   if (isLoading) {
     return (
@@ -120,13 +127,24 @@ const Waiting = () => {
       <S.UserBox style={{ marginRight: "20px" }}>
         <S.CharacterBox>
           <S.ProfileImage
-            src={roomData?.host.profileUrl}
+            src={roomData?.host?.profileUrl}
             alt=""
             width={100}
             height={100}
           />
         </S.CharacterBox>
-        <S.Nickname>{roomData?.host.nickname}</S.Nickname>
+        <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
+        <S.Nickname>
+          <Button
+            text={isReady ? "준비완료" : "게임시작"}
+            theme={isReady ? "fail" : "success"}
+            width="100px"
+            height="40px"
+            onClick={() => {
+              setIsReady(!isReady)
+            }}
+          />
+        </S.Nickname>
       </S.UserBox>
       <S.MainBox>
         <S.MainContentBox>
@@ -141,15 +159,26 @@ const Waiting = () => {
         <ChattingBox session={session} chatData={chatting}></ChattingBox>
       </S.MainBox>
       <S.UserBox style={{ marginLeft: "20px" }}>
-        <S.CharacterBox>
-          {roomData?.guest ? (
+        {roomData?.guest ? (
+          <S.CharacterBox>
             <S.ProfileImage
-              src={roomData?.guest.profileUrl}
+              src={roomData?.guest?.profileUrl}
               alt=""
               width={100}
               height={100}
             />
-          ) : (
+            <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
+            <S.Nickname>
+              <Button
+                text="Ready"
+                theme="success"
+                width="100px"
+                height="40px"
+              />
+            </S.Nickname>
+          </S.CharacterBox>
+        ) : (
+          <S.CharacterBox>
             <S.CharacterBoxContent>
               <Button
                 text="초대하기"
@@ -161,9 +190,8 @@ const Waiting = () => {
                 }}
               />
             </S.CharacterBoxContent>
-          )}
-        </S.CharacterBox>
-        <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
+          </S.CharacterBox>
+        )}
       </S.UserBox>
     </Container>
   )
