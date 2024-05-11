@@ -11,9 +11,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.manager.RoomManager;
@@ -39,6 +41,39 @@ public class RoomStompHandler {
 	}
 
 	@EventListener
+	public void handleWebSocketSubscribeListener(SessionSubscribeEvent event) {
+		log.info("구독 이벤트 !!");
+		log.info("Subscribe event : {}", event.toString());
+
+		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+		String subscribeDestination = headerAccessor.getDestination();
+		String sessionUuid = headerAccessor.getSessionId();
+
+		log.info("구독 경로 : {}", subscribeDestination);
+		log.info("Session Uuid : {}", sessionUuid);
+
+		if(subscribeDestination.startsWith("/topic/")) {
+			String roomUuid = subscribeDestination.substring(7);
+			handleRoomSubscription(roomUuid, sessionUuid);
+		}
+	}
+
+	// [GenericMessage
+	// 	[payload=byte[0],
+	// 	 headers=
+	// 		{
+	// 			simpMessageType=SUBSCRIBE,
+	// 			stompCommand=SUBSCRIBE,
+	// 			nativeHeaders=
+	// 				{
+	// 					id=[sub-0],
+	// 					destination=[/topic/60a9bc2d-ca85-4ae1-ae46-d72031adac98]
+	// 				}, simpSessionAttributes={}, simpHeartbeat=[J@13db8ecc, simpSubscriptionId=sub-0, simpUser=com.cyber.escape.domain.auth.security.StompPrincipal@74a50e0d, simpSessionId=f70f7ed9-116b-1f68-dbae-5357fde7c50e, simpDestination=/topic/60a9bc2d-ca85-4ae1-ae46-d72031adac98
+	// 		}
+	// 	]
+	// ]
+
+	@EventListener
 	public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
 		// StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		// String roomUuid = headerAccessor.getNativeHeader("roomUuid").get(0);
@@ -52,6 +87,20 @@ public class RoomStompHandler {
 
 		log.info("RoomStompHandler === sessionUuid : {}", event.getSessionId());
 		handleDisconnectSession(event.getSessionId());
+	}
+
+	private void handleRoomSubscription(String roomUuid, String sessionUuid) {
+		log.info("이러면 되나?");
+		log.info("handleRoomSubscription === roomUuid : {}, sessionUuid : {}", roomUuid, sessionUuid);
+
+		// sessionUuid와 roomUuid 맵핑
+		sessionRoomMap.put(sessionUuid, roomUuid);
+	}
+
+	private void handleDisconnectSession(String sessionUuid) {
+		String roomUuid = sessionRoomMap.get(sessionUuid);
+		RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, sessionUuid);
+		sendRoomInfo(roomUuid, room);
 	}
 
 	@MessageMapping("/room/connect")
@@ -106,7 +155,11 @@ public class RoomStompHandler {
 	}
 
 	private void sendRoomInfo(String roomUuid, RoomDto.StompResponse room) {
-		log.info("BroadCasting Info ========== roomUuid: {}, host : {}", roomUuid, room.getHost().getNickname());
+		if(room.getHostSessionId() == null){
+			log.info("BroadCasting Info ========== 방 폭파 히히");
+		} else {
+			log.info("BroadCasting Info ========== roomUuid: {}, host : {}", roomUuid, room.getHost().getNickname());
+		}
 		// 대기방 정보 브로드캐스팅
 		messagingTemplate.convertAndSend("/topic/" + roomUuid, room);
 	}
@@ -117,22 +170,19 @@ public class RoomStompHandler {
 		roomModifyService.addPlayerToMatchingQueue(principal.getName());
 	}
 
-	@SubscribeMapping("/topic/{roomUuid}")
-	public void handleRoomSubscription(@DestinationVariable String roomUuid, Principal principal) {
-		String sessionUuid = principal.getName();
-		log.info("handleRoomSubscription === roomUuid : {}, sessionUuid : {}", roomUuid, sessionUuid);
-		// sessionUuid와 roomUuid 맵핑
-		sessionRoomMap.put(sessionUuid, roomUuid);
-	}
+	// @SubscribeMapping("/topic/{roomUuid}")
+	// public void handleRoomSubscription(@DestinationVariable String roomUuid) {
+	// 	log.info("이러면 되나?");
+	// 	// String sessionUuid = principal.getName();
+	// 	// log.info("handleRoomSubscription === roomUuid : {}, sessionUuid : {}", roomUuid, sessionUuid);
+	// 	// sessionUuid와 roomUuid 맵핑
+	// 	// sessionRoomMap.put(sessionUuid, roomUuid);
+	// }
 
 	@MessageMapping("/room/exit/{roomUuid}")
 	public void exitRoom(@DestinationVariable String roomUuid, Principal principal) {
 		log.info("exitRoom === roomUuid : {}, sessionUuid : {}", roomUuid, principal.getName());
-		roomManager.leaveRoom(roomUuid, principal.getName());
-	}
-
-	private void handleDisconnectSession(String sessionUuid) {
-		String roomUuid = sessionRoomMap.get(sessionUuid);
-		roomManager.leaveRoom(roomUuid, sessionUuid);
+		RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, principal.getName());
+		sendRoomInfo(roomUuid, room);
 	}
 }
