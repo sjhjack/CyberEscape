@@ -54,7 +54,8 @@ public class PagingDto {
 		}
 
 		private void setKeyword(String keyword) {
-			if(keyword == null) {
+			log.info("input keyword : {}", keyword);
+			if(keyword.isEmpty()) {
 				log.info("keyword is null !!");
 				this.keyword = "%%";
 			} else {
