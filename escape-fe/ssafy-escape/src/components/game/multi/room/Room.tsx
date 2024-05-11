@@ -8,16 +8,28 @@ import CustomPagination from "./CustomPagination"
 import CircularProgress from "@mui/material/CircularProgress"
 interface RequestData {
   page: number
-  keyword: string
+  // keyword: string
 }
 const Room = () => {
   const [page, setPage] = useState<number>(1)
-  const [keyword, setKeyword] = useState<string>("")
-  const searchData: RequestData = { page: page, keyword: keyword }
-  const { data: roomData, isLoading } = useQuery({
+  const [keyword, setKeyword] = useState<string | null>(null)
+  // const searchData: RequestData = { page: page, keyword: "" }
+  const searchData: RequestData = { page: page }
+  useEffect(() => {}, [])
+  const {
+    data: roomData,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["roomList", searchData],
     queryFn: () => getRoomList(searchData),
+    enabled: false, // 쿼리 비활성화
   })
+  useEffect(() => {
+    // 페이지 변경 시 쿼리 활성화 및 다시 실행
+    refetch()
+  }, [page, refetch])
+
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
   }
