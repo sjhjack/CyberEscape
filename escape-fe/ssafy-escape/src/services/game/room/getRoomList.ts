@@ -33,17 +33,18 @@ interface paginationDataProps {
 
 interface getRoomRequestProps {
   page: number
-  keyword: string
+  // keyword: string
 }
 // 방 목록 조회
 const getRoomList = async ({
   page,
-  keyword,
+  // keyword,
 }: getRoomRequestProps): Promise<GetRoomListBodyProps> => {
   try {
     const response = await api.get<GetRoomListBodyProps>(
       API_PATH.GAME.MULTI.ROOM.LIST,
-      { params: { page, keyword } },
+      { params: { page } },
+      // { params: { page, keyword } },
     )
     if (response.status === 400) {
       throw new Error(`오류: ${response.data}`)
