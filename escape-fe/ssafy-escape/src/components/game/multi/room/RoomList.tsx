@@ -5,7 +5,10 @@ import * as S from "@/app/@modal/main/multi/room/roomStyle"
 import Image from "next/image"
 import RoomPasswordModal from "./RoomPasswordModal"
 import useIngameThemeStore from "@/stores/IngameTheme"
+import useUserStore from "@/stores/UserStore"
+import patchJoin from "@/services/game/room/patchJoin"
 const Room = ({ roomData }: any) => {
+  const { setIsHost, userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
   const { setSelectedTheme } = useIngameThemeStore()
   const router = useRouter()
@@ -13,11 +16,17 @@ const Room = ({ roomData }: any) => {
   const handleModalClose = (): void => {
     setShowModal(false)
   }
-  const enterRoom = (): void => {
+  const enterRoom = async () => {
     if (roomData.hasPassword) {
       setShowModal(true)
     } else {
       setSelectedTheme(roomData.themaId)
+      await patchJoin({
+        roomUuid: roomData.uuid,
+        userUuid: userUuid || "",
+      })
+      // 방 목록에서 입장하는 것은 게스트
+      setIsHost(false)
       router.push(`/main/multi/waiting/${roomData.uuid}`)
     }
   }
