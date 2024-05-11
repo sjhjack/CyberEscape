@@ -72,6 +72,7 @@ const Room = () => {
       <CustomPagination
         pagination={paginationData}
         onPageChange={handlePageChange}
+        currentPage={page}
       />
     </Container>
   )
