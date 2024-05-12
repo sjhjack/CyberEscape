@@ -180,14 +180,14 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	@Override
-	public void deleteRoom(final RoomDto.Request request) {
+	public String deleteRoom(final RoomDto.Request request) {
 		// 이거 근데 왜 필요한거지?
 		// 방장이 나갔을 때 말고는 삭제할 일이 없는거 아닌가?
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 		User findUser = userUtil.getLoginUser();
 
-		if(findUser.getId() == findRoom.getHostId()){
+		if(checkHost(findUser.getId(), findRoom.getHostId())){
 			roomRepository.delete(findRoom);
 			// Todo : 연결된 채팅방까지 삭제 ???
 			// Todo : 방에 남아있는 Guest는 추방 조치
@@ -195,6 +195,8 @@ public class RoomServiceImpl implements RoomService {
 		} else {
 			throw new RuntimeException("방장이 아닙니다.");
 		}
+
+		return "";
 	}
 
 	public String inviteUserToRoom(final RoomDto.Request request) {
@@ -236,15 +238,14 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Transactional
-	public void exitRoom(final RoomDto.Request request) {
+	public String exitRoom(final RoomDto.Request request) {
 		// host : 방 삭제 (소켓 : 연결 끊고, 방 폭파, Todo : 게스트한테는 방폭 메시지 전송)
 		// guest : capacity 변경 (소켓 : 연결 끊기)
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
-
 		User user = userUtil.getLoginUser();
 
-		if (user.getId() == findRoom.getHostId()) {
+		if (checkHost(user.getId(), findRoom.getHostId())) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
 			roomRepository.delete(findRoom);
 			// Todo : 방에 남아있는 Guest에게 방폭 메시지 전송
@@ -254,25 +255,26 @@ public class RoomServiceImpl implements RoomService {
 			// capacity 변경
 			findRoom.setCapacity(1);
 		}
+
+		return "";
 	}
 
 	@Transactional
-	public void kickGuestFromRoom(final RoomDto.Request request) {
-		// Todo : broadcasting 공부 후 강퇴 개발
+	public String kickGuestFromRoom(final RoomDto.Request request) {
 		// host인 경우만 강퇴 가능 -> validation check 필요
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 		User host = userUtil.getLoginUser();
 
-		if (host.getId() == findRoom.getHostId()) {
+		if (checkHost(host.getId(), findRoom.getHostId())) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
-			// Todo : 강퇴..
-			// DB에 저장을 안 하면 강퇴는 어떻게 하지? 연결을 서버에서 끊어버려? 이게 되나?
 			// capacity 변경
 			findRoom.setCapacity(1);
 		} else {
-			throw new RuntimeException("방장이 아닙니다.");
+			throw new RoomException(ExceptionCodeSet.ROOM_NOT_HOST);
 		}
+
+		return "";
 	}
 
 	@Transactional
@@ -293,7 +295,7 @@ public class RoomServiceImpl implements RoomService {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
 		User host = userUtil.getLoginUser();
 
-		if(host.getId() == findRoom.getHostId()){
+		if(checkHost(host.getId(), findRoom.getHostId())){
 			log.info("RoomServiceImpl ========== 방장입니다.");
 
 			User guest = userRepository.findUserByUuid(request.getUserUuid())
@@ -304,7 +306,7 @@ public class RoomServiceImpl implements RoomService {
 
 			return UserDto.Response.from(guest);
 		} else {
-			throw new RuntimeException("방장이 아닙니다.");
+			throw new RoomException(ExceptionCodeSet.ROOM_NOT_HOST);
 		}
 	}
 
@@ -317,5 +319,9 @@ public class RoomServiceImpl implements RoomService {
 		findRoom.setUpdator(findRoom.getHost());
 
 		return RoomDto.TimeResponse.from(findRoom);
+	}
+
+	private boolean checkHost(Long userId, Long roomHostId) {
+		return userId.equals(roomHostId);
 	}
 }
