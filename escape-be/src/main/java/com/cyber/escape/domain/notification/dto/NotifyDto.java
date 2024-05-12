@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.cyber.escape.domain.notification.document.Notify;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,11 +16,25 @@ public class NotifyDto {
     // Todo : member의 unique 값을 뭐로 저장하냐에 따라서 id 타입 바꾸기
     // 지금은 Long id를 참조
 
-    public static class FriendNotifyResponse{
-        List<Object> friendResponse;
-    }
-    public static class GameNotifyResponse{
-        List<Object> gameResponse;
+    /*
+        -- 게임룸 ---
+		private final String roomUuid;
+		private final String receiverUuid;
+
+        -- 친구 초대 --
+
+        private final String receiverUuid;
+        private final String notifyType;
+
+     */
+
+    @Builder
+    @AllArgsConstructor
+    public static class Request{
+        private final String receiverUuid;
+        private final String roomUuid;
+        private final String notifyType;
+
     }
 
     @Getter
@@ -38,6 +53,7 @@ public class NotifyDto {
                     .id(notify.getId().toString())
                     .senderUuid(notify.getSenderUuid())
                     .content(notify.getContent())
+                    .nickname(notify.getNickname())
                     .type(notify.getNotificationType().name())
                     .isRead(notify.getIsRead())
                     .createdAt(notify.getCreatedAt())
