@@ -11,7 +11,7 @@ const API_PATH = {
       LIST: "/friend/list",
       DELETE: "/friend/remove",
       REQUEST: "/friend/request",
-      ADDITION: "/friend/addition",
+      ADDITION: "/friend/acceptance",
       SEARCH: "/user/search",
     },
     NOTIFICATION:{
