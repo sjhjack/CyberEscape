@@ -6,6 +6,7 @@ import Button from "@/components/common/Button"
 import { useQuery } from "@tanstack/react-query"
 import getNotificationFriend from "@/services/main/friends/getNotificationFriend"
 // import postFriendRequest from "@/services/main/friends/postFriendAddition"
+import postFriendAddition from "@/services/main/friends/postFriendAddition";
 
 // 받은 친구 요청 목록 조회
 const FriendRequestActions = () => {
@@ -13,12 +14,12 @@ const FriendRequestActions = () => {
     queryKey: ["friendRequestList"],
     queryFn: () => getNotificationFriend(),
   })
-  // myid는 현재 로그인된 나의 uuid
-  //   const handleRequest = async (requestUserUuid: string) => {
-  //     console.log("친구 수락 완료")
-  //     await postFriendRequest(myid, requestUserUuid)
-  //   }
 
+  
+  const handleRequest = async (requestUserUuid: string) => {
+    console.log("친구 수락 완료")
+    await postFriendAddition(requestUserUuid)
+  }
   return (
     <div>
       <Text>받은 친구 요청</Text>
@@ -34,7 +35,7 @@ const FriendRequestActions = () => {
                 text="수락"
                 theme="success"
                 width="60px"
-                // onClick={() => handleRequest(user.requestUserUuid)}
+                onClick={() => handleRequest(user.senderUuid)}
               />
               <Button text="거절" theme="fail" width="60px" />
               {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}
