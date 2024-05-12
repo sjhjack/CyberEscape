@@ -10,17 +10,17 @@ import FormatTime from "@/hooks/FormatTime"
 import Input from "@/components/common/Input"
 import Button from "@/components/common/Button"
 import postMyRanking from "@/services/main/ranking/postMyRanking"
-import postAutoCreateNickname from "@/services/main/nickname/postAutoCreateNickname"
-// import postIsDuplicationNickname from "@/services/main/nickname/postIsDuplicationNickname"
-// import patchNicknameChange from "@/services/main/nickname/patchNicknameChange"
+import getAutoCreateNickname from "@/services/main/nickname/getAutoCreateNickname"
+import postIsDuplicationNickname from "@/services/main/nickname/postIsDuplicationNickname"
+import patchNicknameChange from "@/services/main/nickname/patchNicknameChange"
 import useUserStore from "@/stores/UserStore"
+import Swal from "sweetalert2"
 interface ImageProps {
   $isActive: boolean
 }
 
 const MyProfile = () => {
-  const { nickname, profileUrl } = useUserStore()
-  const currentNickname = "놀란 상어"
+  const { nickname, profileUrl, setNickname } = useUserStore()
   const userUuid = "임시"
   const themeuuid = ["공포uuid", "싸피uuid", "우주uuid"]
   const themes = ["공포", "싸피", "우주"]
@@ -40,20 +40,27 @@ const MyProfile = () => {
     setActiveTheme(index)
   }
 
-  // // 닉네임 저장 버튼 클릭 시
-  // const handleNicknameSaveClick = async () => {
-  //   if (postIsDuplicationNickname(currentNickname)) {
-  //     await patchNicknameChange(currentNickname, newNickname)
-  //     alert("닉네임 변경 완료!")
-  //     setNewNickname("")
-  //     setIsActiveChangeNickname(false)
-  //   } else {
-  //     alert("이미 존재하는 닉네임입니다.")
-  //   }
-  // }
+  // 닉네임 저장 버튼 클릭 시
+  const handleNicknameSaveClick = async () => {
+    const idDuplicate = await postIsDuplicationNickname(nickname || "")
+    if (idDuplicate) {
+      try {
+        await patchNicknameChange(nickname || "", newNickname)
+        Swal.fire("닉네임 변경 완료!")
+        setNickname(newNickname)
+        setNewNickname("")
+        setIsActiveChangeNickname(false)
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      Swal.fire("이미 존재하는 닉네임입니다.")
+    }
+  }
 
   const [profileImg, setProfileImg] = useState<string>(
-    "https://img.freepik.com/premium-vector/cute-shark-swimming-illustration-shark-mascot-cartoon-characters-animals-icon-concept-isolated_400474-203.jpg",
+    profileUrl ||
+      "https://img.freepik.com/premium-vector/cute-shark-swimming-illustration-shark-mascot-cartoon-characters-animals-icon-concept-isolated_400474-203.jpg",
   )
 
   // 프로필 이미지 변경
@@ -79,8 +86,9 @@ const MyProfile = () => {
 
   // 닉네임 자동 생성 버튼 클릭 시
   const handleAutoNicknameClick = async () => {
-    const newNickname = await postAutoCreateNickname()
-    setNewNickname(newNickname.data.words[0])
+    const response = await getAutoCreateNickname()
+    console.log(response.data)
+    setNewNickname(response.data)
   }
 
   if (isLoading) {
@@ -114,7 +122,7 @@ const MyProfile = () => {
               text="저장"
               theme="success"
               width="55px"
-              // onClick={() => handleNicknameSaveClick()}
+              onClick={() => handleNicknameSaveClick()}
             />
             <Button
               text="닫기"
@@ -138,9 +146,7 @@ const MyProfile = () => {
       </NicknameMainBox>
 
       <ImageContainer>
-        {profileUrl ? (
-          <ProfileImg src={profileUrl} alt="내 프로필 이미지" />
-        ) : null}
+        <ProfileImg src={profileImg} alt="내 프로필 이미지" />
         <WhiteEditIcon
           src="/image/edit_white.png"
           alt="프로필 이미지 수정 아이콘"

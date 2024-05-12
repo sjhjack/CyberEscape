@@ -26,8 +26,8 @@ const Room = ({ roomData }: any) => {
       <RoomPasswordModal open={showModal} handleClose={handleModalClose} />
       <S.RoomBox onClick={enterRoom}>
         <Image
-          src={`/image/${thema[roomData.themaId]}.png`}
-          alt=""
+          src={`/image/${roomData.themaId}emoticon.png`}
+          alt="테마 이모티콘"
           width={70}
           height={70}
         />

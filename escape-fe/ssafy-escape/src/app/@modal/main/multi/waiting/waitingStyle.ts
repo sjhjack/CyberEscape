@@ -30,6 +30,13 @@ export const MainBox = styled.div`
 export const ThemeImage = styled(Image)`
   border-radius: 10%;
 `
+
+export const ProfileImage = styled.img`
+  width: inherit;
+  height: inherit;
+  object-fit: cover;
+  border-radius: 100%;
+`
 export const MainContentBox = styled.div`
   display: flex;
   justify-content: center;
