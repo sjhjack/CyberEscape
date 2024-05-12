@@ -6,6 +6,10 @@ import "./globals.css"
 import { usePathname } from "next/navigation"
 import useUserStore from "@/stores/UserStore"
 
+// 최상위
+import { createContext, useContext, useEffect, useState } from 'react';
+import EventProvider from "@/components/EventProvider"
+
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
 })
@@ -23,10 +27,12 @@ const Layout = ({
     <html>
       <body className={notoSansKr.className}>
         <QueryProvider>
-          <StyledComponentsRegistry>
-            {children}
-            {pathname !== "/ingame" && isLogin && modal}
-          </StyledComponentsRegistry>
+          <EventProvider>
+            <StyledComponentsRegistry>
+              {children}
+              {pathname !== "/ingame" && isLogin && modal}
+            </StyledComponentsRegistry>
+          </EventProvider>
         </QueryProvider>
       </body>
     </html>
