@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationService {
+
+    // ms로 계산, 60L (1분) * 60 * 1000 = 1시간
     private static final Long DEFAULT_TIMEOUT = 60L * 60 * 1000;
     private final EmitterRepositoryImpl emitterRepository;
     // CRUD, FIND, 동적 쿼리 
@@ -44,7 +46,7 @@ public class NotificationService {
         log.info("NotificationService ============ save emitter completed");
 
         // 시간이 만료된 경우에 대해 자동으로 레포지토리에서 삭제 처리해줄 수 있는 콜백을 등록해놓을 수 있다.
-        //sseEmitter.onCompletion(() -> emitterRepository.deleteById(id));
+        sseEmitter.onCompletion(() -> emitterRepository.deleteById(id));
         sseEmitter.onTimeout(() -> emitterRepository.deleteById(id));
         sseEmitter.onError((e) -> emitterRepository.deleteById(id));
         // sseEmitter.onError();
@@ -67,6 +69,8 @@ public class NotificationService {
     }
 
     // 알림이 필요한 곳에서 이 함수를 호출하면 됩니다.
+    // 이걸 불러봤자... 결국 subscribe에서만 되겠구나
+    // subscribe 자체가 그냥 등록만 하는 거니까
     public void send(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content){
         log.info("NotificationService ============= send() 시작");
 
@@ -106,14 +110,14 @@ public class NotificationService {
             // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
             Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
 
-            //sseEmitter가 null이다
-            //log.info("상대방의 SSE EMITTER : {} ", sseEmitters.get(String.valueOf(receiverUuid)));
-            if( sseEmitters.get(String.valueOf(receiverUuid)) == null){
+            if(sseEmitters.get(String.valueOf(receiverUuid)) == null){
                 String userUuid = userUtil.getLoginUserUuid();
                 log.info("NotificationService ============ start subscribe..");
                 String id = userUuid + "_" + System.currentTimeMillis();
                 log.info("NotificationService ============ id : {}, lastEventId: {}", id, "");
                 SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+                emitterRepository.saveEventCache(id, notification);
+                sendToClient(sseEmitter, id, NotifyDto.FriendResponse.from(notification));
             }
 
             sseEmitters.forEach(
@@ -131,6 +135,7 @@ public class NotificationService {
                 .senderUuid(senderUuid)
                 .receiverUuid(receiverUuid)
                 .roomUuid(roomUuid)
+                .nickname(userUtil.getLoginUser().getNickname())
                 .notificationType(notificationType)
                 .content(content)
                 .isRead('F')
@@ -145,11 +150,12 @@ public class NotificationService {
                     .id(id)
                     .name("sse")
                     .data(data));
-            sseEmitter.complete();
+            //sseEmitter.complete();
             log.info("sendToClient ============ sendToClient completed");
         } catch (IOException e){
             log.info("sendToClient ============ sendToClient failed");
-            emitterRepository.deleteById(id);
+            //emitterRepository.deleteById(id);
+            log.error("알림을 송신하는 도중 에러가 발생했습니다 : {}", e.getMessage());
             throw new RuntimeException("연결 오류");
         }
         catch (Exception e){
@@ -187,6 +193,7 @@ public class NotificationService {
                     .id(unreadNotify.getId())
                     .senderUuid(unreadNotify.getSenderUuid())
                     .receiverUuid(unreadNotify.getReceiverUuid())  // Maintain other fields
+                    .nickname(unreadNotify.getNickname())
                     .content(unreadNotify.getContent())      	// Maintain other fields
                     .notificationType(unreadNotify.getNotificationType())  // Maintain other fields
                     .isRead('T')  // Mark as read
