@@ -53,13 +53,13 @@ const Crosshair = ({ interactNum }: CrosshairProp) => {
     <Crosshair1></Crosshair1>
   ) : interactNum === 2 ? (
     <Crosshair2>
-      <Image src={imageURL} alt={"Crosshair"} width={50} height={50} />
+      <Image src={imageURL} alt={"선택"} width={50} height={50} />
     </Crosshair2>
-  ) : (
+  ) : interactNum === 3 ? (
     <Crosshair2>
-      <Image src={imageURL_2} alt={"Crosshair"} width={50} height={50} />
+      <Image src={imageURL_2} alt={"문"} width={50} height={50} />
     </Crosshair2>
-  )
+  ) : null
 }
 
 export default Crosshair

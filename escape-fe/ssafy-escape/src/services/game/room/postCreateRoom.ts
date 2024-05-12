@@ -29,6 +29,7 @@ const postCreateRoom = async (
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
+    console.log("방 생성 완료")
     return response.data
   } catch (error) {
     console.error(error)
@@ -37,10 +38,3 @@ const postCreateRoom = async (
 }
 
 export default postCreateRoom
-
-// import dummy from "./postCreateRoom.json"
-// const postCreateRoom = async (data: postCreateRoomRequestProps) => {
-//   return dummy
-// }
-
-// export default postCreateRoom
