@@ -239,7 +239,7 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	public String exitRoom(final RoomDto.Request request) {
-		// host : 방 삭제 (소켓 : 연결 끊고, 방 폭파, Todo : 게스트한테는 방폭 메시지 전송)
+		// host : 방 삭제 (소켓 : 연결 끊고, 방 폭파)
 		// guest : capacity 변경 (소켓 : 연결 끊기)
 
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
@@ -248,7 +248,6 @@ public class RoomServiceImpl implements RoomService {
 		if (checkHost(user.getId(), findRoom.getHostId())) {
 			log.info("RoomServiceImpl ========== 방장입니다.");
 			roomRepository.delete(findRoom);
-			// Todo : 방에 남아있는 Guest에게 방폭 메시지 전송
 			log.info("RoomServiceImpl ========== 방 삭제 성공");
 		} else {
 			log.info("RoomServiceImpl ========== 게스트입니다.");
