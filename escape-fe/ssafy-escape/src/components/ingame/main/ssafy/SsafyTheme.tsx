@@ -15,7 +15,7 @@ const SsafyTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   return (
     <BasicScene interactNum={interactNum}>
       <Lights />
-      <Player position={[-3, 3, -10]} speed={20} args={[0, 0, 0]} />
+      <Player position={[-3, 3, 10]} speed={20} args={[0, 0, 0]} />
       <Floor
         rotation={[Math.PI / -2, 0, 0]}
         color="white"

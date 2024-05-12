@@ -3,10 +3,11 @@ import { useEffect } from "react"
 import { Mesh } from "three"
 
 const SsafyClassRoom = ({ onLoaded }: RoomProps) => {
-  const { scene } = useGLTF(
-    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/conference_room.glb",
-    true,
-  )
+  // const { scene } = useGLTF(
+  //   process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/ssafymap.glb",
+  //   true,
+  // )
+  const { scene } = useGLTF("/glb/ssafy/ssafymap.glb", true)
 
   useEffect(() => {
     if (scene) {
