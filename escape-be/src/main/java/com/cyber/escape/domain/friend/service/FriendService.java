@@ -36,6 +36,7 @@ public class FriendService {
     public void makeFriend(FriendDto.FriendRelationRequest dto){
         String currentUserUuid = userUtil.getLoginUserUuid();
 
+        log.info("친구 추가하려는 유저의 uuid : {}", dto.getToUserUuid());
         User fromUser = userRepository.findUserByUuid(currentUserUuid)
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
         User toUser = userRepository.findUserByUuid(dto.getToUserUuid())
