@@ -5,10 +5,12 @@ import postLogin from "../services/user/postLogin"
 
 interface UserState {
   isLogin: boolean
+  isHost: boolean
   userUuid: string | null
   nickname: string | null
   profileUrl: string | null
   accessToken: string | null
+  setIsHost: (value: boolean) => void
   setNickname: (name: string) => void
   setAccessToken: (token: string | null) => void
   login: (loginId: string, password: string) => void
@@ -18,6 +20,8 @@ const useUserStore = create<UserState>()(
   persist(
     (set): UserState => ({
       isLogin: false,
+      isHost: false,
+      setIsHost: (value) => set({ isHost: value }),
       userUuid: null,
       nickname: null,
       setNickname: (name) => set({ nickname: name }),
