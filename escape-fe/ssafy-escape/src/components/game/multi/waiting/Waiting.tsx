@@ -93,9 +93,7 @@ const Waiting = () => {
   useEffect(() => {
     connect()
     return () => {
-      if (roomData?.host) {
-        patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
-      }
+      patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
       client.current?.deactivate()
     }
   }, [])
