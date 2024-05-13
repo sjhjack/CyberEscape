@@ -4,10 +4,10 @@ import { AnimationMixer } from "three"
 import DoorBox from "../../common/DoorBox"
 import * as THREE from "three"
 
-const Door1 = ({ position, rotation, setInteractNum }: any) => {
+const Door4 = ({ position, rotation, setInteractNum }: any) => {
   const { scene, animations } = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
-    "/glb/door_01.glb",
+    "/glb/door_04.glb",
     true,
   )
   const doorRef = useRef()
@@ -66,7 +66,7 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
       <primitive
         object={scene}
         ref={doorRef}
-        scale={24}
+        scale={22}
         position={position}
         rotation={rotation}
         onClick={handleClick}
@@ -77,9 +77,9 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
           setInteractNum(1)
         }}
       />
-      <DoorBox position={position} args={[2, 20, 10]} color={"red"} />
+      <DoorBox position={position} args={[10, 20, 2]} color={"red"} />
     </>
   ) : null
 }
 
-export default Door1
+export default Door4

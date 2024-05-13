@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"
@@ -9,7 +9,6 @@ import Stars from "../../elements/space/Backgrounds/Stars"
 // import Asteroids from "../../elements/space/Backgrounds/Asteroids"
 import Venus from "../../elements/space/Backgrounds/Venus"
 import KeyModels from "../../elements/space/Basics/KeyModels"
-import Keys from "@/data/ingame/space/Keys"
 import Sequences from "@/data/ingame/space/Sequences"
 import Interactions from "../../elements/space/Basics/Interactions"
 import Start from "../../elements/space/Interactions/Start"
@@ -17,51 +16,44 @@ import Videos from "../../elements/space/Basics/Videos"
 import Subtitle from "../../elements/common/Subtitle"
 import Problems from "../../elements/space/Basics/Problems"
 import CountdownTimer from "../../CountdownTimer"
+import Keys from "../../elements/space/Basics/Keys"
+// import LEDLight from "../../elements/space/Basics/LEDLight"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [sequences, setSequences] = useState(Sequences)
-  const [activeKeys, setActiveKeys] = useState(Keys)
   const [subtitle, setSubtitle] = useState(null)
   const [interactNum, setInteractNum] = useState(1)
-
-  const onClick = (index: number) => {
-    const updatedKeys = [...activeKeys]
-    updatedKeys[index] = { ...updatedKeys[index], active: false }
-    setActiveKeys(updatedKeys)
-    if (index === 0) {
-      const updatedSequence = [...sequences]
-      updatedSequence[0] = { ...updatedSequence[0], done: true }
-      setSequences(updatedSequence)
-    }
-    setInteractNum(1)
-  }
+  const [onAir, setOnAir] = useState(false)
 
   return (
     <>
       {isGameStart ? (
         <>
           <CountdownTimer />
-          <Start setSubtitle={setSubtitle} />
+          <Start onAir={onAir} setOnAir={setOnAir} setSubtitle={setSubtitle} />
         </>
       ) : null}
       <Subtitle text={subtitle} />
-      <BasicScene interactNum={interactNum}>
+      <BasicScene onAir={onAir} interactNum={interactNum}>
         <Lights />
         <Player position={[3, 1, 0]} />
         <MeshObjects />
-        <Floor rotation={[Math.PI / -2, 0, 0]} color="white" />
+        <Floor
+          position={[0, 1, 0]}
+          rotation={[Math.PI / -2, 0, 0]}
+          color="white"
+        />
         <Stars />
         <Venus />
-        {activeKeys.map(({ active, position }, index) => (
-          <KeyModels
-            key={index}
-            active={active}
-            position={position}
-            setInteractNum={setInteractNum}
-            onClick={() => onClick(index)}
-          />
-        ))}
+        <Keys
+          sequences={sequences}
+          setSequences={setSequences}
+          setSubtitle={setSubtitle}
+          setInteractNum={setInteractNum}
+        />
         <Interactions
+          onAir={onAir}
+          setOnAir={setOnAir}
           sequences={sequences}
           setSequences={setSequences}
           setSubtitle={setSubtitle}
@@ -76,6 +68,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         {/* <Asteroids /> */}
         <Videos sequences={sequences} setSequences={setSequences} />
         <RoomModel onLoaded={setIsModelLoaded} />
+        {/* <LEDLight /> */}
       </BasicScene>
     </>
   )
