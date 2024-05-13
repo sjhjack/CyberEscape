@@ -59,22 +59,22 @@ public class FriendService {
 
     public List<FriendDto.FriendListResponse> getMyFriendList(int pageNumber){
         String userUuid = userUtil.getLoginUserUuid();
-
         Long userId = idFinder.findIdByUuid(userUuid, User.class);
 
+
+        List<FriendDto.FriendListResponse> friendListPerPages = new ArrayList<>();
         int pageSize = 10;
         int startIndex = (pageNumber - 1) * pageSize;
-        //전체 랭킹
 
         List<FriendDto.FriendListResponse> friendList = friendRepositoryImpl.findFriendList(userId);
 
         int endIndex = Math.min(startIndex + pageSize, friendList.size());
 
         for (int i = startIndex; i < endIndex; i++) {
-            friendList.add(friendList.get(i));
+            friendListPerPages.add(friendList.get(i));
         }
 
-        return friendList;
+        return friendListPerPages;
     }
 
     public String removeFriend(Map<String, String> req){
