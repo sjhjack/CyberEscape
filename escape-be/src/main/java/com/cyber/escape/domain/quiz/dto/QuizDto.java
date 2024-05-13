@@ -8,6 +8,16 @@ import lombok.NoArgsConstructor;
 
 public class QuizDto {
 
+
+    @Getter
+    @Builder
+    public static class Request{
+        private String hint;
+        private String difficulty;
+        private String answer;
+        private int themaCategory;
+    }
+
     @Getter
     public static class QuizSubmissionReqDto{
         String themaUuid;
@@ -67,5 +77,6 @@ public class QuizDto {
             this.hint = hint;
         }
     }
+
 
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.cyber.escape.global.common.enums.FileType;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
         String originalFileName = multipartFile.getOriginalFilename();
         String savedFileName = FileUtil.makeFileName(originalFileName);
-        String profileUrl = FileUtil.uploadFile(multipartFile, savedFileName);
+        String profileUrl = FileUtil.uploadFile(multipartFile, FileType.profiles, savedFileName);
 
         findUser.changeProfileImage(savedFileName, profileUrl);
 
@@ -139,7 +140,7 @@ public class UserServiceImpl implements UserService {
     public String putDummyImage(MultipartFile multipartFile) throws IOException {
         String originalFileName = multipartFile.getOriginalFilename();
         String savedFileName = FileUtil.makeFileName(originalFileName);
-        String profileUrl = FileUtil.uploadFile(multipartFile, savedFileName);
+        String profileUrl = FileUtil.uploadFile(multipartFile, FileType.profiles, savedFileName);
 
         log.info("originalFileName : {}, savedFileName : {}, profileUrl : {}", originalFileName, savedFileName, profileUrl);
 
