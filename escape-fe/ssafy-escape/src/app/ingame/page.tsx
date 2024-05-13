@@ -73,7 +73,7 @@ const Page = () => {
             isModelLoaded={isModelLoaded}
             onFinish={handleGameStart}
           /> */}
-          <Chat />
+          {/* <Chat />
           <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
           <ExitGame>
             <Image
@@ -82,7 +82,7 @@ const Page = () => {
               width="40"
               height="40"
             />
-          </ExitGame>
+          </ExitGame> */}
         </div>
       ) : (
         <S.LoadingText>로딩 중...</S.LoadingText>
