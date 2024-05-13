@@ -176,6 +176,7 @@ public class RoomStompHandler {
 	@MessageMapping("/room/ready")
 	public void changeReadyStatus(@Payload String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
 		log.info("changeReadyStatus === ");
+		log.info("session UUID : {}", stompHeaderAccessor.getSessionId());
 		RoomDto.StompResponse room = roomManager.changeReadyStatus(roomUuid, stompHeaderAccessor.getSessionId());
 		sendRoomInfo(roomUuid, room);
 	}
@@ -183,6 +184,7 @@ public class RoomStompHandler {
 	@MessageMapping("/game/progress")
 	public void updateProgress(@Payload String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
 		log.info("updateProgress === ");
+		log.info("session UUID : {}", stompHeaderAccessor.getSessionId());
 		RoomDto.StompResponse room = roomManager.updateProgress(roomUuid, stompHeaderAccessor.getSessionId());
 		sendRoomInfo(roomUuid, room);
 	}
