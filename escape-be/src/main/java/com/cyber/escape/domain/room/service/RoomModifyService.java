@@ -14,8 +14,9 @@ public interface RoomModifyService {
 	UserDto.Response changeHost(RoomDto.Request request);
 	RoomDto.TimeResponse setStartTime(RoomDto.TimeRequest timeRequest);
 
-	void deleteRoom(final RoomDto.Request request);
+	String deleteRoom(final RoomDto.Request request);
 	String inviteUserToRoom(RoomDto.Request request);
 	String joinRoom(final RoomDto.JoinRequest joinRequest);
-	void exitRoom(final RoomDto.Request request);
+	String exitRoom(final RoomDto.Request request);
+	String kickGuestFromRoom(final RoomDto.KickRequest kickRequest);
 }

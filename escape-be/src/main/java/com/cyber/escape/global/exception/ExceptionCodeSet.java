@@ -39,7 +39,10 @@ public enum ExceptionCodeSet {
     // 대기방
     ROOM_PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 8000, "대기방 비밀번호가 일치하지 않습니다."),
     ROOM_CAPACITY_OVER(HttpStatus.BAD_REQUEST, 8001, "대기방 정원 초과로 인해 입장할 수 없습니다."),
-    ROOM_NOT_HOST(HttpStatus.BAD_REQUEST, 8002, "방장이 아닙니다.")
+    ROOM_NOT_HOST(HttpStatus.BAD_REQUEST, 8002, "방장이 아닙니다."),
+    ROOM_NOT_FOUND(HttpStatus.BAD_REQUEST, 8003, "존재하지 않는 대기방입니다."),
+    ROOM_GUEST_NOT_FOUND(HttpStatus.BAD_REQUEST, 8004, "게스트가 존재하지 않습니다."),
+    ROOM_INVALID_USER(HttpStatus.BAD_REQUEST, 8004, "대기방에 존재하지 않는 참여자입니다.")
     ;
 
     private final HttpStatus httpStatus;
