@@ -56,7 +56,7 @@ public class RoomManager {
 			roomMap.remove(roomUuid);
 		} else if (room.getGuestSessionUuid() != null && room.getGuestSessionUuid().equals(sessionId)) {
 			// guest인 경우 guest 정보 null 처리
-			room.kickGuest();
+			room.leaveGuest();
 
 			return room;
 		}
