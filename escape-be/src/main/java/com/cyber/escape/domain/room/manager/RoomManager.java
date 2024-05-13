@@ -29,6 +29,9 @@ public class RoomManager {
 		room.setHost(host);
 		roomMap.put(roomUuid, room);
 
+		log.info("createRoom UUID : {}", roomUuid);
+		log.info("방이 map에 재대로 들어갔니? : {}", roomMap.get(roomUuid) != null);
+
 		return room;
 	}
 
