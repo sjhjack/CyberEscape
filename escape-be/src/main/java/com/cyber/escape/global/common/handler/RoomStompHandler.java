@@ -166,8 +166,8 @@ public class RoomStompHandler {
 	// 	// sessionRoomMap.put(sessionUuid, roomUuid);
 	// }
 
-	@MessageMapping("/room/exit/{roomUuid}")
-	public void exitRoom(@DestinationVariable String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
+	@MessageMapping("/room/exit")
+	public void exitRoom(@Payload String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
 		log.info("exitRoom === roomUuid : {}, sessionUuid : {}", roomUuid, stompHeaderAccessor.getSessionId());
 		RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, stompHeaderAccessor.getSessionId());
 		sendRoomInfo(roomUuid, room);
