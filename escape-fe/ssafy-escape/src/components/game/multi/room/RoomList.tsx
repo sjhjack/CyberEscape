@@ -24,6 +24,7 @@ const Room = ({ roomData }: any) => {
       await patchJoin({
         roomUuid: roomData.uuid,
         userUuid: userUuid || "",
+        password: "",
       })
       // 방 목록에서 입장하는 것은 게스트
       setIsHost(false)
@@ -32,7 +33,11 @@ const Room = ({ roomData }: any) => {
   }
   return (
     <>
-      <RoomPasswordModal open={showModal} handleClose={handleModalClose} />
+      <RoomPasswordModal
+        open={showModal}
+        handleClose={handleModalClose}
+        roomData={roomData}
+      />
       <S.RoomBox onClick={enterRoom}>
         <Image
           src={`/image/${roomData.themaId}emoticon.png`}

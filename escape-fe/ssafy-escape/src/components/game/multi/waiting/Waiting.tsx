@@ -35,7 +35,6 @@ const Waiting = () => {
   }
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isReady, setIsReady] = useState<boolean>(false)
-  const [kicked, setKicked] = useState<boolean>(false)
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
@@ -83,32 +82,25 @@ const Waiting = () => {
     setIsReady(!isReady)
     client.current?.publish({
       destination: `/pub/room/ready`,
-      body: JSON.stringify({
-        roomUuid: roomUuid,
-      }),
+      body: roomUuid,
     })
   }
   const kick = (): void => {
     client.current?.publish({
       destination: `/pub/room/kickGuest`,
-      body: JSON.stringify({
-        roomUuid: roomUuid,
-      }),
+      body: roomUuid,
     })
   }
   useEffect(() => {
     connect()
     return () => {
-      patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
+      if (roomData?.host) {
+        patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
+      }
       client.current?.deactivate()
     }
   }, [])
-  useEffect(() => {
-    if (kicked) {
-      Swal.fire("호스트로부터 강제 퇴장 당했습니다.")
-      router.back()
-    }
-  }, [kicked])
+
   useEffect(() => {
     console.log("방 정보", roomData)
     if (roomData !== null) {
@@ -116,6 +108,10 @@ const Waiting = () => {
     }
     if (!isLoading && roomData?.host === null) {
       Swal.fire("게임방이 종료되었습니다.")
+      router.back()
+    }
+    if (roomData?.kicked && userUuid === roomData?.guest?.uuid) {
+      Swal.fire("호스트로부터 강제 퇴장 당했습니다.")
       router.back()
     }
     // if (roomData?.guestReady && roomData.hostReady) {
@@ -146,6 +142,8 @@ const Waiting = () => {
       alignItems="center"
       backgroundColor="none"
     >
+      <div id="audioContainer" style={{ display: "none" }}></div>
+
       <InviteModal open={showModal} handleClose={handleModalClose} />
       <S.UserBox style={{ marginRight: "20px" }}>
         <S.CharacterBox>

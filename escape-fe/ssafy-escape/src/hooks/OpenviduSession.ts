@@ -43,7 +43,6 @@ const useOpenViduSession = (
       // 스트림의 오디오 및 비디오 트랙을 중단
       const stream = publisher.stream.getMediaStream()
       stream.getAudioTracks().forEach((track) => track.stop())
-      stream.getVideoTracks().forEach((track) => track.stop())
 
       // OpenVidu 세션에서 발행 중단
       session?.unpublish(publisher)
@@ -65,6 +64,7 @@ const useOpenViduSession = (
       console.log("세션 설정됨")
       session.on("streamCreated", (event: any) => {
         const subscriber = session.subscribe(event.stream, undefined)
+        session.subscribe(event.stream, "audioContainer")
         setSubscribers((prev) => [...prev, subscriber])
       })
 
