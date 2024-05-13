@@ -26,8 +26,8 @@ const Waiting = () => {
   const { accessToken, userUuid, isHost } = useUserStore()
   const { selectedTheme } = useIngameThemeStore()
   const [chatting, setChattting] = useState<Array<ChatType>>([])
-  // const { session } = useOpenViduSession(roomUuid, setChattting)
-  const session = ""
+  const { session } = useOpenViduSession(roomUuid, setChattting)
+  // const session = ""
   const [showModal, setShowModal] = useState<boolean>(false)
   const [gameStart, setGameStart] = useState<boolean>(false)
   const handleModalClose = (): void => {
@@ -35,10 +35,10 @@ const Waiting = () => {
   }
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isReady, setIsReady] = useState<boolean>(false)
+  const [kicked, setKicked] = useState<boolean>(false)
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
-
   const connectHeaders = {
     Authorization: accessToken || "",
   }
@@ -56,19 +56,6 @@ const Waiting = () => {
         userType: isHost ? "host" : "guest",
       },
     })
-
-    // client.current?.publish({
-    //   destination: `/pub/room/kickGuest`,
-    //   body: JSON.stringify({
-    //     roomUuid: roomUuid,
-    //   }),
-    // })
-    // client.current?.publish({
-    //   destination: `/pub/room/delegateHost`,
-    //   body: JSON.stringify({
-    //     roomUuid: roomUuid,
-    //   }),
-    // })
   }
   // 입장 시 소켓 연결
   const connect = () => {
@@ -91,13 +78,6 @@ const Waiting = () => {
     })
     client.current.activate()
   }
-  useEffect(() => {
-    connect()
-    return () => {
-      patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
-      client.current?.deactivate()
-    }
-  }, [])
   // 게임 레디 상태 바뀔 때마다 request 보내기
   const ready = (): void => {
     setIsReady(!isReady)
@@ -108,7 +88,27 @@ const Waiting = () => {
       }),
     })
   }
-
+  const kick = (): void => {
+    client.current?.publish({
+      destination: `/pub/room/kickGuest`,
+      body: JSON.stringify({
+        roomUuid: roomUuid,
+      }),
+    })
+  }
+  useEffect(() => {
+    connect()
+    return () => {
+      patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
+      client.current?.deactivate()
+    }
+  }, [])
+  useEffect(() => {
+    if (kicked) {
+      Swal.fire("호스트로부터 강제 퇴장 당했습니다.")
+      router.back()
+    }
+  }, [kicked])
   useEffect(() => {
     console.log("방 정보", roomData)
     if (roomData !== null) {
@@ -118,15 +118,11 @@ const Waiting = () => {
       Swal.fire("게임방이 종료되었습니다.")
       router.back()
     }
-    // if (roomData?.guest.isReady && roomData.host.isReady) {
+    // if (roomData?.guestReady && roomData.hostReady) {
     //   setGameStart(true)
     // }
   }, [roomData])
-  // useEffect(() => {
-  //   if (gameStart) {
-  //     router.push(`/ingame`)
-  //   }
-  // }, [gameStart])
+
   if (isLoading) {
     return (
       <Container
@@ -139,7 +135,10 @@ const Waiting = () => {
       </Container>
     )
   }
-
+  if (gameStart) {
+    // 게임 시작하면 테마 띄우기
+    return null
+  }
   return (
     <Container
       display="flex"
@@ -156,6 +155,7 @@ const Waiting = () => {
             width={100}
             height={100}
           />
+          {roomData?.hostReady ? <div>준비완료</div> : null}
         </S.CharacterBox>
         <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
         <S.Nickname>
@@ -196,6 +196,7 @@ const Waiting = () => {
                 width={100}
                 height={100}
               />
+              {roomData?.guestReady ? <div>준비완료</div> : null}
             </S.CharacterBox>
             <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
             <S.Nickname>
@@ -213,9 +214,15 @@ const Waiting = () => {
                 </>
               ) : (
                 <>
-                  {/* {roomData?.guestReady ? 
-                (<div>준비 완료</div>): null
-              } */}
+                  <Button
+                    text={"강제퇴장"}
+                    theme={"fail"}
+                    width="80px"
+                    height="40px"
+                    onClick={() => {
+                      kick()
+                    }}
+                  />
                 </>
               )}
             </S.Nickname>

@@ -10,6 +10,10 @@ interface RoomInfo {
 interface PubResponseData {
   hostSessionId: string
   guestSessionId: string
+  hostProgress: number
+  guestProgress: number
+  hostReady: number
+  guestReady: number
   host: RoomUserInfo
   guest: RoomUserInfo
 }
