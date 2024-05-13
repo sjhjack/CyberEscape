@@ -11,6 +11,7 @@ import com.cyber.escape.domain.thema.entity.Thema;
 import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.domain.user.util.UserUtil;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.RankingException;
 import jakarta.transaction.Transactional;
@@ -33,11 +34,13 @@ public class GameHistoryService {
     private final UserRepository userRepository;
     private final ThemaRepository themaRepository;
     private final RankingRepository rankingRepository;
+    private final UserUtil userUtil;
 
     @Transactional
     public void upload(GameHistoryDto.Request gameHistoryDto){ // 게임 결과 모든 데이터 저장
 
-        User user = userRepository.findUserByUuid(gameHistoryDto.getUserUuid())
+        String currentUserUuid = userUtil.getLoginUserUuid();
+        User user = userRepository.findUserByUuid(currentUserUuid)
                 .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
 
         Thema thema = themaRepository.findByCategory(gameHistoryDto.getThemaCategory())
@@ -121,8 +124,10 @@ public class GameHistoryService {
 
     public RankingDto.UserRankingDto getMyRankingByUuid(RankingDto.GetMyRanking req){
         //내 랭킹
-        // Todo : themauuid -> thema id로 변경
-        Optional<Object> myRankingObject = rankingRepository.getUserRankings(req.getUserUuid(), req.getThemaCategory());
+
+        String userUuid = userUtil.getLoginUserUuid();
+
+        Optional<Object> myRankingObject = rankingRepository.getUserRankings(userUuid, req.getThemaCategory());
         String myNickname = "";
         String profileUrl = "";
         Time myBestTime = null;
