@@ -1,9 +1,10 @@
-import BaseBox from "../../common/BaseBox"
+import Server from "../Backgrounds/Server"
+import CylinderGlass from "./Cylinder"
 
 const MeshObjects = () => {
   return (
     <>
-      <BaseBox position={[9, 2, 35]} args={[33, 15, 29]} color={"red"} />
+      {/* <BaseBox position={[9, 2, 35]} args={[33, 15, 29]} color={"red"} />
       <BaseBox position={[34, 2, 25]} args={[5, 15, 50]} color={"red"} />
       <BaseBox position={[2, 2, -14]} args={[50, 15, 5]} color={"red"} />
       <BaseBox position={[29, 2, -6]} args={[10, 15, 10]} color={"red"} />
@@ -23,7 +24,9 @@ const MeshObjects = () => {
       <BaseBox position={[-60, 2, 105]} args={[39, 15, 4]} color={"red"} />
       <BaseBox position={[-99, 2, 99]} args={[40, 15, 20]} color={"red"} />
       <BaseBox position={[-99, 2, 70]} args={[40, 15, 20]} color={"red"} />
-      <BaseBox position={[-130, 2, 90]} args={[20, 15, 20]} color={"red"} />
+      <BaseBox position={[-130, 2, 90]} args={[20, 15, 20]} color={"red"} /> */}
+      <Server />
+      <CylinderGlass position={[59, 0, -65]} />
     </>
   )
 }

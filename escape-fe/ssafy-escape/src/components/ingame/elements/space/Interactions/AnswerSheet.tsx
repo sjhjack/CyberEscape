@@ -6,9 +6,7 @@ const AnswerSheet = ({
   rotation,
   scale,
   move,
-  sequences,
-  setSequences,
-  setSubtitle,
+  setBall,
   setInteractNum,
 }: any) => {
   let new_position = new Vector3()
@@ -17,21 +15,9 @@ const AnswerSheet = ({
   new_position.y = position[1] + move[1]
   new_position.z = position[2] + move[2]
 
-  const system_rollback = () => {
-    const audio = new Audio("dubbing/space/sequence/system_restart.mp3")
-    audio.play()
-  }
-
   const handleClick = () => {
-    system_rollback()
-    setSubtitle("시스템이 재가동되었습니다. 조종실로 가 탈출을 시도하세요.")
-    setTimeout(() => {
-      setSubtitle(null)
-    }, 3200)
-    const updatedSequence = [...sequences]
-    updatedSequence[2] = { ...updatedSequence[2], done: true }
-    updatedSequence[3] = { ...updatedSequence[3], done: true }
-    setSequences(updatedSequence)
+    // 조건 달기
+    setBall(true)
   }
 
   return (
@@ -48,7 +34,7 @@ const AnswerSheet = ({
       }}
     >
       <planeGeometry args={[0.5, 0.5]} />
-      <meshBasicMaterial color={"red"} transparent={true} opacity={0} />
+      <meshBasicMaterial color={"red"} transparent={false} opacity={1} />
     </mesh>
   )
 }

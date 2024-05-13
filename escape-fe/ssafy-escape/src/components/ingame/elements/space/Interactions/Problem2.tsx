@@ -2,13 +2,13 @@ import { useTexture, useVideoTexture } from "@react-three/drei"
 import AnswerSheet from "./AnswerSheet"
 import { useEffect } from "react"
 
-const Problem1 = ({
+const Problem2 = ({
   url,
   position,
   rotation,
   scale,
-  firstBall,
-  setFirstBall,
+  secondBall,
+  setSecondBall,
   setInteractNum,
   setSubtitle,
   sequences,
@@ -21,21 +21,21 @@ const Problem1 = ({
     <>
       <mesh position={position} rotation={rotation} scale={scale}>
         <planeGeometry args={[0.5, 1.01]} />
-        {sequences[3].done === true && !firstBall ? (
+        {sequences[3].done === true && !secondBall ? (
           <ProblemMaterial texture={texture} />
         ) : (
           <VideoMaterial />
         )}
       </mesh>
-      {sequences[3].done === true && !firstBall ? (
+      {sequences[3].done === true && !secondBall ? (
         <>
           <AnswerSheet
             num={1}
             position={position}
             rotation={rotation}
             scale={[3, 3, 3]}
-            move={[-0.0005, -1, -2.9]}
-            setBall={setFirstBall}
+            move={[-2.9, -1, 0.2005]}
+            setBall={setSecondBall}
             setSubtitle={setSubtitle}
             sequences={sequences}
             setSequences={setSequences}
@@ -46,8 +46,8 @@ const Problem1 = ({
             position={position}
             rotation={rotation}
             scale={[3, 3, 3]}
-            move={[-0.0005, -1, -0.96]}
-            setBall={setFirstBall}
+            move={[-0.96, -1, 0.2005]}
+            setBall={setSecondBall}
             setSubtitle={setSubtitle}
             sequences={sequences}
             setSequences={setSequences}
@@ -58,8 +58,8 @@ const Problem1 = ({
             position={position}
             rotation={rotation}
             scale={[3, 3, 3]}
-            move={[-0.0005, -1, 0.96]}
-            setBall={setFirstBall}
+            move={[0.96, -1, 0.2005]}
+            setBall={setSecondBall}
             setSubtitle={setSubtitle}
             sequences={sequences}
             setSequences={setSequences}
@@ -70,8 +70,8 @@ const Problem1 = ({
             position={position}
             rotation={rotation}
             scale={[3, 3, 3]}
-            move={[-0.0005, -1, 2.82]}
-            setBall={setFirstBall}
+            move={[2.82, -1, 0.2005]}
+            setBall={setSecondBall}
             setSubtitle={setSubtitle}
             sequences={sequences}
             setSequences={setSequences}
@@ -93,4 +93,4 @@ const VideoMaterial = () => {
   return <meshBasicMaterial map={texture} toneMapped={false} />
 }
 
-export default Problem1
+export default Problem2

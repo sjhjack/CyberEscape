@@ -2,9 +2,10 @@ import React, { useRef, useMemo, useState, useEffect } from "react"
 import { MeshBasicMaterial, BoxGeometry } from "three"
 import Video2 from "./Video2"
 import { useThree } from "@react-three/fiber"
-import TWEEN from "@tweenjs/tween.js"
 
 const Cockpit = ({
+  onAir,
+  setOnAir,
   position,
   sequences,
   setSequences,
@@ -13,6 +14,7 @@ const Cockpit = ({
 }: any) => {
   const meshRef = useRef()
   const geometry = useMemo(() => new BoxGeometry(2, 2, 2), [])
+  const temp_position = [-108.51, 3.5, -71.95]
 
   const url1 = "video/error1.mp4"
   const url2 = "video/countdown.mp4"
@@ -45,39 +47,9 @@ const Cockpit = ({
     audio.play()
   }
 
-  // useEffect(() => {
-  //   const animate = () => {
-  //     requestAnimationFrame(animate)
-  //     TWEEN.update() // Update Tween.js animations
-  //   }
-  //   animate()
-  // }, [])
-
-  const { camera } = useThree()
-  const initiateSpaceWarp = () => {
-    const destination = { x: 0, y: 0, z: 1000 }
-    console.log("Initiating space warp to:", destination)
-
-    const duration = 5000
-
-    const tween = new TWEEN.Tween(camera.position)
-      .to(destination, duration)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .onUpdate(() => {
-        camera.position.x += 0.1
-        camera.position.y += 0.1
-        camera.position.z += 0.1
-        console.log("Tween update - Camera position:", camera.position)
-        // Check if camera position is changing during the animation
-      })
-      .onComplete(() => {
-        console.log("Space warp animation completed!")
-      })
-      .start()
-  }
-
   const handleClick = () => {
-    if (sequences[1].done === false && sequences[3].done === false) {
+    if (sequences[1].done === false && sequences[5].done === false && !onAir) {
+      setOnAir(true)
       tryEscape()
       setSubtitle("비상 탈출을 시도합니다.")
       let currentCountdown = 10
@@ -101,6 +73,7 @@ const Cockpit = ({
             }, 4000)
             setTimeout(() => {
               setSubtitle(null)
+              setOnAir(false)
             }, 6000)
             const updatedSequence = [...sequences]
             updatedSequence[1] = { ...updatedSequence[1], done: true }
@@ -109,7 +82,12 @@ const Cockpit = ({
           }
         }, 1000)
       }, 1000)
-    } else if (sequences[1].done === true && sequences[3].done === true) {
+    } else if (
+      sequences[4].done === true &&
+      sequences[5].done === false &&
+      !onAir
+    ) {
+      setOnAir(true)
       tryEscape()
       setSubtitle("비상 탈출을 시도합니다.")
       let currentCountdown = 10
@@ -123,7 +101,7 @@ const Cockpit = ({
             setSubtitle(currentCountdown.toString())
             currentCountdown--
           } else {
-            initiateSpaceWarp()
+            setOnAir(false)
             setSubtitle(null)
             clearInterval(countdownInterval)
           }
@@ -149,7 +127,7 @@ const Cockpit = ({
       />
       <Video2
         url={currentUrl}
-        position={[-128.651, 3.5, 85.6]}
+        position={temp_position}
         rotation={[0, Math.PI / 2, 0]}
         scale={[5, 2.7, 3]}
       />

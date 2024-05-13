@@ -25,7 +25,7 @@ const BaseBox = ({ ...props }) => {
       renderOrder={props.renderOrder}
     >
       <boxGeometry args={props.args} />
-      <meshStandardMaterial
+      <meshBasicMaterial
         color={props.color}
         transparent={true}
         opacity={props.opacity}
