@@ -39,7 +39,7 @@ const FriendList = () => {
           <SubContainer>
             <ProfileBox>
               <PersonIcon sx={{ fontSize: "35px" }} />
-              <div>{friend.friendNickname}</div>
+              <div>{friend.nickname}</div>
             </ProfileBox>
             {isDeleteMode ? (
               <Button
