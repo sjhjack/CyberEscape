@@ -10,14 +10,19 @@ import com.cyber.escape.domain.quiz.repository.FinalAnswerRepository;
 import com.cyber.escape.domain.quiz.repository.QuizRepository;
 import com.cyber.escape.domain.quiz.util.QuizMapper;
 import com.cyber.escape.domain.thema.entity.Thema;
+import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.common.enums.FileType;
+import com.cyber.escape.global.common.util.FileUtil;
 import com.cyber.escape.global.common.util.IdFinder;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.QuizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -25,18 +30,19 @@ import java.util.*;
 @Slf4j
 public class QuizService {
 
-    private QuizMapper quizMapper;
-    private IdFinder idFinder;
-    private QuizRepository quizRepository;
-    private FinalAnswerRepository finalAnswerRepository;
-    private RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz;
-    private RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore;
+    private final QuizMapper quizMapper;
+    private final IdFinder idFinder;
+    private final QuizRepository quizRepository;
+    private final ThemaRepository themaRepository;
+    private final FinalAnswerRepository finalAnswerRepository;
+    private final RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz;
+    private final RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore;
 //    private RedisTemplate<String, List<Boolean>> solvedQuiz;
     private final UserUtil userUtil;
     public QuizService(QuizRepository quizRepository,
                        FinalAnswerRepository finalAnswerRepository,
                        QuizMapper quizMapper,
-                       IdFinder idFinder,
+                       IdFinder idFinder, ThemaRepository themaRepository,
                        RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz,
                        RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore, UserUtil userUtil) {
 
@@ -44,6 +50,7 @@ public class QuizService {
         this.finalAnswerRepository = finalAnswerRepository;
         this.quizMapper = quizMapper;
         this.idFinder = idFinder;
+        this.themaRepository = themaRepository;
         this.mappedClueWithQuiz = mappedClueWithQuiz;
         this.finalAnswerStore = finalAnswerStore;
         this.userUtil = userUtil;
@@ -54,8 +61,7 @@ public class QuizService {
     public List<QuizDto.QuizSubmissionResDto> getQuizzes(int category) throws QuizException{
         List<QuizDto.QuizSubmissionResDto> result = new ArrayList<>();
 
-        String userUuid = "c83e73a6-0470-11ef-9c95-0242ac101404";
-
+        String userUuid = userUtil.getLoginUserUuid();
 
         List<Quiz> diff1 = quizRepository.getQuizzezByCategory(category, 1)
                 .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
@@ -260,6 +266,31 @@ public class QuizService {
         }
 
         mappedClueWithQuiz.opsForValue().set(userUuid, map);
+    }
+
+    public String putDummyData(QuizDto.Request quiz, MultipartFile multipartFile) throws IOException {
+        String originalFileName = multipartFile.getOriginalFilename();
+        String savedFileName = FileUtil.makeFileName(originalFileName);
+        String quizUrl = FileUtil.uploadFile(multipartFile, FileType.quiz, savedFileName);
+
+        log.info("originalFileName : {}, savedFileName : {}, quizUrl : {}", originalFileName, savedFileName, quizUrl);
+
+        quizRepository.save(createQuiz(quiz, quizUrl));
+
+        return quizUrl;
+    }
+
+    public Quiz createQuiz(QuizDto.Request quiz, String quizUrl){
+
+        Thema thema = themaRepository.findByCategory(quiz.getThemaCategory())
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.BAD_REQUEST));
+        return Quiz
+                .builder()
+                .thema(thema)
+                .hint(quiz.getHint())
+                .url(quizUrl)
+                .answer(quiz.getAnswer())
+                .build();
     }
 
 }
