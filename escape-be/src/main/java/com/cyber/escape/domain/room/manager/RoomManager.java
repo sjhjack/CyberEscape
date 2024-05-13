@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.user.dto.UserDto;
 import com.cyber.escape.domain.user.repository.UserRepository;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.RoomException;
+import com.cyber.escape.global.exception.UserException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +24,13 @@ public class RoomManager {
 
 	public RoomDto.StompResponse createRoom(String roomUuid, String userUuid, String hostSessionId) {
 		UserDto.StompResponse host = UserDto.StompResponse.from(userRepository.findUserByUuid(userUuid)
-			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다.")));
+			.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND)));
 		RoomDto.StompResponse room = new RoomDto.StompResponse(hostSessionId);
 		room.setHost(host);
 		roomMap.put(roomUuid, room);
+
+		log.info("createRoom UUID : {}", roomUuid);
+		log.info("방이 map에 재대로 들어갔니? : {}", roomMap.get(roomUuid) != null);
 
 		return room;
 	}
@@ -34,7 +40,7 @@ public class RoomManager {
 
 		if (isGuestInRoom(room)) {
 			UserDto.StompResponse guest = UserDto.StompResponse.from(userRepository.findUserByUuid(userUuid)
-				.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다.")));
+				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND)));
 
 			room.joinGuest(guestSessionId, guest);
 		}
@@ -45,66 +51,79 @@ public class RoomManager {
 	public RoomDto.StompResponse leaveRoom(String roomUuid, String sessionId) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
 
-		if (room.getHostSessionId().equals(sessionId)) {
+		if (room.getHostSessionUuid().equals(sessionId)) {
 			// host인 경우 대기방 삭제
 			roomMap.remove(roomUuid);
-		} else if (room.getGuestSessionId() != null && room.getGuestSessionId().equals(sessionId)) {
+		} else if (room.getGuestSessionUuid() != null && room.getGuestSessionUuid().equals(sessionId)) {
 			// guest인 경우 guest 정보 null 처리
 			room.kickGuest();
 
 			return room;
 		}
 
+		// 방장 == null 인 정보를 전달하면, Client에서 자동강퇴 처리.
 		return new RoomDto.StompResponse(null);
 	}
 
-	public RoomDto.StompResponse kickGuest(String roomUuid) {
+	public RoomDto.StompResponse kickGuest(String roomUuid, String sessionUuid) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
+		checkHost(sessionUuid, room.getHostSessionUuid());
 		room.kickGuest();
 
 		return room;
 	}
 
-	public RoomDto.StompResponse delegateHost(String roomUuid) {
+	public RoomDto.StompResponse delegateHost(String roomUuid, String sessionUuid) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
+		checkHost(sessionUuid, room.getHostSessionUuid());
 		room.swapHost(getGuestSessionId(room));
 
 		return room;
 	}
 
-	public boolean isHostInRoom(String roomUuid, String sessionId) {
+	public RoomDto.StompResponse changeReadyStatus(String roomUuid, String sessionUuid) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
+		room.changeReadyStatus(sessionUuid);
 
-		if(room.getHostSessionId().equals(sessionId)) {
-			return true;
-		}
+		return room;
+	}
 
-		throw new RuntimeException("방장이 아닙니다.");
+	public RoomDto.StompResponse updateProgress(String roomUuid, String sessionUuid) {
+		RoomDto.StompResponse room = getRoom(roomUuid);
+		room.updateProgress(sessionUuid);
+
+		return room;
 	}
 
 	private RoomDto.StompResponse getRoom(String roomUuid) {
 		RoomDto.StompResponse room = roomMap.get(roomUuid);
 
 		if(room == null){
-			throw new RuntimeException("존재하지 않는 대기방입니다.");
+			throw new RoomException(ExceptionCodeSet.ROOM_NOT_FOUND);
 		}
 
 		return room;
 	}
 
+	private void checkHost(String sessionUuid, String hostSessionUuid) {
+		if(!sessionUuid.equals(hostSessionUuid)) {
+			throw new RoomException(ExceptionCodeSet.ROOM_NOT_HOST);
+		}
+	}
+
 	private boolean isGuestInRoom(RoomDto.StompResponse room) {
-		if(room.getGuestSessionId() == null){
+		if(room.getGuestSessionUuid() == null){
 			return true;
 		}
 
-		throw new RuntimeException("대기방이 가득 찼습니다.");
+		throw new RoomException(ExceptionCodeSet.ROOM_CAPACITY_OVER);
 	}
 
 	private String getGuestSessionId(RoomDto.StompResponse room) {
-		if (room.getGuestSessionId() != null) {
-			return room.getGuestSessionId();
+		if (room.getGuestSessionUuid() != null) {
+			return room.getGuestSessionUuid();
 		} else {
-			throw new RuntimeException("게스트가 존재하지 않습니다.");
+			throw new RoomException(ExceptionCodeSet.ROOM_GUEST_NOT_FOUND);
 		}
 	}
 }
