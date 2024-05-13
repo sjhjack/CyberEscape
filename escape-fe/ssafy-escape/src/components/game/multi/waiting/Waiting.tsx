@@ -3,16 +3,17 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import * as StompJs from "@stomp/stompjs"
 import SockJS from "sockjs-client"
-import useOpenViduSession from "@/hooks/OpenviduSession"
 import Container from "@/components/common/Container"
 import * as S from "../../../../app/@modal/main/multi/waiting/waitingStyle"
 import ChattingBox from "@/components/game/multi/waiting/ChattingBox"
 import InviteModal from "@/components/game/multi/waiting/InviteModal"
 import Button from "@/components/common/Button"
+import Swal from "sweetalert2"
+import { CircularProgress } from "@mui/material"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
-import { CircularProgress } from "@mui/material"
-import Swal from "sweetalert2"
+import useOpenViduSession from "@/hooks/OpenviduSession"
+import patchExit from "@/services/game/room/patchExit"
 interface ChatType {
   userName: string
   message: string
@@ -25,8 +26,10 @@ const Waiting = () => {
   const { accessToken, userUuid, isHost } = useUserStore()
   const { selectedTheme } = useIngameThemeStore()
   const [chatting, setChattting] = useState<Array<ChatType>>([])
-  const { session } = useOpenViduSession(roomUuid, setChattting)
+  // const { session } = useOpenViduSession(roomUuid, setChattting)
+  const session = ""
   const [showModal, setShowModal] = useState<boolean>(false)
+  const [gameStart, setGameStart] = useState<boolean>(false)
   const handleModalClose = (): void => {
     setShowModal(false)
   }
@@ -41,6 +44,7 @@ const Waiting = () => {
   }
   const onConnected = () => {
     client.current?.subscribe(`/topic/${roomUuid}`, (payload) => {
+      console.log("새로운 정보 넘어옴")
       const roomInfo = JSON.parse(payload.body)
       setRoomData(roomInfo)
     })
@@ -52,18 +56,19 @@ const Waiting = () => {
         userType: isHost ? "host" : "guest",
       },
     })
-    client.current?.publish({
-      destination: `/pub/room/kickGuest`,
-      body: JSON.stringify({
-        roomUuid: roomUuid,
-      }),
-    })
-    client.current?.publish({
-      destination: `/pub/room/delegateHost`,
-      body: JSON.stringify({
-        roomUuid: roomUuid,
-      }),
-    })
+
+    // client.current?.publish({
+    //   destination: `/pub/room/kickGuest`,
+    //   body: JSON.stringify({
+    //     roomUuid: roomUuid,
+    //   }),
+    // })
+    // client.current?.publish({
+    //   destination: `/pub/room/delegateHost`,
+    //   body: JSON.stringify({
+    //     roomUuid: roomUuid,
+    //   }),
+    // })
   }
   // 입장 시 소켓 연결
   const connect = () => {
@@ -89,9 +94,20 @@ const Waiting = () => {
   useEffect(() => {
     connect()
     return () => {
+      patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
       client.current?.deactivate()
     }
   }, [])
+  // 게임 레디 상태 바뀔 때마다 request 보내기
+  const ready = (): void => {
+    setIsReady(!isReady)
+    client.current?.publish({
+      destination: `/pub/room/ready`,
+      body: JSON.stringify({
+        roomUuid: roomUuid,
+      }),
+    })
+  }
 
   useEffect(() => {
     console.log("방 정보", roomData)
@@ -102,7 +118,15 @@ const Waiting = () => {
       Swal.fire("게임방이 종료되었습니다.")
       router.back()
     }
+    // if (roomData?.guest.isReady && roomData.host.isReady) {
+    //   setGameStart(true)
+    // }
   }, [roomData])
+  // useEffect(() => {
+  //   if (gameStart) {
+  //     router.push(`/ingame`)
+  //   }
+  // }, [gameStart])
   if (isLoading) {
     return (
       <Container
@@ -135,15 +159,19 @@ const Waiting = () => {
         </S.CharacterBox>
         <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
         <S.Nickname>
-          <Button
-            text={isReady ? "준비완료" : "게임시작"}
-            theme={isReady ? "fail" : "success"}
-            width="100px"
-            height="40px"
-            onClick={() => {
-              setIsReady(!isReady)
-            }}
-          />
+          {roomData?.host?.uuid === userUuid ? (
+            <>
+              <Button
+                text={isReady ? "준비완료" : "게임시작"}
+                theme={isReady ? "fail" : "success"}
+                width="100px"
+                height="40px"
+                onClick={() => {
+                  ready()
+                }}
+              />
+            </>
+          ) : null}
         </S.Nickname>
       </S.UserBox>
       <S.MainBox>
@@ -160,23 +188,38 @@ const Waiting = () => {
       </S.MainBox>
       <S.UserBox style={{ marginLeft: "20px" }}>
         {roomData?.guest ? (
-          <S.CharacterBox>
-            <S.ProfileImage
-              src={roomData?.guest?.profileUrl}
-              alt=""
-              width={100}
-              height={100}
-            />
+          <>
+            <S.CharacterBox>
+              <S.ProfileImage
+                src={roomData?.guest?.profileUrl}
+                alt=""
+                width={100}
+                height={100}
+              />
+            </S.CharacterBox>
             <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
             <S.Nickname>
-              <Button
-                text="Ready"
-                theme="success"
-                width="100px"
-                height="40px"
-              />
+              {roomData?.guest?.uuid === userUuid ? (
+                <>
+                  <Button
+                    text={isReady ? "준비완료" : "게임시작"}
+                    theme={isReady ? "fail" : "success"}
+                    width="100px"
+                    height="40px"
+                    onClick={() => {
+                      ready()
+                    }}
+                  />
+                </>
+              ) : (
+                <>
+                  {/* {roomData?.guestReady ? 
+                (<div>준비 완료</div>): null
+              } */}
+                </>
+              )}
             </S.Nickname>
-          </S.CharacterBox>
+          </>
         ) : (
           <S.CharacterBox>
             <S.CharacterBoxContent>
