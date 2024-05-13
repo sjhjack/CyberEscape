@@ -59,7 +59,7 @@ const SecondProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
       setSubtitle("...아, 기록하려면 노트도 챙겨야지.")
@@ -214,7 +214,7 @@ const HorrorImageBox = styled.div`
   z-index: 25;
 `
 
-const BlackBackground = styled.div`
+export const BlackBackground = styled.div`
   position: fixed;
   width: 100vw;
   height: 100vh;
