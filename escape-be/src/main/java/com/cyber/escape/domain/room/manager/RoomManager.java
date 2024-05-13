@@ -96,6 +96,9 @@ public class RoomManager {
 	}
 
 	private RoomDto.StompResponse getRoom(String roomUuid) {
+		log.info("찾으려는 대기방 UUID : {}", roomUuid);
+		log.info("map size : {}", roomMap.size());
+
 		RoomDto.StompResponse room = roomMap.get(roomUuid);
 
 		if(room == null){
