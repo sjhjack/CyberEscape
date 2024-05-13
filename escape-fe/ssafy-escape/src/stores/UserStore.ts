@@ -7,9 +7,10 @@ interface UserState {
   isLogin: boolean
   userUuid: string | null
   nickname: string | null
-  profileUrl: string | null
+  profileUrl: string | undefined
   accessToken: string | null
   setNickname: (name: string) => void
+  setProfileUrl: (profileUrl: string) => void
   setAccessToken: (token: string | null) => void
   login: (loginId: string, password: string) => void
   logout: () => Promise<void>
@@ -21,7 +22,8 @@ const useUserStore = create<UserState>()(
       userUuid: null,
       nickname: null,
       setNickname: (name) => set({ nickname: name }),
-      profileUrl: null,
+      setProfileUrl: (profileUrl) => set({ profileUrl }),
+      profileUrl: undefined,
       accessToken: null,
       setAccessToken: (token) => set({ accessToken: token }),
 
@@ -52,7 +54,7 @@ const useUserStore = create<UserState>()(
             isLogin: false,
             userUuid: null,
             nickname: null,
-            profileUrl: null,
+            profileUrl: undefined,
             accessToken: null,
           })
         } catch (error) {
