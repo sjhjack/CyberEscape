@@ -61,8 +61,8 @@ public class RoomController {
 	}
 
 	@PatchMapping("/kick")
-	public ApiResponse<String> kickGuestFromRoom(@RequestBody RoomDto.Request request) {
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 강제 퇴장 완료", roomModifyService.kickGuestFromRoom(request));
+	public ApiResponse<String> kickGuestFromRoom(@RequestBody RoomDto.KickRequest kickRequest) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 강제 퇴장 완료", roomModifyService.kickGuestFromRoom(kickRequest));
 	}
 
 	@PatchMapping("/setting")

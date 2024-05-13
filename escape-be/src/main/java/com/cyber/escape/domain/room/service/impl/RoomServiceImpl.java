@@ -259,10 +259,10 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Transactional
-	public String kickGuestFromRoom(final RoomDto.Request request) {
+	public String kickGuestFromRoom(final RoomDto.KickRequest kickRequest) {
 		// host인 경우만 강퇴 가능 -> validation check 필요
 
-		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, request.getRoomUuid());
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, kickRequest.getRoomUuid());
 		User host = userUtil.getLoginUser();
 
 		if (checkHost(host.getId(), findRoom.getHostId())) {
