@@ -6,7 +6,7 @@ import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
 import getFriendList from "@/services/main/friends/getFriendList"
 import useModalStore from "@/stores/ModalStore"
-// import deleteFriend from "@/services/main/friends/deleteFriend"
+import postDeleteFriend from "@/services/main/friends/postDeleteFriend"
 
 // 친구 목록 불러오는 컴포넌트
 const FriendList = () => {
@@ -16,10 +16,10 @@ const FriendList = () => {
   })
   const { isDeleteMode } = useModalStore()
 
-  // 친구 삭제 버튼 클릭 시
-  // const handleDelete = async (friendUuid: string) => {
-  //   await deleteFriend(userUuid, friendUuid)
-  // }
+  //친구 삭제 버튼 클릭 시
+  const handleDelete = async (friendUuid: string) => {
+    await postDeleteFriend(friendUuid)
+  }
 
   const openChat = () => {
     // 채팅방 여는 로직
@@ -46,7 +46,7 @@ const FriendList = () => {
                 text="삭제"
                 theme="fail"
                 width="60px"
-                // onClick={() => handleDelete(friend.friendUuid)}
+                onClick={() => handleDelete(friend.friendUuid)}
               />
             ) : (
               <Button
