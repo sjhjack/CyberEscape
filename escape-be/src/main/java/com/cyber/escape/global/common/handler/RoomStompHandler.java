@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -176,6 +177,13 @@ public class RoomStompHandler {
 	public void changeReadyStatus(@Payload String roomUuid, Principal principal) {
 		log.info("changeReadyStatus === ");
 		RoomDto.StompResponse room = roomManager.changeReadyStatus(roomUuid, principal.getName());
+		sendRoomInfo(roomUuid, room);
+	}
+
+	@MessageMapping("/game/progress")
+	public void updateProgress(@Payload String roomUuid, Principal principal) {
+		log.info("updateProgress === ");
+		RoomDto.StompResponse room = roomManager.updateProgress(roomUuid, principal.getName());
 		sendRoomInfo(roomUuid, room);
 	}
 
