@@ -1,6 +1,7 @@
 package com.cyber.escape.domain.room.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -46,8 +47,7 @@ public class RoomController {
 
 	@DeleteMapping
 	public ApiResponse<String> deleteRoom(@RequestBody RoomDto.Request request) {
-		roomModifyService.deleteRoom(request);
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 삭제 완료", "");
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 삭제 완료", roomModifyService.deleteRoom(request));
 	}
 
 	@PatchMapping("/join")
@@ -57,8 +57,12 @@ public class RoomController {
 
 	@PatchMapping("/exit")
 	public ApiResponse<String> exitRoom(@RequestBody RoomDto.Request request) {
-		roomModifyService.exitRoom(request);
-		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 퇴장 완료", "");
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 퇴장 완료", roomModifyService.exitRoom(request));
+	}
+
+	@PatchMapping("/kick")
+	public ApiResponse<String> kickGuestFromRoom(@RequestBody RoomDto.KickRequest kickRequest) {
+		return new ApiResponse<>(HttpStatus.OK.value(), "대기실 강제 퇴장 완료", roomModifyService.kickGuestFromRoom(kickRequest));
 	}
 
 	@PatchMapping("/setting")
