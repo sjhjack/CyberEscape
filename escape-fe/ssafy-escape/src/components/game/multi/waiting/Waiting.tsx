@@ -26,8 +26,7 @@ const Waiting = () => {
   const { accessToken, userUuid, isHost } = useUserStore()
   const { selectedTheme } = useIngameThemeStore()
   const [chatting, setChattting] = useState<Array<ChatType>>([])
-  const { session } = useOpenViduSession(roomUuid, setChattting)
-  // const session = ""
+  const { session, audioRef } = useOpenViduSession(roomUuid, setChattting)
   const [showModal, setShowModal] = useState<boolean>(false)
   const [gameStart, setGameStart] = useState<boolean>(false)
   const handleModalClose = (): void => {
@@ -142,7 +141,7 @@ const Waiting = () => {
       alignItems="center"
       backgroundColor="none"
     >
-      <div id="audioContainer" style={{ display: "none" }}></div>
+      <audio ref={audioRef} style={{ display: "none" }} controls></audio>
 
       <InviteModal open={showModal} handleClose={handleModalClose} />
       <S.UserBox style={{ marginRight: "20px" }}>
