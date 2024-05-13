@@ -172,6 +172,7 @@ public class RoomDto {
 		private boolean isGuestReady;
 		private int hostProgress;
 		private int guestProgress;
+		private boolean isKicked;
 
 		public StompResponse(String hostSessionUuid){
 			this.hostSessionUuid = hostSessionUuid;
@@ -193,6 +194,10 @@ public class RoomDto {
 		}
 
 		public void kickGuest() {
+			this.isKicked = true;
+		}
+
+		public void leaveGuest() {
 			this.guestSessionUuid = null;
 			this.guest = null;
 		}
