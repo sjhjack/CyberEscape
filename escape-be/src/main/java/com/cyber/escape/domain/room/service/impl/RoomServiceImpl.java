@@ -161,6 +161,7 @@ public class RoomServiceImpl implements RoomService {
 		Room newRoom = Room.of(postRequest.getTitle(), capacity, host, thema);
 
 		if(!postRequest.getPassword().isEmpty()) {
+			log.info("created room raw password : {}", postRequest.getPassword());
 			String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 			newRoom.setPassword(encryptPassword);
 		}
