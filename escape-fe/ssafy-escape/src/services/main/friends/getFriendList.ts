@@ -8,7 +8,7 @@ interface GetFriendListBodyProps {
 }
 
 interface GetFriendListDataProps {
-  friendNickname: string
+  nickname: string
   friendUuid: string
 }
 
@@ -26,6 +26,7 @@ const getFriendList = async (): Promise<GetFriendListDataProps[]> => {
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
+    console.log(response.data)
     return response.data.data
   } catch (error) {
     console.error(error)
