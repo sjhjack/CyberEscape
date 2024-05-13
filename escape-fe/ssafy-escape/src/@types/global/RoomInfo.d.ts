@@ -16,6 +16,7 @@ interface PubResponseData {
   guestReady: number
   host: RoomUserInfo
   guest: RoomUserInfo
+  kicked: boolean
 }
 
 interface RoomUserInfo {
