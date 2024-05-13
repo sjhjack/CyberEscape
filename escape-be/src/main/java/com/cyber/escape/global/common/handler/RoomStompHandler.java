@@ -180,7 +180,7 @@ public class RoomStompHandler {
 		sendRoomInfo(roomUuid, room);
 	}
 
-	@MessageMapping("/room/progress")
+	@MessageMapping("/game/progress")
 	public void updateProgress(@Payload String roomUuid, Principal principal) {
 		log.info("updateProgress === ");
 		RoomDto.StompResponse room = roomManager.updateProgress(roomUuid, principal.getName());
