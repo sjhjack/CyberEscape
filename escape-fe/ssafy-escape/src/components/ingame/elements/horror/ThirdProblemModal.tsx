@@ -58,7 +58,7 @@ const ThirdProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
       setSubtitle("...그러고 보니 처음부터 문고리가 없었던 것 같은데.")

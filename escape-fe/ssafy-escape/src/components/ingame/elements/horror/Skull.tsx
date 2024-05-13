@@ -15,7 +15,6 @@ const Skull = ({ onClick, solved, setInteractNum }: ClickObjectProps) => {
   }, [skull, solved])
 
   const handlePointerOver = () => {
-    console.log(solved)
     if (solved === 0) {
       setInteractNum(2)
     }

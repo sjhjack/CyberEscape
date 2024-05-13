@@ -19,6 +19,8 @@ export const CharacterBox = styled.div`
 export const Nickname = styled.p`
   display: flex;
   justify-content: center;
+  align-items: center;
+  text-align: center;
 `
 export const MainBox = styled.div`
   width: 50%;
