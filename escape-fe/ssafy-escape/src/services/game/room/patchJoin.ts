@@ -4,6 +4,7 @@ import api from "@/services/api"
 interface PatchJoinRequestProps {
   roomUuid: string
   userUuid: string
+  password: string
 }
 
 // 게임방 참여하기
