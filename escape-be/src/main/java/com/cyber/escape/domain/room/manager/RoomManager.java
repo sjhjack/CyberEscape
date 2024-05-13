@@ -85,6 +85,13 @@ public class RoomManager {
 		return room;
 	}
 
+	public RoomDto.StompResponse updateProgress(String roomUuid, String sessionUuid) {
+		RoomDto.StompResponse room = getRoom(roomUuid);
+		room.updateProgress(sessionUuid);
+
+		return room;
+	}
+
 	private RoomDto.StompResponse getRoom(String roomUuid) {
 		RoomDto.StompResponse room = roomMap.get(roomUuid);
 
