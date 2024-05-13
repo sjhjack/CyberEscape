@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { OpenVidu, Session, StreamManager, Publisher } from "openvidu-browser"
 import postInitSession from "@/services/game/vociechat/postInitSession"
 import postConnection from "@/services/game/vociechat/postConnection"
@@ -18,7 +18,7 @@ const useOpenViduSession = (
   const [publisher, setPublisher] = useState<Publisher | null>(null)
   const [chatData, setChatData] = useState<ChatData[]>([])
   const { nickname } = useUserStore()
-
+  const audioRef = useRef(null)
   // 세션 입장
   const joinSession = async () => {
     const token = await getToken(uuid)
@@ -43,7 +43,6 @@ const useOpenViduSession = (
       // 스트림의 오디오 및 비디오 트랙을 중단
       const stream = publisher.stream.getMediaStream()
       stream.getAudioTracks().forEach((track) => track.stop())
-      stream.getVideoTracks().forEach((track) => track.stop())
 
       // OpenVidu 세션에서 발행 중단
       session?.unpublish(publisher)
@@ -64,8 +63,10 @@ const useOpenViduSession = (
     if (session !== undefined) {
       console.log("세션 설정됨")
       session.on("streamCreated", (event: any) => {
-        const subscriber = session.subscribe(event.stream, undefined)
-        setSubscribers((prev) => [...prev, subscriber])
+        if (audioRef.current) {
+          const subscriber = session.subscribe(event.stream, audioRef.current)
+          setSubscribers((prev) => [...prev, subscriber])
+        }
       })
 
       session.on("streamDestroyed", (event: any) => {
@@ -120,7 +121,7 @@ const useOpenViduSession = (
     return response.data.voiceChatToken
   }
 
-  return { session, subscribers, publisher, chatData }
+  return { session, subscribers, publisher, chatData, audioRef }
 }
 
 export default useOpenViduSession

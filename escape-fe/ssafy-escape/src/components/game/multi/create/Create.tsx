@@ -50,11 +50,6 @@ const Create = () => {
       return
     }
     const response = await postCreateRoom(data)
-    // 방을 생성하고 대기방 입장할 때는 호스트임.
-    await patchJoin({
-      roomUuid: response.data.roomUuid,
-      userUuid: userUuid || "",
-    })
     setIsHost(true)
     router.push(`waiting/${response.data.roomUuid}`)
   }
