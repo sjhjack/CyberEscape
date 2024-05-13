@@ -9,9 +9,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -125,11 +123,10 @@ public class RoomStompHandler {
 	}
 
 	@MessageMapping("/room/kickGuest")
-	public void kickGuest(@Payload String roomUuid, StompHeaderAccessor headerAccessor) {
+	public void kickGuest(@Payload String roomUuid, Principal principal) {
 		log.info("강퇴 시작해볼까??");
 
-		roomManager.isHostInRoom(roomUuid, headerAccessor.getSessionId());
-		RoomDto.StompResponse room = roomManager.kickGuest(roomUuid);
+		RoomDto.StompResponse room = roomManager.kickGuest(roomUuid, principal.getName());
 
 		// convertAndSendToUser 사용 시 유저 개인에게 전송 가능하며 "/user"가 자동으로 prefix에 추가된다.
 		// 즉, /user/{guestSessionId}/queue/kick 으로 전송된다.
@@ -139,29 +136,18 @@ public class RoomStompHandler {
 
 		sendRoomInfo(roomUuid, room);
 
-		log.info("guest 강퇴 됐나? {}", room.getGuestSessionId() == null);
+		log.info("guest 강퇴 됐나? {}", room.getGuestSessionUuid() == null);
 	}
 
 	@MessageMapping("/room/delegateHost")
-	public void delegateHost(@Payload String roomUuid, StompHeaderAccessor headerAccessor) {
+	public void delegateHost(@Payload String roomUuid, Principal principal) {
 		log.info("방장 변경 해볼까??");
 
-		roomManager.isHostInRoom(roomUuid, headerAccessor.getSessionId());
-		RoomDto.StompResponse room = roomManager.delegateHost(roomUuid);
+		RoomDto.StompResponse room = roomManager.delegateHost(roomUuid, principal.getName());
 
 		log.info("방장 : {}, 게스트 : {}", room.getHost().getNickname(), room.getGuest().getNickname());
 
 		sendRoomInfo(roomUuid, room);
-	}
-
-	private void sendRoomInfo(String roomUuid, RoomDto.StompResponse room) {
-		if(room.getHostSessionId() == null){
-			log.info("BroadCasting Info ========== 방 폭파 히히");
-		} else {
-			log.info("BroadCasting Info ========== roomUuid: {}, host : {}", roomUuid, room.getHost().getNickname());
-		}
-		// 대기방 정보 브로드캐스팅
-		messagingTemplate.convertAndSend("/topic/" + roomUuid, room);
 	}
 
 	@MessageMapping("/room/match")
@@ -184,5 +170,22 @@ public class RoomStompHandler {
 		log.info("exitRoom === roomUuid : {}, sessionUuid : {}", roomUuid, principal.getName());
 		RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, principal.getName());
 		sendRoomInfo(roomUuid, room);
+	}
+
+	@MessageMapping("/room/ready")
+	public void changeReadyStatus(@Payload String roomUuid, Principal principal) {
+		log.info("changeReadyStatus === ");
+		RoomDto.StompResponse room = roomManager.changeReadyStatus(roomUuid, principal.getName());
+		sendRoomInfo(roomUuid, room);
+	}
+
+	private void sendRoomInfo(String roomUuid, RoomDto.StompResponse room) {
+		if(room.getHostSessionUuid() == null){
+			log.info("BroadCasting Info ========== 방 폭파 히히");
+		} else {
+			log.info("BroadCasting Info ========== roomUuid: {}, host : {}", roomUuid, room.getHost().getNickname());
+		}
+		// 대기방 정보 브로드캐스팅
+		messagingTemplate.convertAndSend("/topic/" + roomUuid, room);
 	}
 }
