@@ -81,7 +81,7 @@ public class FriendService {
         Long currentUserId = idFinder.findIdByUuid(userUtil.getLoginUserUuid(), User.class);
         Long friendId = idFinder.findIdByUuid(req.get("friendUuid"), User.class);
 
-        friendRepositoryImpl.removeFriend(currentUserId, friendId);
+        friendRepositoryImpl.removeFriendAndInsertLogHistory(currentUserId, friendId);
 
         return "";
     }
