@@ -23,6 +23,12 @@ public class RoomDto {
 
 	@Builder
 	@Getter
+	public static class KickRequest {
+		private final String roomUuid;
+	}
+
+	@Builder
+	@Getter
 	public static class JoinRequest {
 		private final String roomUuid;
 		private final String userUuid;
