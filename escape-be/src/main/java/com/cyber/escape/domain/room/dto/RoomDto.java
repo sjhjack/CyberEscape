@@ -24,7 +24,13 @@ public class RoomDto {
 	@Builder
 	@Getter
 	public static class KickRequest {
-		private final String roomUuid;
+		private String roomUuid;
+
+		public KickRequest(){}
+
+		public KickRequest(String roomUuid) {
+			this.roomUuid = roomUuid;
+		}
 	}
 
 	@Builder
@@ -164,6 +170,8 @@ public class RoomDto {
 		private UserDto.StompResponse guest;
 		private boolean isHostReady;
 		private boolean isGuestReady;
+		private int hostProgress;
+		private int guestProgress;
 
 		public StompResponse(String hostSessionUuid){
 			this.hostSessionUuid = hostSessionUuid;
@@ -194,6 +202,16 @@ public class RoomDto {
 				isHostReady = !isHostReady;
 			} else if(guestSessionUuid != null && guestSessionUuid.equals(sessionUuid)) {
 				isGuestReady = !isGuestReady;
+			} else {
+				throw new RoomException(ExceptionCodeSet.ROOM_INVALID_USER);
+			}
+		}
+
+		public void updateProgress(String sessionUuid) {
+			if(hostSessionUuid != null && hostSessionUuid.equals(sessionUuid)) {
+				hostProgress++;
+			} else if(guestSessionUuid != null && guestSessionUuid.equals(sessionUuid)) {
+				guestProgress++;
 			} else {
 				throw new RoomException(ExceptionCodeSet.ROOM_INVALID_USER);
 			}
