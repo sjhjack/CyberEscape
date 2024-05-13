@@ -3,6 +3,7 @@ package com.cyber.escape.global.common.util;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.cyber.escape.global.common.enums.FileType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +42,6 @@ public class FileUtil {
 		bucket = bucketName;
 	}
 	private static AmazonS3 amazonS3;
-
 	public FileUtil(AmazonS3 amazonS3){
 		FileUtil.amazonS3 = amazonS3;
 	}
@@ -52,21 +52,21 @@ public class FileUtil {
 		UUID uuid = UUID.randomUUID();
 
 		String savedFileName = uuid + "_" + originalFileName;
-		if(savedFileName.length() > 100)
+		if(savedFileName.length() > 200)
 			throw new FileException(ExceptionCodeSet.FILE_NAME_TOO_LONG);
 		return savedFileName;
 	}
 
 	// S3 링크 반환
-	public static String uploadFile(MultipartFile multipartFile, String savedFileName) throws IOException {
+	public static String uploadFile(MultipartFile multipartFile, FileType fileType, String savedFileName) throws IOException {
 		checkFileValidation(multipartFile, savedFileName);
 
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setContentLength(multipartFile.getSize());
 		metadata.setContentType(multipartFile.getContentType());
 
-		amazonS3.putObject(bucket, "profiles/" + savedFileName, multipartFile.getInputStream(), metadata);
-		String url = amazonS3.getUrl(bucket, "profiles/" + savedFileName).toString();
+		amazonS3.putObject(bucket, fileType.getPath() + savedFileName, multipartFile.getInputStream(), metadata);
+		String url = amazonS3.getUrl(bucket, fileType.getPath() + savedFileName).toString();
 
 		return url;
 	}
