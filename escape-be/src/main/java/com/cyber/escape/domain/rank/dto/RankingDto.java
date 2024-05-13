@@ -12,7 +12,6 @@ public class RankingDto {
     @Getter
     @Builder
     public static class Request{
-        private String userUuid;
         private int themaCategory;
         private LocalTime bestTime;
     }
@@ -32,8 +31,14 @@ public class RankingDto {
     @Getter
     @Builder
     public static class GetMyRanking{
-        private String userUuid;
         private int themaCategory;
+
+        public GetMyRanking(){
+        }
+
+        public GetMyRanking(int themaCategory){
+            this.themaCategory = themaCategory;
+        }
     }
 
     @Getter
