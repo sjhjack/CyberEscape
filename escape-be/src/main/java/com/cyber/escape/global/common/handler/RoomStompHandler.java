@@ -124,10 +124,10 @@ public class RoomStompHandler {
 	}
 
 	@MessageMapping("/room/kickGuest")
-	public void kickGuest(@Payload String roomUuid, Principal principal) {
+	public void kickGuest(@Payload String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
 		log.info("강퇴 시작해볼까??");
 
-		RoomDto.StompResponse room = roomManager.kickGuest(roomUuid, principal.getName());
+		RoomDto.StompResponse room = roomManager.kickGuest(roomUuid, stompHeaderAccessor.getSessionId());
 
 		// convertAndSendToUser 사용 시 유저 개인에게 전송 가능하며 "/user"가 자동으로 prefix에 추가된다.
 		// 즉, /user/{guestSessionId}/queue/kick 으로 전송된다.
@@ -141,10 +141,10 @@ public class RoomStompHandler {
 	}
 
 	@MessageMapping("/room/delegateHost")
-	public void delegateHost(@Payload String roomUuid, Principal principal) {
+	public void delegateHost(@Payload String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
 		log.info("방장 변경 해볼까??");
 
-		RoomDto.StompResponse room = roomManager.delegateHost(roomUuid, principal.getName());
+		RoomDto.StompResponse room = roomManager.delegateHost(roomUuid, stompHeaderAccessor.getSessionId());
 
 		log.info("방장 : {}, 게스트 : {}", room.getHost().getNickname(), room.getGuest().getNickname());
 
@@ -152,9 +152,9 @@ public class RoomStompHandler {
 	}
 
 	@MessageMapping("/room/match")
-	public void handleMatchRequest(Principal principal) {
-		log.info("매칭 시도한 principal의 UUID : {}", principal.getName());
-		roomModifyService.addPlayerToMatchingQueue(principal.getName());
+	public void handleMatchRequest(StompHeaderAccessor stompHeaderAccessor) {
+		log.info("매칭 시도한 principal의 UUID : {}", stompHeaderAccessor.getSessionId());
+		roomModifyService.addPlayerToMatchingQueue(stompHeaderAccessor.getSessionId());
 	}
 
 	// @SubscribeMapping("/topic/{roomUuid}")
@@ -167,23 +167,23 @@ public class RoomStompHandler {
 	// }
 
 	@MessageMapping("/room/exit/{roomUuid}")
-	public void exitRoom(@DestinationVariable String roomUuid, Principal principal) {
-		log.info("exitRoom === roomUuid : {}, sessionUuid : {}", roomUuid, principal.getName());
-		RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, principal.getName());
+	public void exitRoom(@DestinationVariable String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
+		log.info("exitRoom === roomUuid : {}, sessionUuid : {}", roomUuid, stompHeaderAccessor.getSessionId());
+		RoomDto.StompResponse room = roomManager.leaveRoom(roomUuid, stompHeaderAccessor.getSessionId());
 		sendRoomInfo(roomUuid, room);
 	}
 
 	@MessageMapping("/room/ready")
-	public void changeReadyStatus(@Payload String roomUuid, Principal principal) {
+	public void changeReadyStatus(@Payload String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
 		log.info("changeReadyStatus === ");
-		RoomDto.StompResponse room = roomManager.changeReadyStatus(roomUuid, principal.getName());
+		RoomDto.StompResponse room = roomManager.changeReadyStatus(roomUuid, stompHeaderAccessor.getSessionId());
 		sendRoomInfo(roomUuid, room);
 	}
 
 	@MessageMapping("/game/progress")
-	public void updateProgress(@Payload String roomUuid, Principal principal) {
+	public void updateProgress(@Payload String roomUuid, StompHeaderAccessor stompHeaderAccessor) {
 		log.info("updateProgress === ");
-		RoomDto.StompResponse room = roomManager.updateProgress(roomUuid, principal.getName());
+		RoomDto.StompResponse room = roomManager.updateProgress(roomUuid, stompHeaderAccessor.getSessionId());
 		sendRoomInfo(roomUuid, room);
 	}
 
