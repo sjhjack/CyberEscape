@@ -1,19 +1,42 @@
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import Problem1 from "../Interactions/Problem1"
 import Problem2 from "../Interactions/Problem2"
 import Problem3 from "../Interactions/Problem3"
 import RotateBall from "./RotateBall"
+import getQuiz from "@/services/ingame/getQuiz"
 
 const Problems = ({
+  onAir,
+  setOnAir,
   sequences,
   setSequences,
   setInteractNum,
   setSubtitle,
 }: any) => {
-  const url1 = "/image/problem.png"
+  const [url1, setUrl1] = useState("/image/1.png")
+  const [url2, setUrl2] = useState("/image/1.png")
+  const [url3, setUrl3] = useState("/image/1.png")
+  const [uuid1, setUuid1] = useState("")
+  const [uuid2, setUuid2] = useState("")
+  const [uuid3, setUuid3] = useState("")
   const [firstBall, setFirstBall] = useState(true)
   const [secondBall, setSecondBall] = useState(true)
   const [thirdBall, setThirdBall] = useState(true)
+
+  const fetchData = async () => {
+    try {
+      const quizs = await getQuiz(7)
+      setUrl1(quizs[0].url)
+      setUrl2(quizs[1].url)
+      setUrl3(quizs[2].url)
+      setUuid1(quizs[0].quizUuid)
+      setUuid2(quizs[1].quizUuid)
+      setUuid3(quizs[2].quizUuid)
+    } catch (error) {
+      console.error("Error fetching quizs:", error)
+    }
+  }
+  fetchData()
 
   const system_rollback = () => {
     const audio = new Audio("dubbing/space/sequence/system_restart.mp3")
@@ -21,9 +44,11 @@ const Problems = ({
   }
 
   useEffect(() => {
-    setFirstBall(false)
-    setSecondBall(false)
-    setThirdBall(false)
+    if (sequences[1].done) {
+      setFirstBall(false)
+      setSecondBall(false)
+      setThirdBall(false)
+    }
   }, [sequences[1].done])
 
   useEffect(() => {
@@ -33,6 +58,9 @@ const Problems = ({
       setSequences(updatedSequence)
 
       system_rollback()
+      const new_audio = new Audio("sound/engine_up.mp3")
+      new_audio.play()
+
       setInteractNum(1)
       setSubtitle("시스템이 재가동되었습니다. 조종실로 가 탈출을 시도하세요.")
       setTimeout(() => {
@@ -44,7 +72,10 @@ const Problems = ({
   return (
     <>
       <Problem1
+        onAir={onAir}
+        setOnAir={setOnAir}
         url={url1}
+        uuid={uuid1}
         position={[48.4, 4.3, -65.5]}
         rotation={[0, -Math.PI / 2, 0]}
         scale={[18, 6, 4]}
@@ -56,7 +87,10 @@ const Problems = ({
         setInteractNum={setInteractNum}
       />
       <Problem2
-        url={url1}
+        onAir={onAir}
+        setOnAir={setOnAir}
+        url={url2}
+        uuid={uuid2}
         position={[58.4, 4.5, -56.1]}
         rotation={[-0.1, 0, -0]}
         scale={[18, 5.8, 4]}
@@ -68,7 +102,10 @@ const Problems = ({
         setInteractNum={setInteractNum}
       />
       <Problem3
-        url={url1}
+        onAir={onAir}
+        setOnAir={setOnAir}
+        url={url3}
+        uuid={uuid3}
         position={[58.4, 4.5, -75.1]}
         rotation={[0.1, Math.PI, -0]}
         scale={[18, 5.7, 4]}

@@ -4,7 +4,14 @@ import { AnimationMixer } from "three"
 import DoorBox from "../../common/DoorBox"
 import * as THREE from "three"
 
-const Door2 = ({ position, rotation, setInteractNum }: any) => {
+const Door2 = ({
+  onAir,
+  setOnAir,
+  position,
+  rotation,
+  setSubtitle,
+  setInteractNum,
+}: any) => {
   const { scene } = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door4.glb",
     "/glb/door_02.glb",
@@ -20,7 +27,16 @@ const Door2 = ({ position, rotation, setInteractNum }: any) => {
   }, [scene])
 
   const handleClick = () => {
+    if (onAir) return
+    setOnAir(true)
     // 유머 방송
+    const audio = new Audio("dubbing/space/sequence/already_escaped.mp3")
+    audio.play()
+    setSubtitle("정우님의 방입니다. 이미 탈출하셨습니다.")
+    setTimeout(() => {
+      setOnAir(false)
+      setSubtitle(null)
+    }, 2500)
   }
 
   return isLoaded ? (

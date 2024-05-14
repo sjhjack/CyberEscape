@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"
@@ -36,7 +36,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       <Subtitle text={subtitle} />
       <BasicScene onAir={onAir} interactNum={interactNum}>
         <Lights />
-        <Player position={[-33, 1, -60]} />
+        <Player position={[3, 1, 0]} />
         <MeshObjects />
         <Floor
           position={[0, 1, 0]}
@@ -60,6 +60,8 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setInteractNum={setInteractNum}
         />
         <Problems
+          onAir={onAir}
+          setOnAir={setOnAir}
           sequences={sequences}
           setSequences={setSequences}
           setSubtitle={setSubtitle}

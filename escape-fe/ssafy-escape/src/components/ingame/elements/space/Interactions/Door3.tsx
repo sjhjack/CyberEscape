@@ -75,10 +75,22 @@ const Door3 = ({
 
   const handleClick = () => {
     if (sequences[0].done === true) {
+      const new_audio = new Audio("sound/door_open.mp3")
+      new_audio.play()
       setIsAnimationActivated(true)
       setTimeout(() => {
         setIsAnimationActivated(false)
       }, 7000)
+    } else if (sequences[0].done === true && sequences[1].done === false) {
+      if (onAir) return
+      setOnAir(true)
+      const audio = new Audio("dubbing/space/sequence/no_authorize.mp3")
+      audio.play()
+      setSubtitle("조종석을 조작해 탈출을 시도하세요.")
+      setTimeout(() => {
+        setOnAir(false)
+        setSubtitle(null)
+      }, 2500)
     } else {
       if (onAir) return
       // 경고

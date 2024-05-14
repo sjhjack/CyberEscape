@@ -39,7 +39,31 @@ const Computer = ({
       setCurrentUrl(url2)
       setTimeout(() => {
         setCurrentUrl(url3)
+        const audio = new Audio("dubbing/space/sequence/server_restore.mp3")
+        audio.play()
+        const new_audio = new Audio("sound/server_up.mp3")
+        new_audio.play()
+        setSubtitle("서버실이 재가동되었습니다.")
       }, 5500)
+      setTimeout(() => {
+        setSubtitle("하지만 탈출을 위해선 엔진실 수리가 필요합니다.")
+      }, 7500)
+      setTimeout(() => {
+        setSubtitle("지금 바로 엔진실로 가세요.")
+      }, 10500)
+      setTimeout(() => {
+        setSubtitle(null)
+      }, 12500)
+    } else {
+      if (onAir) return
+      setOnAir(true)
+      const audio = new Audio("dubbing/space/sequence/no_time_to_game.mp3")
+      audio.play()
+      setSubtitle("게임할 시간이 아닙니다.")
+      setTimeout(() => {
+        setOnAir(false)
+        setSubtitle(null)
+      }, 2000)
     }
   }
 

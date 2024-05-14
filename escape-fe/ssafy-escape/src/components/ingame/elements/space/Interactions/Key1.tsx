@@ -9,7 +9,12 @@ import { Mesh, MeshStandardMaterial } from "three"
 //   setInteractNum: any
 // }
 
-const Key1 = ({ sequences, setSequences, setInteractNum }: any) => {
+const Key1 = ({
+  sequences,
+  setSequences,
+  setSubtitle,
+  setInteractNum,
+}: any) => {
   const { scene } = useGLTF(process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key.glb")
 
   const onClick = () => {
@@ -17,6 +22,12 @@ const Key1 = ({ sequences, setSequences, setInteractNum }: any) => {
     updatedSequence[0] = { ...updatedSequence[0], done: true }
     setSequences(updatedSequence)
     setInteractNum(1)
+    const audio = new Audio("dubbing/space/sequence/key1_find.mp3")
+    audio.play()
+    setSubtitle("잘 찾으셨습니다. 이제 조종실로 가세요.")
+    setTimeout(() => {
+      setSubtitle(null)
+    }, 3500)
   }
 
   return (
@@ -28,7 +39,7 @@ const Key1 = ({ sequences, setSequences, setInteractNum }: any) => {
               key={index}
               geometry={child.geometry}
               material={child.material}
-              position={[-13, 1.2, -168]}
+              position={[24, 0.6, -95]}
               scale={[0.2, 0.2, 0.2]}
               onClick={onClick}
               onPointerOver={() => {

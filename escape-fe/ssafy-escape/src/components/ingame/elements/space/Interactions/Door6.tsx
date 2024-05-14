@@ -4,7 +4,15 @@ import { AnimationMixer } from "three"
 import DoorBox from "../../common/DoorBox"
 import * as THREE from "three"
 
-const Door6 = ({ position, rotation, setInteractNum }: any) => {
+const Door6 = ({
+  onAir,
+  setOnAir,
+  position,
+  rotation,
+  setInteractNum,
+  sequences,
+  setSubtitle,
+}: any) => {
   const { scene, animations } = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
     "/glb/door_06.glb",
@@ -55,10 +63,26 @@ const Door6 = ({ position, rotation, setInteractNum }: any) => {
   }, [scene])
 
   const handleClick = () => {
+    const new_audio = new Audio("sound/door_open.mp3")
+    new_audio.play()
     setIsAnimationActivated(true)
     setTimeout(() => {
       setIsAnimationActivated(false)
     }, 7000)
+    if (sequences[3].done === true && sequences[4].done === false) {
+      if (onAir) return
+      setOnAir(true)
+      const audio = new Audio("dubbing/space/sequence/solve_engine.mp3")
+      audio.play()
+      setSubtitle("문제를 해결하여 엔진을 고치세요.")
+      setTimeout(() => {
+        setSubtitle("잘못 조작했을 시 남은 시간이 단축될 수 있습니다.")
+      }, 2000)
+      setTimeout(() => {
+        setSubtitle(null)
+        setOnAir(false)
+      }, 5000)
+    }
   }
 
   return isLoaded ? (
