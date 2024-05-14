@@ -46,7 +46,7 @@ const Multi = () => {
         </S.MenuContainer>
         <S.MenuContainer
           onClick={() => {
-            router.push("theme?mode=multi")
+            router.push("/main/multi/random")
           }}
         >
           <S.MultiImage

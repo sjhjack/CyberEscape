@@ -17,17 +17,18 @@ const Room = ({ roomData }: any) => {
     setShowModal(false)
   }
   const enterRoom = async () => {
+    setIsHost(false)
     if (roomData.hasPassword) {
       setShowModal(true)
     } else {
       setSelectedTheme(roomData.themaId)
+
       await patchJoin({
         roomUuid: roomData.uuid,
         userUuid: userUuid || "",
         password: "",
       })
       // 방 목록에서 입장하는 것은 게스트
-      setIsHost(false)
       router.push(`/main/multi/waiting/${roomData.uuid}`)
     }
   }
