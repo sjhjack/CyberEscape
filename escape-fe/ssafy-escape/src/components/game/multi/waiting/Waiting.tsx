@@ -13,19 +13,23 @@ import { CircularProgress } from "@mui/material"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
 import useOpenViduSession from "@/hooks/OpenviduSession"
-import useOpenViduStore from "@/stores/OpenviduSessionStore"
 import patchExit from "@/services/game/room/patchExit"
-
+interface chatData {
+  userName: string
+  message: string
+}
 const Waiting = () => {
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const router = useRouter()
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
+  const [chatting, setChattting] = useState<Array<chatData>>([])
   const { accessToken, userUuid, isHost } = useUserStore()
   const { selectedTheme } = useIngameThemeStore()
-  const { voiceConnect, voiceDisconnect } = useOpenViduSession(roomUuid)
-  const { session, subscribers, chatData } = useOpenViduStore()
-  const audioRef = useRef<HTMLVideoElement>(null)
+  const { joinSession, leaveSession, audioRef, session } = useOpenViduSession(
+    roomUuid,
+    setChattting,
+  )
   const [showModal, setShowModal] = useState<boolean>(false)
   const [gameStart, setGameStart] = useState<boolean>(false)
   const handleModalClose = (): void => {
@@ -93,29 +97,19 @@ const Waiting = () => {
       body: roomUuid,
     })
   }
-  useEffect(() => {
-    if (audioRef.current && subscribers.length > 0) {
-      const streamManager = subscribers[0].stream // StreamManager 객체 접근
-      if (streamManager) {
-        const stream = streamManager.getMediaStream()
-        if (stream && stream.getAudioTracks().length > 0) {
-          audioRef.current.srcObject = stream
-        }
-      }
-    }
-  }, [subscribers])
+
+  const gameOut = async () => {
+    await patchExit({
+      roomUuid: roomUuid,
+      userUuid: userUuid || "",
+    })
+    client.current?.deactivate()
+    // leaveSession()
+  }
   useEffect(() => {
     connect()
-    voiceConnect()
+    joinSession()
     return () => {
-      const gameOut = async () => {
-        await patchExit({
-          roomUuid: roomUuid,
-          userUuid: userUuid || "",
-        })
-        client.current?.deactivate()
-        voiceDisconnect()
-      }
       console.log("게임 스타트", gameStartRef.current)
       if (!gameStartRef.current) {
         gameOut()
@@ -132,10 +126,12 @@ const Waiting = () => {
       setIsLoading(false)
     }
     if (!isLoading && roomData?.host === null) {
+      gameOut()
       Swal.fire("게임방이 종료되었습니다.")
       router.back()
     }
     if (roomData?.kicked && userUuid === roomData?.guest?.uuid) {
+      gameOut()
       Swal.fire("호스트로부터 강제 퇴장 당했습니다.")
       router.back()
     }
@@ -173,7 +169,7 @@ const Waiting = () => {
       alignItems="center"
       backgroundColor="none"
     >
-      <video ref={audioRef} style={{ display: "none" }} controls></video>
+      <audio ref={audioRef} style={{ display: "none" }} controls></audio>
 
       <InviteModal open={showModal} handleClose={handleModalClose} />
       <S.UserBox style={{ marginRight: "20px" }}>
@@ -213,7 +209,7 @@ const Waiting = () => {
             priority
           />
         </S.MainContentBox>
-        <ChattingBox session={session} chatData={chatData}></ChattingBox>
+        <ChattingBox session={session} chatData={chatting}></ChattingBox>
       </S.MainBox>
       <S.UserBox style={{ marginLeft: "20px" }}>
         {roomData?.guest ? (
