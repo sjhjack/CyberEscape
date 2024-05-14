@@ -27,12 +27,10 @@ const Layout = ({
     <html>
       <body className={notoSansKr.className}>
         <QueryProvider>
-          <EventProvider>
             <StyledComponentsRegistry>
               {children}
               {pathname !== "/ingame" && isLogin && modal}
             </StyledComponentsRegistry>
-          </EventProvider>
         </QueryProvider>
       </body>
     </html>
