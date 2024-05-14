@@ -18,10 +18,10 @@ const Cockpit = ({
   const geometry = useMemo(() => new BoxGeometry(2, 2, 2), [])
   const temp_position = [-108.51, 3.5, -71.95]
 
-  const url1 = "video/error1.mp4"
-  const url2 = "video/countdown.mp4"
-  const url3 = "video/countdown2.mp4"
-  const url4 = "video/system_operating.mp4"
+  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/error1.mp4"
+  const url2 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/countdown.mp4"
+  const url3 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/countdown2.mp4"
+  const url4 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/system_operating.mp4"
   const [currentUrl, setCurrentUrl] = useState(url1)
 
   const material = useMemo(
@@ -36,7 +36,9 @@ const Cockpit = ({
   )
 
   const tryEscapeSoundEffect = () => {
-    const audio = new Audio("sound/cockpit_up.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/cockpit_up.mp3",
+    )
     audio.play()
 
     setTimeout(() => {
@@ -46,22 +48,33 @@ const Cockpit = ({
   }
 
   const EscapeSoundEffect = () => {
-    const audio = new Audio("sound/cockpit_up.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/cockpit_up.mp3",
+    )
     audio.play()
   }
 
   const tryEscape = () => {
-    const audio = new Audio("dubbing/space/sequence/try_escape.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        "dubbing/space/sequence/try_escape.mp3",
+    )
     audio.play()
   }
 
   const errorOccur = () => {
-    const audio = new Audio("dubbing/space/sequence/system_error.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        "dubbing/space/sequence/system_error.mp3",
+    )
     audio.play()
   }
 
   const countDownStart = (num: number) => {
-    const audio = new Audio(`dubbing/space/sequence/countdown/${num}.mp3`)
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        `dubbing/space/sequence/countdown/${num}.mp3`,
+    )
     audio.play()
   }
 
@@ -93,7 +106,9 @@ const Cockpit = ({
             setCurrentUrl(url1)
             errorOccur()
 
-            const new_audio = new Audio("sound/power_down.mp3")
+            const new_audio = new Audio(
+              process.env.NEXT_PUBLIC_IMAGE_URL + "sound/power_down.mp3",
+            )
             new_audio.play()
             setTimeout(() => {
               setSubtitle("시스템 오류가 발생했습니다.")

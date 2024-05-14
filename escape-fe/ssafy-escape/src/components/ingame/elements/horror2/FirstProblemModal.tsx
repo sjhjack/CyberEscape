@@ -59,7 +59,7 @@ const FirstProblemModal = ({
   return (
     <MainContainer>
       <Image
-        src="/image/monitor.png"
+        src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/monitor.png"}
         alt="모니터 이미지"
         width={600}
         height={550}
@@ -107,7 +107,7 @@ const FirstProblemModal = ({
       </GuideText>
       <HintIconBox onClick={handleOpenModal}>
         <Image
-          src={"/image/hint.png"}
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
           alt="힌트 아이콘"
           width={35}
           height={35}

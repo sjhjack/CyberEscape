@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei"
 import { Mesh } from "three"
 
 const Server = () => {
-  const url = "/glb/engine_computer1.glb"
+  const url = process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/engine_computer1.glb"
   const gltf = useGLTF(url, true)
 
   useEffect(() => {

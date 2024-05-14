@@ -20,7 +20,7 @@ const VideoMaterial = ({ url }: any) => {
 export default Video2
 
 function FallbackMaterial() {
-  const fallbackURL = "image/Black.png"
+  const fallbackURL = process.env.NEXT_PUBLIC_IMAGE_URL + "image/Black.png"
   const texture = useTexture(fallbackURL)
   return <meshBasicMaterial map={texture} toneMapped={false} />
 }

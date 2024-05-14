@@ -46,8 +46,8 @@ const Crosshair2 = styled.image`
 `
 
 const Crosshair = ({ interactNum }: CrosshairProp) => {
-  const imageURL = "/image/selection.png"
-  const imageURL_2 = "/image/open_door.png"
+  const imageURL = process.env.NEXT_PUBLIC_IMAGE_URL + "/image/selection.png"
+  const imageURL_2 = process.env.NEXT_PUBLIC_IMAGE_URL + "/image/open_door.png"
 
   return interactNum === 1 ? (
     <Crosshair1></Crosshair1>
