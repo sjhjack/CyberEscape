@@ -68,3 +68,9 @@ openvidu:
 
 room:
   matching-key: ${MATCHING_QUEUE_KEY}
+
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: TRACE

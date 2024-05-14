@@ -37,7 +37,7 @@ public class NotificationService {
 
     // subscribe
     public SseEmitter subscribe(String lastEventId){
-        String userUuid = userUtil.getLoginUserUuid();
+        String userUuid = userUtil.getLoginIdFromContextHolder();
         log.info("NotificationService ============ start subscribe..");
         String id = userUuid + "_" + System.currentTimeMillis();
         log.info("NotificationService ============ id : {}, lastEventId: {}", id, lastEventId);

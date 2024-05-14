@@ -47,7 +47,7 @@ public class UserUtil {
         return findByLoginId(getLoginIdFromContextHolder());
     }
 
-    private String getLoginIdFromContextHolder() {
+    public String getLoginIdFromContextHolder() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
