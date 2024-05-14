@@ -14,7 +14,7 @@ interface ResponseData {
 const Random = () => {
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const connectHeaders = {
-    Authorization: sessionStorage.getItem("access_token") || "",
+    Authorization: `Bearer ${sessionStorage.getItem("access_token") || ""}`,
   }
   const router = useRouter()
   const { accessToken, userUuid, setIsHost } = useUserStore()
