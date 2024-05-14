@@ -10,6 +10,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
@@ -158,7 +160,9 @@ public class RoomStompHandler {
 	// }
 
 	@MessageMapping("/room/match")
-	public void handleMatchRequest(@Payload String userUuid, Principal principal) {
+	public void handleMatchRequest(@Payload String userUuid, @AuthenticationPrincipal Principal principal) {
+		log.info("StompHandler 쓰레드 : {}", Thread.currentThread().getName());
+		log.info("Security Context에 저장되어 있는 인증 정보 입니다. : ", SecurityContextHolder.getContext().getAuthentication().getName());
 		log.info("매칭 시도한 principal의 UUID : {}", principal.getName());
 		roomModifyService.addPlayerToMatchingQueue(userUuid, principal.getName());
 	}
