@@ -4,14 +4,13 @@ import postMyRanking from "@/services/main/ranking/postMyRanking"
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query"
 
 const Page = async () => {
-  const userUuid = "임시"
-  const themeuuids = ["공포uuid", "싸피uuid", "일반uuid"]
+  const themeIdx = [1, 4, 7]
   const queryClient = getQueryClient()
   await Promise.all(
-    themeuuids.map((themeuuid) =>
+    themeIdx.map((idx) =>
       queryClient.prefetchQuery({
-        queryKey: ["myRanking", themeuuid],
-        queryFn: () => postMyRanking(userUuid, themeuuid),
+        queryKey: ["myRanking", idx],
+        queryFn: () => postMyRanking(idx),
       }),
     ),
   )
