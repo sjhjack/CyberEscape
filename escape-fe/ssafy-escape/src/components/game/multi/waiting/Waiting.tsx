@@ -15,10 +15,6 @@ import useUserStore from "@/stores/UserStore"
 import useOpenViduSession from "@/hooks/OpenviduSession"
 import useOpenViduStore from "@/stores/OpenviduSessionStore"
 import patchExit from "@/services/game/room/patchExit"
-interface ChatType {
-  userName: string
-  message: string
-}
 
 const Waiting = () => {
   const baseUrl = process.env.NEXT_PUBLIC_URL
@@ -27,9 +23,8 @@ const Waiting = () => {
   const roomUuid: string = pathname.substring(20)
   const { accessToken, userUuid, isHost } = useUserStore()
   const { selectedTheme } = useIngameThemeStore()
-  const [chatting, setChattting] = useState<Array<ChatType>>([])
   const { voiceConnect, voiceDisconnect } = useOpenViduSession(roomUuid)
-  const { session, subscribers } = useOpenViduStore()
+  const { session, subscribers, chatData } = useOpenViduStore()
   const audioRef = useRef<HTMLVideoElement>(null)
   const [showModal, setShowModal] = useState<boolean>(false)
   const [gameStart, setGameStart] = useState<boolean>(false)
@@ -100,9 +95,12 @@ const Waiting = () => {
   }
   useEffect(() => {
     if (audioRef.current && subscribers.length > 0) {
-      const stream = subscribers[0].stream.getMediaStream()
-      if (stream.getAudioTracks().length > 0) {
-        audioRef.current.srcObject = stream
+      const streamManager = subscribers[0].stream // StreamManager 객체 접근
+      if (streamManager) {
+        const stream = streamManager.getMediaStream()
+        if (stream && stream.getAudioTracks().length > 0) {
+          audioRef.current.srcObject = stream
+        }
       }
     }
   }, [subscribers])
@@ -116,6 +114,7 @@ const Waiting = () => {
           userUuid: userUuid || "",
         })
         client.current?.deactivate()
+        voiceDisconnect()
       }
       console.log("게임 스타트", gameStartRef.current)
       if (!gameStartRef.current) {
@@ -174,7 +173,7 @@ const Waiting = () => {
       alignItems="center"
       backgroundColor="none"
     >
-      <audio ref={audioRef} style={{ display: "none" }} controls></audio>
+      <video ref={audioRef} style={{ display: "none" }} controls></video>
 
       <InviteModal open={showModal} handleClose={handleModalClose} />
       <S.UserBox style={{ marginRight: "20px" }}>
@@ -214,7 +213,7 @@ const Waiting = () => {
             priority
           />
         </S.MainContentBox>
-        <ChattingBox session={session} chatData={chatting}></ChattingBox>
+        <ChattingBox session={session} chatData={chatData}></ChattingBox>
       </S.MainBox>
       <S.UserBox style={{ marginLeft: "20px" }}>
         {roomData?.guest ? (
