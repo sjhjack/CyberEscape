@@ -62,6 +62,8 @@ const Random = () => {
     if (matchData?.roomUuid) {
       if (userUuid === matchData.hostUuid) {
         setIsHost(true)
+      } else {
+        setIsHost(false)
       }
       Swal.fire("매칭 완료!")
       setTimeout(() => {
