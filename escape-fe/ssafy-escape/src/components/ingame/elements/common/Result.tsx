@@ -34,7 +34,7 @@ const Result = ({
   // 나가기 버튼 눌렀을 시
   const handleQuit = () => {
     if (selectedThemeType === "single") {
-      router.push("/main")
+      router.push(`/main`)
     } else {
       router.back()
     }

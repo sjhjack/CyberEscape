@@ -11,7 +11,7 @@ const Venus = () => {
   const venusGeometry = new THREE.SphereGeometry(50, 64, 64)
   const venusMesh = new THREE.Mesh(venusGeometry, venusMaterial)
 
-  return <primitive object={venusMesh} position={[-1000, 0, -100]} />
+  return <primitive object={venusMesh} position={[-300, 0, -150]} />
 }
 
 export default Venus

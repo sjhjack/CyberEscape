@@ -19,6 +19,7 @@ import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import Keys from "../../elements/space/Basics/Keys"
 import Result from "../../elements/common/Result"
 import useIngameThemeStore from "@/stores/IngameTheme"
+import Asteroids from "../../elements/space/Backgrounds/Asteroids"
 // import LEDLight from "../../elements/space/Basics/LEDLight"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {

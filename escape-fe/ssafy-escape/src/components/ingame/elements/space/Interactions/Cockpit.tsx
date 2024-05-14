@@ -81,6 +81,7 @@ const Cockpit = ({
   const { camera } = useThree()
 
   const handleClick = () => {
+    console.log(sequences)
     if (
       sequences[0].done === true &&
       sequences[1].done === false &&
@@ -114,7 +115,7 @@ const Cockpit = ({
               setSubtitle("시스템 오류가 발생했습니다.")
             }, 2000)
             setTimeout(() => {
-              setSubtitle("엔진실에서 수리가 필요합니다.")
+              setSubtitle("서버실에서 수리가 필요합니다.")
             }, 4000)
             setTimeout(() => {
               setSubtitle(null)
