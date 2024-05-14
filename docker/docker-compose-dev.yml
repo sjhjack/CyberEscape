@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   # 서비스 이름
@@ -24,32 +24,11 @@ services:
       dockerfile: "./docker/dockerfile/mysql.dockerfile"
     networks:
       - backend
-#    volumes:
-#      - /home/ubuntu/volume/mysql:/var/lib/mysql
+    volumes:
+      - ./volume/mysql:/var/lib/mysql
     env_file: ".env"
     ports:
       - "3307:3306"
-#
-#  flask:
-#    container_name: flask
-#    hostname: flask
-#    build:
-#      context: ../
-#      dockerfile: "./docker/dockerfile/flask.dockerfile"
-#    networks:
-#      - backend
-#    volumes:
-#      - /home/ubuntu/volume/flask:/usr/local/app/
-#    ports:
-#      - "5000:5000"
-
-#  elastic:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
-#    networks:
-#      - backend
-#    ports:
-#      - "9200:9200"
-
   redis:
     image: redis
     networks:
@@ -79,15 +58,28 @@ services:
       - ".env"
 
   #
-#  mongo:
-#    image: mongo
-#    networks:
-#      - backend
-#    volumes:
-#      - /home/ubuntu/volume/data:/data
-#    env_file: ".env"
-#    ports:
-#      - "27017:27017"
+  mongo:
+    image: mongo
+    container_name: mongo
+    networks:
+      - backend
+    volumes:
+      - /home/ubuntu/volume/data:/data
+    env_file: ".env"
+    ports:
+      - "27017:27017"
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "8082:8081"
+    env_file: ".env"
+    depends_on:
+      - mongo
 
 # 브리지 네트워크는 도커가 제공하는 네트워크 드라이버 중 하나로, 가상
 # 인터페이스를 통해 컨테이너들을 연결한다.
