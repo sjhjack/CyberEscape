@@ -151,10 +151,16 @@ public class RoomStompHandler {
 		sendRoomInfo(roomUuid, room);
 	}
 
+	// @MessageMapping("/room/match")
+	// public void handleMatchRequest(@Payload String userUuid, StompHeaderAccessor stompHeaderAccessor) {
+	// 	log.info("매칭 시도한 principal의 UUID : {}", stompHeaderAccessor.getSessionId());
+	// 	roomModifyService.addPlayerToMatchingQueue(userUuid, stompHeaderAccessor.getSessionId());
+	// }
+
 	@MessageMapping("/room/match")
-	public void handleMatchRequest(@Payload String userUuid, StompHeaderAccessor stompHeaderAccessor) {
-		log.info("매칭 시도한 principal의 UUID : {}", stompHeaderAccessor.getSessionId());
-		roomModifyService.addPlayerToMatchingQueue(userUuid, stompHeaderAccessor.getSessionId());
+	public void handleMatchRequest(@Payload String userUuid, Principal principal) {
+		log.info("매칭 시도한 principal의 UUID : {}", principal.getName());
+		roomModifyService.addPlayerToMatchingQueue(userUuid, principal.getName());
 	}
 
 	// @SubscribeMapping("/topic/{roomUuid}")
