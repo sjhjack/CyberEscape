@@ -36,7 +36,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       <Subtitle text={subtitle} />
       <BasicScene onAir={onAir} interactNum={interactNum}>
         <Lights />
-        <Player position={[3, 1, 0]} />
+        <Player position={[-33, 1, -60]} />
         <MeshObjects />
         <Floor
           position={[0, 1, 0]}
