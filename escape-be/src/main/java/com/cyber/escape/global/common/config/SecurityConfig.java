@@ -9,7 +9,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,6 +21,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.cyber.escape.domain.auth.jwt.JwtFilter;
+import com.cyber.escape.domain.auth.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,8 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
-	private final AuthenticationConfiguration authenticationConfiguration;
-	//private final TokenProvider tokenProvider;
+	private final TokenProvider tokenProvider;
 	private final CorsConfig config;
 
 	@Bean
@@ -58,14 +58,8 @@ public class SecurityConfig {
 			// 		.requestMatchers("/**").authenticated()
 			// )
 
-			// .addFilter(config.corsFilter())
-			//.addFilterAfter(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+			.addFilterAfter(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 
-		// .addFilter(JWTfilter)
-		// JwtFilter
-		// JwtProvider
-		// 401, 403 Exception
-		// doFilter
 		;
 		return http.build();
 	}
@@ -97,18 +91,4 @@ public class SecurityConfig {
 		return source;
 	}
 
-	// ----------------------
-
-	// @Bean
-	// public AuthenticationFilter getAuthenticationFilter() throws Exception{
-	// 	AuthenticationFilterCustom authenticationFilter = new AuthenticationFilterCustom();
-	// 	authenticationFilter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-	//
-	// 	return authenticationFilter;
-	// }
-	//
-	// @Bean
-	// public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-	// 	return authenticationConfiguration.getAuthenticationManager();
-	// }
 }

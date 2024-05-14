@@ -13,7 +13,7 @@ import SsafyClassRoom from "../../elements/ssafy/SsafyClassRoom"
 const SsafyTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [interactNum, setInteractNum] = useState<number>(1)
   return (
-    <BasicScene interactNum={interactNum}>
+    <BasicScene interactNum={interactNum} onAir={true}>
       <Lights />
       <Player position={[-3, 3, 10]} speed={20} args={[0, 0, 0]} />
       <Floor

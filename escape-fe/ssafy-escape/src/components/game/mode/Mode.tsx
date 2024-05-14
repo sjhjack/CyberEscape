@@ -4,8 +4,10 @@ import Container from "@/components/common/Container"
 import { useRouter } from "next/navigation"
 import * as S from "@/app/@modal/main/mode/modeStyle"
 import Image from "next/image"
+import useIngameThemeStore from "@/stores/IngameTheme"
 const Mode = () => {
   const router = useRouter()
+  const { setSelectedThemeType } = useIngameThemeStore()
   return (
     <Container
       display="flex"
@@ -19,10 +21,15 @@ const Mode = () => {
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("theme")
+            router.push("theme"), setSelectedThemeType("multi")
           }}
         >
-          <Image src="/image/single.png" alt="" width={300} height={300} />
+          <Image
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/single.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
           <S.Text>
             싱글
             <br />
@@ -32,10 +39,15 @@ const Mode = () => {
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/main/multi")
+            router.push("/main/multi"), setSelectedThemeType("single")
           }}
         >
-          <Image src="/image/multi.png" alt="" width={300} height={300} />
+          <Image
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/multi.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
           <S.Text>
             멀티
             <br />

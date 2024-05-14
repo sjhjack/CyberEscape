@@ -14,7 +14,7 @@ const Player = (props: any) => {
   const { camera } = useThree()
 
   const [ref, api] = useSphere((index) => ({
-    mass: 1,
+    mass: 6,
     type: "Dynamic",
     restitution: 0,
     ...props,
