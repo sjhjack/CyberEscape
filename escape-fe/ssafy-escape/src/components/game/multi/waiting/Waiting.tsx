@@ -93,8 +93,10 @@ const Waiting = () => {
   useEffect(() => {
     connect()
     return () => {
-      patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
-      client.current?.deactivate()
+      if (!gameStart) {
+        patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
+        client.current?.deactivate()
+      }
     }
   }, [])
 
@@ -111,10 +113,16 @@ const Waiting = () => {
       Swal.fire("호스트로부터 강제 퇴장 당했습니다.")
       router.back()
     }
-    // if (roomData?.guestReady && roomData.hostReady) {
-    //   setGameStart(true)
-    // }
+    if (roomData?.guestReady && roomData.hostReady) {
+      setGameStart(true)
+    }
   }, [roomData])
+
+  useEffect(() => {
+    if (gameStart) {
+      router.push("/ingame")
+    }
+  }, [gameStart])
 
   if (isLoading) {
     return (
