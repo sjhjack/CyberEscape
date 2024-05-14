@@ -1,16 +1,22 @@
 "use client"
-import React, { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+
+import { useRouter } from "next/navigation"
 import Container from "@/components/common/Container"
 import ThemeCarousel from "@/components/common/ThemeCarousel"
 import Button from "@/components/common/Button"
 import Swal from "sweetalert2"
+import useIngameThemeStore from "@/stores/IngameTheme"
 const Theme = () => {
   const router = useRouter()
 
   const gameStart = (): void => {
-    Swal.fire("게임을 시작합니다.")
-    router.push("/ingame")
+    if (selectedThemeType === "single") {
+      Swal.fire("게임을 시작합니다.")
+      router.push("/ingame")
+    } else {
+      alert("잘못된 접근입니다. ")
+      router.push("mode")
+    }
   }
   return (
     <Container
