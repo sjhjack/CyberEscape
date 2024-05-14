@@ -10,17 +10,22 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
+import com.cyber.escape.domain.auth.jwt.TokenProvider;
 import com.cyber.escape.domain.room.dto.RoomDto;
 import com.cyber.escape.domain.room.manager.RoomManager;
 import com.cyber.escape.domain.room.service.RoomModifyService;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.TokenException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +38,7 @@ public class RoomStompHandler {
 	private final SimpMessageSendingOperations messagingTemplate;
 	private final RoomManager roomManager;
 	private final RoomModifyService roomModifyService;
+	private final TokenProvider tokenProvider;
 	private Map<String, String> sessionRoomMap = new ConcurrentHashMap<>();
 
 	@EventListener
@@ -49,6 +55,7 @@ public class RoomStompHandler {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String subscribeDestination = headerAccessor.getDestination();
 		String sessionUuid = headerAccessor.getSessionId();
+		String bearerToken = headerAccessor.getFirstNativeHeader("Authorization");
 
 		log.info("구독 경로 : {}", subscribeDestination);
 		log.info("Session Uuid : {}", sessionUuid);
@@ -56,7 +63,29 @@ public class RoomStompHandler {
 		if(subscribeDestination.startsWith("/topic/")) {
 			String roomUuid = subscribeDestination.substring(7);
 			handleRoomSubscription(roomUuid, sessionUuid);
+			setAuthentication(bearerToken);
 		}
+	}
+
+	private void setAuthentication(String bearerToken) {
+		log.info("subscribe 쓰레드 : {}", Thread.currentThread().getName());
+		log.info("SUB token : {}", bearerToken);
+		// Header의 jwt token 검증
+		String token = resolveToken(bearerToken);
+
+		log.info("SUB ::::::::: 유효한 토큰입니다.");
+		//토큰 값에서 Authentication 값으로 가공해서 반환 후 저장
+		Authentication authentication = tokenProvider.getAuthentication(token);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		log.info("SUB ::::::::: Security Context에 '{}' 인증 정보를 저장했습니다", authentication.getName());
+		log.info("SUB ::::::::: Security Context에 저장되어 있는 인증 정보 입니다. '{}'", SecurityContextHolder.getContext().getAuthentication().getName());
+	}
+
+	private String resolveToken(String bearerToken) {
+		log.info("Token 확인 : {}", bearerToken);
+		if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) return bearerToken.substring(7);
+
+		throw new TokenException(ExceptionCodeSet.TOKEN_NOT_EXISTS);
 	}
 
 	// [GenericMessage
