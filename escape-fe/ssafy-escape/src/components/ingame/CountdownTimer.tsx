@@ -2,16 +2,25 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  forwardRef,
   useImperativeHandle,
+  ForwardRefRenderFunction,
+  forwardRef,
 } from "react"
 import styled from "styled-components"
 
 export interface CountdownTimerHandle {
   applyPenalty: () => void
+  getTime: () => { minutes: number; seconds: number }
 }
 
-const CountdownTimer = forwardRef<CountdownTimerHandle | null>((_, ref) => {
+interface CountdownTimerProps {
+  onTimeOut: () => void
+}
+
+const CountdownTimer: ForwardRefRenderFunction<
+  CountdownTimerHandle,
+  CountdownTimerProps
+> = ({ onTimeOut }: CountdownTimerProps, ref) => {
   const [time, setTime] = useState({
     minutes: 10,
     seconds: 0,
@@ -21,7 +30,7 @@ const CountdownTimer = forwardRef<CountdownTimerHandle | null>((_, ref) => {
     setTime((prevTime) => {
       let { minutes, seconds } = prevTime
       const totalSeconds = minutes * 60 + seconds
-      const newTotalSeconds = Math.max(totalSeconds - 30, 0) // 최소 0초까지 감산
+      const newTotalSeconds = Math.max(totalSeconds - 30, 0)
 
       const newMinutes = Math.floor(newTotalSeconds / 60)
       const newSeconds = newTotalSeconds % 60
@@ -29,8 +38,10 @@ const CountdownTimer = forwardRef<CountdownTimerHandle | null>((_, ref) => {
       return { minutes: newMinutes, seconds: newSeconds }
     })
   }, [])
+
   useImperativeHandle(ref, () => ({
     applyPenalty,
+    getTime: () => time,
   }))
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,8 +55,9 @@ const CountdownTimer = forwardRef<CountdownTimerHandle | null>((_, ref) => {
           minutes -= 1
         }
 
-        if (minutes < 0) {
+        if (minutes === 0 && seconds === 0) {
           clearInterval(interval)
+          onTimeOut()
           return { minutes: 0, seconds: 0 }
         }
 
@@ -54,16 +66,16 @@ const CountdownTimer = forwardRef<CountdownTimerHandle | null>((_, ref) => {
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [onTimeOut])
   return (
     <Container>
       <TimerDigit>{time.minutes.toString().padStart(2, "0")}</TimerDigit>:
       <TimerDigit>{time.seconds.toString().padStart(2, "0")}</TimerDigit>
     </Container>
   )
-})
+}
 
-export default CountdownTimer
+export default forwardRef(CountdownTimer)
 
 const Container = styled.div`
   position: absolute;
