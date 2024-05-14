@@ -10,6 +10,11 @@ const Lights = () => {
       />
       <directionalLight position={[5, 10, 7.5]} />
       <directionalLight position={[59, 10, -65]} />
+      {/* <pointLight
+        position={[-500, 10, -180]}
+        intensity={100000}
+        color={"red"}
+      /> */}
     </>
   )
 }

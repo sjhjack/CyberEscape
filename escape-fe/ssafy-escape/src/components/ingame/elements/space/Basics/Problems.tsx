@@ -71,10 +71,11 @@ const Problems = ({
         process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/engine_up.mp3",
       )
       new_audio.play()
-
+      setOnAir(true)
       setInteractNum(1)
       setSubtitle("시스템이 재가동되었습니다. 조종실로 가 탈출을 시도하세요.")
       setTimeout(() => {
+        setOnAir(false)
         setSubtitle(null)
       }, 3200)
     }
