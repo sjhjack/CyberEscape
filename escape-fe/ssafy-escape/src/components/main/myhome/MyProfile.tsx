@@ -137,7 +137,7 @@ const MyProfile = () => {
           <NicknameSubBox>
             <SubText>{nickname}</SubText>
             <BlackEditIcon
-              src="/image/edit_black.png"
+              src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/edit_black.png"}
               alt="닉네임 수정 아이콘"
               width={25}
               height={25}
@@ -150,7 +150,7 @@ const MyProfile = () => {
       <ImageContainer>
         <ProfileImg src={profileImg} alt="내 프로필 이미지" />
         <WhiteEditIcon
-          src="/image/edit_white.png"
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/edit_white.png"}
           alt="프로필 이미지 수정 아이콘"
           width={25}
           height={25}
@@ -169,7 +169,10 @@ const MyProfile = () => {
         {themes.map((theme, index) => (
           <ThemeSubBox key={index} onClick={() => handleThemeClick(index)}>
             <ThemeIcon
-              src={`/image/${themeIdx[index]}emoticon.png`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/${themeIdx[index]}emoticon.png`
+              }
               alt={theme}
               width={60}
               height={60}

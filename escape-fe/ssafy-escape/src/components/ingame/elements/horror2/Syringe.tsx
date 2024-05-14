@@ -3,7 +3,10 @@ import { useEffect, useMemo } from "react"
 
 // 마지막 탈출하기 전 찾을 주사기 랜덤 3곳 (시간 남으면 더 추가할 예정)
 const Syringe = ({ onClick, solved, setInteractNum }: ClickObjectProps) => {
-  const syringe = useGLTF("/glb/horror2/syringe.glb", true)
+  const syringe = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror2/syringe.glb",
+    true,
+  )
   const objectArr: [number, number, number][][] = [
     [
       [89, 31.8, 8],

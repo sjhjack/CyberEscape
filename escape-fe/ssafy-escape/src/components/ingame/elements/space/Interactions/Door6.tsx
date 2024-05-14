@@ -15,7 +15,7 @@ const Door6 = ({
 }: any) => {
   const { scene, animations } = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
-    "/glb/door_06.glb",
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door_06.glb",
     true,
   )
   const doorRef = useRef()
@@ -63,7 +63,9 @@ const Door6 = ({
   }, [scene])
 
   const handleClick = () => {
-    const new_audio = new Audio("sound/door_open.mp3")
+    const new_audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/door_open.mp3",
+    )
     new_audio.play()
     setIsAnimationActivated(true)
     setTimeout(() => {
@@ -72,7 +74,10 @@ const Door6 = ({
     if (sequences[3].done === true && sequences[4].done === false) {
       if (onAir) return
       setOnAir(true)
-      const audio = new Audio("dubbing/space/sequence/solve_engine.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL +
+          "dubbing/space/sequence/solve_engine.mp3",
+      )
       audio.play()
       setSubtitle("문제를 해결하여 엔진을 고치세요.")
       setTimeout(() => {

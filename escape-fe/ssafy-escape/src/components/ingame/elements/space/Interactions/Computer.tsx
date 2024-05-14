@@ -15,9 +15,9 @@ const Computer = ({
   const geometry = useMemo(() => new BoxGeometry(3, 3, 3), [])
   const temp_position = [-43.45, 4.86, -162.9]
 
-  const url1 = "video/error1.mp4"
-  const url2 = "video/loading.mp4"
-  const url3 = "video/system_operating.mp4"
+  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/error1.mp4"
+  const url2 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/loading.mp4"
+  const url3 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/system_operating.mp4"
   const [currentUrl, setCurrentUrl] = useState(url1)
 
   const material = useMemo(
@@ -39,9 +39,14 @@ const Computer = ({
       setCurrentUrl(url2)
       setTimeout(() => {
         setCurrentUrl(url3)
-        const audio = new Audio("dubbing/space/sequence/server_restore.mp3")
+        const audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "dubbing/space/sequence/server_restore.mp3",
+        )
         audio.play()
-        const new_audio = new Audio("sound/server_up.mp3")
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL + "sound/server_up.mp3",
+        )
         new_audio.play()
         setSubtitle("서버실이 재가동되었습니다.")
       }, 5500)
@@ -57,7 +62,10 @@ const Computer = ({
     } else {
       if (onAir) return
       setOnAir(true)
-      const audio = new Audio("dubbing/space/sequence/no_time_to_game.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL +
+          "dubbing/space/sequence/no_time_to_game.mp3",
+      )
       audio.play()
       setSubtitle("게임할 시간이 아닙니다.")
       setTimeout(() => {
