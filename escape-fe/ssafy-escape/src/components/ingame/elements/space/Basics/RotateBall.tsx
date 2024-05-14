@@ -8,7 +8,7 @@ const RotateBall = ({
   delay,
   isRotating,
 }: any) => {
-  const ballRef = useRef()
+  const ballRef = useRef<any>()
   const [startTime, setStartTime] = useState<number | null>(null)
 
   useEffect(() => {
@@ -28,16 +28,16 @@ const RotateBall = ({
 
   useFrame(({ clock }) => {
     if (!isRotating || !startTime) return
-    const elapsed = clock.getElapsedTime() - startTime / 1000 // Subtract the start time from elapsed time
-    const radius = 2.9 // Radius of orbit
-    const speed = 2 // Speed of rotation
-
-    // Update position based on orbit equation and sun position
-    ballRef.current.position.x =
-      sunPosition[0] + Math.cos(elapsed * speed) * radius
-    ballRef.current.position.z =
-      sunPosition[2] + Math.sin(elapsed * speed) * radius
-    ballRef.current.rotation.y += 0.05 // Adjust rotation speed of the ball itself
+    const elapsed = clock.getElapsedTime() - startTime / 1000
+    const radius = 2.9
+    const speed = 2
+    if (ballRef.current) {
+      ballRef.current.position.x =
+        sunPosition[0] + Math.cos(elapsed * speed) * radius
+      ballRef.current.position.z =
+        sunPosition[2] + Math.sin(elapsed * speed) * radius
+      ballRef.current.rotation.y += 0.05
+    }
   })
 
   return (
