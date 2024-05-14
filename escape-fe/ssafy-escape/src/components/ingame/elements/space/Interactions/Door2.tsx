@@ -30,7 +30,10 @@ const Door2 = ({
     if (onAir) return
     setOnAir(true)
     // 유머 방송
-    const audio = new Audio("dubbing/space/sequence/already_escaped.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        "dubbing/space/sequence/already_escaped.mp3",
+    )
     audio.play()
     setSubtitle("정우님의 방입니다. 이미 탈출하셨습니다.")
     setTimeout(() => {

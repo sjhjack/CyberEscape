@@ -102,7 +102,7 @@ const ProblemMaterial = ({ texture }: any) => {
 }
 
 const VideoMaterial = () => {
-  const url1 = "/video/system_operating.mp4"
+  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/system_operating.mp4"
   const texture = useVideoTexture(url1)
   return <meshBasicMaterial map={texture} toneMapped={false} />
 }
