@@ -31,7 +31,9 @@ const PlaySound = ({ penalty, role }: PlaySoundProps) => {
       } while (playedSounds.includes(newSound))
 
       setPlayedSounds((prev) => [...prev, newSound])
-      const audio = new Audio(`/sound/${newSound}.mp3`)
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + `/sound/${newSound}.mp3`,
+      )
       audio.play()
     }
   }, [penalty, soundArray, playedSounds])

@@ -62,7 +62,9 @@ const Door1 = ({
 
   const handleClick = () => {
     if (onAir) return
-    const new_audio = new Audio("sound/door_open.mp3")
+    const new_audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/door_open.mp3",
+    )
     new_audio.play()
     setIsAnimationActivated(true)
     setTimeout(() => {
