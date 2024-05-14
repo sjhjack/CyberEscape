@@ -79,7 +79,10 @@ const Ranking = () => {
         {themes.map((theme, index) => (
           <S.ThemeSubBox key={index} onClick={() => handleClick(index)}>
             <S.CustomImage
-              src={`/image/${themeIdx[index]}emoticon.png`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/${themeIdx[index]}emoticon.png`
+              }
               alt={theme}
               width={60}
               height={60}

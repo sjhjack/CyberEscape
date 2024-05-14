@@ -23,7 +23,7 @@ const QuickStart = () => {
           }}
         >
           <Image
-            src="/image/single.png"
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/single.png"}
             alt=""
             width={250}
             height={250}
@@ -38,7 +38,7 @@ const QuickStart = () => {
           }}
         >
           <Image
-            src="/image/multi.png"
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/multi.png"}
             alt=""
             width={250}
             height={250}
