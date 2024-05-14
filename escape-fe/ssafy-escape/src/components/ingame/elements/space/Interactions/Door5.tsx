@@ -7,7 +7,7 @@ import * as THREE from "three"
 const Door5 = ({ position, rotation, setInteractNum }: any) => {
   const { scene, animations } = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
-    "/glb/door_05.glb",
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door_05.glb",
     true,
   )
   const doorRef = useRef()

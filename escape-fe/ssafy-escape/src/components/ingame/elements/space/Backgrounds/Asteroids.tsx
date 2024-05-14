@@ -15,7 +15,9 @@ const Asteroids = () => {
       const asteroidGeometry = new THREE.SphereGeometry(asteroidSize, 16, 16)
 
       const textureLoader = new THREE.TextureLoader()
-      const asteroidTexture = textureLoader.load("image/asteroidtexture.jpg")
+      const asteroidTexture = textureLoader.load(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "image/asteroidtexture.jpg",
+      )
       const asteroidMaterial = new THREE.MeshStandardMaterial({
         map: asteroidTexture,
       })

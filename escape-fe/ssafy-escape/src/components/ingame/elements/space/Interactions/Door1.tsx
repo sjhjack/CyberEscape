@@ -13,7 +13,7 @@ const Door1 = ({
 }: any) => {
   const { scene, animations } = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
-    "/glb/door_01.glb",
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door_01.glb",
     true,
   )
   const doorRef = useRef()

@@ -82,7 +82,10 @@ const ThirdProblemModal = ({
         <BlackBackground>
           <HorrorImageBox>
             <Image
-              src={`/image/ghost/ghost${randomIndex}.jpg`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/ghost/ghost${randomIndex}.jpg`
+              }
               alt="귀신 이미지"
               layout="fill"
               objectFit="cover"
