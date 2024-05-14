@@ -41,11 +41,11 @@ const Computer = ({
         setCurrentUrl(url3)
         const audio = new Audio(
           process.env.NEXT_PUBLIC_IMAGE_URL +
-            "dubbing/space/sequence/server_restore.mp3",
+            "/dubbing/space/sequence/server_restore.mp3",
         )
         audio.play()
         const new_audio = new Audio(
-          process.env.NEXT_PUBLIC_IMAGE_URL + "sound/server_up.mp3",
+          process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/server_up.mp3",
         )
         new_audio.play()
         setSubtitle("서버실이 재가동되었습니다.")
@@ -64,7 +64,7 @@ const Computer = ({
       setOnAir(true)
       const audio = new Audio(
         process.env.NEXT_PUBLIC_IMAGE_URL +
-          "dubbing/space/sequence/no_time_to_game.mp3",
+          "/dubbing/space/sequence/no_time_to_game.mp3",
       )
       audio.play()
       setSubtitle("게임할 시간이 아닙니다.")

@@ -28,7 +28,7 @@ const SecondProblemModal = ({
   useEffect(() => {
     const playAudio = setTimeout(() => {
       const audio = new Audio(
-        process.env.NEXT_PUBLIC_IMAGE_URL + "sound/woman_scream.mp3",
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/woman_scream.mp3",
       )
       audio.play()
       const showImg = setTimeout(() => {

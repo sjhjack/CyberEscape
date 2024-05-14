@@ -26,14 +26,15 @@ const Door3 = ({
   const alert = () => {
     const audio = new Audio(
       process.env.NEXT_PUBLIC_IMAGE_URL +
-        "dubbing/space/sequence/no_authorize.mp3",
+        "/dubbing/space/sequence/no_authorize.mp3",
     )
     audio.play()
   }
 
   const findkey = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "dubbing/space/sequence/door_key.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        "/dubbing/space/sequence/door_key.mp3",
     )
     audio.play()
   }
@@ -81,7 +82,7 @@ const Door3 = ({
   const handleClick = () => {
     if (sequences[0].done === true) {
       const new_audio = new Audio(
-        process.env.NEXT_PUBLIC_IMAGE_URL + "sound/door_open.mp3",
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/door_open.mp3",
       )
       new_audio.play()
       setIsAnimationActivated(true)
@@ -93,7 +94,7 @@ const Door3 = ({
       setOnAir(true)
       const audio = new Audio(
         process.env.NEXT_PUBLIC_IMAGE_URL +
-          "dubbing/space/sequence/no_authorize.mp3",
+          "/dubbing/space/sequence/no_authorize.mp3",
       )
       audio.play()
       setSubtitle("조종석을 조작해 탈출을 시도하세요.")

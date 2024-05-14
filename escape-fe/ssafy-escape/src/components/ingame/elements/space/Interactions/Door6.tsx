@@ -64,7 +64,7 @@ const Door6 = ({
 
   const handleClick = () => {
     const new_audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/door_open.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/door_open.mp3",
     )
     new_audio.play()
     setIsAnimationActivated(true)
@@ -76,7 +76,7 @@ const Door6 = ({
       setOnAir(true)
       const audio = new Audio(
         process.env.NEXT_PUBLIC_IMAGE_URL +
-          "dubbing/space/sequence/solve_engine.mp3",
+          "/dubbing/space/sequence/solve_engine.mp3",
       )
       audio.play()
       setSubtitle("문제를 해결하여 엔진을 고치세요.")
