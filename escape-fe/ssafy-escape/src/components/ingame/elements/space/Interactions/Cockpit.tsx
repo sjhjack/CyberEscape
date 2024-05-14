@@ -37,7 +37,7 @@ const Cockpit = ({
 
   const tryEscapeSoundEffect = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/cockpit_up.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/cockpit_up.mp3",
     )
     audio.play()
 
@@ -49,7 +49,7 @@ const Cockpit = ({
 
   const EscapeSoundEffect = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/cockpit_up.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/cockpit_up.mp3",
     )
     audio.play()
   }
@@ -57,7 +57,7 @@ const Cockpit = ({
   const tryEscape = () => {
     const audio = new Audio(
       process.env.NEXT_PUBLIC_IMAGE_URL +
-        "dubbing/space/sequence/try_escape.mp3",
+        "/dubbing/space/sequence/try_escape.mp3",
     )
     audio.play()
   }
@@ -65,7 +65,7 @@ const Cockpit = ({
   const errorOccur = () => {
     const audio = new Audio(
       process.env.NEXT_PUBLIC_IMAGE_URL +
-        "dubbing/space/sequence/system_error.mp3",
+        "/dubbing/space/sequence/system_error.mp3",
     )
     audio.play()
   }
@@ -73,7 +73,7 @@ const Cockpit = ({
   const countDownStart = (num: number) => {
     const audio = new Audio(
       process.env.NEXT_PUBLIC_IMAGE_URL +
-        `dubbing/space/sequence/countdown/${num}.mp3`,
+        `/dubbing/space/sequence/countdown/${num}.mp3`,
     )
     audio.play()
   }
@@ -107,7 +107,7 @@ const Cockpit = ({
             errorOccur()
 
             const new_audio = new Audio(
-              process.env.NEXT_PUBLIC_IMAGE_URL + "sound/power_down.mp3",
+              process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/power_down.mp3",
             )
             new_audio.play()
             setTimeout(() => {

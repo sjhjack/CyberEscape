@@ -53,7 +53,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
 
   const dub1 = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "dubbing/space/start/start_1.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_1.mp3",
     )
     audio.play()
     setSubtitle("정신이 드십니까?")
@@ -66,7 +66,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
 
   const dub2 = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "dubbing/space/start/start_2.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_2.mp3",
     )
     audio.play()
     setSubtitle("몸을 움직이실 수 있습니까?")
@@ -78,7 +78,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
 
   const dub3 = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "dubbing/space/start/start_3.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_3.mp3",
     )
     audio.play()
     setSubtitle("좋습니다. 몸을 움직이는 데는 이상이 없으시군요.")
@@ -90,7 +90,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
 
   const dub4 = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "dubbing/space/start/start_4.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_4.mp3",
     )
     audio.play()
     setSubtitle("현재 산소공급 장치가 고장나 의식을 잃은 상태셨습니다.")
@@ -105,7 +105,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
 
   const dub5 = () => {
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "dubbing/space/start/start_5.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_5.mp3",
     )
     audio.play()
     setSubtitle("최대한 빨리 우주선을 탈출하세요.")
