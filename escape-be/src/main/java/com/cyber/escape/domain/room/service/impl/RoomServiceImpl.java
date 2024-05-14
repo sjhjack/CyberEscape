@@ -106,6 +106,19 @@ public class RoomServiceImpl implements RoomService {
 		}
 	}
 
+	// @Async
+	// public void sendMatchResultToUser(MatchUser matchUser, RoomDto.PostResponse createdRoom) {
+	// 	try {
+	// 		log.info("매칭 정보 전송 쓰레드 : {}", Thread.currentThread().getName());
+	// 		messagingTemplate.convertAndSend("/queue/match" + matchUser.getUserUuid(), createdRoom);
+	// 		log.info("매칭 정보 전송 할 Client의 session Uuid: {}", matchUser.getPrincipalUuid());
+	// 	} catch (Exception e) {
+	// 		log.error("Failed to send match result to user: {}", matchUser.getPrincipalUuid(), e);
+	// 		// 실패한 경우 재시도 로직 추가
+	// 		retryMatchResultSend(matchUser, createdRoom, 3); // 최대 3번 재시도
+	// 	}
+	// }
+
 	@Async
 	public void sendMatchResultToUser(MatchUser matchUser, RoomDto.PostResponse createdRoom) {
 		try {
