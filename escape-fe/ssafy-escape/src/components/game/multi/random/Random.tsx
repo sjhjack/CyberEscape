@@ -13,11 +13,11 @@ interface ResponseData {
 }
 const Random = () => {
   const baseUrl = process.env.NEXT_PUBLIC_URL
+  const { accessToken, userUuid, setIsHost } = useUserStore()
   const connectHeaders = {
-    Authorization: `Bearer ${sessionStorage.getItem("access_token") || ""}`,
+    Authorization: `Bearer ${accessToken || ""}`,
   }
   const router = useRouter()
-  const { accessToken, userUuid, setIsHost } = useUserStore()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [matchData, setMatchData] = useState<ResponseData | null>(null)
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
