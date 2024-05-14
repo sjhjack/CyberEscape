@@ -69,9 +69,11 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       timerRef.current.applyPenalty()
     }
   }
+  
+  // 시간 끝났을 시 이벤트 함수
   const handleTimeOut = () => {
     setIsTimeOut(true)
-          setResult("Timeout")
+    setResult("Timeout")
     setIsGameFinished(true)
   }
 
@@ -103,7 +105,9 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
     // 5분 경과 시
     const fiveMintimer = setTimeout(() => {
-      const audio = new Audio("sound/door_bang.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "sound/door_bang.mp3",
+      )
       audio.play()
       setFiveMinLater(true)
     }, 60000 * 5)

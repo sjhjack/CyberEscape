@@ -27,7 +27,9 @@ const ThirdProblemModal = ({
 
   useEffect(() => {
     const playAudio = setTimeout(() => {
-      const audio = new Audio("sound/woman_scream.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "sound/woman_scream.mp3",
+      )
       audio.play()
       const showImg = setTimeout(() => {
         setShowExtraImage(true)
@@ -82,7 +84,10 @@ const ThirdProblemModal = ({
         <BlackBackground>
           <HorrorImageBox>
             <Image
-              src={`/image/ghost/ghost${randomIndex}.jpg`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/ghost/ghost${randomIndex}.jpg`
+              }
               alt="귀신 이미지"
               layout="fill"
               objectFit="cover"
@@ -92,7 +97,7 @@ const ThirdProblemModal = ({
       )}
       <MainContainer>
         <Image
-          src="/image/diary.png"
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/diary.png"}
           alt="일기장 이미지"
           width={620}
           height={580}
@@ -139,7 +144,7 @@ const ThirdProblemModal = ({
         </SubContainer>
         <HintIconBox onClick={handleOpenModal}>
           <Image
-            src={"/image/hint.png"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
             alt="힌트 아이콘"
             width={35}
             height={35}

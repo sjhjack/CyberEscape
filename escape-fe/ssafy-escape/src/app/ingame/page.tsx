@@ -84,7 +84,7 @@ const Page = () => {
           ) : null}
           <ExitGame>
             <Image
-              src="/image/exitbutton.png"
+              src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/exitbutton.png"}
               alt="exit game image"
               width="40"
               height="40"

@@ -7,7 +7,10 @@ const SsafyClassRoom = ({ onLoaded }: RoomProps) => {
   //   process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/ssafymap.glb",
   //   true,
   // )
-  const { scene } = useGLTF("/glb/ssafy/ssafymap.glb", true)
+  const { scene } = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/ssafymap.glb",
+    true,
+  )
 
   useEffect(() => {
     if (scene) {
