@@ -3,7 +3,10 @@ import AnswerSheet from "./AnswerSheet"
 import { useEffect } from "react"
 
 const Problem3 = ({
+  onAir,
+  setOnAir,
   url,
+  uuid,
   position,
   rotation,
   scale,
@@ -30,7 +33,10 @@ const Problem3 = ({
       {sequences[3].done === true && !thirdBall ? (
         <>
           <AnswerSheet
+            onAir={onAir}
+            setOnAir={setOnAir}
             num={1}
+            uuid={uuid}
             position={position}
             rotation={rotation}
             scale={[3, 3, 3]}
@@ -42,7 +48,10 @@ const Problem3 = ({
             setInteractNum={setInteractNum}
           />
           <AnswerSheet
+            onAir={onAir}
+            setOnAir={setOnAir}
             num={2}
+            uuid={uuid}
             position={position}
             rotation={rotation}
             scale={[3, 3, 3]}
@@ -54,7 +63,10 @@ const Problem3 = ({
             setInteractNum={setInteractNum}
           />
           <AnswerSheet
+            onAir={onAir}
+            setOnAir={setOnAir}
             num={3}
+            uuid={uuid}
             position={position}
             rotation={rotation}
             scale={[3, 3, 3]}
@@ -66,6 +78,8 @@ const Problem3 = ({
             setInteractNum={setInteractNum}
           />
           <AnswerSheet
+            onAir={onAir}
+            setOnAir={setOnAir}
             num={4}
             position={position}
             rotation={rotation}

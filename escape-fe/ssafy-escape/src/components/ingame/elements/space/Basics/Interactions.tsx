@@ -41,8 +41,11 @@ const Interactions = ({
         setInteractNum={setInteractNum}
       />
       <Door2
+        onAir={onAir}
+        setOnAir={setOnAir}
         position={[-58, 0, 0.4]}
         rotation={[0, Math.PI / 2, 0]}
+        setSubtitle={setSubtitle}
         setInteractNum={setInteractNum}
       />
       <Door3
@@ -58,9 +61,13 @@ const Interactions = ({
       <Door4 position={[-38, 0, -34]} setInteractNum={setInteractNum} />
       <Door5 position={[-38, 0, -100]} setInteractNum={setInteractNum} />
       <Door6
+        onAir={onAir}
+        setOnAir={setOnAir}
         position={[3, 0, -72.5]}
         rotation={[0, Math.PI / 2, 0]}
         setInteractNum={setInteractNum}
+        sequences={sequences}
+        setSubtitle={setSubtitle}
       />
     </>
   )

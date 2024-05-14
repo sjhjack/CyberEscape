@@ -1,7 +1,12 @@
+import postAnswer from "@/services/ingame/postAnswer"
+import { useEffect, useState } from "react"
 import { Vector3 } from "three"
 
 const AnswerSheet = ({
+  onAir,
+  setOnAir,
   num,
+  uuid,
   position,
   rotation,
   scale,
@@ -9,15 +14,56 @@ const AnswerSheet = ({
   setBall,
   setInteractNum,
 }: any) => {
+  const [isAnswer, setIsAnswer] = useState(false)
+
+  useEffect(() => {
+    if (isAnswer) {
+      setBall(true)
+    }
+  }, [isAnswer])
+
+  const fetchData = async () => {
+    try {
+      const answer = await postAnswer(uuid, num)
+      console.log(answer)
+      if (answer.right) {
+        setIsAnswer(true)
+        if (onAir) return
+        setOnAir(true)
+        const new_audio = new Audio("sound/right.mp3")
+        new_audio.play()
+        setTimeout(() => {
+          setOnAir(false)
+        }, 2000)
+      } else {
+        // 틀리면 시간 차감 로직
+
+        if (onAir) return
+        setOnAir(true)
+
+        const new_audio = new Audio("sound/right.mp3")
+        new_audio.play()
+        setTimeout(() => {
+          const audio = new Audio("sound/discount.mp3")
+          audio.play()
+        }, 2000)
+      }
+      // setIsAnswer(true)
+    } catch (error) {
+      console.error("Error fetching quizs:", error)
+    }
+  }
+
   let new_position = new Vector3()
 
   new_position.x = position[0] + move[0]
-  new_position.y = position[1] + move[1]
+  new_position.y = position[1] + move[1] - 1.1
   new_position.z = position[2] + move[2]
 
   const handleClick = () => {
     // 조건 달기
-    setBall(true)
+
+    fetchData()
   }
 
   return (

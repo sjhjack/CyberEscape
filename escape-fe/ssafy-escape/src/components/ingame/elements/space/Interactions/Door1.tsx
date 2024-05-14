@@ -55,6 +55,8 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
   }, [scene])
 
   const handleClick = () => {
+    const new_audio = new Audio("sound/door_open.mp3")
+    new_audio.play()
     setIsAnimationActivated(true)
     setTimeout(() => {
       setIsAnimationActivated(false)

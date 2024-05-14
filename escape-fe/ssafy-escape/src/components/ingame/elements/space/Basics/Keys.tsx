@@ -14,6 +14,7 @@ const Keys = ({
           sequences={sequences}
           setSequences={setSequences}
           setInteractNum={setInteractNum}
+          setSubtitle={setSubtitle}
         />
       )}
       {sequences[1].done === true && sequences[2].done === false && (
@@ -21,6 +22,7 @@ const Keys = ({
           sequences={sequences}
           setSequences={setSequences}
           setInteractNum={setInteractNum}
+          setSubtitle={setSubtitle}
         />
       )}
     </>
