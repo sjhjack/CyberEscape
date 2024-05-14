@@ -70,7 +70,7 @@ public class RoomServiceImpl implements RoomService {
 		// listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUtil.getLoginUserUuid()));
 		listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUuid));
 
-		log.info("listOperations size : {}", listOperations.size(MATCHING_QUEUE_KEY));
+		log.info("After Matching Queue size : {}", listOperations.size(MATCHING_QUEUE_KEY));
 	}
 
 	@Scheduled(fixedDelay = 1000) // 1초마다 실행
@@ -79,6 +79,9 @@ public class RoomServiceImpl implements RoomService {
 		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
 
 		if(listOperations.size(MATCHING_QUEUE_KEY) >= 2) {
+			log.info("매칭 성공 !!");
+			log.info("listOperations size before matching : {}", listOperations.size(MATCHING_QUEUE_KEY));
+
 			MatchUser user1 = listOperations.leftPop(MATCHING_QUEUE_KEY);
 			MatchUser user2 = listOperations.leftPop(MATCHING_QUEUE_KEY);
 
@@ -123,8 +126,8 @@ public class RoomServiceImpl implements RoomService {
 	public void sendMatchResultToUser(MatchUser matchUser, RoomDto.PostResponse createdRoom) {
 		try {
 			log.info("매칭 정보 전송 쓰레드 : {}", Thread.currentThread().getName());
-			messagingTemplate.convertAndSendToUser(matchUser.getPrincipalUuid(), "/queue/match", createdRoom);
 			log.info("매칭 정보 전송 할 Client의 session Uuid: {}", matchUser.getPrincipalUuid());
+			messagingTemplate.convertAndSendToUser(matchUser.getPrincipalUuid(), "/queue/match", createdRoom);
 		} catch (Exception e) {
 			log.error("Failed to send match result to user: {}", matchUser.getPrincipalUuid(), e);
 			// 실패한 경우 재시도 로직 추가
