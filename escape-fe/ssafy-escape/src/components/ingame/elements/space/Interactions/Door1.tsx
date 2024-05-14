@@ -4,7 +4,13 @@ import { AnimationMixer } from "three"
 import DoorBox from "../../common/DoorBox"
 import * as THREE from "three"
 
-const Door1 = ({ position, rotation, setInteractNum }: any) => {
+const Door1 = ({
+  onAir,
+  setOnAir,
+  position,
+  rotation,
+  setInteractNum,
+}: any) => {
   const { scene, animations } = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
     "/glb/door_01.glb",
@@ -55,6 +61,7 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
   }, [scene])
 
   const handleClick = () => {
+    if (onAir) return
     const new_audio = new Audio("sound/door_open.mp3")
     new_audio.play()
     setIsAnimationActivated(true)
