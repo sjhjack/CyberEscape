@@ -25,7 +25,7 @@ const Instructions = styled.div`
   text-align: center;
 `
 
-const Start = ({ setSubtitle }: any) => {
+const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
   const [isNull, setIsNull] = useState(false)
   const [showInstruction, setShowInstruction] = useState(true)
   const [sequence, setSequence] = useState(1)
@@ -44,7 +44,8 @@ const Start = ({ setSubtitle }: any) => {
   }, [sequence])
 
   const handleClick = () => {
-    if (sequence === 1) {
+    if (sequence === 1 && !onAir) {
+      setOnAir(true)
       dub1()
       setShowInstruction(false)
     }
@@ -107,6 +108,7 @@ const Start = ({ setSubtitle }: any) => {
     setTimeout(() => {
       setSubtitle(null)
     }, 9000)
+    setOnAir(false)
     setIsNull(true)
   }
 
