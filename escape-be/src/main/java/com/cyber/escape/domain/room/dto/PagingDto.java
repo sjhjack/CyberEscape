@@ -9,6 +9,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 public class PagingDto {
 
@@ -32,6 +33,7 @@ public class PagingDto {
 
 	@Setter
 	@Getter
+	@Slf4j
 	public static class PageRequest {
 		private int page = 1;					// 현재 페이지
 		private final int recordSize = 4;		// 페이지에 출력할 방 개수
@@ -45,8 +47,20 @@ public class PagingDto {
 			// this.pageSize = 5;
 		}
 
-		public void setKeyword(String keyword) {
-			this.keyword = "%" + keyword + "%";
+		public PageRequest(int page, String keyword) {
+			this.page = page;
+			// this.keyword = keyword;
+			setKeyword(keyword);
+		}
+
+		private void setKeyword(String keyword) {
+			log.info("input keyword : {}", keyword);
+			if(keyword.isEmpty()) {
+				log.info("keyword is null !!");
+				this.keyword = "%%";
+			} else {
+				this.keyword = "%" + keyword + "%";
+			}
 		}
 
 		public int getOffset(){

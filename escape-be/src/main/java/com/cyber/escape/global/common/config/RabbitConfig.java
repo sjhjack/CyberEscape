@@ -24,6 +24,13 @@ public class RabbitConfig {
     private static final String ROUTING_KEY = "game.room.*";
     private static final String CHAT_ROUTING_KEY = "chat.room.*";
 
+    @Value("${rabbit.host}")
+    private static String host;
+    @Value("${rabbit.host}")
+    public void setHost(String host) {
+        RabbitConfig.host = host;
+    }
+
     // @Value("${rabbit.queue-name}")
     // private static String CHAT_QUEUE_NAME;
     // @Value("${rabbit.exchange-name}")
@@ -90,7 +97,7 @@ public class RabbitConfig {
     public ConnectionFactory connectionFactory(@Value("${rabbit.username}") String USER_NAME, @Value("${rabbit.password}") String PASSWORD){
         log.info("connectionFactory 등록 !!");
         CachingConnectionFactory factory = new CachingConnectionFactory();
-		factory.setHost("localhost");
+		factory.setHost(host);
         //factory.setHost("rabbitmq");
         factory.setPort(5672);
         // factory.setPort(58153);
