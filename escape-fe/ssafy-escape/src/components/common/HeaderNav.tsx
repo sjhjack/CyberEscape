@@ -15,7 +15,7 @@ import {
 } from "@tanstack/react-query"
 import getFriendList from "@/services/main/friends/getFriendList"
 import NotificationModal from "../notification/NotificationModal"
-import postInvitedList from "@/services/notification/postInvitedList"
+import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
 
@@ -56,13 +56,11 @@ const EventProvider = () => {
             Connection: 'keep-alive',
           }
         });
-      }, 2000);
-      //EventProvider();
-  }
+      }, 2000);  }
 
-  // return () => {
-  //     eventSource.close();
-  // };
+  return () => {
+      eventSource.close();
+  };
 }
 
 const MainHeader = () => {
@@ -88,8 +86,9 @@ const MainHeader = () => {
     // }),
     queryClient.prefetchQuery({
       queryKey: ["invitedList"],
-      queryFn: postInvitedList,
+      queryFn: getNotificationList,
     }),
+
     EventProvider();
   }, [])
 

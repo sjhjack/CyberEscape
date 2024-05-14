@@ -16,6 +16,7 @@ const API_PATH = {
     },
     NOTIFICATION:{
       SUBSCRIBE: "/notify/subscribe",
+      READ: "notify/read",
       LIST: "/notify/list"
     },
     RANKING: {
@@ -48,10 +49,10 @@ const API_PATH = {
       },
     },
   },
-  INVITE: {
-    INVITED_LIST: "/notification/game",
-    INVITED_ACCEPT: "/room/acceptance",
-  },
+  // INVITE: {
+  //   INVITED_LIST: "/notification/game",
+  //   INVITED_ACCEPT: "/room/acceptance",
+  // },
   INGAME: {
     QUIZ: "/game/quiz",
     HINT: "/game/quiz/hint",

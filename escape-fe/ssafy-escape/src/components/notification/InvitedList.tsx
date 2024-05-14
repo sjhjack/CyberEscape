@@ -4,13 +4,14 @@ import { useQuery } from "@tanstack/react-query"
 import { styled } from "styled-components"
 import PersonIcon from "@mui/icons-material/Person"
 import Button from "../common/Button"
-import postInvitedList from "@/services/notification/postInvitedList"
+//import postInvitedList from "@/services/notification/postInvitedList"
 // import postInvitedAccept from "@/services/notification/postInvitedAccept"
+import getNotificationList from "@/services/notification/getNotificationList"
 
 const InvitedList = () => {
   const { data: invitedData, isLoading } = useQuery({
     queryKey: ["invitedList"],
-    queryFn: () => postInvitedList(),
+    queryFn: () => getNotificationList(),
   })
 
   const handleAccept = async () => {
