@@ -2,7 +2,7 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
+import extractSubstring from "@/hooks/RequestFormatTime"
 import { useEffect, useMemo, useState } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
@@ -58,7 +58,7 @@ const ThirdProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
       setSubtitle("...그러고 보니 처음부터 문고리가 없었던 것 같은데.")

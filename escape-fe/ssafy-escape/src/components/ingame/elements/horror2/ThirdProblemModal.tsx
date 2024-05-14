@@ -2,7 +2,7 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
+import extractSubstring from "@/hooks/RequestFormatTime"
 import { useState } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
@@ -36,7 +36,7 @@ const ThirdProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
       setSubtitle("이런, 시간이...서둘러 나가야겠군.")

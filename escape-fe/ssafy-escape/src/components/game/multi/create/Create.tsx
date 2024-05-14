@@ -23,7 +23,7 @@ const Create = () => {
   const [secretMode, setSecretMode] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
   const { selectedTheme } = useIngameThemeStore()
-  const { userUuid } = useUserStore()
+  const { userUuid, setIsHost } = useUserStore()
   const handleSecretMode = (secretMode: boolean): void => {
     setSecretMode(!secretMode)
   }
@@ -49,6 +49,7 @@ const Create = () => {
       return
     }
     const response = await postCreateRoom(data)
+    setIsHost(true)
     router.push(`waiting/${response.data.roomUuid}`)
   }
   return (

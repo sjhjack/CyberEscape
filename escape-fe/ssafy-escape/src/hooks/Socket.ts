@@ -21,6 +21,7 @@ const useSocket = (url: string, topic: string, onMessage: MessageHandler) => {
           onMessage(JSON.parse(message.body))
         })
       },
+      onStompError: (frame) => console.error(`STOMP error: ${frame.body}`),
     })
 
     // WebSocket 서버에 연결
