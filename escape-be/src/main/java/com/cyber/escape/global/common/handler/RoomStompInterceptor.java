@@ -28,6 +28,7 @@ public class RoomStompInterceptor implements ChannelInterceptor {
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 		if (StompCommand.CONNECT == accessor.getCommand()) { // websocket 연결요청
+			log.info("Interceptor 쓰레드 : {}", Thread.currentThread().getName());
 			String bearerToken = accessor.getFirstNativeHeader("Authorization");
 			log.info("CONNECT token : {}", bearerToken);
 			// Header의 jwt token 검증
