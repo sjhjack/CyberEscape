@@ -91,7 +91,7 @@ const SecondProblemModal = ({
 
       <MainContainer>
         <Image
-          src="/image/paper.png"
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/paper.png"}
           alt="쪽지 이미지"
           width={600}
           height={550}
@@ -138,7 +138,7 @@ const SecondProblemModal = ({
         </SubContainer>
         <HintIconBox onClick={handleOpenModal}>
           <Image
-            src={"/image/hint.png"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
             alt="힌트 아이콘"
             width={35}
             height={35}
