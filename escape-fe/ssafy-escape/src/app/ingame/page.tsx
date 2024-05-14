@@ -17,7 +17,7 @@ import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, selectedThemeType } = useIngameThemeStore()
 
   const onStartClick = () => {
     const canvas = document.querySelector("canvas")
@@ -36,23 +36,22 @@ const Page = () => {
 
   return (
     <S.Container>
-      {/* 멀티인지 확인 후 수정*/}
-      {selectedTheme === 3 ? (
+      {selectedTheme === 7 ? (
         <SpaceTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === 1 ? (
+      ) : selectedTheme === 1 || selectedTheme === 2 ? (
         <HorrorTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === 2 ? (
+      ) : selectedTheme === 4 || selectedTheme === 5 ? (
         <SsafyTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === 4 ? (
+      ) : selectedTheme === 3 ? (
         <HorrorTheme2
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
@@ -66,15 +65,23 @@ const Page = () => {
         // />
         <StartScene onFinish={handleGameStart} />
       ) : null}
-      {/* 멀티인지 확인 후 표시 여부 수정*/}
       {isModelLoaded ? (
         <div>
           {/* <StartingCountDown
             isModelLoaded={isModelLoaded}
             onFinish={handleGameStart}
           /> */}
-          {/* <Chat />
-          <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
+          {selectedThemeType === "multi" ? (
+            <>
+              <Chat />
+              <ProgressBar
+                id1={"오희주"}
+                id2={"김병주"}
+                value1={30}
+                value2={40}
+              />
+            </>
+          ) : null}
           <ExitGame>
             <Image
               src="/image/exitbutton.png"
@@ -82,7 +89,7 @@ const Page = () => {
               width="40"
               height="40"
             />
-          </ExitGame> */}
+          </ExitGame>
         </div>
       ) : (
         <S.LoadingText>로딩 중...</S.LoadingText>

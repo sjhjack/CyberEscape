@@ -7,12 +7,21 @@ import RoomPasswordModal from "./RoomPasswordModal"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
 import patchJoin from "@/services/game/room/patchJoin"
+
+interface Themes {
+  [key: number]: string
+}
+
 const Room = ({ roomData }: any) => {
   const { setIsHost, userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
   const { setSelectedTheme } = useIngameThemeStore()
   const router = useRouter()
-  const thema = ["", "공포", "싸피", "우주"]
+  const themes : Themes = {
+    1: "공포",
+    4: "싸피",
+    7: "우주",
+  }
   const handleModalClose = (): void => {
     setShowModal(false)
   }
@@ -48,7 +57,7 @@ const Room = ({ roomData }: any) => {
         <S.Title>{roomData.title}</S.Title>
         <S.Menu>인원: {roomData.capacity}/2</S.Menu>
         <S.Menu>방장: {roomData.nickname}</S.Menu>
-        <S.Menu>테마: {thema[roomData.themaId]}</S.Menu>
+        <S.Menu>테마: {themes[roomData.themaId]}</S.Menu>
       </S.RoomBox>
     </>
   )
