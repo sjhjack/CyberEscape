@@ -179,7 +179,7 @@ public class RoomServiceImpl implements RoomService {
 		}
 
 		newRoom = roomRepository.save(newRoom);
-		log.info("new room password : {}", postRequest.getPassword());
+		log.info("new room password : {}", newRoom.getPassword());
 
 		log.info("created room title : {}, hasPassword : {}", newRoom.getTitle(), newRoom.isHasPassword());
 
