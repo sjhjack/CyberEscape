@@ -7,7 +7,10 @@ interface Props {
 }
 
 const Spider = ({ showSpider }: Props) => {
-  const spider = useGLTF("/glb/horror2/spider.glb", true)
+  const spider = useGLTF(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror2/spider.glb",
+    true,
+  )
 
   const [position, setPosition] = useState<[number, number, number]>([
     46, 90, 46,

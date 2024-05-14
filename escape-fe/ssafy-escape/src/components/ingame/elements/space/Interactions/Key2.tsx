@@ -16,7 +16,7 @@ const Key2 = ({
   setInteractNum,
 }: any) => {
   //   const { scene } = useGLTF(process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key.glb")
-  const { scene } = useGLTF("/glb/key2.glb")
+  const { scene } = useGLTF(process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key2.glb")
 
   const onClick = () => {
     const updatedSequence = [...sequences]
