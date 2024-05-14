@@ -10,7 +10,7 @@ const DoorBox = ({ position, args, color }: any) => {
   }))
 
   const openDoor = () => {
-    const newPosition = [position[0], position[1] + 10, position[2]]
+    const newPosition = [position[0], position[1] + 20, position[2]]
     api.position.set(newPosition[0], newPosition[1], newPosition[2])
 
     setTimeout(() => {

@@ -20,8 +20,13 @@ const Sequences = [
     done: false,
   },
   {
-    name: "cockpit2",
+    name: "engine",
     number: 5,
+    done: false,
+  },
+  {
+    name: "cockpit2",
+    number: 6,
     done: false,
   },
   //   {
