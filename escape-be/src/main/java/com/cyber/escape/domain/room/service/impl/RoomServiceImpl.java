@@ -60,7 +60,12 @@ public class RoomServiceImpl implements RoomService {
 	@Transactional
 	public void addPlayerToMatchingQueue(String principalUuid) {
 		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
+
+		log.info("Current Matching Queue size : {}", listOperations.size(MATCHING_QUEUE_KEY));
+		log.info("SessionUuid for matching : {}", principalUuid);
+
 		listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUtil.getLoginUserUuid()));
+
 		log.info("listOperations size : {}", listOperations.size(MATCHING_QUEUE_KEY));
 	}
 
@@ -149,28 +154,36 @@ public class RoomServiceImpl implements RoomService {
 	@Transactional
 	@Override
 	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest, int capacity) {
+		log.info("방 생성 시작!!");
 
-		User host = userUtil.getLoginUser();
-		// User host = userRepository.findUserByUuid(postRequest.getHostUuid())
-		// 	.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+		User host = null;
+		if(capacity == 1) {
+			host = userUtil.getLoginUser();
+		} else {
+			host = userRepository.findUserByUuid(postRequest.getHostUuid())
+				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
+		}
+
 		log.info("hostUuid : {}", host.getUuid());
 
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
 
 		Room newRoom = Room.of(postRequest.getTitle(), capacity, host, thema);
+		log.info("req room raw password : {}", postRequest.getPassword());
 
 		if(!postRequest.getPassword().isEmpty()) {
-			log.info("created room raw password : {}", postRequest.getPassword());
+			log.info("password 있어용 ㅎㅎ");
 			String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 			newRoom.setPassword(encryptPassword);
 		}
 
 		newRoom = roomRepository.save(newRoom);
+		log.info("new room password : {}", postRequest.getPassword());
 
-		// Todo : 채팅방 생성해서 저장하고 채팅방 Uuid 가져오기
+		log.info("created room title : {}, hasPassword : {}", newRoom.getTitle(), newRoom.isHasPassword());
 
-		return RoomDto.PostResponse.of(newRoom.getUuid(), "chatRoomuuid");
+		return RoomDto.PostResponse.of(newRoom.getUuid(), newRoom.getHostUuid(), thema.getId());
 	}
 
 	@Transactional
