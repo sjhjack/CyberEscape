@@ -30,7 +30,6 @@ const useUserStore = create<UserState>()(
       profileUrl: undefined,
       accessToken: null,
       setAccessToken: (token) => set({ accessToken: token }),
-
       login: async (loginId: string, password: string) => {
         try {
           const response = await postLogin(loginId, password)
@@ -56,6 +55,7 @@ const useUserStore = create<UserState>()(
           await postLogout()
           set({
             isLogin: false,
+            isHost: false,
             userUuid: null,
             nickname: null,
             profileUrl: undefined,

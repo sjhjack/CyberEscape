@@ -11,7 +11,6 @@ import { useState, useEffect } from "react"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
 import postCreateRoom from "@/services/game/room/postCreateRoom"
-import patchJoin from "@/services/game/room/patchJoin"
 interface postCreateRoomRequestProps {
   title: string
   themaId: number

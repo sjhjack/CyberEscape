@@ -13,6 +13,7 @@ import { CircularProgress } from "@mui/material"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
 import useOpenViduSession from "@/hooks/OpenviduSession"
+import useOpenViduStore from "@/stores/OpenviduSessionStore"
 import patchExit from "@/services/game/room/patchExit"
 interface ChatType {
   userName: string
@@ -20,32 +21,39 @@ interface ChatType {
 }
 
 const Waiting = () => {
+  const baseUrl = process.env.NEXT_PUBLIC_URL
   const router = useRouter()
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
   const { accessToken, userUuid, isHost } = useUserStore()
   const { selectedTheme } = useIngameThemeStore()
   const [chatting, setChattting] = useState<Array<ChatType>>([])
-  const { session, audioRef } = useOpenViduSession(roomUuid, setChattting)
+  const { voiceConnect, voiceDisconnect } = useOpenViduSession(roomUuid)
+  const { session, subscribers } = useOpenViduStore()
+  const audioRef = useRef<HTMLVideoElement>(null)
   const [showModal, setShowModal] = useState<boolean>(false)
   const [gameStart, setGameStart] = useState<boolean>(false)
   const handleModalClose = (): void => {
     setShowModal(false)
   }
+  const gameStartRef = useRef(gameStart)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isReady, setIsReady] = useState<boolean>(false)
-  const baseUrl = process.env.NEXT_PUBLIC_URL
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
   const connectHeaders = {
-    Authorization: accessToken || "",
+    Authorization: `Bearer ${accessToken || ""}`,
   }
   const onConnected = () => {
-    client.current?.subscribe(`/topic/${roomUuid}`, (payload) => {
-      console.log("새로운 정보 넘어옴")
-      const roomInfo = JSON.parse(payload.body)
-      setRoomData(roomInfo)
-    })
+    client.current?.subscribe(
+      `/topic/${roomUuid}`,
+      (payload) => {
+        console.log("새로운 정보 넘어옴")
+        const roomInfo = JSON.parse(payload.body)
+        setRoomData(roomInfo)
+      },
+      connectHeaders,
+    )
     client.current?.publish({
       destination: `/pub/room/connect`,
       headers: {
@@ -91,14 +99,33 @@ const Waiting = () => {
     })
   }
   useEffect(() => {
-    connect()
-    return () => {
-      if (roomData?.host) {
-        patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
+    if (audioRef.current && subscribers.length > 0) {
+      const stream = subscribers[0].stream.getMediaStream()
+      if (stream.getAudioTracks().length > 0) {
+        audioRef.current.srcObject = stream
       }
-      client.current?.deactivate()
+    }
+  }, [subscribers])
+  useEffect(() => {
+    connect()
+    voiceConnect()
+    return () => {
+      const gameOut = async () => {
+        await patchExit({
+          roomUuid: roomUuid,
+          userUuid: userUuid || "",
+        })
+        client.current?.deactivate()
+      }
+      console.log("게임 스타트", gameStartRef.current)
+      if (!gameStartRef.current) {
+        gameOut()
+      }
     }
   }, [])
+  useEffect(() => {
+    gameStartRef.current = gameStart // 컴포넌트가 렌더링될 때마다 ref를 업데이트
+  })
 
   useEffect(() => {
     console.log("방 정보", roomData)
@@ -113,10 +140,16 @@ const Waiting = () => {
       Swal.fire("호스트로부터 강제 퇴장 당했습니다.")
       router.back()
     }
-    // if (roomData?.guestReady && roomData.hostReady) {
-    //   setGameStart(true)
-    // }
+    if (roomData?.guestReady && roomData.hostReady) {
+      setGameStart(true)
+    }
   }, [roomData])
+
+  useEffect(() => {
+    if (gameStart) {
+      router.push("/ingame")
+    }
+  }, [gameStart])
 
   if (isLoading) {
     return (
@@ -148,7 +181,7 @@ const Waiting = () => {
         <S.CharacterBox>
           <S.ProfileImage
             src={roomData?.host?.profileUrl}
-            alt=""
+            alt="호스트 프로필 이미지"
             width={100}
             height={100}
           />
