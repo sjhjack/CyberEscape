@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.extern.slf4j.Slf4j;
 
-@@Repository
+@Repository
 @Slf4j
 // SSE연결 정보들을 DB가 아닌 Map<>에(JVM에 저장) CRUD 하는 메서드 작성
 public class EmitterRepositoryImpl implements EmitterRepository {
