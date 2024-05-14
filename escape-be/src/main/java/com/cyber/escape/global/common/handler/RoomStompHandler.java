@@ -191,7 +191,7 @@ public class RoomStompHandler {
 	@MessageMapping("/room/match")
 	public void handleMatchRequest(@Payload String userUuid, @AuthenticationPrincipal Principal principal) {
 		log.info("StompHandler 쓰레드 : {}", Thread.currentThread().getName());
-		log.info("Security Context에 저장되어 있는 인증 정보 입니다. : ", SecurityContextHolder.getContext().getAuthentication().getName());
+		// log.info("Security Context에 저장되어 있는 인증 정보 입니다. : ", SecurityContextHolder.getContext().getAuthentication().getName());
 		log.info("매칭 시도한 principal의 UUID : {}", principal.getName());
 		roomModifyService.addPlayerToMatchingQueue(userUuid, principal.getName());
 	}
