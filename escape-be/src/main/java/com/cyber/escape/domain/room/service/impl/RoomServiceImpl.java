@@ -170,14 +170,16 @@ public class RoomServiceImpl implements RoomService {
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
 
 		Room newRoom = Room.of(postRequest.getTitle(), capacity, host, thema);
+		log.info("req room raw password : {}", postRequest.getPassword());
 
 		if(!postRequest.getPassword().isEmpty()) {
-			log.info("created room raw password : {}", postRequest.getPassword());
+			log.info("password 있어용 ㅎㅎ");
 			String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 			newRoom.setPassword(encryptPassword);
 		}
 
 		newRoom = roomRepository.save(newRoom);
+		log.info("new room password : {}", postRequest.getPassword());
 
 		log.info("created room title : {}, hasPassword : {}", newRoom.getTitle(), newRoom.isHasPassword());
 
