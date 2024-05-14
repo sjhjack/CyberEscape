@@ -284,12 +284,14 @@ public class QuizService {
 
         Thema thema = themaRepository.findByCategory(quiz.getThemaCategory())
                 .orElseThrow(() -> new QuizException(ExceptionCodeSet.BAD_REQUEST));
+
         return Quiz
                 .builder()
                 .thema(thema)
                 .hint(quiz.getHint())
-                .url(quizUrl)
                 .answer(quiz.getAnswer())
+                .difficulty(quiz.getDifficulty())
+                .url(quizUrl)
                 .build();
     }
 
