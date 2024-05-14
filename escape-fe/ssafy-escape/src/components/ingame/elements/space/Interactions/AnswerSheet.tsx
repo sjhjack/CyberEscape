@@ -30,7 +30,9 @@ const AnswerSheet = ({
         setIsAnswer(true)
         if (onAir) return
         setOnAir(true)
-        const new_audio = new Audio("sound/right.mp3")
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL + "sound/right.mp3",
+        )
         new_audio.play()
         setTimeout(() => {
           setOnAir(false)
@@ -41,10 +43,14 @@ const AnswerSheet = ({
         if (onAir) return
         setOnAir(true)
 
-        const new_audio = new Audio("sound/right.mp3")
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL + "sound/right.mp3",
+        )
         new_audio.play()
         setTimeout(() => {
-          const audio = new Audio("sound/discount.mp3")
+          const audio = new Audio(
+            process.env.NEXT_PUBLIC_IMAGE_URL + "sound/discount.mp3",
+          )
           audio.play()
         }, 2000)
       }

@@ -16,14 +16,17 @@ const Key2 = ({
   setInteractNum,
 }: any) => {
   //   const { scene } = useGLTF(process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key.glb")
-  const { scene } = useGLTF("/glb/key2.glb")
+  const { scene } = useGLTF(process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key2.glb")
 
   const onClick = () => {
     const updatedSequence = [...sequences]
     updatedSequence[2] = { ...updatedSequence[2], done: true }
     setSequences(updatedSequence)
     setInteractNum(1)
-    const audio = new Audio("dubbing/space/sequence/key2_find.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        "dubbing/space/sequence/key2_find.mp3",
+    )
     audio.play()
     setSubtitle(
       "잘 찾으셨습니다. 이제 서버실의 컴퓨터를 활용해 시스템을 재가동하세요.",
