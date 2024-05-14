@@ -213,7 +213,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         />
       ) : null}
       <PlaySound penalty={penalty} role="experiment" />
-      <BasicScene interactNum={interactNum}>
+      <BasicScene interactNum={interactNum} onAir={true}>
         <Lights penalty={penalty} solved={solved} />
         <Player position={[3, 50, 0]} speed={100} />
         <Floor
