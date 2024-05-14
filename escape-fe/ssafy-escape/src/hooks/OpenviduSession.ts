@@ -1,6 +1,5 @@
 // hooks/useOpenViduSession.ts
-import { useCallback, useRef, useEffect } from "react"
-import { OpenVidu, Session } from "openvidu-browser"
+import { OpenVidu } from "openvidu-browser"
 import useOpenViduStore from "@/stores/OpenviduSessionStore"
 import postInitSession from "@/services/game/vociechat/postInitSession"
 import postConnection from "@/services/game/vociechat/postConnection"
@@ -8,27 +7,21 @@ import useUserStore from "@/stores/UserStore"
 
 const useOpenViduSession = (uuid: string) => {
   const {
+    session,
     setSession,
     clearSession,
     setPublisher,
     addSubscriber,
     removeSubscriber,
     addChatData,
-    setAudioRef,
   } = useOpenViduStore()
-  const OV = useRef<OpenVidu>(new OpenVidu()).current
   const { nickname } = useUserStore()
-  const session = useRef<Session | null>(null)
+
   const getToken = async (uuid: string): Promise<string> => {
     const sessionId = await createSession(uuid)
     return createToken(sessionId)
   }
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  useEffect(() => {
-    if (audioRef.current) {
-      setAudioRef(audioRef.current)
-    }
-  }, [audioRef])
+
   const createSession = async (uuid: string): Promise<string> => {
     try {
       const response = await postInitSession({ roomUuid: uuid })
@@ -43,56 +36,47 @@ const useOpenViduSession = (uuid: string) => {
     return response.data.voiceChatToken
   }
 
-  const voiceConnect = useCallback(async () => {
+  const voiceConnect = async () => {
+    const newOV = new OpenVidu()
     const token = await getToken(uuid) // Token fetching logic
-    session.current = OV.initSession()
-    session.current
+    const newSession = newOV.initSession()
+    newSession
       .connect(token, { clientData: nickname })
       .then(() => {
-        const publisher = OV.initPublisher(undefined, {
+        const newPublisher = newOV.initPublisher(undefined, {
           audioSource: undefined, // 오디오 소스
           videoSource: false, // 비디오는 사용하지 않음
           publishAudio: true, // 오디오 발행
           publishVideo: false, // 비디오 발행하지 않음
         })
-        if (session.current) {
-          session.current.on("streamCreated", (event: any) => {
-            if (audioRef.current) {
-              const subscriber = session.current?.subscribe(
-                event.stream,
-                audioRef.current,
-              )
-              if (subscriber) {
-                addSubscriber(subscriber)
-              }
-            }
-          })
+        newSession.on("streamCreated", (event: any) => {
+          console.log("event.stream", event.stream)
+          const subscriber = newSession?.subscribe(event.stream, undefined)
+          addSubscriber(subscriber)
+        })
 
-          session.current.on("streamDestroyed", (event: any) => {
-            removeSubscriber(event.stream.streamManager)
-          })
+        newSession.on("streamDestroyed", (event: any) => {
+          removeSubscriber(event.stream.streamManager)
+        })
 
-          session.current.on("signal", (event: any) => {
-            const userName = JSON.parse(event.from.data).clientData
-            const message = event.data
-            addChatData({ userName, message })
-          })
-          session.current.publish(publisher)
-          setSession(session.current)
-          setPublisher(publisher)
-        }
+        newSession.on("signal", (event: any) => {
+          const userName = JSON.parse(event.from.data).clientData
+          const message = event.data
+          addChatData({ userName, message })
+        })
+        newSession.publish(newPublisher)
+        setSession(newSession)
+        setPublisher(newPublisher)
       })
       .catch((error) => console.error("Connection failed", error))
-  }, [uuid, OV])
+  }
 
-  const voiceDisconnect = useCallback(() => {
-    if (session.current) {
-      session.current.disconnect()
+  const voiceDisconnect = () => {
+    if (session) {
+      session.disconnect()
       clearSession()
-      session.current = null
     }
-  }, [])
-
+  }
   return { voiceConnect, voiceDisconnect }
 }
 export default useOpenViduSession
