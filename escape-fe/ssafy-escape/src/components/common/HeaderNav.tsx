@@ -17,11 +17,52 @@ import getFriendList from "@/services/main/friends/getFriendList"
 import NotificationModal from "../notification/NotificationModal"
 import postInvitedList from "@/services/notification/postInvitedList"
 import Swal from "sweetalert2"
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
 
 interface HeaderProps {
   Icon: React.ElementType
   text: string
   onClick: () => void
+}
+
+const EventProvider = () => {
+  const EventSource = EventSourcePolyfill || NativeEventSource
+  const accessToken = sessionStorage.getItem('access_token');
+  // if(accessToken == null) return;
+  console.log(accessToken)
+  let eventSource = new EventSource('http://localhost:8080/notify/subscribe',{
+      headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Connection: 'keep-alive',
+      },
+  });
+  
+  console.log("EVENT !!!!!");
+  eventSource.onmessage = function(event) {
+      console.log('New event from server:', event.data);
+  };
+  eventSource.addEventListener('sse', function(event) {
+      console.log('Message:', event.data);
+      //setMessages(prevMessages => [...prevMessages, event.data]);
+  });
+  eventSource.onerror = function(error){
+      console.log("ERROR OCCUR");
+      console.log(error)
+      setTimeout(function() {
+        eventSource.close();
+        eventSource = new EventSource('http://localhost:8080/notify/subscribe',{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Connection: 'keep-alive',
+          }
+        });
+      }, 2000);
+      //EventProvider();
+  }
+
+  // return () => {
+  //     eventSource.close();
+  // };
 }
 
 const MainHeader = () => {
@@ -39,15 +80,17 @@ const MainHeader = () => {
   }
 
   const queryClient = new QueryClient()
+
   useEffect(() => {
+    // queryClient.prefetchQuery({
+    //   queryKey: ["friendList"],
+    //   queryFn: getFriendList,
+    // }),
     queryClient.prefetchQuery({
-      queryKey: ["friendList"],
-      queryFn: getFriendList,
+      queryKey: ["invitedList"],
+      queryFn: postInvitedList,
     }),
-      queryClient.prefetchQuery({
-        queryKey: ["invitedList"],
-        queryFn: postInvitedList,
-      })
+    EventProvider();
   }, [])
 
   // 로그아웃 버튼 클릭 시
@@ -115,7 +158,7 @@ const MainHeader = () => {
   )
 
   return (
-    <ParentDiv>
+    <ParentDiv>9
       <MainContainer>
         {headerItems.map(({ Icon, text, onClick }, index) => (
           <HeaderItem key={index} Icon={Icon} text={text} onClick={onClick} />
