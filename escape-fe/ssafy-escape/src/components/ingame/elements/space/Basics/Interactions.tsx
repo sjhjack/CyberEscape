@@ -36,6 +36,8 @@ const Interactions = ({
         setInteractNum={setInteractNum}
       />
       <Door1
+        onAir={onAir}
+        setOnAir={setOnAir}
         position={[-17, 0, 0.4]}
         rotation={[0, Math.PI / 2, 0]}
         setInteractNum={setInteractNum}
