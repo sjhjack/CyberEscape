@@ -60,6 +60,8 @@ public class AuthServiceImpl implements AuthService {
 			.authenticate(signinRequest.toAuthentication());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
+		log.info("로그인 후 Context Holder에 저장된 Authetication : {}", SecurityContextHolder.getContext().getAuthentication().toString());
+
 		UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
 		signinResponse.setUserInfo(userUtil.getLoginUser());
 
