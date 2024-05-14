@@ -20,6 +20,7 @@ interface ChatType {
 }
 
 const Waiting = () => {
+  const baseUrl = process.env.NEXT_PUBLIC_URL
   const router = useRouter()
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
@@ -34,7 +35,6 @@ const Waiting = () => {
   }
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isReady, setIsReady] = useState<boolean>(false)
-  const baseUrl = process.env.NEXT_PUBLIC_URL
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
   const connectHeaders = {
