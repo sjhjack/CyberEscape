@@ -20,6 +20,7 @@ interface ChatType {
 }
 
 const Waiting = () => {
+  const baseUrl = process.env.NEXT_PUBLIC_URL
   const router = useRouter()
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
@@ -34,7 +35,6 @@ const Waiting = () => {
   }
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isReady, setIsReady] = useState<boolean>(false)
-  const baseUrl = process.env.NEXT_PUBLIC_URL
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
   const connectHeaders = {
@@ -93,10 +93,10 @@ const Waiting = () => {
   useEffect(() => {
     connect()
     return () => {
-      if (roomData?.host) {
+      if (!gameStart) {
         patchExit({ roomUuid: roomUuid, userUuid: userUuid || "" })
+        client.current?.deactivate()
       }
-      client.current?.deactivate()
     }
   }, [])
 
@@ -113,10 +113,16 @@ const Waiting = () => {
       Swal.fire("호스트로부터 강제 퇴장 당했습니다.")
       router.back()
     }
-    // if (roomData?.guestReady && roomData.hostReady) {
-    //   setGameStart(true)
-    // }
+    if (roomData?.guestReady && roomData.hostReady) {
+      setGameStart(true)
+    }
   }, [roomData])
+
+  useEffect(() => {
+    if (gameStart) {
+      router.push("/ingame")
+    }
+  }, [gameStart])
 
   if (isLoading) {
     return (
