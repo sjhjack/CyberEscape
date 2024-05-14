@@ -39,10 +39,13 @@ public class FriendController {
         return new ApiResponse<>(HttpStatus.OK.value(), "내 친구 목록을 가져왔습니다.", friendService.getMyFriendList(pageNumber));
     }
 
+    /*
+        Map 내부 :
+            friendUuid : string
+     */
+
     @PostMapping("/remove")
     public ApiResponse removeFriendRelationship(@RequestBody Map<String, String> friendInfo){
         return new ApiResponse<>(HttpStatus.OK.value(), "친구를 삭제했습니다.", friendService.removeFriend(friendInfo));
     }
-
-
 }
