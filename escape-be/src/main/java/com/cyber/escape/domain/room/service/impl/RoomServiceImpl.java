@@ -109,6 +109,7 @@ public class RoomServiceImpl implements RoomService {
 	@Async
 	public void sendMatchResultToUser(MatchUser matchUser, RoomDto.PostResponse createdRoom) {
 		try {
+			log.info("매칭 정보 전송 쓰레드 : {}", Thread.currentThread().getName());
 			messagingTemplate.convertAndSendToUser(matchUser.getPrincipalUuid(), "/queue/match", createdRoom);
 			log.info("매칭 정보 전송 할 Client의 session Uuid: {}", matchUser.getPrincipalUuid());
 		} catch (Exception e) {
