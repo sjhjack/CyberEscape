@@ -53,7 +53,12 @@ const SecondProblemModal = ({
 
   return (
     <MainContainer>
-      <Image src="/image/note.png" alt="노트 이미지" width={550} height={550} />
+      <Image
+        src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/note.png"}
+        alt="노트 이미지"
+        width={550}
+        height={550}
+      />
       <IconBox onClick={onClose}>
         <CloseIcon sx={{ fontSize: 40 }} />
       </IconBox>
@@ -94,7 +99,7 @@ const SecondProblemModal = ({
       </SubContainer>
       <HintIconBox onClick={handleOpenModal}>
         <Image
-          src={"/image/hint.png"}
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
           alt="힌트 아이콘"
           width={35}
           height={35}

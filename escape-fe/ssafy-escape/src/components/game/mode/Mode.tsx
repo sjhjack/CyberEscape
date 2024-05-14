@@ -24,7 +24,12 @@ const Mode = () => {
             router.push("theme"), setSelectedThemeType("multi")
           }}
         >
-          <Image src="/image/single.png" alt="" width={300} height={300} />
+          <Image
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/single.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
           <S.Text>
             싱글
             <br />
@@ -37,7 +42,12 @@ const Mode = () => {
             router.push("/main/multi"), setSelectedThemeType("single")
           }}
         >
-          <Image src="/image/multi.png" alt="" width={300} height={300} />
+          <Image
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/multi.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
           <S.Text>
             멀티
             <br />
