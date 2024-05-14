@@ -18,10 +18,10 @@ const Cockpit = ({
   const geometry = useMemo(() => new BoxGeometry(2, 2, 2), [])
   const temp_position = [-108.51, 3.5, -71.95]
 
-  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/error1.mp4"
-  const url2 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/countdown.mp4"
-  const url3 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/countdown2.mp4"
-  const url4 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/system_operating.mp4"
+  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/error1.mp4"
+  const url2 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/countdown.mp4"
+  const url3 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/countdown2.mp4"
+  const url4 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/system_operating.mp4"
   const [currentUrl, setCurrentUrl] = useState(url1)
 
   const material = useMemo(
