@@ -59,6 +59,9 @@ public class RoomServiceImpl implements RoomService {
 
 	@Transactional
 	public void addPlayerToMatchingQueue(String principalUuid) {
+		log.info("매칭 등록 시작!!");
+		log.info("매칭 쓰레드 : {}", Thread.currentThread().getName());
+		
 		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
 
 		log.info("Current Matching Queue size : {}", listOperations.size(MATCHING_QUEUE_KEY));
