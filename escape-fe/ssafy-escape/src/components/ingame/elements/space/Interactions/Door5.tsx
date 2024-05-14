@@ -56,7 +56,7 @@ const Door5 = ({ position, rotation, setInteractNum }: any) => {
 
   const handleClick = () => {
     const new_audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "sound/door_open.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/door_open.mp3",
     )
     new_audio.play()
     setIsAnimationActivated(true)

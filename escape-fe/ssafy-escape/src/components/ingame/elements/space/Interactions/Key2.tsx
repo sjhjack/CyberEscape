@@ -25,7 +25,7 @@ const Key2 = ({
     setInteractNum(1)
     const audio = new Audio(
       process.env.NEXT_PUBLIC_IMAGE_URL +
-        "dubbing/space/sequence/key2_find.mp3",
+        "/dubbing/space/sequence/key2_find.mp3",
     )
     audio.play()
     setSubtitle(
