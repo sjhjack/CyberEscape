@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationService {
 
     // ms로 계산, 60L (1분) * 60 * 1000 = 1시간
-    private static final Long DEFAULT_TIMEOUT = 60L * 60 * 1000;
+    private static final Long DEFAULT_TIMEOUT = 180000L;
     private final EmitterRepositoryImpl emitterRepository;
     // CRUD, FIND, 동적 쿼리 
     private final NotifyRepository notifyRepository;
@@ -83,49 +83,56 @@ public class NotificationService {
         // 친구 요청이라면
         if(notificationType.equals(Notify.NotificationType.FRIEND)) {
             // sender가 receiver에게 친구 요청을 보낸 적이 있는지를 판별
-            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.FRIEND);
+            log.info("::::::::::::::: 친구 요청입니다.");
+            List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.FRIEND);
             sendNotifcation(receiverUuid, "", notificationType, content, senderUuid, existNotification);
         }
         // 게임 요청이 들어왔다면
         else {
-            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.GAME);
+            log.info("::::::::::::::: 게임 초대 요청입니다.");
+            List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.GAME);
             sendNotifcation(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
         }
         log.info("NotificationService ============= send() 끝");
 
     }
 
-    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, Notify existNotification) {
-        if (existNotification == null) {
+    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification) {
+        try {
+            if (existNotification.size() <= 5) {
 
-            // roomUuid 자리는 비워놓는다.
-            //저장 확인
-            Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
-            log.info("::::::::::::::::::::::::::::::::::  친구 요청 ");
-            // Notify notification = createNotify(receiverId, notificationType, content);
+                // roomUuid 자리는 비워놓는다.
+                //저장 확인
+                Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
+                log.info("::::::::::::::::::::::::::::::::::  친구 요청 ");
+                // Notify notification = createNotify(receiverId, notificationType, content);
 
-            // receiver = 현재 로그인 한 유저 = 알림 받을 사람
-            // String receiverId = receiver.getMemberId();
+                // receiver = 현재 로그인 한 유저 = 알림 받을 사람
+                // String receiverId = receiver.getMemberId();
 
-            // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
-            Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
+                // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
+                Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
 
-            if(sseEmitters.get(String.valueOf(receiverUuid)) == null){
-                String userUuid = userUtil.getLoginUserUuid();
-                log.info("NotificationService ============ start subscribe..");
-                String id = userUuid + "_" + System.currentTimeMillis();
-                log.info("NotificationService ============ id : {}, lastEventId: {}", id, "");
-                SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
-                emitterRepository.saveEventCache(id, notification);
-                sendToClient(sseEmitter, id, NotifyDto.FriendResponse.from(notification));
+                if (sseEmitters.get(String.valueOf(receiverUuid)) == null) {
+                    String userUuid = userUtil.getLoginUserUuid();
+                    log.info("NotificationService ============ start subscribe..");
+                    String id = userUuid + "_" + System.currentTimeMillis();
+                    log.info("NotificationService ============ id : {}, lastEventId: {}", id, "");
+                    SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+                    emitterRepository.saveEventCache(id, notification);
+                    sendToClient(sseEmitter, id, NotifyDto.FriendResponse.from(notification));
+                }
+
+                sseEmitters.forEach(
+                        (key, sseEmitter) -> {
+                            emitterRepository.saveEventCache(key, notification);
+                            sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
+                        }
+                );
             }
-
-            sseEmitters.forEach(
-                    (key, sseEmitter) -> {
-                        emitterRepository.saveEventCache(key, notification);
-                        sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
-                    }
-            );
+        }
+        catch (Exception e) {
+            log.info("EXCETION : {}", e.getMessage());
         }
     }
 
@@ -154,7 +161,8 @@ public class NotificationService {
             log.info("sendToClient ============ sendToClient completed");
         } catch (IOException e){
             log.info("sendToClient ============ sendToClient failed");
-            //emitterRepository.deleteById(id);
+            sseEmitter.completeWithError(e);
+            emitterRepository.deleteById(id);
             log.error("알림을 송신하는 도중 에러가 발생했습니다 : {}", e.getMessage());
             throw new RuntimeException("연결 오류");
         }
