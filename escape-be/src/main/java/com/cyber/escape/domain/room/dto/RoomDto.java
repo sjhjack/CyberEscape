@@ -64,12 +64,14 @@ public class RoomDto {
 	@Getter
 	public static class PostResponse {
 		private final String roomUuid;
-		private final String chatRoomUuid;
+		private final String hostUuid;
+		private final Long themaId;
 
-		public static PostResponse of(final String roomUuid, final String chatRoomUuid) {
+		public static PostResponse of(final String roomUuid, final String hostUuid, final Long themaId) {
 			return PostResponse.builder()
 				.roomUuid(roomUuid)
-				.chatRoomUuid(chatRoomUuid)
+				.hostUuid(hostUuid)
+				.themaId(themaId)
 				.build();
 		}
 	}
