@@ -45,7 +45,10 @@ const Problems = ({
   fetchData()
 
   const system_rollback = () => {
-    const audio = new Audio("dubbing/space/sequence/system_restart.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        "dubbing/space/sequence/system_restart.mp3",
+    )
     audio.play()
   }
 
@@ -64,7 +67,9 @@ const Problems = ({
       setSequences(updatedSequence)
 
       system_rollback()
-      const new_audio = new Audio("sound/engine_up.mp3")
+      const new_audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "sound/engine_up.mp3",
+      )
       new_audio.play()
 
       setInteractNum(1)
