@@ -55,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest) {
 		log.info("signin start !!");
+		log.info("로그인 쓰레드 : {}", Thread.currentThread().getName());
 
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(signinRequest.toAuthentication());
