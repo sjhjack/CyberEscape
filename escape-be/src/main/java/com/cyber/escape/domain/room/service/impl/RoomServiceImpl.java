@@ -58,7 +58,7 @@ public class RoomServiceImpl implements RoomService {
 	private String MATCHING_QUEUE_KEY;
 
 	@Transactional
-	public void addPlayerToMatchingQueue(String principalUuid) {
+	public void addPlayerToMatchingQueue(String userUuid, String principalUuid) {
 		log.info("매칭 등록 시작!!");
 		log.info("매칭 쓰레드 : {}", Thread.currentThread().getName());
 		
@@ -67,7 +67,8 @@ public class RoomServiceImpl implements RoomService {
 		log.info("Current Matching Queue size : {}", listOperations.size(MATCHING_QUEUE_KEY));
 		log.info("SessionUuid for matching : {}", principalUuid);
 
-		listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUtil.getLoginUserUuid()));
+		// listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUtil.getLoginUserUuid()));
+		listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUuid));
 
 		log.info("listOperations size : {}", listOperations.size(MATCHING_QUEUE_KEY));
 	}
