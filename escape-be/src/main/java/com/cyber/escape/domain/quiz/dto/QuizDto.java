@@ -13,7 +13,7 @@ public class QuizDto {
     @Builder
     public static class Request{
         private String hint;
-        private String difficulty;
+        private int difficulty;
         private String answer;
         private int themaCategory;
     }
