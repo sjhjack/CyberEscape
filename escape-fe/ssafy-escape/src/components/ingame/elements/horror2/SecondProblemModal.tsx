@@ -2,7 +2,6 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
@@ -104,7 +103,6 @@ const SecondProblemModal = ({
           <ProblemText>
             {problem.slice(0, problem.lastIndexOf(","))}
           </ProblemText>
-          <ProblemText>{extractSubstring(problem)}</ProblemText>
           <ChoiceBox>
             <Button
               theme="fail"

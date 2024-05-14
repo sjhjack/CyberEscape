@@ -32,6 +32,8 @@ import CreepyDoll from "../../elements/horror2/CreepyDoll"
 import VoodooDoll from "../../elements/horror2/VoodooDoll"
 import BloodText from "../../elements/horror2/BloodText"
 import PlaySound from "../../PlaySound"
+import Result from "../../elements/common/Result"
+import RequestFormatTime from "@/hooks/RequestFormatTime"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -47,20 +49,21 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
   const { solved } = useIngameQuizStore()
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const [interactNum, setInteractNum] = useState<number>(1)
   const [showSpider, setShowSpider] = useState<boolean>(false)
   const [showBlackOut, setShowBlackOut] = useState<boolean>(false)
   const [showBloodText, setShowBloodText] = useState<boolean>(false)
   const setQuizData = useIngameQuizStore((state) => state.setQuizData)
+  const [result, setResult] = useState<string>("")
+  const [clearTime, setClearTime] = useState<string>("")
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
 
   const { data: quizData } = useQuery({
     queryKey: ["quizList"],
-    queryFn: () =>
-      selectedTheme !== null
-        ? getQuiz(selectedTheme)
-        : Promise.reject(new Error("selectedTheme is null")),
+    queryFn: () => getQuiz(3),
   })
 
   const timerRef = useRef<CountdownTimerHandle | null>(null)
@@ -70,6 +73,11 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     if (timerRef.current) {
       timerRef.current.applyPenalty()
     }
+  }
+  const handleTimeOut = () => {
+    setIsTimeOut(true)
+    setResult("Timeout")
+    setIsGameFinished(true)
   }
 
   // 가져온 퀴즈 데이터를 스토어에 저장
@@ -163,7 +171,16 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   // 마지막 문 클릭 시 이벤트
   const handleFinal = () => {
     if (isHammerClicked && isSyringeClicked) {
-      alert("탈출성공")
+    if (timerRef.current) {
+      const currentTime = timerRef.current.getTime()
+      const clearTime = RequestFormatTime(
+        currentTime.minutes,
+        currentTime.seconds,
+      )
+      setClearTime(clearTime)
+    }
+    setResult("victory")
+    setIsGameFinished(true)
     }
   }
 
@@ -192,7 +209,9 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     <>
       {isGameStart ? (
         <>
-          <CountdownTimer ref={timerRef} />
+          {!isGameFinished && (
+            <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
+          )}
           <Start setSubtitle={setSubtitle} />
         </>
       ) : null}
@@ -227,8 +246,16 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       {showBloodText ? <BloodText role="scientist" penalty={penalty} /> : null}
       {showBlackOut ? <BlackBackground></BlackBackground> : null}
-      <PlaySound penalty={penalty} role="scientist"/>
-      <BasicScene interactNum={interactNum}>
+      {isGameFinished ? (
+        <Result
+          type={result}
+          themeIdx={1}
+          selectedThemeType={selectedThemeType}
+          clearTime={clearTime}
+        />
+      ) : null}
+      <PlaySound penalty={penalty} role="scientist" />
+      <BasicScene interactNum={interactNum} onAir={true}>
         <Player position={[3, 40, 0]} speed={100} />
         <Floor
           rotation={[Math.PI / -2, 0, 0]}

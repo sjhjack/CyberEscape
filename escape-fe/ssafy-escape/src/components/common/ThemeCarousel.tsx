@@ -27,15 +27,17 @@ const themeData: CardInfo[] = [
     time: "10분",
     content:
       "날씨도 좋은데 도망가고 싶은 걸? 프로님의 눈길을 피해 멀티캠퍼스를 탈출하라!",
-    image: "/image/2.png",
+    image: "/image/4.png",
   },
   {
     title: "우주",
     time: "10분",
     content: "오희주의 걸작품 Spaceship! 우주선에서 탈출하라!",
-    image: "/image/3.png",
+    image: "/image/7.png",
   },
 ]
+
+const themeIdx = [1, 4, 7]
 
 const ThemeCarousel = ({
   width,
@@ -46,7 +48,7 @@ const ThemeCarousel = ({
   const [currentCard, setCurrentCard] = useState<number>(0)
   const { setSelectedTheme } = useIngameThemeStore()
   useEffect(() => {
-    setSelectedTheme((currentCard + 1))
+    setSelectedTheme(themeIdx[currentCard])
   }, [currentCard])
   return (
     <MainContainer style={{ borderRadius: "20px" }}>

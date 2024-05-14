@@ -9,9 +9,9 @@ const Videos = ({ sequences, setSequences }: any) => {
     <>
       <Video1
         url={url1}
-        position={[25.2, 5, -7]}
+        position={[-16.5, 5, -64]}
         rotation={[0, -Math.PI / 2, 0]}
-        scale={[15, 4, 6]}
+        scale={[13, 4, 6]}
       />
       {/* <Video2
         url={url2}
