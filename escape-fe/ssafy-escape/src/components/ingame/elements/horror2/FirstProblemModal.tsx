@@ -2,7 +2,7 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
+import extractSubstring from "@/hooks/RequestFormatTime"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import { useState } from "react"
@@ -16,6 +16,7 @@ const FirstProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  setShowSpider,
 }: ProblemProps) => {
   // 더미 삭제 후 문제 부분 코드 수정 필요
   const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
@@ -39,9 +40,14 @@ const FirstProblemModal = ({
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
+      if (setShowSpider) {
+        setShowSpider(true)
+      }
       setSubtitle("이제 백업은 됐고...")
       setTimeout(() => {
-        setSubtitle("이 근처에 실험에 쓸 약물에 대해 적어놓은 종이가 있었던 것 같은데...버렸나?")
+        setSubtitle(
+          "이 근처에 실험에 쓸 약물에 대해 적어놓은 종이가 있었던 것 같은데...버렸나?",
+        )
         setTimeout(() => {
           setSubtitle("")
         }, 10000)

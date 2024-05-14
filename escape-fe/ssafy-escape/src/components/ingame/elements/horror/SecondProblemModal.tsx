@@ -2,7 +2,7 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
+import extractSubstring from "@/hooks/RequestFormatTime"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
@@ -36,7 +36,7 @@ const SecondProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
       setSubtitle("...정신이 이상해지는 것 같아.")
