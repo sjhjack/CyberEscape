@@ -29,6 +29,7 @@ const Random = () => {
     })
     client.current?.publish({
       destination: `/pub/room/match`,
+      body: userUuid || "",
     })
   }
   const connect = () => {
