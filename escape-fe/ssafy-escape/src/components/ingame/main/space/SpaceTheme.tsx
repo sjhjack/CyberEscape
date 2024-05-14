@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"
@@ -15,8 +15,10 @@ import Start from "../../elements/space/Interactions/Start"
 import Videos from "../../elements/space/Basics/Videos"
 import Subtitle from "../../elements/common/Subtitle"
 import Problems from "../../elements/space/Basics/Problems"
-import CountdownTimer from "../../CountdownTimer"
+import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import Keys from "../../elements/space/Basics/Keys"
+import Result from "../../elements/common/Result"
+import useIngameThemeStore from "@/stores/IngameTheme"
 // import LEDLight from "../../elements/space/Basics/LEDLight"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
@@ -24,14 +26,34 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [subtitle, setSubtitle] = useState(null)
   const [interactNum, setInteractNum] = useState(1)
   const [onAir, setOnAir] = useState(false)
+  const timerRef = useRef<CountdownTimerHandle | null>(null)
+  const [result, setResult] = useState<string>("")
+  const [clearTime, setClearTime] = useState<string>("")
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
 
+  const { selectedThemeType } = useIngameThemeStore()
+
+  const handleTimeOut = () => {
+    setIsTimeOut(true)
+    setResult("Timeout")
+    setIsGameFinished(true)
+  }
   return (
     <>
       {isGameStart ? (
         <>
-          <CountdownTimer />
+          <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
           <Start onAir={onAir} setOnAir={setOnAir} setSubtitle={setSubtitle} />
         </>
+      ) : null}
+      {isGameFinished ? (
+        <Result
+          type={result}
+          themeIdx={7}
+          selectedThemeType={selectedThemeType}
+          clearTime={clearTime}
+        />
       ) : null}
       <Subtitle text={subtitle} />
       <BasicScene onAir={onAir} interactNum={interactNum}>
@@ -58,6 +80,8 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setSequences={setSequences}
           setSubtitle={setSubtitle}
           setInteractNum={setInteractNum}
+          setIsGameFinished={setIsGameFinished}
+          setResult={setResult}
         />
         <Problems
           onAir={onAir}

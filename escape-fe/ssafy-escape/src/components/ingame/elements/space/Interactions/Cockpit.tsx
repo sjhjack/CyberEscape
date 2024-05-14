@@ -11,6 +11,8 @@ const Cockpit = ({
   setSequences,
   setSubtitle,
   setInteractNum,
+  setResult,
+  setIsGameFinished,
 }: any) => {
   const meshRef = useRef()
   const geometry = useMemo(() => new BoxGeometry(2, 2, 2), [])
@@ -132,6 +134,8 @@ const Cockpit = ({
           } else {
             setCurrentUrl(url4)
             setOnAir(false)
+            setIsGameFinished(true)
+            setResult("victory")
             setSubtitle(null)
             clearInterval(countdownInterval)
           }

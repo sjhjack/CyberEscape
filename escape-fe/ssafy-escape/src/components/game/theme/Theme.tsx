@@ -8,6 +8,7 @@ import Swal from "sweetalert2"
 import useIngameThemeStore from "@/stores/IngameTheme"
 const Theme = () => {
   const router = useRouter()
+  const { selectedThemeType } = useIngameThemeStore()
 
   const gameStart = (): void => {
     if (selectedThemeType === "single") {
