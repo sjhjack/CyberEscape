@@ -26,35 +26,9 @@ const AnswerSheet = ({
     try {
       const answer = await postAnswer(uuid, num)
       console.log(answer)
-      if (answer.right) {
+      if (answer.right === true) {
         setIsAnswer(true)
-        if (onAir) return
-        setOnAir(true)
-        const new_audio = new Audio(
-          process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/right.mp3",
-        )
-        new_audio.play()
-        setTimeout(() => {
-          setOnAir(false)
-        }, 2000)
-      } else {
-        // 틀리면 시간 차감 로직
-
-        if (onAir) return
-        setOnAir(true)
-
-        const new_audio = new Audio(
-          process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/right.mp3",
-        )
-        new_audio.play()
-        setTimeout(() => {
-          const audio = new Audio(
-            process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/discount.mp3",
-          )
-          audio.play()
-        }, 2000)
       }
-      // setIsAnswer(true)
     } catch (error) {
       console.error("Error fetching quizs:", error)
     }
@@ -66,10 +40,33 @@ const AnswerSheet = ({
   new_position.y = position[1] + move[1] - 1.1
   new_position.z = position[2] + move[2]
 
-  const handleClick = () => {
+  const handleClick = async () => {
     // 조건 달기
 
-    fetchData()
+    await fetchData()
+    if (isAnswer === true) {
+      if (onAir) return
+      const new_audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/right.mp3",
+      )
+      new_audio.play()
+    } else {
+      // 틀리면 시간 차감 로직
+
+      if (onAir) return
+
+      const new_audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/sequence/wrong.mp3",
+      )
+      new_audio.play()
+      setTimeout(() => {
+        const audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/discount.mp3",
+        )
+        audio.play()
+      }, 2000)
+    }
   }
 
   return (
@@ -86,7 +83,7 @@ const AnswerSheet = ({
       }}
     >
       <planeGeometry args={[0.5, 0.5]} />
-      <meshBasicMaterial color={"red"} transparent={false} opacity={1} />
+      <meshBasicMaterial color={"red"} transparent={true} opacity={0} />
     </mesh>
   )
 }
