@@ -6,7 +6,9 @@ import SockJS from "sockjs-client"
 import { CircularProgress } from "@mui/material"
 import useUserStore from "@/stores/UserStore"
 import { useRouter } from "next/navigation"
+import patchJoin from "@/services/game/room/patchJoin"
 import Swal from "sweetalert2"
+
 interface ResponseData {
   roomUuid: string
   hostUuid: string
@@ -60,17 +62,23 @@ const Random = () => {
     }
   })
   useEffect(() => {
-    if (matchData?.roomUuid) {
-      if (userUuid === matchData.hostUuid) {
-        setIsHost(true)
-      } else {
-        setIsHost(false)
-      }
-      Swal.fire("매칭 완료!")
-      setTimeout(() => {
+    const joinRoom = async () => {
+      if (matchData?.roomUuid) {
+        if (userUuid === matchData.hostUuid) {
+          setIsHost(true)
+        } else {
+          setIsHost(false)
+        }
+        await patchJoin({
+          roomUuid: matchData.roomUuid,
+          userUuid: userUuid || "",
+          password: "",
+        })
+        Swal.fire("매칭 완료!")
         router.push(`/main/multi/waiting/${matchData.roomUuid}`)
-      }, 2000)
+      }
     }
+    joinRoom()
   }, [matchData])
 
   return (
