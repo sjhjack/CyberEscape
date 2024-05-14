@@ -202,7 +202,9 @@ const Waiting = () => {
       <S.MainBox>
         <S.MainContentBox>
           <S.ThemeImage
-            src={`/image/${selectedTheme}.png`}
+            src={
+              process.env.NEXT_PUBLIC_IMAGE_URL + `/image/${selectedTheme}.png`
+            }
             alt=""
             width={400}
             height={220}

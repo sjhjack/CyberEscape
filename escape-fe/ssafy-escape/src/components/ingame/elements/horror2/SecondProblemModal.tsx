@@ -2,7 +2,6 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
@@ -28,7 +27,9 @@ const SecondProblemModal = ({
 
   useEffect(() => {
     const playAudio = setTimeout(() => {
-      const audio = new Audio("sound/woman_scream.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/woman_scream.mp3",
+      )
       audio.play()
       const showImg = setTimeout(() => {
         setShowExtraImage(true)
@@ -81,7 +82,10 @@ const SecondProblemModal = ({
         <BlackBackground>
           <HorrorImageBox>
             <Image
-              src={`/image/ghost/ghost${randomIndex}.jpg`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/ghost/ghost${randomIndex}.jpg`
+              }
               alt="귀신 이미지"
               layout="fill"
               objectFit="cover"
@@ -92,7 +96,7 @@ const SecondProblemModal = ({
 
       <MainContainer>
         <Image
-          src="/image/paper.png"
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/paper.png"}
           alt="쪽지 이미지"
           width={600}
           height={550}
@@ -104,7 +108,6 @@ const SecondProblemModal = ({
           <ProblemText>
             {problem.slice(0, problem.lastIndexOf(","))}
           </ProblemText>
-          <ProblemText>{extractSubstring(problem)}</ProblemText>
           <ChoiceBox>
             <Button
               theme="fail"
@@ -140,7 +143,7 @@ const SecondProblemModal = ({
         </SubContainer>
         <HintIconBox onClick={handleOpenModal}>
           <Image
-            src={"/image/hint.png"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
             alt="힌트 아이콘"
             width={35}
             height={35}

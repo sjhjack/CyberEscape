@@ -6,15 +6,20 @@ import PlayMusic from "./PlayMusic"
 import Crosshair from "./Crosshair"
 
 interface BasicSceneProps {
+  onAir: boolean
   interactNum: number
   children: ReactNode
 }
 
 const CustomPointerLockControls = () => {
-  return <PointerLockControls />
+  return (
+    <>
+      <PointerLockControls pointerSpeed={0.4} />
+    </>
+  )
 }
 
-const BasicScene = ({ interactNum, children }: BasicSceneProps) => {
+const BasicScene = ({ onAir, interactNum, children }: BasicSceneProps) => {
   const [isPointerLocked, setIsPointerLocked] = useState(false)
 
   useEffect(() => {

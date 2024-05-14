@@ -25,6 +25,7 @@ const API_PATH = {
       AUTO_CREATE: "/user/nickname",
       CHANGE: "/user/change",
     },
+    PROFILE_IMG_CHANGE: "/user/image/change",
   },
   GAME: {
     MULTI: {

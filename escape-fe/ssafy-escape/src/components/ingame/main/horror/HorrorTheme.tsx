@@ -30,6 +30,8 @@ import getQuiz from "@/services/ingame/getQuiz"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import BloodText from "../../elements/horror2/BloodText"
+import Result from "../../elements/common/Result"
+import RequestFormatTime from "@/hooks/RequestFormatTime"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -45,18 +47,19 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
   const { solved } = useIngameSolvedStore()
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const setQuizData = useIngameQuizStore((state) => state.setQuizData)
   const [interactNum, setInteractNum] = useState<number>(1)
   const [showBloodText, setShowBloodText] = useState<boolean>(false)
+  const [result, setResult] = useState<string>("")
+  const [clearTime, setClearTime] = useState<string>("")
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
 
   const { data: quizData } = useQuery({
     queryKey: ["quizList"],
-    queryFn: () =>
-      selectedTheme !== null
-        ? getQuiz(selectedTheme)
-        : Promise.reject(new Error("selectedTheme is null")),
+    queryFn: () => getQuiz(2),
   })
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
@@ -65,6 +68,13 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     if (timerRef.current) {
       timerRef.current.applyPenalty()
     }
+  }
+
+  // 시간 끝났을 시 이벤트 함수
+  const handleTimeOut = () => {
+    setIsTimeOut(true)
+    setResult("Timeout")
+    setIsGameFinished(true)
   }
 
   // 가져온 퀴즈 데이터를 스토어에 저장
@@ -95,7 +105,9 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
     // 5분 경과 시
     const fiveMintimer = setTimeout(() => {
-      const audio = new Audio("sound/door_bang.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/door_bang.mp3",
+      )
       audio.play()
       setFiveMinLater(true)
     }, 60000 * 5)
@@ -125,8 +137,16 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
   // 문고리 클릭 시 이벤트
   const handleFinal = () => {
-    // 탈출 성공 로직
-    alert("탈출성공")
+    if (timerRef.current) {
+      const currentTime = timerRef.current.getTime()
+      const clearTime = RequestFormatTime(
+        currentTime.minutes,
+        currentTime.seconds,
+      )
+      setClearTime(clearTime)
+    }
+    setResult("victory")
+    setIsGameFinished(true)
   }
 
   // 첫 번째 문제 모달
@@ -154,7 +174,9 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     <>
       {isGameStart ? (
         <>
-          <CountdownTimer ref={timerRef} />
+          {!isGameFinished && (
+            <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
+          )}
           <Start setSubtitle={setSubtitle} />
         </>
       ) : null}
@@ -186,8 +208,16 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           timePenalty={timePenalty}
         />
       ) : null}
+      {isGameFinished ? (
+        <Result
+          type={result}
+          themeIdx={1}
+          selectedThemeType={selectedThemeType}
+          clearTime={clearTime}
+        />
+      ) : null}
       <PlaySound penalty={penalty} role="experiment" />
-      <BasicScene interactNum={interactNum}>
+      <BasicScene interactNum={interactNum} onAir={true}>
         <Lights penalty={penalty} solved={solved} />
         <Player position={[3, 50, 0]} speed={100} />
         <Floor

@@ -1,6 +1,6 @@
 import React from "react"
 import { useGLTF } from "@react-three/drei"
-import { Mesh } from "three"
+import { Mesh, MeshStandardMaterial } from "three"
 
 interface KeyProps {
   onClick: any
@@ -31,7 +31,9 @@ const KeyModels = ({ onClick, position, active, setInteractNum }: KeyProps) => {
                 onPointerOut={() => {
                   setInteractNum(1)
                 }}
-              />
+              >
+                <meshStandardMaterial color={"red"} />
+              </mesh>
             )
           }
           return null

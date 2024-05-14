@@ -25,7 +25,7 @@ const Instructions = styled.div`
   text-align: center;
 `
 
-const Start = ({ setSubtitle }: any) => {
+const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
   const [isNull, setIsNull] = useState(false)
   const [showInstruction, setShowInstruction] = useState(true)
   const [sequence, setSequence] = useState(1)
@@ -44,14 +44,17 @@ const Start = ({ setSubtitle }: any) => {
   }, [sequence])
 
   const handleClick = () => {
-    if (sequence === 1) {
+    if (sequence === 1 && !onAir) {
+      setOnAir(true)
       dub1()
       setShowInstruction(false)
     }
   }
 
   const dub1 = () => {
-    const audio = new Audio("dubbing/space/start/start_1.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_1.mp3",
+    )
     audio.play()
     setSubtitle("정신이 드십니까?")
     setTimeout(() => {
@@ -62,7 +65,9 @@ const Start = ({ setSubtitle }: any) => {
   }
 
   const dub2 = () => {
-    const audio = new Audio("dubbing/space/start/start_2.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_2.mp3",
+    )
     audio.play()
     setSubtitle("몸을 움직이실 수 있습니까?")
     setTimeout(() => {
@@ -72,7 +77,9 @@ const Start = ({ setSubtitle }: any) => {
   }
 
   const dub3 = () => {
-    const audio = new Audio("dubbing/space/start/start_3.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_3.mp3",
+    )
     audio.play()
     setSubtitle("좋습니다. 몸을 움직이는 데는 이상이 없으시군요.")
     setTimeout(() => {
@@ -82,7 +89,9 @@ const Start = ({ setSubtitle }: any) => {
   }
 
   const dub4 = () => {
-    const audio = new Audio("dubbing/space/start/start_4.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_4.mp3",
+    )
     audio.play()
     setSubtitle("현재 산소공급 장치가 고장나 의식을 잃은 상태셨습니다.")
     setTimeout(() => {
@@ -95,7 +104,9 @@ const Start = ({ setSubtitle }: any) => {
   }
 
   const dub5 = () => {
-    const audio = new Audio("dubbing/space/start/start_5.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_5.mp3",
+    )
     audio.play()
     setSubtitle("최대한 빨리 우주선을 탈출하세요.")
     setTimeout(() => {
@@ -107,6 +118,7 @@ const Start = ({ setSubtitle }: any) => {
     setTimeout(() => {
       setSubtitle(null)
     }, 9000)
+    setOnAir(false)
     setIsNull(true)
   }
 

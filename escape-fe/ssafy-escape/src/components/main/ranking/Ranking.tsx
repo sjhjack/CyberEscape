@@ -10,7 +10,7 @@ import formatTime from "@/hooks/FormatTime"
 import * as S from "@/app/@modal/main/ranking/rankingStyle"
 
 const Ranking = () => {
-  const themeuuid = ["공포uuid", "싸피uuid", "일반uuid"]
+  const themeIdx = [1, 4, 7]
   const themes = ["공포", "싸피", "우주"]
   const [activeTheme, setActiveTheme] = useState<number>(0)
 
@@ -22,8 +22,8 @@ const Ranking = () => {
     isLoading,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["rankingList", themeuuid[activeTheme]],
-    queryFn: () => postRankingList(1, themeuuid[activeTheme]),
+    queryKey: ["rankingList", themeIdx[activeTheme]],
+    queryFn: () => postRankingList(1, themeIdx[activeTheme]),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => allPages.length + 1,
   })
@@ -79,7 +79,10 @@ const Ranking = () => {
         {themes.map((theme, index) => (
           <S.ThemeSubBox key={index} onClick={() => handleClick(index)}>
             <S.CustomImage
-              src={`/image/${index + 1}emoticon.png`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/${themeIdx[index]}emoticon.png`
+              }
               alt={theme}
               width={60}
               height={60}
@@ -96,12 +99,12 @@ const Ranking = () => {
       {rankingData.pages.map((page, i) => (
         <S.RankingMainBox key={i}>
           <S.RankingSubBox>
-            {page.data.length === 0 ? (
-              <div>
+            {page.length === 0 ? (
+              <S.NoTimeText>
                 아직 클리어한 유저가 없습니다. 첫 클리어에 도전해보세요!
-              </div>
+              </S.NoTimeText>
             ) : null}
-            {page.data.map((rank, idx) => (
+            {page.map((rank, idx) => (
               <div key={idx}>
                 <S.RankInfo>
                   <S.RankPosition>

@@ -2,7 +2,6 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
@@ -54,13 +53,17 @@ const SecondProblemModal = ({
 
   return (
     <MainContainer>
-      <Image src="/image/note.png" alt="노트 이미지" width={550} height={550} />
+      <Image
+        src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/note.png"}
+        alt="노트 이미지"
+        width={550}
+        height={550}
+      />
       <IconBox onClick={onClose}>
         <CloseIcon sx={{ fontSize: 40 }} />
       </IconBox>
       <SubContainer>
         <ProblemText>{problem.slice(0, problem.lastIndexOf(","))}</ProblemText>
-        <ProblemText>{extractSubstring(problem)}</ProblemText>
         <ChoiceBox>
           <Button
             theme="fail"
@@ -96,7 +99,7 @@ const SecondProblemModal = ({
       </SubContainer>
       <HintIconBox onClick={handleOpenModal}>
         <Image
-          src={"/image/hint.png"}
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
           alt="힌트 아이콘"
           width={35}
           height={35}

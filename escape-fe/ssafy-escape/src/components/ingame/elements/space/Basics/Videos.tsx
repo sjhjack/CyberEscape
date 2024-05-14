@@ -2,16 +2,16 @@ import Video1 from "../Interactions/Video1"
 // import Video2 from "../Interactions/Video2"
 
 const Videos = ({ sequences, setSequences }: any) => {
-  const url1 = "video/error1.mp4"
+  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/error1.mp4"
   // const url2 = "video/countdown.mp4"
 
   return (
     <>
       <Video1
         url={url1}
-        position={[25.2, 5, -7]}
+        position={[-16.5, 5, -64]}
         rotation={[0, -Math.PI / 2, 0]}
-        scale={[15, 4, 6]}
+        scale={[13, 4, 6]}
       />
       {/* <Video2
         url={url2}

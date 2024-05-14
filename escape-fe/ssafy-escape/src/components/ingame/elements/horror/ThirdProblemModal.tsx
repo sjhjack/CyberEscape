@@ -2,7 +2,6 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
 import { useEffect, useMemo, useState } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
@@ -28,7 +27,9 @@ const ThirdProblemModal = ({
 
   useEffect(() => {
     const playAudio = setTimeout(() => {
-      const audio = new Audio("sound/woman_scream.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/woman_scream.mp3",
+      )
       audio.play()
       const showImg = setTimeout(() => {
         setShowExtraImage(true)
@@ -83,7 +84,10 @@ const ThirdProblemModal = ({
         <BlackBackground>
           <HorrorImageBox>
             <Image
-              src={`/image/ghost/ghost${randomIndex}.jpg`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/ghost/ghost${randomIndex}.jpg`
+              }
               alt="귀신 이미지"
               layout="fill"
               objectFit="cover"
@@ -93,7 +97,7 @@ const ThirdProblemModal = ({
       )}
       <MainContainer>
         <Image
-          src="/image/diary.png"
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/diary.png"}
           alt="일기장 이미지"
           width={620}
           height={580}
@@ -105,7 +109,6 @@ const ThirdProblemModal = ({
           <ProblemText>
             {problem.slice(0, problem.lastIndexOf(","))}
           </ProblemText>
-          <ProblemText>{extractSubstring(problem)}</ProblemText>
           <ChoiceBox>
             <Button
               theme="fail"
@@ -141,7 +144,7 @@ const ThirdProblemModal = ({
         </SubContainer>
         <HintIconBox onClick={handleOpenModal}>
           <Image
-            src={"/image/hint.png"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
             alt="힌트 아이콘"
             width={35}
             height={35}
