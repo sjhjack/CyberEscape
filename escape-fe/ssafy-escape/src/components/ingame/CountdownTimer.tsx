@@ -22,7 +22,7 @@ const CountdownTimer: ForwardRefRenderFunction<
   CountdownTimerProps
 > = ({ onTimeOut }: CountdownTimerProps, ref) => {
   const [time, setTime] = useState({
-    minutes: 1,
+    minutes: 10,
     seconds: 0,
   })
 
