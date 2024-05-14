@@ -4,27 +4,34 @@ import { styled } from "styled-components"
 import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
 import { useQuery } from "@tanstack/react-query"
-import getNotificationFriend from "@/services/main/friends/getNotificationFriend"
+import getNotificationFriend from "@/services/notification/getNotificationList"
 // import postFriendRequest from "@/services/main/friends/postFriendAddition"
 import postFriendAddition from "@/services/main/friends/postFriendAddition";
+import getFriendList from "@/services/main/friends/getFriendList"
 
 // 받은 친구 요청 목록 조회
 const FriendRequestActions = () => {
   const { data: requestData } = useQuery({
     queryKey: ["friendRequestList"],
-    queryFn: () => getNotificationFriend(),
+    queryFn: () => getFriendList(),
   })
 
-  
+  // 친구 채팅 부분 로직 호출하도록 고침
   const handleRequest = async (requestUserUuid: string) => {
-    console.log("친구 수락 완료")
-    await postFriendAddition(requestUserUuid)
+
+    // console.log("친구 채팅")
+
+    // console.log("친구 수락 완료")
+    // await postFriendAddition(requestUserUuid)
+    // // 읽음 처리
+    // readNotification();
   }
+
   return (
     <div>
-      <Text>받은 친구 요청</Text>
+      <Text>내 친구 목록</Text>
       {requestData?.map((user) => (
-        <div key={user.senderUuid}>
+        <div key={user.friendUuid}>
           <SubContainer>
             <ProfileBox>
               <PersonIcon sx={{ fontSize: "35px" }} />
@@ -35,7 +42,7 @@ const FriendRequestActions = () => {
                 text="수락"
                 theme="success"
                 width="60px"
-                onClick={() => handleRequest(user.senderUuid)}
+                onClick={() => handleRequest(user.friendUuid)}
               />
               <Button text="거절" theme="fail" width="60px" />
               {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}

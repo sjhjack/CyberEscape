@@ -1,13 +1,13 @@
 import API_PATH from "@/constants/path"
 import api from "@/services/api"
 
-interface GetNotificationFriendProps {
+interface GetNotificationListProps {
   status: number
   message: string
-  data: GetNotificationFriendDataProps[] | string;
+  data: GetNotificationListDataProps[] | string;
 }
 
-interface GetNotificationFriendDataProps {
+interface GetNotificationListDataProps {
   id : string;
   senderUuid : string;
   roomUuid : string;
@@ -19,12 +19,12 @@ interface GetNotificationFriendDataProps {
 }
 
 // 받은 친구 요청 리스트
-const getNotificationFriend =
-  async (): Promise<GetNotificationFriendDataProps[]> => {
+const getNotificationList =
+  async (): Promise<GetNotificationListDataProps[]> => {
     const accessToken = sessionStorage.getItem("access_token");
     
     try {
-      const response = await api.get<GetNotificationFriendProps>(
+      const response = await api.get<GetNotificationListProps>(
         API_PATH.MAIN.NOTIFICATION.LIST,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -42,7 +42,7 @@ const getNotificationFriend =
     }
   }
 
-export default getNotificationFriend
+export default getNotificationList
 
 // import dummy from "./postNotificationFriend.json"
 // const postNotificationFriend = async () => {
