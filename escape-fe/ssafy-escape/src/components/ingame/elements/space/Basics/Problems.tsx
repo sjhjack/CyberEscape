@@ -13,9 +13,15 @@ const Problems = ({
   setInteractNum,
   setSubtitle,
 }: any) => {
-  const [url1, setUrl1] = useState("/image/1.png")
-  const [url2, setUrl2] = useState("/image/1.png")
-  const [url3, setUrl3] = useState("/image/1.png")
+  const [url1, setUrl1] = useState(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
+  )
+  const [url2, setUrl2] = useState(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
+  )
+  const [url3, setUrl3] = useState(
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
+  )
   const [uuid1, setUuid1] = useState("")
   const [uuid2, setUuid2] = useState("")
   const [uuid3, setUuid3] = useState("")

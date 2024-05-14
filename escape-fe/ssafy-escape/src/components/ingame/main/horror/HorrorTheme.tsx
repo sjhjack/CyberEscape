@@ -69,9 +69,11 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       timerRef.current.applyPenalty()
     }
   }
+  
+  // 시간 끝났을 시 이벤트 함수
   const handleTimeOut = () => {
     setIsTimeOut(true)
-          setResult("Timeout")
+    setResult("Timeout")
     setIsGameFinished(true)
   }
 
