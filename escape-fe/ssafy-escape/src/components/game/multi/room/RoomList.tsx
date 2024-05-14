@@ -17,7 +17,7 @@ const Room = ({ roomData }: any) => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const { setSelectedTheme } = useIngameThemeStore()
   const router = useRouter()
-  const themes : Themes = {
+  const themes: Themes = {
     1: "공포",
     4: "싸피",
     7: "우주",
@@ -50,7 +50,10 @@ const Room = ({ roomData }: any) => {
       />
       <S.RoomBox onClick={enterRoom}>
         <Image
-          src={`/image/${roomData.themaId}emoticon.png`}
+          src={
+            process.env.NEXT_PUBLIC_IMAGE_URL +
+            `/image/${roomData.themaId}emoticon.png`
+          }
           alt="테마 이모티콘"
           width={70}
           height={70}

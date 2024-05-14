@@ -22,7 +22,10 @@ const Key1 = ({
     updatedSequence[0] = { ...updatedSequence[0], done: true }
     setSequences(updatedSequence)
     setInteractNum(1)
-    const audio = new Audio("dubbing/space/sequence/key1_find.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL +
+        "dubbing/space/sequence/key1_find.mp3",
+    )
     audio.play()
     setSubtitle("잘 찾으셨습니다. 이제 조종실로 가세요.")
     setTimeout(() => {
