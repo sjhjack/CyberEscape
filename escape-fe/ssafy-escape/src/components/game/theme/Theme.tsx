@@ -4,22 +4,13 @@ import { useRouter, useSearchParams } from "next/navigation"
 import Container from "@/components/common/Container"
 import ThemeCarousel from "@/components/common/ThemeCarousel"
 import Button from "@/components/common/Button"
+import Swal from "sweetalert2"
 const Theme = () => {
   const router = useRouter()
 
-  const searchParams = useSearchParams()
-  const mode: string | null = searchParams.get("mode")
   const gameStart = (): void => {
-    if (mode === "single") {
-      alert("게임을 시작합니다.")
-      router.push("/ingame")
-    } else if (mode === "multi") {
-      alert("매칭을 시작합니다.")
-      router.push("multi/random")
-    } else {
-      alert("잘못된 접근입니다. ")
-      router.push("mode")
-    }
+    Swal.fire("게임을 시작합니다.")
+    router.push("/ingame")
   }
   return (
     <Container
