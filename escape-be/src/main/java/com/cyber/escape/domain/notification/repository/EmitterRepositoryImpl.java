@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -48,6 +49,11 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
     @Override
     public Map<String, SseEmitter> findAllEmitterByIdStartWith(String userUuid) {
+
+        for(Map.Entry<String, SseEmitter> emt : emitters.entrySet()){
+            log.info("KEY : {}, VALUE : {} ",emt.getKey(), emt.getValue());
+        }
+
         return emitters.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(userUuid))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
