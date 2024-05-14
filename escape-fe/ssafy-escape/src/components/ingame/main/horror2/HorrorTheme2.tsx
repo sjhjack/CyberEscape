@@ -32,6 +32,7 @@ import CreepyDoll from "../../elements/horror2/CreepyDoll"
 import VoodooDoll from "../../elements/horror2/VoodooDoll"
 import BloodText from "../../elements/horror2/BloodText"
 import PlaySound from "../../PlaySound"
+import Result from "../../elements/common/Result"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -47,20 +48,19 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
   const { solved } = useIngameQuizStore()
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const [interactNum, setInteractNum] = useState<number>(1)
   const [showSpider, setShowSpider] = useState<boolean>(false)
   const [showBlackOut, setShowBlackOut] = useState<boolean>(false)
   const [showBloodText, setShowBloodText] = useState<boolean>(false)
   const setQuizData = useIngameQuizStore((state) => state.setQuizData)
+  const [result, setResult] = useState<string>("victory")
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(true)
 
   const { data: quizData } = useQuery({
     queryKey: ["quizList"],
-    queryFn: () =>
-      selectedTheme !== null
-        ? getQuiz(selectedTheme)
-        : Promise.reject(new Error("selectedTheme is null")),
+    queryFn: () => getQuiz(3),
   })
 
   const timerRef = useRef<CountdownTimerHandle | null>(null)
@@ -164,6 +164,8 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const handleFinal = () => {
     if (isHammerClicked && isSyringeClicked) {
       alert("탈출성공")
+      setResult("victory")
+      setIsGameFinished(true)
     }
   }
 
@@ -227,7 +229,14 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       {showBloodText ? <BloodText role="scientist" penalty={penalty} /> : null}
       {showBlackOut ? <BlackBackground></BlackBackground> : null}
-      <PlaySound penalty={penalty} role="scientist"/>
+      {isGameFinished ? (
+        <Result
+          type={result}
+          themeIdx={1}
+          selectedThemeType={selectedThemeType}
+        />
+      ) : null}
+      <PlaySound penalty={penalty} role="scientist" />
       <BasicScene interactNum={interactNum}>
         <Player position={[3, 40, 0]} speed={100} />
         <Floor

@@ -9,15 +9,14 @@ import CameraMoveToPosition, {
   CameraMoveToPositionRef,
 } from "./CameraMoveToPosition"
 import HeaderNav from "../common/HeaderNav"
-// import useUserStore from "@/stores/UserStore"
+import useUserStore from "@/stores/UserStore"
 
 interface HomeProps {
   showText?: boolean
 }
 
 const Home = ({ showText = true }: HomeProps) => {
-  // const { isLogin } = useUserStore()
-  const isLogin = false
+  const { isLogin } = useUserStore()
   const router = useRouter()
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isStartClicked, setIsStartClicked] = useState<boolean>(false)
