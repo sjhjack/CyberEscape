@@ -15,9 +15,9 @@ const Computer = ({
   const geometry = useMemo(() => new BoxGeometry(3, 3, 3), [])
   const temp_position = [-43.45, 4.86, -162.9]
 
-  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/error1.mp4"
-  const url2 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/loading.mp4"
-  const url3 = process.env.NEXT_PUBLIC_IMAGE_URL + "video/system_operating.mp4"
+  const url1 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/error1.mp4"
+  const url2 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/loading.mp4"
+  const url3 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/system_operating.mp4"
   const [currentUrl, setCurrentUrl] = useState(url1)
 
   const material = useMemo(
