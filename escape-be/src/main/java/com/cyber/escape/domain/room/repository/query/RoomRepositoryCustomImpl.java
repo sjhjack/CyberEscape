@@ -27,12 +27,13 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 				room.host.id,
 				room.uuid,
 				user.nickname,
-				new CaseBuilder()
-					.when(JPAExpressions.selectFrom(room)
-						.where(room.id.eq(room.id).and(room.password.isNotNull()))
-						.exists())
-					.then(true)
-					.otherwise(false).as("hasPassword")
+				room.hasPassword
+				// new CaseBuilder()
+				// 	.when(JPAExpressions.selectFrom(room)
+				// 		.where(room.id.eq(room.id).and(room.password.isNotNull()))
+				// 		.exists())
+				// 	.then(true)
+				// 	.otherwise(false).as("hasPassword")
 			))
 			.from(room)
 			.innerJoin(room.host, user)
