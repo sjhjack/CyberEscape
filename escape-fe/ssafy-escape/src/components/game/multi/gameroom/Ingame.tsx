@@ -13,7 +13,6 @@ import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
 import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
-import IngameStore from "@/stores/IngameStore"
 
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
