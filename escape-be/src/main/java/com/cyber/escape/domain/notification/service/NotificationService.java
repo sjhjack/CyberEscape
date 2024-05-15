@@ -11,7 +11,6 @@ import com.cyber.escape.domain.notification.dto.NotifyDto;
 import com.cyber.escape.domain.notification.repository.EmitterRepositoryImpl;
 import com.cyber.escape.domain.notification.repository.NotifyRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
-import com.cyber.escape.global.common.util.IdFinder;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -37,35 +36,52 @@ public class NotificationService {
 
     // subscribe
     public SseEmitter subscribe(String lastEventId){
-        String userUuid = userUtil.getLoginUserUuid();
-        log.info("NotificationService ============ start subscribe..");
-        String id = userUuid + "_" + System.currentTimeMillis();
-        log.info("NotificationService ============ id : {}, lastEventId: {}", id, lastEventId);
-        SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+        try {
+            String userUuid = userUtil.getLoginUserUuid();
+            log.info("NotificationService ============ start subscribe..");
+            String id = userUuid + "_" + System.currentTimeMillis();
+            log.info("NotificationService ============ id : {}, lastEventId: {}", id, lastEventId);
+            SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
-        log.info("NotificationService ============ save emitter completed");
+            log.info("NotificationService ============ save emitter completed");
 
-        // 시간이 만료된 경우에 대해 자동으로 레포지토리에서 삭제 처리해줄 수 있는 콜백을 등록해놓을 수 있다.
-        sseEmitter.onCompletion(() -> emitterRepository.deleteById(id));
-        sseEmitter.onTimeout(() -> emitterRepository.deleteById(id));
-        sseEmitter.onError((e) -> emitterRepository.deleteById(id));
-        // sseEmitter.onError();
+            // 시간이 만료된 경우에 대해 자동으로 레포지토리에서 삭제 처리해줄 수 있는 콜백을 등록해놓을 수 있다.
+            // onCompletion()에 정의한 콜백함수가 SseEmitter를 관리하는 다른 스레드에서 실행된다는 것이다.
+            sseEmitter.onCompletion(() -> {
+                log.info(":::::::::::::::: EMITTER COMPLETE!!!!");
+                emitterRepository.deleteById(id);
+            });
+            sseEmitter.onTimeout(() -> {
+                log.info(":::::::::::::::: EMITTER TIME!!!!");
+                emitterRepository.deleteById(id);
+            });
+            sseEmitter.onError((e) -> {
 
-        log.info("SSE DATA : {}", sseEmitter.toString());
+                log.info(":::::::::::::::: EMITTER ERROR!!!!");
+                emitterRepository.deleteById(id);
+            });
+            // sseEmitter.onError();
 
-        // sendToClient(sseEmitter, id, "EventStream Created. memberId = {" + memberId + "}");
-        sendToClient(sseEmitter, id, "SSE 구독 요청이 완료되었습니다.");
-        log.info("NotificationService ============ sendToClient completed");
+            log.info("SSE DATA : {}", sseEmitter.toString());
 
-        // 클라이언트가 미수신한 알림에 대해 전송
-        if(!lastEventId.isEmpty()){
-            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(userUuid));
-            events.entrySet().stream()
-                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> sendToClient(sseEmitter, entry.getKey(), entry.getValue()));
+            // sendToClient(sseEmitter, id, "EventStream Created. memberId = {" + memberId + "}");
+            sendToClient(sseEmitter, id, "SSE 구독 요청이 완료되었습니다.");
+            log.info("NotificationService ============ sendToClient completed");
+
+            // 클라이언트가 미수신한 알림에 대해 전송
+            if (!lastEventId.isEmpty()) {
+                Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(userUuid));
+                events.entrySet().stream()
+                        .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
+                        .forEach(entry -> sendToClient(sseEmitter, entry.getKey(), entry.getValue()));
+            }
+
+            return sseEmitter;
         }
-
-        return sseEmitter;
+        catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return null;
     }
 
     // 알림이 필요한 곳에서 이 함수를 호출하면 됩니다.
@@ -83,49 +99,53 @@ public class NotificationService {
         // 친구 요청이라면
         if(notificationType.equals(Notify.NotificationType.FRIEND)) {
             // sender가 receiver에게 친구 요청을 보낸 적이 있는지를 판별
-            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.FRIEND);
+            log.info("::::::::::::::: 친구 요청입니다.");
+            List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationTypeAndIsRead(senderUuid, receiverUuid, Notify.NotificationType.FRIEND, 'F');
             sendNotifcation(receiverUuid, "", notificationType, content, senderUuid, existNotification);
         }
         // 게임 요청이 들어왔다면
         else {
-            Notify existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationType(senderUuid, receiverUuid, Notify.NotificationType.GAME);
+            log.info("::::::::::::::: 게임 초대 요청입니다.");
+            List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationTypeAndIsRead(senderUuid, receiverUuid, Notify.NotificationType.GAME, 'F');
             sendNotifcation(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
         }
         log.info("NotificationService ============= send() 끝");
 
     }
 
-    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, Notify existNotification) {
-        if (existNotification == null) {
+    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification) {
 
-            // roomUuid 자리는 비워놓는다.
-            //저장 확인
-            Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
-            log.info("::::::::::::::::::::::::::::::::::  친구 요청 ");
-            // Notify notification = createNotify(receiverId, notificationType, content);
+        try {
+            if (existNotification.isEmpty()) {
 
-            // receiver = 현재 로그인 한 유저 = 알림 받을 사람
-            // String receiverId = receiver.getMemberId();
+                // roomUuid 자리는 비워놓는다.
+                //저장 확인
+                Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
+                log.info("::::::::::::::::::::::::::::::::::  친구 요청 ");
+                // Notify notification = createNotify(receiverId, notificationType, content);
 
-            // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
-            Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
+                // receiver = 현재 로그인 한 유저 = 알림 받을 사람
+                // String receiverId = receiver.getMemberId();
 
-            if(sseEmitters.get(String.valueOf(receiverUuid)) == null){
-                String userUuid = userUtil.getLoginUserUuid();
-                log.info("NotificationService ============ start subscribe..");
-                String id = userUuid + "_" + System.currentTimeMillis();
-                log.info("NotificationService ============ id : {}, lastEventId: {}", id, "");
-                SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
-                emitterRepository.saveEventCache(id, notification);
-                sendToClient(sseEmitter, id, NotifyDto.FriendResponse.from(notification));
+                // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
+                Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
+                try {
+                    sseEmitters.forEach(
+                            (key, sseEmitter) -> {
+                                log.info("KEY : {}, Emitter : {}", key, sseEmitter);
+                                emitterRepository.saveEventCache(key, notification);
+                                sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
+                            }
+                    );
+
+                }
+                catch (Exception e){
+                    log.info("::::::::::::::: SEND ERROR입니다. {}", e.getMessage());
+                }
             }
-
-            sseEmitters.forEach(
-                    (key, sseEmitter) -> {
-                        emitterRepository.saveEventCache(key, notification);
-                        sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
-                    }
-            );
+        }
+        catch (Exception e) {
+            log.info("EXCETION : {}", e.getMessage());
         }
     }
 
@@ -142,25 +162,30 @@ public class NotificationService {
                 .build();
     }
 
+    // 호출을 안해..
     private void sendToClient(SseEmitter sseEmitter, String id, Object data){
         try{
             log.info("sendToClient ============ sendToClient start");
             log.info("sseEmitter INFO : {}", sseEmitter);
-            sseEmitter.send(SseEmitter.event()
+            SseEmitter.SseEventBuilder event = SseEmitter.event()
                     .id(id)
                     .name("sse")
-                    .data(data));
-            //sseEmitter.complete();
+                    .data(data);
+                    //.reconnectTime(DEFAULT_TIMEOUT);
+            sseEmitter.send(event);
             log.info("sendToClient ============ sendToClient completed");
-        } catch (IOException e){
+        } catch (IOException e){ // 연결이 끊기거나 네트워크가 불안정한 경우
             log.info("sendToClient ============ sendToClient failed");
-            //emitterRepository.deleteById(id);
+            sseEmitter.completeWithError(e);
+            emitterRepository.deleteById(id);
             log.error("알림을 송신하는 도중 에러가 발생했습니다 : {}", e.getMessage());
             throw new RuntimeException("연결 오류");
         }
         catch (Exception e){
             log.error("ERROR : {}", e.getMessage());
         }
+
+        //sseEmitter.complete();
     }
 
     // 안 읽은 목록들 추출
@@ -183,8 +208,8 @@ public class NotificationService {
     }
 
     // mongoDB에서 read 처리 지정
-    public void markAsRead(List<ObjectId> objectIdList){
-        for(ObjectId objectId : objectIdList){
+    public void markAsRead(ObjectId objectId){
+        //for(ObjectId objectId : objectIdList){
             log.info("objectId : " + objectId);
             Notify unreadNotify = notifyRepository.findById(objectId)
                     .orElseThrow(() -> new RuntimeException("Document를 찾을 수 없습니다."));
@@ -201,6 +226,12 @@ public class NotificationService {
                     .build();
 
             mongoTemplate.save(readNotify);
-        }
+        //}
+    }
+
+    public List<SseEmitter> getMyEmitter(){
+
+        String userUuid = userUtil.getLoginIdFromContextHolder();
+        return emitterRepository.getMyEmitter(userUuid);
     }
 }
