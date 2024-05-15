@@ -37,7 +37,7 @@ public class NotificationService {
 
     // subscribe
     public SseEmitter subscribe(String lastEventId){
-        String userUuid = userUtil.getLoginUserUuid();
+        String userUuid = userUtil.getLoginIdFromContextHolder();
         log.info("NotificationService ============ start subscribe..");
         String id = userUuid + "_" + System.currentTimeMillis();
         log.info("NotificationService ============ id : {}, lastEventId: {}", id, lastEventId);
@@ -99,7 +99,7 @@ public class NotificationService {
 
     private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification) {
         try {
-            if (existNotification.size() <= 5) {
+            if (existNotification.isEmpty()) {
 
                 // roomUuid 자리는 비워놓는다.
                 //저장 확인
@@ -191,8 +191,8 @@ public class NotificationService {
     }
 
     // mongoDB에서 read 처리 지정
-    public void markAsRead(List<ObjectId> objectIdList){
-        for(ObjectId objectId : objectIdList){
+    public void markAsRead(ObjectId objectId){
+        //for(ObjectId objectId : objectIdList){
             log.info("objectId : " + objectId);
             Notify unreadNotify = notifyRepository.findById(objectId)
                     .orElseThrow(() -> new RuntimeException("Document를 찾을 수 없습니다."));
@@ -209,6 +209,6 @@ public class NotificationService {
                     .build();
 
             mongoTemplate.save(readNotify);
-        }
+        //}
     }
 }
