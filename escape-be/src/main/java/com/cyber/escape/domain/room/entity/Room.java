@@ -78,6 +78,10 @@ public class Room extends BaseEntity {
 		return host.getId();
 	}
 
+	public String getHostUuid() {
+		return host.getUuid();
+	}
+
 	public static Room of(
 		final String title,
 		final int capacity,

@@ -58,10 +58,19 @@ public class RoomServiceImpl implements RoomService {
 	private String MATCHING_QUEUE_KEY;
 
 	@Transactional
-	public void addPlayerToMatchingQueue(String principalUuid) {
+	public void addPlayerToMatchingQueue(String userUuid, String principalUuid) {
+		log.info("매칭 등록 시작!!");
+		log.info("매칭 쓰레드 : {}", Thread.currentThread().getName());
+		
 		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
-		listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUtil.getLoginUserUuid()));
-		log.info("listOperations size : {}", listOperations.size(MATCHING_QUEUE_KEY));
+
+		log.info("Current Matching Queue size : {}", listOperations.size(MATCHING_QUEUE_KEY));
+		log.info("SessionUuid for matching : {}", principalUuid);
+
+		// listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUtil.getLoginUserUuid()));
+		listOperations.rightPush(MATCHING_QUEUE_KEY, new MatchUser(principalUuid, userUuid));
+
+		log.info("After Matching Queue size : {}", listOperations.size(MATCHING_QUEUE_KEY));
 	}
 
 	@Scheduled(fixedDelay = 1000) // 1초마다 실행
@@ -70,6 +79,9 @@ public class RoomServiceImpl implements RoomService {
 		ListOperations<String, MatchUser> listOperations = redisTemplate.opsForList();
 
 		if(listOperations.size(MATCHING_QUEUE_KEY) >= 2) {
+			log.info("매칭 성공 !!");
+			log.info("listOperations size before matching : {}", listOperations.size(MATCHING_QUEUE_KEY));
+
 			MatchUser user1 = listOperations.leftPop(MATCHING_QUEUE_KEY);
 			MatchUser user2 = listOperations.leftPop(MATCHING_QUEUE_KEY);
 
@@ -97,11 +109,25 @@ public class RoomServiceImpl implements RoomService {
 		}
 	}
 
+	// @Async
+	// public void sendMatchResultToUser(MatchUser matchUser, RoomDto.PostResponse createdRoom) {
+	// 	try {
+	// 		log.info("매칭 정보 전송 쓰레드 : {}", Thread.currentThread().getName());
+	// 		messagingTemplate.convertAndSend("/queue/match" + matchUser.getUserUuid(), createdRoom);
+	// 		log.info("매칭 정보 전송 할 Client의 session Uuid: {}", matchUser.getPrincipalUuid());
+	// 	} catch (Exception e) {
+	// 		log.error("Failed to send match result to user: {}", matchUser.getPrincipalUuid(), e);
+	// 		// 실패한 경우 재시도 로직 추가
+	// 		retryMatchResultSend(matchUser, createdRoom, 3); // 최대 3번 재시도
+	// 	}
+	// }
+
 	@Async
 	public void sendMatchResultToUser(MatchUser matchUser, RoomDto.PostResponse createdRoom) {
 		try {
-			messagingTemplate.convertAndSendToUser(matchUser.getPrincipalUuid(), "/queue/match", createdRoom);
+			log.info("매칭 정보 전송 쓰레드 : {}", Thread.currentThread().getName());
 			log.info("매칭 정보 전송 할 Client의 session Uuid: {}", matchUser.getPrincipalUuid());
+			messagingTemplate.convertAndSendToUser(matchUser.getPrincipalUuid(), "/queue/match", createdRoom);
 		} catch (Exception e) {
 			log.error("Failed to send match result to user: {}", matchUser.getPrincipalUuid(), e);
 			// 실패한 경우 재시도 로직 추가
@@ -149,27 +175,36 @@ public class RoomServiceImpl implements RoomService {
 	@Transactional
 	@Override
 	public RoomDto.PostResponse createRoom(RoomDto.PostRequest postRequest, int capacity) {
+		log.info("방 생성 시작!!");
 
-		User host = userUtil.getLoginUser();
-		// User host = userRepository.findUserByUuid(postRequest.getHostUuid())
-		// 	.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+		User host = null;
+		if(capacity == 1) {
+			host = userUtil.getLoginUser();
+		} else {
+			host = userRepository.findUserByUuid(postRequest.getHostUuid())
+				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
+		}
+
 		log.info("hostUuid : {}", host.getUuid());
 
 		Thema thema = themaRepository.findById(postRequest.getThemaId())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
 
 		Room newRoom = Room.of(postRequest.getTitle(), capacity, host, thema);
+		log.info("req room raw password : {}", postRequest.getPassword());
 
 		if(!postRequest.getPassword().isEmpty()) {
+			log.info("password 있어용 ㅎㅎ");
 			String encryptPassword = bCryptPasswordEncoder.encode(postRequest.getPassword());
 			newRoom.setPassword(encryptPassword);
 		}
 
 		newRoom = roomRepository.save(newRoom);
+		log.info("new room password : {}", newRoom.getPassword());
 
-		// Todo : 채팅방 생성해서 저장하고 채팅방 Uuid 가져오기
+		log.info("created room title : {}, hasPassword : {}", newRoom.getTitle(), newRoom.isHasPassword());
 
-		return RoomDto.PostResponse.of(newRoom.getUuid(), "chatRoomuuid");
+		return RoomDto.PostResponse.of(newRoom.getUuid(), newRoom.getHostUuid(), thema.getId());
 	}
 
 	@Transactional
