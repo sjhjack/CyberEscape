@@ -19,7 +19,6 @@ const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
   const { selectedTheme, selectedThemeType } = useIngameThemeStore()
-  const { setIsOpened } = IngameStore()
 
   const onStartClick = () => {
     const canvas = document.querySelector("canvas")
@@ -34,10 +33,6 @@ const Page = () => {
 
   useEffect(() => {
     document.addEventListener("click", onStartClick)
-    setIsOpened(true)
-    return () => {
-      setIsOpened(false)
-    }
   }, [])
 
   return (
@@ -69,7 +64,7 @@ const Page = () => {
         //   isModelLoaded={isModelLoaded}
         //   onFinish={handleGameStart}
         // />
-        <StartScene onFinish={handleGameStart} />
+        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme} />
       ) : null}
       {isModelLoaded ? (
         <div>
