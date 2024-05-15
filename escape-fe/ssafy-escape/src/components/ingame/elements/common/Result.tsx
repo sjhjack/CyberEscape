@@ -9,7 +9,7 @@ interface ResultProps {
   type: "forfeitedVictory" | "victory" | "defeat" | "timeOut" | string // 순서대로 몰수승, 승리, 패배, 시간초과
   themeIdx: number | null
   selectedThemeType: string | null
-  clearTime: string | null
+  clearTime?: string | null
 }
 
 interface ResultButtonStyleProps {
@@ -34,19 +34,20 @@ const Result = ({
   // 나가기 버튼 눌렀을 시
   const handleQuit = () => {
     if (selectedThemeType === "single") {
-      router.push(`/main`)
+      window.location.href = "/main"
     } else {
+      // 포인터락 버그 발생 할 수 있음. 확인 필요(필요할 시 새로고침 -> window.location.reload())
       router.back()
     }
   }
 
-  if (isLoading) {
-    return <div>로딩 중</div>
-  }
+  // if (isLoading) {
+  //   return <div>로딩 중</div>
+  // }
 
-  if (!myRankingData) {
-    return <div>데이터 없음</div>
-  }
+  // if (!myRankingData) {
+  //   return <div>데이터 없음</div>
+  // }
 
   return selectedThemeType === "single" ? (
     /* 싱글일 경우 */
@@ -55,8 +56,8 @@ const Result = ({
         <SubContainer>
           <MainText $type="victory">탈출 성공!</MainText>
           <SubText>탈출 시간: {clearTime}</SubText>
-          {myRankingData.bestTime != "00:00:00" ? (
-            <SubText>내 최고 기록: {myRankingData.bestTime}</SubText>
+          {myRankingData?.bestTime != "00:00:00" ? (
+            <SubText>내 최고 기록: {myRankingData?.bestTime}</SubText>
           ) : null}
           <ButtonBox>
             <Button
@@ -64,7 +65,7 @@ const Result = ({
               height="40px"
               text="재도전"
               theme="success"
-              onClick={() => router.push("/main/theme")}
+              onClick={() => (window.location.href = "/main/theme")}
             />
             <Button
               width="80px"
@@ -102,7 +103,7 @@ const Result = ({
             onClick={() => handleQuit()}
           />
         </SubContainer>
-      ) : type === "defeat" || "timeOut" ? (
+      ) : type === "defeat" || type === "timeOut" ? (
         <SubContainer>
           <MainText $type="defeat">탈출 실패</MainText>
           {type === "defeat" ? (
@@ -121,7 +122,6 @@ const Result = ({
       ) : (
         <SubContainer>
           <MainText $type="victory">탈출 성공!</MainText>
-          <SubText>탈출 시간: {clearTime}</SubText>
           <SubText>상대보다 먼저 방을 탈출했습니다!</SubText>
           <Button
             width="80px"
