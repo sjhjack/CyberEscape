@@ -14,7 +14,10 @@ const BaseBox = ({ ...props }) => {
   }))
 
   // 박스 노가다의 편의를 위해 추가합니다. 박스 배치 끝나면 지울 예정
-  useEffect(() => {}, [props])
+  useEffect(() => {
+    // do something
+    // console.log(1123)
+  }, [props.position])
 
   return (
     <mesh
@@ -25,7 +28,7 @@ const BaseBox = ({ ...props }) => {
       renderOrder={props.renderOrder}
     >
       <boxGeometry args={props.args} />
-      <meshStandardMaterial
+      <meshBasicMaterial
         color={props.color}
         transparent={true}
         opacity={props.opacity}

@@ -10,14 +10,19 @@ import com.cyber.escape.domain.quiz.repository.FinalAnswerRepository;
 import com.cyber.escape.domain.quiz.repository.QuizRepository;
 import com.cyber.escape.domain.quiz.util.QuizMapper;
 import com.cyber.escape.domain.thema.entity.Thema;
+import com.cyber.escape.domain.thema.repository.ThemaRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.common.enums.FileType;
+import com.cyber.escape.global.common.util.FileUtil;
 import com.cyber.escape.global.common.util.IdFinder;
 import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.QuizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -25,40 +30,53 @@ import java.util.*;
 @Slf4j
 public class QuizService {
 
-    private QuizMapper quizMapper;
-    private IdFinder idFinder;
-    private QuizRepository quizRepository;
-    private FinalAnswerRepository finalAnswerRepository;
-    private RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz;
-    private RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore;
+    private final QuizMapper quizMapper;
+    private final IdFinder idFinder;
+    private final QuizRepository quizRepository;
+    private final ThemaRepository themaRepository;
+    private final FinalAnswerRepository finalAnswerRepository;
+    private final RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz;
+    private final RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore;
 //    private RedisTemplate<String, List<Boolean>> solvedQuiz;
+    private final UserUtil userUtil;
     public QuizService(QuizRepository quizRepository,
                        FinalAnswerRepository finalAnswerRepository,
                        QuizMapper quizMapper,
-                       IdFinder idFinder,
+                       IdFinder idFinder, ThemaRepository themaRepository,
                        RedisTemplate<String, Map<String, QuizDataInRedis.MapQuizWithClueData>> mappedClueWithQuiz,
-                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore) {
+                       RedisTemplate<String, QuizDataInRedis.finalAnswerData> finalAnswerStore, UserUtil userUtil) {
 
         this.quizRepository = quizRepository;
         this.finalAnswerRepository = finalAnswerRepository;
         this.quizMapper = quizMapper;
         this.idFinder = idFinder;
+        this.themaRepository = themaRepository;
         this.mappedClueWithQuiz = mappedClueWithQuiz;
         this.finalAnswerStore = finalAnswerStore;
+        this.userUtil = userUtil;
     }
 
     // 퀴즈를 뽑는 로직
     // 여기서 주어지는 themaUuid는 설명 칸에 있는 uuid일 것이므로 무조건 role 정보가 필요함
-    public List<QuizDto.QuizSubmissionResDto> getQuizzes(String themaUuid, int role) throws QuizException{
+    public List<QuizDto.QuizSubmissionResDto> getQuizzes(int category) throws QuizException{
         List<QuizDto.QuizSubmissionResDto> result = new ArrayList<>();
 
-        String userUuid = UserUtil.getUserUuid();
+        String userUuid = userUtil.getLoginUserUuid();
 
-        Long themaId = idFinder.findIdByUuid(themaUuid, Thema.class) + role;
-        log.info("themaId : {}", themaId);
+        List<Quiz> diff1 = quizRepository.getQuizzezByCategory(category, 1)
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
 
-        List<Quiz> quizList = quizRepository.getQuizzes(themaId)
-                .orElseThrow(()-> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+        List<Quiz> diff2 = quizRepository.getQuizzezByCategory(category, 2)
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+
+        List<Quiz> diff3 = quizRepository.getQuizzezByCategory(category, 3)
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
+
+        List<Quiz> quizList = new ArrayList<>();
+
+        quizList.add(getRandomQuiz(diff1));
+        quizList.add(getRandomQuiz(diff2));
+        quizList.add(getRandomQuiz(diff3));
 
         FinalAnswer finalAnswer = finalAnswerRepository.findRandomAnswer()
                 .orElseThrow(()-> new QuizException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
@@ -66,18 +84,28 @@ public class QuizService {
         // 레디스에 최종정답 및 현재 정답 정보 저장
         storeAnswersToRedis(userUuid, quizList, finalAnswer);
 
-        for(Quiz q : quizList){
-            result.add(quizMapper.toDto(q));
+        for(Quiz quiz : quizList){
+            result.add(quizMapper.toDto(quiz));
         }
         //result = quizList.stream().map(quizMapper::toDto).toList();
         result.add(new QuizDto.QuizSubmissionResDto(finalAnswer.getUuid(), "마지막 문제입니다. 풀고 탈출하세요.", "", 4));
 
         return result;
-
     }
 
-    public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
-        String userUuid = UserUtil.getUserUuid();
+    public Quiz getRandomQuiz(List<Quiz> quizList){
+            Random random = new Random();
+
+            int size = quizList.size();
+
+            // 0 ~ size - 1의 값을 반환한다.
+            int randomIdx = random.nextInt(size);
+            return quizList.get(randomIdx);
+        }
+
+
+        public QuizAnswerDto.SubmitAnswerResDto getAnswer(QuizAnswerDto.SubmitAnswerReqDto req){
+        String userUuid = userUtil.getLoginUserUuid();
 
         // 현재 제출한 퀴즈 데이터 불러오기
         Quiz quiz = quizRepository.findByUuid(req.getQuizUuid())
@@ -125,7 +153,7 @@ public class QuizService {
     }
 
     public QuizDto.QuizHintResDto getHint(String quizUuid){
-        String userUuid = UserUtil.getUserUuid();
+        String userUuid = userUtil.getLoginUserUuid();
 
         Map<String, QuizDataInRedis.MapQuizWithClueData> map = mappedClueWithQuiz.opsForValue().get(userUuid);
 
@@ -163,7 +191,7 @@ public class QuizService {
         String realAnswer = answerInfo.getFinalAnswer().replace(" ", "").trim();
 
         if(realAnswer.equals(submitAnswer)){
-            String userUuid = UserUtil.getUserUuid();
+            String userUuid = userUtil.getLoginUserUuid();
 
             // 레디스에서 유저가 풀던 문제 삭제
             mappedClueWithQuiz.delete(userUuid);
@@ -238,6 +266,33 @@ public class QuizService {
         }
 
         mappedClueWithQuiz.opsForValue().set(userUuid, map);
+    }
+
+    public String putDummyData(QuizDto.Request quiz, MultipartFile multipartFile) throws IOException {
+        String originalFileName = multipartFile.getOriginalFilename();
+        String savedFileName = FileUtil.makeFileName(originalFileName);
+        String quizUrl = FileUtil.uploadFile(multipartFile, FileType.quiz, savedFileName);
+
+        log.info("originalFileName : {}, savedFileName : {}, quizUrl : {}", originalFileName, savedFileName, quizUrl);
+
+        quizRepository.save(createQuiz(quiz, quizUrl));
+
+        return quizUrl;
+    }
+
+    public Quiz createQuiz(QuizDto.Request quiz, String quizUrl){
+
+        Thema thema = themaRepository.findByCategory(quiz.getThemaCategory())
+                .orElseThrow(() -> new QuizException(ExceptionCodeSet.BAD_REQUEST));
+
+        return Quiz
+                .builder()
+                .thema(thema)
+                .hint(quiz.getHint())
+                .answer(quiz.getAnswer())
+                .difficulty(quiz.getDifficulty())
+                .url(quizUrl)
+                .build();
     }
 
 }

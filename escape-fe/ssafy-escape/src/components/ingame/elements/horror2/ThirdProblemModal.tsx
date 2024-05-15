@@ -2,11 +2,13 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import HintModal from "../common/HintModal"
+import useHorrorOptionStore from "@/stores/HorrorOptionStore"
+import { useQuery } from "@tanstack/react-query"
+import getQuiz from "@/services/ingame/getQuiz"
 
 // 세 번째 문제 모달
 const ThirdProblemModal = ({
@@ -16,15 +18,26 @@ const ThirdProblemModal = ({
   setSubtitle,
   timePenalty,
 }: ProblemProps) => {
-  const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
-  const choices = ["1", "3", "5", "7"]
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
 
-  const { solved, setSolved, quizData } = useIngameQuizStore()
+  const { solved, setSolved } = useIngameQuizStore()
+  const { data: quizData } = useQuery({
+    queryKey: ["quizList", 3],
+    queryFn: () => getQuiz(3),
+  })
+  const { horror2QuizList } = useHorrorOptionStore()
+  const [choices, setChoices] = useState<string[]>([])
+
+  useEffect(() => {
+    if (quizData && quizData[0] && horror2QuizList[quizData[2].quizUuid]) {
+      setChoices(horror2QuizList[quizData[2].quizUuid])
+    }
+  }, [quizData, horror2QuizList])
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
   }
+  console.log(quizData)
 
   // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
@@ -36,7 +49,7 @@ const ThirdProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
       setSubtitle("이런, 시간이...서둘러 나가야겠군.")
@@ -52,59 +65,52 @@ const ThirdProblemModal = ({
     } else {
       alert("오답입니다")
       setPenalty(penalty + 1)
+      timePenalty()
     }
   }
-
   return (
     <MainContainer>
-      <Image
-        src="/image/diary.png"
-        alt="일기장 이미지"
-        width={620}
-        height={580}
-      />
-      <IconBox onClick={onClose}>
-        <CloseIcon sx={{ fontSize: 40 }} />
-      </IconBox>
-      <SubContainer>
-        <ProblemText>{problem.slice(0, problem.lastIndexOf(","))}</ProblemText>
-        <ProblemText>{extractSubstring(problem)}</ProblemText>
-        <ChoiceBox>
+      <div>
+        <img src={quizData[2].url} width={620} height={580} alt="세번째 문제" />
+        <CloseIconBox onClick={onClose}>
+          <CloseIcon sx={{ fontSize: 30 }} />
+        </CloseIconBox>
+        <ChoiceBox1>
           <Button
             theme="fail"
-            text={choices[0]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[0])}
           />
           <Button
             theme="fail"
-            text={choices[1]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[1])}
           />
-        </ChoiceBox>
-        <ChoiceBox>
+        </ChoiceBox1>
+        <ChoiceBox2>
           <Button
             theme="fail"
-            text={choices[2]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[2])}
           />
           <Button
             theme="fail"
-            text={choices[3]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[3])}
           />
-        </ChoiceBox>
-      </SubContainer>
+        </ChoiceBox2>
+      </div>
       <HintIconBox onClick={handleOpenModal}>
         <Image
-          src={"/image/hint.png"}
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
           alt="힌트 아이콘"
           width={35}
           height={35}
@@ -132,33 +138,22 @@ const MainContainer = styled.div`
   z-index: 20;
 `
 
-const SubContainer = styled.div`
+const ChoiceBox1 = styled.div`
+  display: flex;
   position: absolute;
-  top: 48%;
+  top: 40%;
   left: 50%;
-  transform: translate(-45%, -50%);
-  width: 380px;
-  height: 580px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-`
-
-const ProblemText = styled.div`
-  margin-bottom: 20px;
-  font-size: 24px;
-  word-break: keep-all;
-`
-
-const ChoiceBox = styled.div`
-  display: flex;
-  gap: 30px;
+  transform: translate(-40%, 30%);
+  gap: 60px;
   margin-top: 30px;
 `
 
-const IconBox = styled.div`
+const ChoiceBox2 = styled(ChoiceBox1)`
+  top: 53%;
+  transform: translate(-40%, 45%);
+`
+
+const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
   right: 130px;
@@ -172,7 +167,7 @@ const HintIconBox = styled.div`
   align-items: center;
   cursor: pointer;
   left: 165px;
-  top: 42px;
+  bottom: 90px;
   z-index: 10;
   font-size: 16px;
 `

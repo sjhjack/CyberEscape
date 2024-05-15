@@ -8,10 +8,11 @@ interface UserState {
   isHost: boolean
   userUuid: string | null
   nickname: string | null
-  profileUrl: string | null
+  profileUrl: string | undefined
   accessToken: string | null
   setIsHost: (value: boolean) => void
   setNickname: (name: string) => void
+  setProfileUrl: (profileUrl: string) => void
   setAccessToken: (token: string | null) => void
   login: (loginId: string, password: string) => void
   logout: () => Promise<void>
@@ -22,13 +23,14 @@ const useUserStore = create<UserState>()(
       isLogin: false,
       isHost: false,
       setIsHost: (value) => set({ isHost: value }),
+
       userUuid: null,
       nickname: null,
       setNickname: (name) => set({ nickname: name }),
-      profileUrl: null,
+      setProfileUrl: (profileUrl) => set({ profileUrl }),
+      profileUrl: undefined,
       accessToken: null,
       setAccessToken: (token) => set({ accessToken: token }),
-
       login: async (loginId: string, password: string) => {
         try {
           const response = await postLogin(loginId, password)
@@ -54,9 +56,10 @@ const useUserStore = create<UserState>()(
           await postLogout()
           set({
             isLogin: false,
+            isHost: false,
             userUuid: null,
             nickname: null,
-            profileUrl: null,
+            profileUrl: undefined,
             accessToken: null,
           })
         } catch (error) {

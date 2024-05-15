@@ -2,10 +2,18 @@ import { useEffect, useRef, useState } from "react"
 import { useGLTF } from "@react-three/drei"
 import { AnimationMixer } from "three"
 import DoorBox from "../../common/DoorBox"
+import * as THREE from "three"
 
-const Door1 = ({ position, rotation, setInteractNum }: any) => {
+const Door1 = ({
+  onAir,
+  setOnAir,
+  position,
+  rotation,
+  setInteractNum,
+}: any) => {
   const { scene, animations } = useGLTF(
-    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
+    // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door3.glb",
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/door_01.glb",
     true,
   )
   const doorRef = useRef()
@@ -17,6 +25,7 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
 
     const mixer = new AnimationMixer(scene)
     const action = mixer.clipAction(animations[0])
+    action.setLoop(THREE.LoopOnce, 1)
 
     if (isAnimationActivated) {
       action.play()
@@ -52,10 +61,15 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
   }, [scene])
 
   const handleClick = () => {
+    if (onAir) return
+    const new_audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/door_open.mp3",
+    )
+    new_audio.play()
     setIsAnimationActivated(true)
     setTimeout(() => {
       setIsAnimationActivated(false)
-    }, 10000)
+    }, 7000)
   }
 
   return isLoaded ? (
@@ -63,7 +77,7 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
       <primitive
         object={scene}
         ref={doorRef}
-        scale={20}
+        scale={24}
         position={position}
         rotation={rotation}
         onClick={handleClick}
@@ -74,7 +88,7 @@ const Door1 = ({ position, rotation, setInteractNum }: any) => {
           setInteractNum(1)
         }}
       />
-      <DoorBox position={position} args={[10, 15, 2]} color={"red"} />
+      <DoorBox position={position} args={[2, 20, 10]} color={"red"} />
     </>
   ) : null
 }
