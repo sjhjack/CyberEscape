@@ -63,7 +63,7 @@ public class NotificationController {
         ObjectId objectId = objInfo.get("objectId");
 //        }
         notificationService.markAsRead(objectId);
-        return new ApiResponse<>(HttpStatus.OK.value(), "알림 읽음 완료 !!!");
+        return new ApiResponse<>(HttpStatus.OK.value(), "알림 읽음 완료 !!!", "");
     }
 
 
