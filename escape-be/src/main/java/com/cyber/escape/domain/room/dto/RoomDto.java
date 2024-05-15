@@ -64,12 +64,14 @@ public class RoomDto {
 	@Getter
 	public static class PostResponse {
 		private final String roomUuid;
-		private final String chatRoomUuid;
+		private final String hostUuid;
+		private final Long themaId;
 
-		public static PostResponse of(final String roomUuid, final String chatRoomUuid) {
+		public static PostResponse of(final String roomUuid, final String hostUuid, final Long themaId) {
 			return PostResponse.builder()
 				.roomUuid(roomUuid)
-				.chatRoomUuid(chatRoomUuid)
+				.hostUuid(hostUuid)
+				.themaId(themaId)
 				.build();
 		}
 	}
@@ -172,6 +174,7 @@ public class RoomDto {
 		private boolean isGuestReady;
 		private int hostProgress;
 		private int guestProgress;
+		private boolean isKicked;
 
 		public StompResponse(String hostSessionUuid){
 			this.hostSessionUuid = hostSessionUuid;
@@ -193,6 +196,10 @@ public class RoomDto {
 		}
 
 		public void kickGuest() {
+			this.isKicked = true;
+		}
+
+		public void leaveGuest() {
 			this.guestSessionUuid = null;
 			this.guest = null;
 		}

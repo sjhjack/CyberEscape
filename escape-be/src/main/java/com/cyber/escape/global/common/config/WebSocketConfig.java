@@ -56,8 +56,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 			.withSockJS();
 	}
 
-	// @Override
-	// public void configureClientInboundChannel(ChannelRegistration registration) {
-	// 	registration.interceptors(roomStompInterceptor);
-	// }
+	@Override
+	public void configureClientInboundChannel(ChannelRegistration registration) {
+		registration.interceptors(roomStompInterceptor);
+	}
 }

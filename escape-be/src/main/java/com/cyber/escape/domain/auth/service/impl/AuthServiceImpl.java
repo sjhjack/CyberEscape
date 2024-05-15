@@ -55,10 +55,13 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public UserDto.SigninResponse signin(UserDto.SigninRequest signinRequest) {
 		log.info("signin start !!");
+		log.info("로그인 쓰레드 : {}", Thread.currentThread().getName());
 
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(signinRequest.toAuthentication());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		log.info("로그인 후 Context Holder에 저장된 Authetication : {}", SecurityContextHolder.getContext().getAuthentication().toString());
 
 		UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
 		signinResponse.setUserInfo(userUtil.getLoginUser());
