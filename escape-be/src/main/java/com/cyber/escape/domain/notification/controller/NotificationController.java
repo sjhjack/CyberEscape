@@ -2,6 +2,7 @@ package com.cyber.escape.domain.notification.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.dto.NotifyDto;
@@ -50,13 +51,18 @@ public class NotificationController {
         return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList());
     }
 
+    /*
+        Parameter :
+            StringObjId : 읽은 알림의 id
+     */
     @PostMapping("/read")
-    public ApiResponse<String> setUnreadToRead(@RequestBody List<String> stringObjectIdList){
-        List<ObjectId> objectIdList = new ArrayList<>();
-        for(String s : stringObjectIdList){
-            objectIdList.add(new ObjectId(s));
-        }
-        notificationService.markAsRead(objectIdList);
+    public ApiResponse<String> setUnreadToRead(@RequestBody Map<String, ObjectId> objInfo){
+//        List<ObjectId> objectIdList = new ArrayList<>();
+//        for(String s : stringObjectIdList){
+//            objectIdList.add(new ObjectId(s));
+        ObjectId objectId = objInfo.get("objectId");
+//        }
+        notificationService.markAsRead(objectId);
         return new ApiResponse<>(HttpStatus.OK.value(), "알림 읽음 완료 !!!");
     }
 
