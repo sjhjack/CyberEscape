@@ -5,14 +5,15 @@ import Chat from "@/components/ingame/Chat"
 import ExitGame from "@/components/ingame/ExitGame"
 import ProgressBar from "@/components/ingame/ProgressBar"
 import Image from "next/image"
-import * as S from "./ingameStyle"
-import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
+import * as S from "@/app/ingame/ingameStyle"
+import SpaceTheme from "@/components/ingame/main/space/SpaceTheme"
 // import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
 import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
+import IngameStore from "@/stores/IngameStore"
 
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
@@ -63,7 +64,7 @@ const Page = () => {
         //   isModelLoaded={isModelLoaded}
         //   onFinish={handleGameStart}
         // />
-        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme}/>
+        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme} />
       ) : null}
       {isModelLoaded ? (
         <div>
