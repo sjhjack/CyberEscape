@@ -1,7 +1,7 @@
 package com.cyber.escape.global.exception;
 
-public class QuizException extends BaseExceptionAbs{
-    public QuizException(ExceptionCodeSet exceptionCode) {
+public class FriendException extends BaseExceptionAbs{
+    public FriendException(ExceptionCodeSet exceptionCode) {
         super(exceptionCode);
     }
 }
