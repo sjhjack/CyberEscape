@@ -6,15 +6,20 @@ import PlayMusic from "./PlayMusic"
 import Crosshair from "./Crosshair"
 
 interface BasicSceneProps {
+  onAir: boolean
   interactNum: number
   children: ReactNode
 }
 
 const CustomPointerLockControls = () => {
-  return <PointerLockControls />
+  return (
+    <>
+      <PointerLockControls pointerSpeed={0.4} />
+    </>
+  )
 }
 
-const BasicScene = ({ interactNum, children }: BasicSceneProps) => {
+const BasicScene = ({ onAir, interactNum, children }: BasicSceneProps) => {
   const [isPointerLocked, setIsPointerLocked] = useState(false)
 
   useEffect(() => {
@@ -31,7 +36,7 @@ const BasicScene = ({ interactNum, children }: BasicSceneProps) => {
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      <PlayMusic />
+      {/* <PlayMusic /> */}
       <Canvas shadows camera={{ fov: 50 }}>
         <Physics gravity={[0, -9.8, 0]}>{children}</Physics>
         <CustomPointerLockControls />

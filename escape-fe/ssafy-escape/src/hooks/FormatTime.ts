@@ -1,4 +1,4 @@
-const formatTime = (time: string) => {
+const FormatTime = (time: string) => {
   const parts = time.split(":")
 
   let minutes = parseInt(parts[1], 10)
@@ -6,4 +6,4 @@ const formatTime = (time: string) => {
 
   return `${minutes}분 ${seconds}초`
 }
-export default formatTime
+export default FormatTime

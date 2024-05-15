@@ -13,9 +13,7 @@ const HintModal = ({ open, onClose, quizUuid }: HintModalProps) => {
         ? postHint(quizUuid)
         : Promise.reject(new Error("quizUuid is null")),
   })
-  if (!hintData) {
-    return <div>힌트가 없습니다.</div>
-  }
+
   return (
     <>
       <MainModal
@@ -25,7 +23,7 @@ const HintModal = ({ open, onClose, quizUuid }: HintModalProps) => {
         width="200px"
         height="200px"
       >
-        <div>{hintData.hint}</div>
+        <div>{hintData?.hint}</div>
       </MainModal>
     </>
   )

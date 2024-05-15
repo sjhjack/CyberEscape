@@ -15,7 +15,7 @@ const Room = () => {
   const [keyword, setKeyword] = useState<string | null>(null)
   // const searchData: RequestData = { page: page, keyword: "" }
   const searchData: RequestData = { page: page }
-  useEffect(() => {}, [])
+
   const {
     data: roomData,
     isLoading,

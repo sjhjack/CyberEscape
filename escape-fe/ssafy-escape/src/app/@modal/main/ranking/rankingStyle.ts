@@ -112,3 +112,7 @@ export const Time = styled.div<TopThreeProps>`
   color: #dd3232;
   font-weight: ${(props) => (props.$isTopThree ? "bold" : "normal")};
 `
+
+export const NoTimeText = styled.div`
+  text-align: center;
+`

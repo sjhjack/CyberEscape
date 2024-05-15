@@ -46,7 +46,9 @@ const Start = ({ setSubtitle }: StartProps) => {
   }
 
   const dub4 = () => {
-    const audio = new Audio("sound/man_scream.mp3")
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/man_scream.mp3",
+    )
     audio.play()
     setTimeout(() => {
       setSubtitle("무슨 소리지?!")

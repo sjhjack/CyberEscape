@@ -11,7 +11,6 @@ import { useState, useEffect } from "react"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import useUserStore from "@/stores/UserStore"
 import postCreateRoom from "@/services/game/room/postCreateRoom"
-import patchJoin from "@/services/game/room/patchJoin"
 interface postCreateRoomRequestProps {
   title: string
   themaId: number
@@ -50,13 +49,8 @@ const Create = () => {
       return
     }
     const response = await postCreateRoom(data)
-    // 방을 생성하고 대기방 입장할 때는 호스트임.
-    await patchJoin({
-      roomUuid: response.data.roomUuid,
-      userUuid: userUuid || "",
-    })
     setIsHost(true)
-    router.push(`waiting/${response.data.roomUuid}`)
+    router.push(`/gameroom/${response.data.roomUuid}`)
   }
   return (
     <Container

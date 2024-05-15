@@ -2,11 +2,13 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useQuery } from "@tanstack/react-query"
+import getQuiz from "@/services/ingame/getQuiz"
+import useHorrorOptionStore from "@/stores/HorrorOptionStore"
 
 // 두 번째 문제 모달
 const SecondProblemModal = ({
@@ -16,10 +18,22 @@ const SecondProblemModal = ({
   setSubtitle,
   timePenalty,
 }: ProblemProps) => {
-  const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
-  const choices = ["1", "3", "5", "7"]
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
-  const { solved, setSolved, quizData } = useIngameQuizStore()
+  const { solved, setSolved } = useIngameQuizStore()
+
+  const { data: quizData } = useQuery({
+    queryKey: ["quizList", 2],
+    queryFn: () => getQuiz(2),
+  })
+
+  const { horror1QuizList } = useHorrorOptionStore()
+  const [choices, setChoices] = useState<string[]>([])
+
+  useEffect(() => {
+    if (quizData && quizData[0] && horror1QuizList[quizData[1].quizUuid]) {
+      setChoices(horror1QuizList[quizData[1].quizUuid])
+    }
+  }, [quizData, horror1QuizList])
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
@@ -31,12 +45,13 @@ const SecondProblemModal = ({
     timePenalty()
   }
 
+  // 힌트 모달 닫기
   const handleCloseModal = () => {
     setHintModalOpen(false)
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
       setSubtitle("...정신이 이상해지는 것 같아.")
@@ -47,56 +62,55 @@ const SecondProblemModal = ({
         }, 10000)
       }, 4000)
     } else {
-      alert("오답입니다")
+      alert("오답입니다.")
       setPenalty(penalty + 1)
+      timePenalty()
     }
   }
-
+  console.log(quizData)
   return (
     <MainContainer>
-      <Image src="/image/note.png" alt="노트 이미지" width={550} height={550} />
-      <IconBox onClick={onClose}>
-        <CloseIcon sx={{ fontSize: 40 }} />
-      </IconBox>
-      <SubContainer>
-        <ProblemText>{problem.slice(0, problem.lastIndexOf(","))}</ProblemText>
-        <ProblemText>{extractSubstring(problem)}</ProblemText>
-        <ChoiceBox>
+      <div>
+        <img src={quizData[1].url} width={550} height={550} alt="두번째 문제" />
+        <CloseIconBox onClick={onClose}>
+          <CloseIcon sx={{ fontSize: 40 }} />
+        </CloseIconBox>
+        <ChoiceBox1>
           <Button
             theme="fail"
-            text={choices[0]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[0])}
           />
           <Button
             theme="fail"
-            text={choices[1]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[1])}
           />
-        </ChoiceBox>
-        <ChoiceBox>
+        </ChoiceBox1>
+        <ChoiceBox2>
           <Button
             theme="fail"
-            text={choices[2]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[2])}
           />
           <Button
             theme="fail"
-            text={choices[3]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[3])}
           />
-        </ChoiceBox>
-      </SubContainer>
+        </ChoiceBox2>
+      </div>
       <HintIconBox onClick={handleOpenModal}>
         <Image
-          src={"/image/hint.png"}
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
           alt="힌트 아이콘"
           width={35}
           height={35}
@@ -125,33 +139,22 @@ const MainContainer = styled.div`
   z-index: 20;
 `
 
-const SubContainer = styled.div`
+const ChoiceBox1 = styled.div`
+  display: flex;
   position: absolute;
-  top: 48%;
+  top: 40%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 370px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-`
-
-const ProblemText = styled.div`
-  margin-bottom: 20px;
-  font-size: 24px;
-  word-break: keep-all;
-`
-
-const ChoiceBox = styled.div`
-  display: flex;
-  gap: 30px;
+  transform: translate(-40%, 30%);
+  gap: 60px;
   margin-top: 30px;
 `
 
-const IconBox = styled.div`
+const ChoiceBox2 = styled(ChoiceBox1)`
+  top: 53%;
+  transform: translate(-40%, 45%);
+`
+
+const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
   right: 60px;
