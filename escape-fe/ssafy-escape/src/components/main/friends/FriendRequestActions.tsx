@@ -4,34 +4,38 @@ import { styled } from "styled-components"
 import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
 import { useQuery } from "@tanstack/react-query"
-import getNotificationFriend from "@/services/notification/getNotificationList"
+import postReadNotification from "@/services/notification/postReadNotification"
 // import postFriendRequest from "@/services/main/friends/postFriendAddition"
 import postFriendAddition from "@/services/main/friends/postFriendAddition";
 import getFriendList from "@/services/main/friends/getFriendList"
+import getNotificationList from "@/services/notification/getNotificationList"
+import { StyledString } from "next/dist/build/swc"
 
 // 받은 친구 요청 목록 조회
 const FriendRequestActions = () => {
   const { data: requestData } = useQuery({
-    queryKey: ["friendRequestList"],
-    queryFn: () => getFriendList(),
+    queryKey: ["getNotificationList"],
+    queryFn: () => getNotificationList(),
   })
 
   // 친구 채팅 부분 로직 호출하도록 고침
-  const handleRequest = async (requestUserUuid: string) => {
-
+  const handleRequest = async (requestUserUuid: string, notificationId : string) => {
     // console.log("친구 채팅")
 
     // console.log("친구 수락 완료")
     // await postFriendAddition(requestUserUuid)
-    // // 읽음 처리
-    // readNotification();
+    
+    // 읽음 처리
+    postReadNotification(notificationId);
   }
 
   return (
     <div>
-      <Text>내 친구 목록</Text>
-      {requestData?.map((user) => (
-        <div key={user.friendUuid}>
+      <Text>받은 친구 요청 목록</Text>
+      // 친구 요청만 렌더링
+      {requestData?.filter((data)=> data.type === "FRIEND")
+                  .map((user) => (
+        <div key={user.senderUuid}>
           <SubContainer>
             <ProfileBox>
               <PersonIcon sx={{ fontSize: "35px" }} />
@@ -42,7 +46,7 @@ const FriendRequestActions = () => {
                 text="수락"
                 theme="success"
                 width="60px"
-                onClick={() => handleRequest(user.friendUuid)}
+                onClick={() => handleRequest(user.senderUuid, user.id)}
               />
               <Button text="거절" theme="fail" width="60px" />
               {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}

@@ -7,15 +7,19 @@ import Button from "../common/Button"
 //import postInvitedList from "@/services/notification/postInvitedList"
 // import postInvitedAccept from "@/services/notification/postInvitedAccept"
 import getNotificationList from "@/services/notification/getNotificationList"
+import postFriendAddition from "@/services/main/friends/postFriendAddition"
 
+// 게임 초대 요청 리스트
 const InvitedList = () => {
-  const { data: invitedData, isLoading } = useQuery({
+  const { data: invitedList, isLoading } = useQuery({
     queryKey: ["invitedList"],
     queryFn: () => getNotificationList(),
   })
 
-  const handleAccept = async () => {
+
+  const handleAccept = async (roomUuid : string) => {
     // await postInvitedAccept(roomUuid, userUuid)
+    
     // 초대된 방으로 이동하는 로직
   }
 
@@ -27,13 +31,15 @@ const InvitedList = () => {
     return <div>로딩 중</div>
   }
 
-  if (!invitedData) {
+  if (!invitedList) {
     return <div>데이터 없음</div>
   }
 
   return (
     <div>
-      {invitedData.data.map((user, i) => (
+      {invitedList
+        .filter((data) => data.type === "GAME")
+        .map((user, i) => (
         <div key={i}>
           <MainContainer>
             <ProfileBox>
@@ -45,7 +51,7 @@ const InvitedList = () => {
                 text="수락"
                 theme="success"
                 width="60px"
-                onClick={handleAccept}
+                onClick={() => handleAccept(user.roomUuid)}
               />
               <Button
                 text="거절"
