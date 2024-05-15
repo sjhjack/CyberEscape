@@ -14,16 +14,19 @@ interface PostReadNotificationDataProps {
 // }
 
 
-
-// 알림 subscribe
-const PostReadNotification = async (
+// 알림 읽음 처리
+const postReadNotification = async (
+    objectId : string
 ): Promise<string> => {
   const accessToken = sessionStorage.getItem("access_token");
   console.log("SUBSCRIBE TOKEN : ");
   console.log(accessToken);
   try {
-    const response = await api.get<PostReadNotificationDataProps>(
-      API_PATH.MAIN.NOTIFICATION.READ
+    const response = await api.post<PostReadNotificationDataProps>(
+      API_PATH.MAIN.NOTIFICATION.READ,
+      {
+        objectId,
+      }
     )
     if (response.data.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
@@ -35,4 +38,4 @@ const PostReadNotification = async (
   }
 }
 
-export default PostReadNotification
+export default postReadNotification
