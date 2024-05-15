@@ -21,7 +21,7 @@ const Mode = () => {
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("theme"), setSelectedThemeType("multi")
+            router.push("theme"), setSelectedThemeType("single")
           }}
         >
           <Image
@@ -39,7 +39,7 @@ const Mode = () => {
         <S.SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/main/multi"), setSelectedThemeType("single")
+            router.push("/main/multi"), setSelectedThemeType("multi")
           }}
         >
           <Image
