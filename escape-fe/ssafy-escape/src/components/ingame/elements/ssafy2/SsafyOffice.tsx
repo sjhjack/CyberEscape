@@ -7,7 +7,7 @@ const SsafyOffice = ({ onLoaded }: RoomProps) => {
   //   process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/conference_room.glb",
   //   true,
   // )
-  const { scene } = useGLTF("/glb/ssafy/conference_room.glb", true)
+  const { scene } = useGLTF("/glb/ssafy2/mersus_office.glb", true)
 
   useEffect(() => {
     if (scene) {
