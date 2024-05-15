@@ -1,3 +1,4 @@
+import useIngameThemeStore from "@/stores/IngameTheme"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
@@ -32,6 +33,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
   const [containerOpacity, setContainerOpacity] = useState(1)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const { selectedTheme } = useIngameThemeStore()
 
   const onMusicStart = () => {
     if (audioRef.current) {
@@ -51,8 +53,16 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
   }, [])
 
   useEffect(() => {
+    let musicname = ""
+    if (selectedTheme === 7) {
+      musicname = "SpeckInTime"
+    } else if (selectedTheme === 1) {
+      musicname = "HorrorBgm"
+    } else if (selectedTheme === 3) {
+      musicname = "HorrorBgm2"
+    }
     const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + "/music/SpeckInTime.mp3",
+      process.env.NEXT_PUBLIC_IMAGE_URL + `/music/${musicname}.mp3`,
     )
     audio.loop = true
     audioRef.current = audio
