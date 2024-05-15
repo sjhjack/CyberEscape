@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Box } from "@react-three/drei"
 
 // 세 번째 문제가 숨겨진 곳(랜덤)
@@ -43,16 +43,18 @@ const ThirdProblemObject = ({
     ],
   ]
 
-  const { randomIndex } = useMemo(() => {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
     const randomIndex = Math.floor(Math.random() * objectArr.length)
-    return { randomIndex }
+    setIndex(randomIndex)
   }, [])
 
   return solved === 2 ? (
     <>
       <Box
-        position={objectArr[randomIndex][0]}
-        args={objectArr[randomIndex][1]}
+        position={objectArr[index][0]}
+        args={objectArr[index][1]}
         onPointerOver={() => setInteractNum(2)}
         onPointerOut={() => setInteractNum(1)}
         onClick={() => onClick()}

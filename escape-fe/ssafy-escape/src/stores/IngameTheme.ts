@@ -11,7 +11,7 @@ interface ThemeState {
 const useIngameThemeStore = create<ThemeState>()(
   persist(
     (set): ThemeState => ({
-      selectedThemeType: "single",
+      selectedThemeType: null,
       setSelectedThemeType: (selectedThemeType: "multi" | "single" | null) =>
         set({ selectedThemeType }),
       selectedTheme: null,
