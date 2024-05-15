@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 
 // 패널티에 따른 효과음 재생
 const PlaySound = ({ penalty, role }: PlaySoundProps) => {
@@ -20,23 +20,15 @@ const PlaySound = ({ penalty, role }: PlaySoundProps) => {
         ]
   }, [role])
 
-  // 이미 재생된 사운드 저장하는 문자열 배열 (패널티 최대 3까지만 적용)
-  const [playedSounds, setPlayedSounds] = useState<string[]>([])
-
   useEffect(() => {
-    if (penalty > 0 && penalty <= 3 && penalty <= soundArray.length) {
-      let newSound: string
-      do {
-        newSound = soundArray[Math.floor(Math.random() * soundArray.length)]
-      } while (playedSounds.includes(newSound))
-
-      setPlayedSounds((prev) => [...prev, newSound])
+    if (penalty === 1 || penalty === 2 || penalty === 3) {
+      const randomIndex = Math.floor(Math.random() * soundArray.length)
       const audio = new Audio(
-        process.env.NEXT_PUBLIC_IMAGE_URL + `/sound/${newSound}.mp3`,
+        `${process.env.NEXT_PUBLIC_IMAGE_URL}/sound/${soundArray[randomIndex]}.mp3`,
       )
       audio.play()
     }
-  }, [penalty, soundArray, playedSounds])
+  }, [penalty, soundArray])
 
   return null
 }
