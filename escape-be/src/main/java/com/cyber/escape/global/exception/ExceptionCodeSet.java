@@ -15,6 +15,8 @@ public enum ExceptionCodeSet {
     SESSION_ID_NOT_CORRECT(HttpStatus.BAD_REQUEST, 4003, "세션 아이디가 잘못 되었습니다."),
     SESSION_NOT_CORRECT(HttpStatus.BAD_REQUEST, 4004, "세션이 잘못 되었습니다."),
     UUID_NOT_CORRECT(HttpStatus.BAD_REQUEST, 4005, "uuid가 잘못 되었습니다."),
+    ALREADY_FRIEND(HttpStatus.BAD_REQUEST, 4006, "이미 친구 사이 입니다."),
+    NO_SELF_FRIEND(HttpStatus.BAD_REQUEST, 4007, "자기 자신과는 친구가 될 수 없습니다."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, 4040, "회원이 존재하지 않습니다."),
     RANKING_NOT_FOUND(HttpStatus.NOT_FOUND, 4041, "랭킹 정보가 존재하지 않습니다."),
