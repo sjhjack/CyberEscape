@@ -32,17 +32,18 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
   const [sequence, setSequence] = useState(1)
   const [containerOpacity, setContainerOpacity] = useState(1)
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  // const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const onMusicStart = () => {
     const audio = new Audio(
       process.env.NEXT_PUBLIC_IMAGE_URL + `/music/SpeckInTime.mp3`,
     )
+    audio.play()
     audio.loop = true
-    audioRef.current = audio
-    if (audioRef.current) {
-      audioRef.current.play()
-    }
+    // audioRef.current = audio
+    // if (audioRef.current) {
+    //   audioRef.current.play()
+    // }
   }
 
   useEffect(() => {
