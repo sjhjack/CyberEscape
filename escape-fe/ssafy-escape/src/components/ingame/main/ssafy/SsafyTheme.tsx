@@ -16,17 +16,21 @@ const SsafyTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [subtitle, setSubtitle] = useState<string>("")
   const timerRef = useRef<CountdownTimerHandle | null>(null)
   const [interactNum, setInteractNum] = useState<number>(1)
+  const [penalty, setPenalty] = useState<number>(0)
+
   return (
-    <BasicScene interactNum={interactNum} onAir={true}>
-      <Lights />
-      <Player position={[-3, 3, 10]} speed={20} args={[0, 0, 0]} />
-      <Floor
-        rotation={[Math.PI / -2, 0, 0]}
-        color="white"
-        position={[0, -0.5, 0]}
-      />
-      <SsafyClassRoom onLoaded={setIsModelLoaded} />
-    </BasicScene>
+    <>
+      <BasicScene interactNum={interactNum} onAir={true}>
+        <Lights />
+        <Player position={[-3, 3, 10]} speed={20} args={[0, 0, 0]} />
+        <Floor
+          rotation={[Math.PI / -2, 0, 0]}
+          color="white"
+          position={[0, -0.5, 0]}
+        />
+        <SsafyClassRoom onLoaded={setIsModelLoaded} />
+      </BasicScene>
+    </>
   )
 }
 

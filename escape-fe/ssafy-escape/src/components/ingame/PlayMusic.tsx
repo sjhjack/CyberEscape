@@ -26,8 +26,12 @@ const PlayMusic = () => {
         )
         audio.play()
         audio.loop = true
-      } else if (selectedTheme === 2) {
+      } else if (selectedTheme === 4 || selectedTheme === 5) {
         const audio = new Audio("music/SsafyBgm.mp3")
+        audio.play()
+        audio.loop = true
+      } else if (selectedTheme === 6) {
+        const audio = new Audio("music/SsafyBgm2.mp3")
         audio.play()
         audio.loop = true
       }
