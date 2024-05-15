@@ -5,7 +5,10 @@ import Button from "@/components/common/Button"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import getQuiz from "@/services/ingame/getQuiz"
+import useHorrorOptionStore from "@/stores/HorrorOptionStore"
 
 // 첫 번째 문제 모달
 // 문제 모달 중복 코드 많아서 추후 리팩토링 필요
@@ -16,12 +19,23 @@ const FirstProblemModal = ({
   setSubtitle,
   timePenalty,
 }: ProblemProps) => {
-  // 더미 삭제 후 문제 부분 코드 수정 필요
-  const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
-  const choices = ["1", "3", "5", "7"]
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
-  const { solved, setSolved, quizData } = useIngameQuizStore()
+  const { solved, setSolved } = useIngameQuizStore()
 
+  const { data: quizData } = useQuery({
+    queryKey: ["quizList", 2],
+    queryFn: () => getQuiz(2),
+  })
+
+  const { horror1QuizList } = useHorrorOptionStore()
+  const [choices, setChoices] = useState<string[]>([])
+
+  useEffect(() => {
+    if (quizData && quizData[0] && horror1QuizList[quizData[0].quizUuid]) {
+      setChoices(horror1QuizList[quizData[0].quizUuid])
+    }
+  }, [quizData, horror1QuizList])
+  
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
   }
@@ -31,9 +45,13 @@ const FirstProblemModal = ({
     setHintModalOpen(true)
     timePenalty()
   }
+
+  // 힌트 모달 닫기
   const handleCloseModal = () => {
     setHintModalOpen(false)
   }
+
+  // 선지 클릭 시 정답여부 확인
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
@@ -46,60 +64,53 @@ const FirstProblemModal = ({
         }, 10000)
       }, 4000)
     } else {
-      alert("오답입니다")
+      alert("오답입니다.")
       setPenalty(penalty + 1)
+      timePenalty()
     }
   }
+  console.log(quizData)
   return (
     <MainContainer>
-      <Image
-        src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/paper.png"}
-        alt="쪽지 이미지"
-        width={600}
-        height={550}
-      />
-      <IconBox onClick={onClose}>
-        <CloseIcon sx={{ fontSize: 40 }} />
-      </IconBox>
-      <SubContainer>
-        <img src={quizData[0].url} alt="첫번째 문제" />
+      <div>
+        <img src={quizData[0].url} width={600} height={550} alt="첫번째 문제" />
+        <CloseIconBox onClick={onClose}>
+          <CloseIcon sx={{ fontSize: 40 }} />
+        </CloseIconBox>
 
-        <ChoiceBox>
+        <ChoiceBox1>
           <Button
             theme="fail"
-            text={choices[0]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[0])}
           />
           <Button
             theme="fail"
-            text={choices[1]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[1])}
           />
-        </ChoiceBox>
-        <ChoiceBox>
+        </ChoiceBox1>
+        <ChoiceBox2>
           <Button
             theme="fail"
-            text={choices[2]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[2])}
           />
           <Button
             theme="fail"
-            text={choices[3]}
             width="100px"
-            fontSize="22px"
+            height="40px"
+            opacity="0"
             onClick={() => handleAnswerCheck(choices[3])}
           />
-        </ChoiceBox>
-      </SubContainer>
-      <GuideText>
-        ※ ALT 또는 ESC 버튼을 누르면 마우스 커서가 나타납니다.
-      </GuideText>
+        </ChoiceBox2>
+      </div>
       <HintIconBox onClick={handleOpenModal}>
         <Image
           src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
@@ -131,34 +142,22 @@ const MainContainer = styled.div`
   z-index: 20;
 `
 
-const SubContainer = styled.div`
+const ChoiceBox1 = styled.div`
+  display: flex;
   position: absolute;
-  top: 50%;
-  left: 51%;
-  transform: translate(-45%, -50%);
-  width: 395px;
-  height: 440px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-`
-
-const GuideText = styled.div`
-  position: fixed;
-  bottom: 115px;
-  left: 175px;
-  font-size: 13px;
-`
-
-const ChoiceBox = styled.div`
-  display: flex;
+  top: 40%;
+  left: 50%;
+  transform: translate(-40%, 20%);
   gap: 30px;
   margin-top: 30px;
 `
 
-const IconBox = styled.div`
+const ChoiceBox2 = styled(ChoiceBox1)`
+  top: 50%;
+  transform: translate(-40%, 45%);
+`
+
+const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
   right: 110px;
@@ -172,7 +171,7 @@ const HintIconBox = styled.div`
   align-items: center;
   cursor: pointer;
   left: 165px;
-  top: 72px;
+  top: 70px;
   z-index: 10;
   font-size: 16px;
 `

@@ -63,7 +63,7 @@ const Page = () => {
         //   isModelLoaded={isModelLoaded}
         //   onFinish={handleGameStart}
         // />
-        <StartScene onFinish={handleGameStart} />
+        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme}/>
       ) : null}
       {isModelLoaded ? (
         <div>

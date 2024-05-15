@@ -24,10 +24,9 @@ import KnobObject from "../../elements/horror/KnobObject"
 import Start from "../../elements/horror/Start"
 import Subtitle from "../../elements/common/Subtitle"
 import PlaySound from "../../PlaySound"
-import { useQuery } from "@tanstack/react-query"
+import { QueryClient } from "@tanstack/react-query"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import getQuiz from "@/services/ingame/getQuiz"
-import useIngameQuizStore from "@/stores/IngameQuizStore"
 import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import BloodText from "../../elements/horror2/BloodText"
 import Result from "../../elements/common/Result"
@@ -49,7 +48,6 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const { solved } = useIngameSolvedStore()
   const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
-  const setQuizData = useIngameQuizStore((state) => state.setQuizData)
   const [interactNum, setInteractNum] = useState<number>(1)
   const [showBloodText, setShowBloodText] = useState<boolean>(false)
   const [result, setResult] = useState<string>("")
@@ -57,10 +55,6 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
 
-  const { data: quizData } = useQuery({
-    queryKey: ["quizList"],
-    queryFn: () => getQuiz(2),
-  })
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
   // 시간 깎는 패널티 함수
@@ -77,12 +71,13 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     setIsGameFinished(true)
   }
 
-  // 가져온 퀴즈 데이터를 스토어에 저장
+  const queryClient = new QueryClient()
   useEffect(() => {
-    if (quizData) {
-      setQuizData(quizData)
-    }
-  }, [quizData, setQuizData])
+    queryClient.prefetchQuery({
+      queryKey: ["quizList", 2],
+      queryFn: () => getQuiz(2),
+    })
+  }, [])
 
   // 패널티 2개 -> 빨간 글씨 출력
   useEffect(() => {
@@ -91,8 +86,8 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       setTimeout(() => {
         setTimeout(() => {
           setShowBloodText(false)
-        }, 2000)
-      }, 2000)
+        }, 500)
+      }, 500)
     }
   }, [penalty])
 
@@ -217,6 +212,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         />
       ) : null}
       <PlaySound penalty={penalty} role="experiment" />
+      {showBloodText ? <BloodText role="experiment" penalty={penalty} /> : null}
       <BasicScene interactNum={interactNum} onAir={true}>
         <Lights penalty={penalty} solved={solved} />
         <Player position={[3, 50, 0]} speed={100} />
@@ -252,9 +248,6 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           solved={solved}
           setInteractNum={setInteractNum}
         />
-        {showBloodText ? (
-          <BloodText role="experiment" penalty={penalty} />
-        ) : null}
         <Blood penalty={penalty} role="experiment" />
         <HorrorRoom onLoaded={setIsModelLoaded} />
         <SecondProblemObject
