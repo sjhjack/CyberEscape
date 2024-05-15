@@ -55,7 +55,7 @@ const CountdownTimer: ForwardRefRenderFunction<
           minutes -= 1
         }
 
-        if (minutes === 0 && seconds === 0) {
+        if (minutes < 0 || (minutes === 0 && seconds === 0)) {
           clearInterval(interval)
           onTimeOut()
           return { minutes: 0, seconds: 0 }
