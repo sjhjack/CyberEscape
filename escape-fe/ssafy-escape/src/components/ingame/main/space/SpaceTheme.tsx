@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"
@@ -35,11 +35,45 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
   const { selectedThemeType } = useIngameThemeStore()
 
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
   const handleTimeOut = () => {
     setIsTimeOut(true)
     setResult("Timeout")
     setIsGameFinished(true)
   }
+
+  const onMusicStart = () => {
+    if (audioRef.current) {
+      audioRef.current.play()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("click", onMusicStart)
+    return () => {
+      document.removeEventListener("click", onMusicStart)
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/music/SpeckInTime.mp3",
+    )
+    audio.loop = true
+    audioRef.current = audio
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+    }
+  }, [])
+
   return (
     <>
       {isGameStart ? (
