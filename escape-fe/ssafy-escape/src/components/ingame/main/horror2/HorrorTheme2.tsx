@@ -18,7 +18,7 @@ import Paper from "../../elements/horror2/Paper"
 import Start from "../../elements/horror2/Start"
 import Computer from "../../elements/horror2/Computer"
 import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
-import { useQuery } from "@tanstack/react-query"
+import { QueryClient, useQuery } from "@tanstack/react-query"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import getQuiz from "@/services/ingame/getQuiz"
 import ScrunchedPaper from "../../elements/horror2/ScrunchedPaper"
@@ -33,7 +33,6 @@ import VoodooDoll from "../../elements/horror2/VoodooDoll"
 import BloodText from "../../elements/horror2/BloodText"
 import PlaySound from "../../PlaySound"
 import Result from "../../elements/common/Result"
-import RequestFormatTime from "@/hooks/RequestFormatTime"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -55,16 +54,9 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [showSpider, setShowSpider] = useState<boolean>(false)
   const [showBlackOut, setShowBlackOut] = useState<boolean>(false)
   const [showBloodText, setShowBloodText] = useState<boolean>(false)
-  const setQuizData = useIngameQuizStore((state) => state.setQuizData)
   const [result, setResult] = useState<string>("")
-  const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
-
-  const { data: quizData } = useQuery({
-    queryKey: ["quizList"],
-    queryFn: () => getQuiz(3),
-  })
 
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
@@ -80,22 +72,27 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     setIsGameFinished(true)
   }
 
-  // 가져온 퀴즈 데이터를 스토어에 저장
+  const queryClient = new QueryClient()
   useEffect(() => {
-    if (quizData) {
-      setQuizData(quizData)
-    }
-  }, [quizData, setQuizData])
+    queryClient.prefetchQuery({
+      queryKey: ["quizList", 3],
+      queryFn: () => getQuiz(3),
+    })
+  }, [])
 
   useEffect(() => {
     // 2분 경과 시
     const twoMintimer = setTimeout(() => {
-      // setPenalty(penalty + 1)
+      setPenalty(penalty + 1)
       setTwoMinLater(true)
     }, 60000 * 2)
 
     // 5분 경과 시
     const fiveMintimer = setTimeout(() => {
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/lift_door_bangs.mp3",
+      )
+      audio.play()
       setFiveMinLater(true)
     }, 60000 * 5)
 
@@ -118,8 +115,8 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       setTimeout(() => {
         setTimeout(() => {
           setShowBloodText(false)
-        }, 2000)
-      }, 2000)
+        }, 500)
+      }, 500)
     }
   }, [penalty])
 
@@ -157,30 +154,24 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     }
   }
 
-  // 필요한 물품들을 다 챙겼을 시 이벤트(자막)
-  if (isHammerClicked && isSyringeClicked) {
-    setSubtitle("이제 필요한 건 다 챙긴 것 같은데.")
-    setTimeout(() => {
-      setSubtitle("슬슬 나가지 않으면 늦겠어.")
+  useEffect(() => {
+    // 필요한 물품들을 다 챙겼을 시 이벤트(자막)
+    if (isHammerClicked && isSyringeClicked) {
+      setSubtitle("이제 필요한 건 다 챙긴 것 같은데.")
       setTimeout(() => {
-        setSubtitle("")
+        setSubtitle("슬슬 나가지 않으면 늦겠어.")
+        setTimeout(() => {
+          setSubtitle("")
+        }, 4000)
       }, 4000)
-    }, 4000)
-  }
+    }
+  }, [isHammerClicked, isSyringeClicked])
 
   // 마지막 문 클릭 시 이벤트
-  const handleFinal = () => {
+  const handleFinal = async () => {
     if (isHammerClicked && isSyringeClicked) {
-    if (timerRef.current) {
-      const currentTime = timerRef.current.getTime()
-      const clearTime = RequestFormatTime(
-        currentTime.minutes,
-        currentTime.seconds,
-      )
-      setClearTime(clearTime)
-    }
-    setResult("victory")
-    setIsGameFinished(true)
+      await setResult("victory")
+      setIsGameFinished(true)
     }
   }
 
@@ -249,9 +240,8 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       {isGameFinished ? (
         <Result
           type={result}
-          themeIdx={1}
+          themeIdx={3}
           selectedThemeType={selectedThemeType}
-          clearTime={clearTime}
         />
       ) : null}
       <PlaySound penalty={penalty} role="scientist" />
