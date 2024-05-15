@@ -1,4 +1,5 @@
 import { useGLTF } from "@react-three/drei"
+import { useEffect } from "react"
 
 interface PortraitProps {
   twoMinLater: boolean
@@ -15,10 +16,18 @@ const Portrait = ({ twoMinLater, fiveMinLater }: PortraitProps) => {
     process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/horror/after_portrait.glb",
     true,
   )
+
+  useEffect(() => {
+    if (portrait.scene && horrorPortrait.scene) {
+      portrait.scene.position.set(-8, 0, 0)
+      horrorPortrait.scene.position.set(-8, 0, 0)
+    }
+  }, [portrait, horrorPortrait])
+
   let horrorPortraitScale = 35
   if (fiveMinLater) {
-    horrorPortrait.scene.rotation.set(3, 0, 0)
     horrorPortrait.scene.position.set(15, 105, -132)
+    horrorPortrait.scene.rotation.set(3, 0, 0)
     horrorPortraitScale = 45
   }
   return (
