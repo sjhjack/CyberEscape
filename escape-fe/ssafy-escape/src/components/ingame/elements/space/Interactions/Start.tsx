@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 interface ContainerProps {
@@ -30,6 +30,39 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
   const [showInstruction, setShowInstruction] = useState(true)
   const [sequence, setSequence] = useState(1)
   const [containerOpacity, setContainerOpacity] = useState(1)
+
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const onMusicStart = () => {
+    if (audioRef.current) {
+      audioRef.current.play()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("click", onMusicStart)
+    return () => {
+      document.removeEventListener("click", onMusicStart)
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + "/music/SpeckInTime.mp3",
+    )
+    audio.loop = true
+    audioRef.current = audio
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (sequence === 2) {
@@ -119,7 +152,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
       setSubtitle(null)
     }, 9000)
     setOnAir(false)
-    setIsNull(true)
+    // setIsNull(true)
   }
 
   return !isNull ? (
