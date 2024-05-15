@@ -11,12 +11,13 @@ import {
 // success: 메인색(녹색), fail: 서브색(적색)
 
 interface ButtonProps {
-  text: string
+  text?: string
   theme: "success" | "fail" | "game"
   width?: string
   height?: string
   fontSize?: string
   backgroundColor?: string
+  opacity?: string
   type?: "button" | "submit"
   disabled?: boolean
   onClick?: () => void
@@ -28,6 +29,7 @@ interface ButtonStyleProps {
   width?: string
   height?: string
   fontSize?: string
+  opacity?: string
 }
 
 const Button = ({
@@ -37,6 +39,7 @@ const Button = ({
   backgroundColor,
   fontSize,
   text,
+  opacity,
   type,
   disabled,
   onClick,
@@ -48,6 +51,7 @@ const Button = ({
       height={height}
       backgroundColor={backgroundColor}
       fontSize={fontSize}
+      opacity={opacity}
       type={type}
       disabled={disabled}
       onClick={onClick}
@@ -77,6 +81,7 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
   color: white;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
+  opacity: ${(props) => props.opacity || "1"};
 
   &:hover {
     background-color: ${(props) =>
