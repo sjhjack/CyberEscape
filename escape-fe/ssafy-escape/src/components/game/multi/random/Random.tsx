@@ -75,7 +75,7 @@ const Random = () => {
           password: "",
         })
         Swal.fire("매칭 완료!")
-        router.push(`/main/multi/waiting/${matchData.roomUuid}`)
+        router.push(`/gameroom/${matchData.roomUuid}`)
       }
     }
     joinRoom()
