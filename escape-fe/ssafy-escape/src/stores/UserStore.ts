@@ -23,6 +23,7 @@ const useUserStore = create<UserState>()(
       isLogin: false,
       isHost: false,
       setIsHost: (value) => set({ isHost: value }),
+
       userUuid: null,
       nickname: null,
       setNickname: (name) => set({ nickname: name }),

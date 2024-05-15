@@ -38,7 +38,7 @@ const Room = ({ roomData }: any) => {
         password: "",
       })
       // 방 목록에서 입장하는 것은 게스트
-      router.push(`/main/multi/waiting/${roomData.uuid}`)
+      router.push(`/gameroom/${roomData.uuid}`)
     }
   }
   return (
