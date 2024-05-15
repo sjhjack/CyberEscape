@@ -43,7 +43,7 @@ const RoomPasswordModal = ({
     })
     handleClose()
     if (response.status === 200) {
-      router.push(`/main/multi/waiting/${roomData.uuid}`)
+      router.push(`/gameroom/${roomData.uuid}`)
     } else if (response.status === 8000) {
       Swal.fire("비밀번호가 일치하지 않습니다.")
       return
