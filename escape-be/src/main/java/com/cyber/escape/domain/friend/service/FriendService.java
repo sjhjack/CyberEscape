@@ -11,6 +11,8 @@ import com.cyber.escape.domain.user.entity.User;
 import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
 import com.cyber.escape.global.common.util.IdFinder;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.FriendException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,18 +33,25 @@ public class FriendService {
     private final FriendRepositoryImpl friendRepositoryImpl;
     private final UserUtil userUtil;
 
-
     private final IdFinder idFinder;
 
     public void makeFriend(FriendDto.FriendRelationRequest dto){
         String currentUserUuid = userUtil.getLoginUserUuid();
 
+        if(dto.getToUserUuid().equals(currentUserUuid))
+            throw new FriendException(ExceptionCodeSet.NO_SELF_FRIEND);
+
         log.info("친구 추가하려는 유저의 uuid : {}", dto.getToUserUuid());
         User fromUser = userRepository.findUserByUuid(currentUserUuid)
-                .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
+                .orElseThrow(() -> new FriendException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
         User toUser = userRepository.findUserByUuid(dto.getToUserUuid())
-                .orElseThrow(() -> new RuntimeException("일치하는 사용자 없음"));
+                .orElseThrow(() -> new FriendException(ExceptionCodeSet.ENTITY_NOT_EXISTS));
 
+        Optional<Friend> friend = friendRepository.getFriend(currentUserUuid, dto.getToUserUuid());
+        // 이미 친구 관계라면
+        if(friend.isPresent()){
+            throw new FriendException(ExceptionCodeSet.ALREADY_FRIEND);
+        }
 
         Friend fromUserToUser = new Friend(fromUser, toUser);
         Friend toUserFromUser = new Friend(toUser, fromUser);
