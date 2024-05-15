@@ -31,6 +31,8 @@ import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import BloodText from "../../elements/horror2/BloodText"
 import Result from "../../elements/common/Result"
 import RequestFormatTime from "@/hooks/RequestFormatTime"
+import postUpdateRank from "@/services/main/ranking/postUpdateRank"
+import useUserStore from "@/stores/UserStore"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -54,6 +56,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
+  const { userUuid } = useUserStore()
 
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
@@ -130,15 +133,18 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     }, 4000)
   }
 
-  // 문고리 클릭 시 이벤트
+  // 문고리 클릭 시 이벤트(싱글이면 시간 갱신, 멀티면 승리 로직만)
   const handleFinal = () => {
-    if (timerRef.current) {
-      const currentTime = timerRef.current.getTime()
-      const clearTime = RequestFormatTime(
-        currentTime.minutes,
-        currentTime.seconds,
-      )
-      setClearTime(clearTime)
+    if (selectedThemeType === "single") {
+      if (timerRef.current) {
+        const currentTime = timerRef.current.getTime()
+        const clearTime = RequestFormatTime(
+          currentTime.minutes,
+          currentTime.seconds,
+        )
+        setClearTime(clearTime)
+        postUpdateRank(clearTime, userUuid as string, 1)
+      }
     }
     setResult("victory")
     setIsGameFinished(true)
