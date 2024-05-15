@@ -36,7 +36,7 @@ const BasicScene = ({ onAir, interactNum, children }: BasicSceneProps) => {
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      <PlayMusic />
+      {/* <PlayMusic /> */}
       <Canvas shadows camera={{ fov: 50 }}>
         <Physics gravity={[0, -9.8, 0]}>{children}</Physics>
         <CustomPointerLockControls />
