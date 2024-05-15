@@ -5,7 +5,6 @@ import QueryProvider from "../hooks/QueryClientProvider"
 import "./globals.css"
 import { usePathname } from "next/navigation"
 import useUserStore from "@/stores/UserStore"
-
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
 })
@@ -18,6 +17,7 @@ const Layout = ({
   modal: React.ReactNode
 }) => {
   const pathname = usePathname()
+  const segments = pathname.split("/")
   const { isLogin } = useUserStore()
   return (
     <html>
@@ -25,7 +25,10 @@ const Layout = ({
         <QueryProvider>
           <StyledComponentsRegistry>
             {children}
-            {pathname !== "/ingame" && isLogin && modal}
+            {pathname !== "/ingame" &&
+              segments[1] !== "gameroom" &&
+              isLogin &&
+              modal}
           </StyledComponentsRegistry>
         </QueryProvider>
       </body>
