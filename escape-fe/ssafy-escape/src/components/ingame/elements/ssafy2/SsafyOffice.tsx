@@ -2,12 +2,12 @@ import { useGLTF } from "@react-three/drei"
 import { useEffect } from "react"
 import { Mesh } from "three"
 
-const SsafyClassRoom = ({ onLoaded }: RoomProps) => {
+const SsafyOffice = ({ onLoaded }: RoomProps) => {
   // const { scene } = useGLTF(
-  //   process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/classroom_merged.glb",
+  //   process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/conference_room.glb",
   //   true,
   // )
-  const { scene } = useGLTF("/glb/ssafy/classroom_merged.glb", true)
+  const { scene } = useGLTF("/glb/ssafy/conference_room.glb", true)
 
   useEffect(() => {
     if (scene) {
@@ -26,4 +26,4 @@ const SsafyClassRoom = ({ onLoaded }: RoomProps) => {
   return <primitive object={scene} scale={10} />
 }
 
-export default SsafyClassRoom
+export default SsafyOffice
