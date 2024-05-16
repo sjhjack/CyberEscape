@@ -15,19 +15,19 @@ import CameraMoveToPosition, {
 
 import { CircularProgress } from "@mui/material"
 interface GameRoomProps {
-  session: any
-  chatting: any
-  ready: any
-  kick: any
-  roomData: any
+  chatting: chatData[]
+  ready: () => void
+  kick: () => void
+  sendMessage: (text: string) => void
+  roomData: PubResponseData | null
   isReady: boolean
   selectedTheme: number
 }
 const Waiting = ({
-  session,
   chatting,
   ready,
   kick,
+  sendMessage,
   roomData,
   isReady,
   selectedTheme,
@@ -101,7 +101,10 @@ const Waiting = ({
                 priority
               />
             </S.MainContentBox>
-            <ChattingBox session={session} chatData={chatting}></ChattingBox>
+            <ChattingBox
+              chatData={chatting}
+              sendMessage={sendMessage}
+            ></ChattingBox>
           </S.MainBox>
           <S.UserBox style={{ marginLeft: "20px" }}>
             {roomData?.guest ? (

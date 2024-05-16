@@ -6,15 +6,26 @@ import ExitGame from "@/components/ingame/ExitGame"
 import ProgressBar from "@/components/ingame/ProgressBar"
 import Image from "next/image"
 import * as S from "@/app/ingame/ingameStyle"
-import SpaceTheme from "@/components/ingame/main/space/SpaceTheme"
 // import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
 import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
+import SsafyTheme2 from "@/components/ingame/main/ssafy2/SsafyTheme2"
+interface IngameProps {
+  roomData: PubResponseData | null
+  progressUpdate: () => void
+  sendMessage: (text: string) => void
+  chatting: chatData[]
+}
 
-const Page = () => {
+const Ingame = ({
+  roomData,
+  progressUpdate,
+  sendMessage,
+  chatting,
+}: IngameProps) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
   const { selectedTheme, selectedThemeType } = useIngameThemeStore()
@@ -36,12 +47,7 @@ const Page = () => {
 
   return (
     <S.Container>
-      {selectedTheme === 7 ? (
-        <SpaceTheme
-          setIsModelLoaded={setIsModelLoaded}
-          isGameStart={isGameStart}
-        />
-      ) : selectedTheme === 1 || selectedTheme === 2 ? (
+      {selectedTheme === 1 || selectedTheme === 2 ? (
         <HorrorTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
@@ -53,6 +59,11 @@ const Page = () => {
         />
       ) : selectedTheme === 3 ? (
         <HorrorTheme2
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : selectedTheme === 6 ? (
+        <SsafyTheme2
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
@@ -73,12 +84,12 @@ const Page = () => {
           /> */}
           {selectedThemeType === "multi" ? (
             <>
-              <Chat />
+              <Chat sendMessage={sendMessage} chatting={chatting} />
               <ProgressBar
-                id1={"오희주"}
-                id2={"김병주"}
-                value1={30}
-                value2={40}
+                id1={roomData?.host?.nickname}
+                id2={roomData?.guest?.nickname}
+                value1={roomData?.hostProgress}
+                value2={roomData?.guestProgress}
               />
             </>
           ) : null}
@@ -98,4 +109,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default Ingame
