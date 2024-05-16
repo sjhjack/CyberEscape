@@ -5,34 +5,44 @@ import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
 import { useQuery } from "@tanstack/react-query"
 import postReadNotification from "@/services/notification/postReadNotification"
-// import postFriendRequest from "@/services/main/friends/postFriendAddition"
 import postFriendAddition from "@/services/main/friends/postFriendAddition"
-import getFriendList from "@/services/main/friends/getFriendList"
 import getNotificationList from "@/services/notification/getNotificationList"
-import { StyledString } from "next/dist/build/swc"
+import Swal from "sweetalert2"
+import { useFriendContext } from "./FriendMainModal"
+import { useEffect } from "react"
 
 // 받은 친구 요청 목록 조회
 const FriendRequestActions = () => {
-  const { data: requestData } = useQuery({
+  const { data: requestData, refetch } = useQuery({
     queryKey: ["notificationList"],
     queryFn: () => getNotificationList(),
   })
 
+  useEffect(() => {
+    refetch()
+  }, [])
+
+  const { refetchFriends } = useFriendContext()
+
+  // 친구 요청 수락 눌렀을 시
   const handleRequest = async (
     requestUserUuid: string,
     notificationId: string,
   ) => {
-    // console.log("친구 채팅")
-
-    // console.log("친구 수락 완료")
     await postFriendAddition(requestUserUuid)
-
     // 읽음 처리
-    postReadNotification(notificationId)
+    await postReadNotification(notificationId)
+    Swal.fire("친구 추가 완료")
+    refetchFriends()
+    refetch()
   }
 
+  // 친구 요청 거절 눌렀을 시
   const handleDeny = async (notificationId: string) => {
-    postReadNotification(notificationId)
+    // 읽음 처리
+    await postReadNotification(notificationId)
+    Swal.fire("친구 요청을 거절했습니다.")
+    refetch()
   }
 
   return (
@@ -63,7 +73,6 @@ const FriendRequestActions = () => {
                   width="60px"
                   onClick={() => handleDeny(user.id)}
                 />
-                {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}
               </ButtonBox>
             </SubContainer>
           </div>

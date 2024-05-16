@@ -4,27 +4,29 @@ import { useQuery } from "@tanstack/react-query"
 import { styled } from "styled-components"
 import PersonIcon from "@mui/icons-material/Person"
 import Button from "../common/Button"
-//import postInvitedList from "@/services/notification/postInvitedList"
 // import postInvitedAccept from "@/services/notification/postInvitedAccept"
 import getNotificationList from "@/services/notification/getNotificationList"
-import postFriendAddition from "@/services/main/friends/postFriendAddition"
+import Swal from "sweetalert2"
 
 // 게임 초대 요청 리스트
 const InvitedList = () => {
-  const { data: notificationList } = useQuery({
+  const { data: notificationList, refetch } = useQuery({
     queryKey: ["notificationList"],
     queryFn: () => getNotificationList(),
   })
 
-
-  const handleAccept = async (roomUuid : string) => {
+  // 초대 요청 수락 시
+  const handleAccept = async (roomUuid: string) => {
     // await postInvitedAccept(roomUuid, userUuid)
-    
     // 초대된 방으로 이동하는 로직
   }
 
+  // 초대 요청 거절 시
   const handleDeny = async () => {
-    // 초대 거절 시 처리
+    Swal.fire("초대를 거절했습니다.")
+    // 여기도 읽음 처리? 한다면 어떤 정보를 넘겨주는지?
+    // await postReadNotification(notificationId)
+    // refetch()
   }
 
   if (!notificationList) {
@@ -33,32 +35,36 @@ const InvitedList = () => {
 
   return (
     <div>
-      {notificationList
-        .filter((data) => data.type === "GAME")
-        .map((user, i) => (
-          <div key={i}>
-            <MainContainer>
-              <ProfileBox>
-                <PersonIcon sx={{ fontSize: "35px" }} />
-                <div>{user.nickname}</div>
-              </ProfileBox>
-              <ButtonBox>
-                <Button
-                  text="수락"
-                  theme="success"
-                  width="60px"
-                  onClick={() => handleAccept(user.roomUuid)}
-                />
-                <Button
-                  text="거절"
-                  theme="fail"
-                  width="60px"
-                  onClick={() => handleDeny()}
-                />
-              </ButtonBox>
-            </MainContainer>
-          </div>
-        ))}
+      {notificationList.length === 0 ? (
+        <NoText>받은 초대 요청이 없습니다.</NoText>
+      ) : (
+        notificationList
+          .filter((data) => data.type === "GAME")
+          .map((user, i) => (
+            <div key={i}>
+              <MainContainer>
+                <ProfileBox>
+                  <PersonIcon sx={{ fontSize: "35px" }} />
+                  <div>{user.nickname}</div>
+                </ProfileBox>
+                <ButtonBox>
+                  <Button
+                    text="수락"
+                    theme="success"
+                    width="60px"
+                    onClick={() => handleAccept(user.roomUuid)}
+                  />
+                  <Button
+                    text="거절"
+                    theme="fail"
+                    width="60px"
+                    onClick={() => handleDeny()}
+                  />
+                </ButtonBox>
+              </MainContainer>
+            </div>
+          ))
+      )}
     </div>
   )
 }
@@ -82,4 +88,9 @@ const ProfileBox = styled.div`
 const ButtonBox = styled.div`
   display: flex;
   gap: 5px;
+`
+const NoText = styled.div`
+  font-size: 14px;
+  text-align: center;
+  padding: 5px;
 `

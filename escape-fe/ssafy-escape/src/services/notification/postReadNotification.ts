@@ -7,31 +7,19 @@ interface PostReadNotificationDataProps {
   data: string
 }
 
-// interface GetNotificationSubscribeDataProps {
-//   roomUuid: string
-//   inviteUserUuid: string
-//   nickname: string
-// }
-
-
 // 알림 읽음 처리
-const postReadNotification = async (
-    objectId : string
-): Promise<string> => {
-  const accessToken = sessionStorage.getItem("access_token");
-  console.log("SUBSCRIBE TOKEN : ");
-  console.log(accessToken);
+const postReadNotification = async (objectId: string): Promise<string> => {
   try {
     const response = await api.post<PostReadNotificationDataProps>(
       API_PATH.MAIN.NOTIFICATION.READ,
       {
         objectId,
-      }
+      },
     )
     if (response.data.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
-    return response.data.data;
+    return response.data.data
   } catch (error) {
     console.error(error)
     throw error

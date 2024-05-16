@@ -105,7 +105,7 @@ const MainHeader = () => {
   useEffect(() => {
     queryClient.prefetchQuery({
       queryKey: ["friendList"],
-      queryFn: getFriendList,
+      queryFn: () => getFriendList(1),
     }),
       queryClient.prefetchQuery({
         queryKey: ["notificationList"],
