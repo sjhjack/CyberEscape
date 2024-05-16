@@ -12,12 +12,13 @@ import {
   QueryClient,
   HydrationBoundary,
   dehydrate,
+  useQuery,
 } from "@tanstack/react-query"
 import getFriendList from "@/services/main/friends/getFriendList"
 import NotificationModal from "../notification/NotificationModal"
 import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
-import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill"
 import { formControlClasses } from "@mui/material"
 
 interface HeaderProps {
@@ -27,56 +28,64 @@ interface HeaderProps {
 }
 
 const EventProvider = () => {
-  const EventSource = EventSourcePolyfill || NativeEventSource;
-  const accessToken = sessionStorage.getItem('access_token');
+  const EventSource = EventSourcePolyfill || NativeEventSource
+  const accessToken = sessionStorage.getItem("access_token")
   // if(accessToken == null) return;
-  let eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
+  let eventSource = new EventSource(
+    process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+    {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        Connection: 'keep-alive',
-        'Content-Type': 'text/event-stream',
-        'X-Accel-Buffering': 'no',
+        Connection: "keep-alive",
+        "Content-Type": "text/event-stream",
+        "X-Accel-Buffering": "no",
       },
-      
-      heartbeatTimeout: 120000
-  });
-  
-  console.log("EVENT !!!!!");
-  eventSource.onmessage = function(event) {
-      console.log('New event from server:', event.data);
-  };
-  eventSource.addEventListener('sse', function(event) {
-      console.log(event);
-      //setMessages(prevMessages => [...prevMessages, event.data]);
-  });
 
-  eventSource.onerror = function(error){
-      console.log("ERROR OCCUR");
-      console.log(error)
-      setTimeout(async function() {
-        await eventSource.close();
-        
-        eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
+      heartbeatTimeout: 120000,
+    },
+  )
+
+  console.log("EVENT !!!!!")
+  eventSource.onmessage = function (event) {
+    console.log("New event from server:", event.data)
+  }
+  eventSource.addEventListener("sse", function (event) {
+    console.log(event)
+    //setMessages(prevMessages => [...prevMessages, event.data]);
+  })
+
+  eventSource.onerror = function (error) {
+    console.log("ERROR OCCUR")
+    console.log(error)
+    setTimeout(async function () {
+      await eventSource.close()
+
+      eventSource = new EventSource(
+        process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            Connection: 'keep-alive',
-            'Content-Type': 'text/event-stream',
-            'X-Accel-Buffering': 'no',
+            Connection: "keep-alive",
+            "Content-Type": "text/event-stream",
+            "X-Accel-Buffering": "no",
           },
-          heartbeatTimeout: 120000
-        });
-      }, 2000);  
+          heartbeatTimeout: 120000,
+        },
+      )
+    }, 2000)
   }
 
   return () => {
-      eventSource.close();
-  };
+    eventSource.close()
+  }
 }
 
 const MainHeader = () => {
   const router = useRouter()
   const { logout } = useUserStore()
   const [friendModalopen, setfriendModalOpen] = useState<boolean>(false)
+  const [isFriendAlram, setIsFriendAlram] = useState<boolean>(false)
+  const [isInviteAlram, setIsInviteAlram] = useState<boolean>(false)
   const [notificationModalopen, setNotificationModalopen] =
     useState<boolean>(false)
 
@@ -94,13 +103,24 @@ const MainHeader = () => {
       queryKey: ["friendList"],
       queryFn: getFriendList,
     }),
-    queryClient.prefetchQuery({
-      queryKey: ["invitedList"],
-      queryFn: getNotificationList,
-    }),
+      queryClient.prefetchQuery({
+        queryKey: ["notificationList"],
+        queryFn: getNotificationList,
+      }),
+      EventProvider()
+  }, [])
 
-    EventProvider();
-    
+  useEffect(() => {
+    const { data: requestData } = useQuery({
+      queryKey: ["notificationList"],
+      queryFn: () => getNotificationList(),
+    })
+    if (requestData?.filter((data) => data.type === "FRIEND").length !== 0) {
+      setIsFriendAlram(true)
+    }
+    if (requestData?.filter((data) => data.type === "GAME").length !== 0) {
+      setIsInviteAlram(true)
+    }
   }, [])
 
   // 로그아웃 버튼 클릭 시
