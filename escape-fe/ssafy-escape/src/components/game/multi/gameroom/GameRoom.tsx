@@ -18,6 +18,7 @@ const GameRoom = () => {
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
   const { selectedTheme, setSelectedTheme } = useIngameThemeStore()
+  const [gameStart, setGameStart] = useState<boolean>(false)
   // openvidu 관련 변수
   const [chatting, setChattting] = useState<Array<chatData>>([])
   const { accessToken, userUuid, isHost } = useUserStore()
@@ -126,17 +127,20 @@ const GameRoom = () => {
     }
   }, [])
   useEffect(() => {
-    // guest와 host 둘 다 준비하면 게임스타트
-    if (roomData?.guestReady && roomData?.hostReady) {
+    if (gameStart) {
       if (roomData?.host?.uuid === userUuid) {
         setSelectedTheme(selectedTheme ? selectedTheme + 1 : 1)
       } else if (roomData?.guest?.uuid === userUuid) {
         setSelectedTheme(selectedTheme ? selectedTheme + 2 : 3)
       }
-      setTimeout(() => {
-        progressReset()
-        setisIngame(true)
-      }, 1000)
+      progressReset()
+      setisIngame(true)
+    }
+  }, [gameStart])
+  useEffect(() => {
+    // guest와 host 둘 다 준비하면 게임스타트
+    if (roomData?.guestReady && roomData?.hostReady) {
+      setGameStart(true)
     }
     if (roomData?.kicked && roomData?.guest?.uuid === userUuid) {
       patchExit({

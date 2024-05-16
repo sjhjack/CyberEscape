@@ -10,20 +10,20 @@ const Chat = ({ sendMessage, chatting }: ChatProps) => {
   const userInputRef = useRef<HTMLInputElement>(null)
   const chatBoxRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClickInsideChat = (event: MouseEvent) => {
-      event.stopPropagation()
-    }
+  // useEffect(() => {
+  //   const handleClickInsideChat = (event: MouseEvent) => {
+  //     event.stopPropagation()
+  //   }
 
-    const chatContainer = document.getElementById(
-      "chat-container",
-    ) as HTMLElement
-    chatContainer.addEventListener("click", handleClickInsideChat)
+  //   const chatContainer = document.getElementById(
+  //     "chat-container",
+  //   ) as HTMLElement
+  //   chatContainer.addEventListener("click", handleClickInsideChat)
 
-    return () => {
-      chatContainer.removeEventListener("click", handleClickInsideChat)
-    }
-  }, [])
+  //   return () => {
+  //     chatContainer.removeEventListener("click", handleClickInsideChat)
+  //   }
+  // }, [])
 
   useEffect(() => {
     if (chatBoxRef.current) {
