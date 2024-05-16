@@ -45,7 +45,6 @@ public class GameHistoryService {
 
         Thema thema = themaRepository.findByCategory(gameHistoryDto.getThemaCategory())
                 .orElseThrow(() -> new RuntimeException("일치하는 테마 없음"));
-
         GameHistory gameHistory = GameHistory.builder()
                 .user(user)
                 .thema(thema)
@@ -70,9 +69,9 @@ public class GameHistoryService {
             Ranking newRanking = Ranking.builder()
                     .user(user)
                     .thema(thema)
-
                     .bestTime(gameHistory.getClearTime())
                     .build();
+
             rankingRepository.save(newRanking);
         }
     }
@@ -98,6 +97,7 @@ public class GameHistoryService {
             String nickname = (String) arr[0];
             Time bestTime = (Time) arr[1];
             int category = (int) arr[2];
+            String profileUrl = (String) arr[3];
 
             if (prevTime.equals(bestTime)) {
                 rank--;
@@ -113,6 +113,7 @@ public class GameHistoryService {
             RankingDto.Response dto = RankingDto.Response.builder()
                     .rank(rank++)
                     .nickname(nickname)
+                    .profileUrl(profileUrl)
                     .bestTime(bestTime)
                     .category(category)
                     .build();
