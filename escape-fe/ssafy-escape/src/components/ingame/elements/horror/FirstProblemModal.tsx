@@ -8,7 +8,7 @@ import HintModal from "../common/HintModal"
 import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-import useHorrorOptionStore from "@/stores/HorrorOptionStore"
+import useIngameOptionStore from "@/stores/IngameOptionStore"
 
 // 첫 번째 문제 모달
 // 문제 모달 중복 코드 많아서 추후 리팩토링 필요
@@ -27,7 +27,7 @@ const FirstProblemModal = ({
     queryFn: () => getQuiz(2),
   })
 
-  const { horror1QuizList } = useHorrorOptionStore()
+  const { horror1QuizList } = useIngameOptionStore()
   const [choices, setChoices] = useState<string[]>([])
 
   useEffect(() => {
@@ -56,17 +56,21 @@ const FirstProblemModal = ({
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
-      setTimeout(() => {
-        setSubtitle("서랍장을 한번 뒤져볼까?")
+      if (setSubtitle) {
+        setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
         setTimeout(() => {
-          setSubtitle("")
-        }, 10000)
-      }, 4000)
+          setSubtitle("서랍장을 한번 뒤져볼까?")
+          setTimeout(() => {
+            setSubtitle("")
+          }, 10000)
+        }, 4000)
+      }
     } else {
       alert("오답입니다.")
-      setPenalty(penalty + 1)
-      timePenalty()
+      if (penalty && setPenalty) {
+        setPenalty(penalty + 1)
+        timePenalty()
+      }
     }
   }
   console.log(quizData)
