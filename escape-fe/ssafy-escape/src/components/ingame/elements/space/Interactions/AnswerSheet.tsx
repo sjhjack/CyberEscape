@@ -26,9 +26,39 @@ const AnswerSheet = ({
   const fetchData = async () => {
     try {
       const answer = await postAnswer(uuid, num)
-      console.log(answer)
       if (answer.right === true) {
         setIsAnswer(true)
+        if (onAir) return
+        setOnAir(true)
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/right.mp3",
+        )
+        new_audio.play()
+        setTimeout(() => {
+          setOnAir(false)
+        }, 2000)
+      } else {
+        if (onAir) return
+        setOnAir(true)
+        // 틀리면 시간 차감 로직
+        timePenalty()
+
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/wrong.mp3",
+        )
+        new_audio.play()
+        setTimeout(() => {
+          const audio = new Audio(
+            process.env.NEXT_PUBLIC_IMAGE_URL +
+              "/dubbing/space/sequence/discount.mp3",
+          )
+          audio.play()
+        }, 1500)
+        setTimeout(() => {
+          setOnAir(false)
+        }, 3500)
       }
     } catch (error) {
       console.error("Error fetching quizs:", error)
@@ -41,34 +71,9 @@ const AnswerSheet = ({
   new_position.y = position[1] + move[1] - 1.1
   new_position.z = position[2] + move[2]
 
-  const handleClick = async () => {
+  const handleClick = () => {
     // 조건 달기
-
-    await fetchData()
-    if (isAnswer === true) {
-      if (onAir) return
-      const new_audio = new Audio(
-        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/right.mp3",
-      )
-      new_audio.play()
-    } else {
-      // 틀리면 시간 차감 로직
-      timePenalty()
-
-      if (onAir) return
-
-      const new_audio = new Audio(
-        process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/sequence/wrong.mp3",
-      )
-      new_audio.play()
-      setTimeout(() => {
-        const audio = new Audio(
-          process.env.NEXT_PUBLIC_IMAGE_URL +
-            "/dubbing/space/sequence/discount.mp3",
-        )
-        audio.play()
-      }, 2000)
-    }
+    fetchData()
   }
 
   return (
