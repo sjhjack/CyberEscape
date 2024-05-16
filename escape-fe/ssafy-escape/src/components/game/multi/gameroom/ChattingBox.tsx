@@ -4,15 +4,15 @@ import styled from "styled-components"
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn"
 
 interface ChattingBoxProps {
-  session: any
   chatData: ChatType[]
+  sendMessage: (text: string) => void
 }
 interface ChatType {
   userName: string
   message: string
 }
 
-const ChattingBox = ({ session, chatData }: ChattingBoxProps) => {
+const ChattingBox = ({ chatData, sendMessage }: ChattingBoxProps) => {
   const [text, setText] = useState<string>("")
   const chatBoxRef = useRef<HTMLDivElement>(null)
 
@@ -23,22 +23,8 @@ const ChattingBox = ({ session, chatData }: ChattingBoxProps) => {
     setText(event.target.value)
   }
 
-  // 세션이 연결된 참가자에게 메시지 보내기
-  const sendMessage = () => {
-    session
-      .signal({
-        data: text,
-      })
-      .then(() => {
-        console.log("Message successfully sent")
-      })
-      .catch((error: Error) => {
-        console.error(error)
-      })
-  }
-
   const submitChat = () => {
-    sendMessage()
+    sendMessage(text)
     setText("")
   }
 

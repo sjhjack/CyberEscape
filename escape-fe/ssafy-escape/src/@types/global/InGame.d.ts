@@ -44,3 +44,8 @@ interface PlaySoundProps {
 interface SolvedObjectProps {
   solved: number
 }
+
+interface chatData {
+  userName: string
+  message: string
+}

@@ -11,10 +11,6 @@ import Waiting from "./Waiting"
 import Ingame from "./Ingame"
 import Swal from "sweetalert2"
 // socket cleint, openvidu session, 게임 입장 및 퇴장 다 여기서 관리
-interface chatData {
-  userName: string
-  message: string
-}
 
 const GameRoom = () => {
   const router = useRouter()
@@ -29,7 +25,18 @@ const GameRoom = () => {
     roomUuid,
     setChattting,
   )
-
+  const sendMessage = (text: string) => {
+    session
+      ?.signal({
+        data: text,
+      })
+      .then(() => {
+        console.log("Message successfully sent")
+      })
+      .catch((error: Error) => {
+        console.error(error)
+      })
+  }
   // stomp client 관련 변수
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [isReady, setIsReady] = useState<boolean>(false)
@@ -92,6 +99,12 @@ const GameRoom = () => {
       body: roomUuid,
     })
   }
+  const progressUpdate = (): void => {
+    client.current?.publish({
+      destination: `/pub/game/progress`,
+      body: roomUuid,
+    })
+  }
   const gameOut = async () => {
     await patchExit({
       roomUuid: roomUuid,
@@ -123,13 +136,18 @@ const GameRoom = () => {
     <>
       <audio ref={audioRef} style={{ display: "none" }} controls></audio>
       {isIngame ? (
-        <Ingame />
+        <Ingame
+          roomData={roomData}
+          progressUpdate={progressUpdate}
+          sendMessage={sendMessage}
+          chatting={chatting}
+        />
       ) : (
         <Waiting
-          session={session}
           chatting={chatting}
           ready={ready}
           kick={kick}
+          sendMessage={sendMessage}
           roomData={roomData}
           isReady={isReady}
           selectedTheme={selectedTheme || 1}
