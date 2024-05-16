@@ -69,7 +69,9 @@ const Waiting = ({
                 width={100}
                 height={100}
               />
-              {roomData?.hostReady ? <div>준비완료</div> : null}
+              {roomData?.hostReady ? (
+                <S.ReadyImage src={`/image/ready.png`} />
+              ) : null}
             </S.CharacterBox>
             <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
             <S.Nickname>
@@ -85,7 +87,9 @@ const Waiting = ({
                     }}
                   />
                 </>
-              ) : null}
+              ) : (
+                <div style={{ width: "100px", height: "40px" }}></div>
+              )}
             </S.Nickname>
           </S.UserBox>
           <S.MainBox>
@@ -116,7 +120,9 @@ const Waiting = ({
                     width={100}
                     height={100}
                   />
-                  {roomData?.guestReady ? <div>준비완료</div> : null}
+                  {roomData?.guestReady ? (
+                    <S.ReadyImage src={`/image/ready.png`} />
+                  ) : null}
                 </S.CharacterBox>
                 <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
                 <S.Nickname>
@@ -137,7 +143,7 @@ const Waiting = ({
                       <Button
                         text={"강제퇴장"}
                         theme={"fail"}
-                        width="80px"
+                        width="100px"
                         height="40px"
                         onClick={() => {
                           kick()
