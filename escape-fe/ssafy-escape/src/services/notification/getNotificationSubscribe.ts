@@ -7,32 +7,16 @@ interface GetNotificationSubscribe {
   data: string
 }
 
-// interface GetNotificationSubscribeDataProps {
-//   roomUuid: string
-//   inviteUserUuid: string
-//   nickname: string
-// }
-
-
-
 // 알림 subscribe
-const getNotificationSubscribe = async (
-
-): Promise<string> => {
-  const accessToken = sessionStorage.getItem("access_token");
-  console.log("SUBSCRIBE TOKEN : ");
-  console.log(accessToken);
+const getNotificationSubscribe = async (): Promise<string> => {
   try {
     const response = await api.get<GetNotificationSubscribe>(
       API_PATH.MAIN.NOTIFICATION.SUBSCRIBE,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
     )
     if (response.data.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
-    return "";
+    return ""
   } catch (error) {
     console.error(error)
     throw error

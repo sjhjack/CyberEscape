@@ -8,8 +8,8 @@ interface PostUserSearchBodyProps {
 }
 
 interface PostUserSearchDataProps {
-  nickname: string,
-  userUuid: string,
+  nickname: string
+  userUuid: string
   relationship: string
 }
 
@@ -17,19 +17,15 @@ interface PostUserSearchDataProps {
 const postUserSearch = async (
   nickname: string,
 ): Promise<PostUserSearchDataProps[]> => {
-  const accessToken = sessionStorage.getItem("access_token");
   try {
     const response = await api.post<PostUserSearchBodyProps>(
       API_PATH.MAIN.FRIEND.SEARCH,
       { nickname },
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
     )
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
     }
-    return response.data.data;
+    return response.data.data
   } catch (error) {
     console.error(error)
     throw error
@@ -37,11 +33,3 @@ const postUserSearch = async (
 }
 
 export default postUserSearch
-
-// import dummy from "./postUserSearch.json"
-// const postUserSearch = async (nickname: string) => {
-//   console.log(nickname)
-//   return dummy
-// }
-
-// export default postUserSearch
