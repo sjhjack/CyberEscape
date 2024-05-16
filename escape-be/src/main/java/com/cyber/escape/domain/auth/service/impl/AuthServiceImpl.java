@@ -74,7 +74,8 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public UserDto.SigninResponse reIssue(UserDto.SigninResponse tokenRequest) {
-		log.info("reissue start !!");
+		log.info("reissue start !! ========================");
+		log.info("request refreshToken : {}", tokenRequest.getRefreshToken());
 
 		// Refresh Token 파싱되면 OK
 		tokenProvider.validateToken(tokenRequest.getRefreshToken());
@@ -87,6 +88,8 @@ public class AuthServiceImpl implements AuthService {
 		UserDto.SigninResponse signinResponse = tokenProvider.generateTokenResponse(authentication);
 		// Refresh Token Redis에 저장
 		tokenUtil.setRefreshToken(signinResponse.getRefreshToken());
+
+		log.info("reissue end !! ========================");
 
 		return signinResponse;
 	}
