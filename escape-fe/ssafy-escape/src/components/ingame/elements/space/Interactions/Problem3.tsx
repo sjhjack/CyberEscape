@@ -16,6 +16,7 @@ const Problem3 = ({
   setSubtitle,
   sequences,
   setSequences,
+  timePenalty,
 }: any) => {
   const texture = useTexture(url)
 
@@ -46,6 +47,7 @@ const Problem3 = ({
             sequences={sequences}
             setSequences={setSequences}
             setInteractNum={setInteractNum}
+            timePenalty={timePenalty}
           />
           <AnswerSheet
             onAir={onAir}
@@ -61,6 +63,7 @@ const Problem3 = ({
             sequences={sequences}
             setSequences={setSequences}
             setInteractNum={setInteractNum}
+            timePenalty={timePenalty}
           />
           <AnswerSheet
             onAir={onAir}
@@ -76,6 +79,7 @@ const Problem3 = ({
             sequences={sequences}
             setSequences={setSequences}
             setInteractNum={setInteractNum}
+            timePenalty={timePenalty}
           />
           <AnswerSheet
             onAir={onAir}
@@ -90,6 +94,7 @@ const Problem3 = ({
             sequences={sequences}
             setSequences={setSequences}
             setInteractNum={setInteractNum}
+            timePenalty={timePenalty}
           />
         </>
       ) : null}
