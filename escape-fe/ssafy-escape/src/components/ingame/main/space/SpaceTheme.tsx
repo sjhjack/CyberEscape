@@ -36,7 +36,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const { selectedThemeType } = useIngameThemeStore()
   const handleTimeOut = () => {
     setIsTimeOut(true)
-    setResult("Timeout")
+    setResult("timeOut")
     setIsGameFinished(true)
   }
   const timePenalty = () => {
@@ -48,7 +48,9 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     <>
       {isGameStart ? (
         <>
-          <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
+          {!isGameFinished && (
+            <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
+          )}
           <Start onAir={onAir} setOnAir={setOnAir} setSubtitle={setSubtitle} />
         </>
       ) : null}
