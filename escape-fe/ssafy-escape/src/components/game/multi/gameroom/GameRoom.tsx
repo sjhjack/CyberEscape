@@ -149,6 +149,10 @@ const GameRoom = () => {
       }, 1000)
       setisIngame(true)
     }
+    // gameStart를 추적하면서 false일 때는 ingame도 false. 처음 렌더링, 게임 끝나고 다시 대기방 돌아올 때
+    else {
+      setisIngame(false)
+    }
   }, [gameStart])
   useEffect(() => {
     // guest와 host 둘 다 준비하면 게임스타트
@@ -163,6 +167,22 @@ const GameRoom = () => {
       // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음. 이 부분 추후 수정 필요
       Swal.fire("호스트가 이탈하여 게임이 종료되었습니다.")
       window.location.href = "/main"
+    }
+
+    // 게임 종료 조건
+    if (roomData?.hostProgress === 4 || roomData?.guestProgress === 4) {
+      Swal.fire("게임이 종료되었습니다. 대기방으로 이동합니다.")
+      // 예시, 게스트나 호스트 둘 중 한 명이 게임을 끝내면 5초 후에 대기방으로 이동
+      setTimeout(() => {
+        setGameStart(false)
+      }, 5000)
+    }
+    if (isIngame && !roomData?.guest) {
+      // 게임 중에 게스트가 이탈하면
+      Swal.fire("상대방이 이탈하였습니다. 게임을 종료합니다")
+      setTimeout(() => {
+        setGameStart(false)
+      }, 3000)
     }
   }, [roomData])
 
