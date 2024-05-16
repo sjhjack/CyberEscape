@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(FileException.class)
-    public ApiResponse handleVoiceChatException(FileException e) {
+    public ApiResponse handleFileException(FileException e) {
         return makeResponseFormat(e.getExceptionCode());
     }
 
@@ -37,17 +37,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TokenException.class)
-    public ApiResponse handleVoiceChatException(TokenException e) {
+    public ApiResponse handleTokenException(TokenException e) {
         return makeResponseFormat(e.getExceptionCode());
     }
 
     @ExceptionHandler(UserException.class)
-    public ApiResponse handleVoiceChatException(UserException e) {
+    public ApiResponse handleUserException(UserException e) {
         return makeResponseFormat(e.getExceptionCode());
     }
 
     @ExceptionHandler(RoomException.class)
-    public ApiResponse handleVoiceChatException(RoomException e) {
+    public ApiResponse handleRoomException(RoomException e) {
         return makeResponseFormat(e.getExceptionCode());
     }
 
