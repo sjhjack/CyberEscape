@@ -45,9 +45,8 @@ const EventProvider = () => {
   eventSource.onmessage = function(event) {
       console.log('New event from server:', event.data);
   };
-  eventSource.addEventListener('sse', function(event : any) {
+  eventSource.addEventListener('sse', function(event) {
       console.log(event);
-      console.log('Message:', event.data);
       //setMessages(prevMessages => [...prevMessages, event.data]);
   });
 
@@ -169,7 +168,7 @@ const MainHeader = () => {
   )
 
   return (
-    <ParentDiv>9
+    <ParentDiv>
       <MainContainer>
         {headerItems.map(({ Icon, text, onClick }, index) => (
           <HeaderItem key={index} Icon={Icon} text={text} onClick={onClick} />
