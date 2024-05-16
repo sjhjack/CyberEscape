@@ -4,6 +4,7 @@ import { Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import ThemeCard from "./ThemeCard"
 import useIngameThemeStore from "@/stores/IngameTheme"
+
 import styled from "styled-components"
 import "swiper/css"
 import "swiper/css/navigation"
@@ -46,7 +47,10 @@ const ThemeCarousel = ({
   pagination,
 }: CarouselProps) => {
   const [currentCard, setCurrentCard] = useState<number>(0)
-  const { setSelectedTheme } = useIngameThemeStore()
+  const { setSelectedTheme, selectedThemeType } = useIngameThemeStore()
+  const filteredThemeData =
+    selectedThemeType === "multi" ? themeData.slice(0, 2) : themeData
+
   useEffect(() => {
     setSelectedTheme(themeIdx[currentCard])
   }, [currentCard])
@@ -64,7 +68,7 @@ const ThemeCarousel = ({
           pagination ? (pagination === true ? { clickable: true } : {}) : false
         }
       >
-        {themeData?.map((item: CardInfo, index: number) => {
+        {filteredThemeData?.map((item: CardInfo, index: number) => {
           return (
             <SwiperSlide key={index}>
               <ThemeCard themeData={item} $width={width} $height={height} />
