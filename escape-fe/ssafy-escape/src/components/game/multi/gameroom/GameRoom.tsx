@@ -16,7 +16,7 @@ const GameRoom = () => {
   const router = useRouter()
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const pathname: string = usePathname()
-  const roomUuid: string = pathname.substring(20)
+  const roomUuid: string = pathname.substring(10)
   const { selectedTheme, setSelectedTheme } = useIngameThemeStore()
   const [gameStart, setGameStart] = useState<boolean>(false)
   // openvidu 관련 변수
@@ -116,6 +116,10 @@ const GameRoom = () => {
     // socket 및 openvidu session 연결 끊기
     client.current?.deactivate()
     leaveSession()
+    patchExit({
+      roomUuid: roomUuid,
+      userUuid: userUuid || "",
+    })
   }
 
   // 게임방 들어오면 stomp client, openvidu 연결 시작. 언마운트 되면 연결 끊기
@@ -128,10 +132,11 @@ const GameRoom = () => {
   }, [])
   useEffect(() => {
     if (gameStart) {
-      if (roomData?.host?.uuid === userUuid) {
-        setSelectedTheme(selectedTheme ? selectedTheme + 1 : 1)
-      } else if (roomData?.guest?.uuid === userUuid) {
-        setSelectedTheme(selectedTheme ? selectedTheme + 2 : 3)
+      const newTheme = isHost ? selectedTheme + 1 : selectedTheme + 2
+      if (isHost) {
+        setSelectedTheme(newTheme)
+      } else {
+        setSelectedTheme(newTheme)
       }
       progressReset()
       setisIngame(true)
@@ -143,17 +148,13 @@ const GameRoom = () => {
       setGameStart(true)
     }
     if (roomData?.kicked && roomData?.guest?.uuid === userUuid) {
-      patchExit({
-        roomUuid: roomUuid,
-        userUuid: userUuid || "",
-      })
       Swal.fire("방장으로부터 강제 퇴장 당했습니다")
-      router.push("/main/multi/room")
+      window.location.href = "/main"
     }
     if (roomData?.host === null) {
-      // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음
+      // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음. 이 부분 추후 수정 필요
       Swal.fire("호스트가 이탈하여 게임이 종료되었습니다.")
-      router.push("/main/multi/room")
+      window.location.href = "/main"
     }
   }, [roomData])
 
@@ -175,7 +176,6 @@ const GameRoom = () => {
           sendMessage={sendMessage}
           roomData={roomData}
           isReady={isReady}
-          selectedTheme={selectedTheme || 1}
         />
       )}
     </>
