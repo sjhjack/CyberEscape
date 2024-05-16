@@ -228,6 +228,13 @@ public class RoomStompHandler {
 		sendRoomInfo(roomUuid, room);
 	}
 
+	@MessageMapping("/game/init")
+	public void initProgress(@Payload String roomUuid) {
+		log.info("Initialize progress === ");
+		RoomDto.StompResponse room = roomManager.initProgress(roomUuid);
+		sendRoomInfo(roomUuid, room);
+	}
+
 	private void sendRoomInfo(String roomUuid, RoomDto.StompResponse room) {
 		if(room.getHostSessionUuid() == null){
 			log.info("BroadCasting Info ========== 방 폭파 히히");
