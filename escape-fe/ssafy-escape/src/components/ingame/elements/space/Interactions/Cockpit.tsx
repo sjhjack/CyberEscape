@@ -2,6 +2,9 @@ import React, { useRef, useMemo, useState, useEffect } from "react"
 import { MeshBasicMaterial, BoxGeometry } from "three"
 import Video2 from "./Video2"
 import { useThree } from "@react-three/fiber"
+import SecondToTime from "@/hooks/SecondToTime"
+import postUpdateRank from "@/services/main/ranking/postUpdateRank"
+import useUserStore from "@/stores/UserStore"
 
 const Cockpit = ({
   onAir,
@@ -13,6 +16,8 @@ const Cockpit = ({
   setInteractNum,
   setResult,
   setIsGameFinished,
+  setClearTime,
+  timerRef,
 }: any) => {
   const meshRef = useRef()
   const geometry = useMemo(() => new BoxGeometry(2, 2, 2), [])
@@ -23,6 +28,7 @@ const Cockpit = ({
   const url3 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/countdown2.mp4"
   const url4 = process.env.NEXT_PUBLIC_IMAGE_URL + "/video/system_operating.mp4"
   const [currentUrl, setCurrentUrl] = useState(url1)
+  const { userUuid } = useUserStore()
 
   const material = useMemo(
     () =>
@@ -150,6 +156,11 @@ const Cockpit = ({
           } else {
             setCurrentUrl(url4)
             setOnAir(false)
+            const currentTime = timerRef.current.getTime()
+            const clearSeconds =
+              600 - currentTime.minutes * 60 + currentTime.seconds
+            setClearTime(SecondToTime(clearSeconds))
+            postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
             setIsGameFinished(true)
             setResult("victory")
             setSubtitle(null)

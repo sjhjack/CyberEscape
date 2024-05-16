@@ -16,6 +16,8 @@ const Interactions = ({
   setInteractNum,
   setIsGameFinished,
   setResult,
+  setClearTime,
+  timerRef
 }: any) => {
   return (
     <>
@@ -29,6 +31,8 @@ const Interactions = ({
         setInteractNum={setInteractNum}
         setIsGameFinished={setIsGameFinished}
         setResult={setResult}
+        setClearTime={setClearTime}
+        timerRef={timerRef}
       />
       <Computer
         position={[-43, 4, -162.9]}

@@ -12,6 +12,7 @@ const Problems = ({
   setSequences,
   setInteractNum,
   setSubtitle,
+  timePenalty,
 }: any) => {
   const [url1, setUrl1] = useState(
     process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
@@ -97,6 +98,7 @@ const Problems = ({
         setSequences={setSequences}
         setSubtitle={setSubtitle}
         setInteractNum={setInteractNum}
+        timePenalty={timePenalty}
       />
       <Problem2
         onAir={onAir}
@@ -112,6 +114,7 @@ const Problems = ({
         setSequences={setSequences}
         setSubtitle={setSubtitle}
         setInteractNum={setInteractNum}
+        timePenalty={timePenalty}
       />
       <Problem3
         onAir={onAir}
@@ -127,6 +130,7 @@ const Problems = ({
         setSequences={setSequences}
         setSubtitle={setSubtitle}
         setInteractNum={setInteractNum}
+        timePenalty={timePenalty}
       />
       <RotateBall
         sunPosition={[59, 9, -65]}

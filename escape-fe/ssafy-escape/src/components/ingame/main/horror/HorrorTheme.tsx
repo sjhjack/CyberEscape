@@ -33,6 +33,7 @@ import Result from "../../elements/common/Result"
 import RequestFormatTime from "@/hooks/RequestFormatTime"
 import postUpdateRank from "@/services/main/ranking/postUpdateRank"
 import useUserStore from "@/stores/UserStore"
+import SecondToTime from "@/hooks/SecondToTime"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -138,12 +139,9 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     if (selectedThemeType === "single") {
       if (timerRef.current) {
         const currentTime = timerRef.current.getTime()
-        const clearTime = RequestFormatTime(
-          currentTime.minutes,
-          currentTime.seconds,
-        )
-        setClearTime(clearTime)
-        postUpdateRank(clearTime, userUuid as string, 1)
+        const clearSeconds = 600 - currentTime.minutes * 60 + currentTime.seconds
+        setClearTime(SecondToTime(clearSeconds))
+        postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
       }
     }
     setResult("victory")
