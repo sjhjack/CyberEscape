@@ -54,3 +54,10 @@ export const CharacterBoxContent = styled.div`
   justify-content: center;
   align-items: center;
 `
+export const ReadyImage = styled.img`
+  position: absolute;
+  top: 30%;
+  width: 180px;
+  height: 120px;
+  pointer-events: none; // Ensures that the overlay does not interfere with mouse events
+`
