@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomService {
-	private static final Long[] themaIds = {1L, 2L, 3L};	// Todo : 값 변경
+	private static final Long[] themaIds = {1L, 4L};
 
 	private final UserRepository userRepository;
 	private final RoomRepository roomRepository;
