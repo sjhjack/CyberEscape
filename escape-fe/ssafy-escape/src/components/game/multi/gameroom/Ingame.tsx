@@ -75,6 +75,7 @@ const Ingame = ({
         />
       ) : selectedTheme === 3 ? (
         <HorrorTheme2
+          progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
