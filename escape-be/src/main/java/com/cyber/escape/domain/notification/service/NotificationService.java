@@ -135,12 +135,29 @@ public class NotificationService {
 
                 // 해당 객체에 엮인 sseEmitter 객체를 찾는다.
                 Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterByIdStartWith(String.valueOf(receiverUuid));
+
+                // emitter가 모종의 이유로 삭제되었을 때
+                if(sseEmitters.isEmpty()){
+                    log.info("NotificationService ============ emitter를 새로 생성");
+                    String id = user.getUuid() + "_" + System.currentTimeMillis();
+                    log.info("NotificationService ============ id : {}, lastEventId: {}", id, "");
+                    SseEmitter sseEmitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+
+                    if(notificationType.equals(Notify.NotificationType.FRIEND))
+                        sendToClient(sseEmitter, id,  NotifyDto.FriendResponse.from(notification));
+                    else
+                        sendToClient(sseEmitter, id,  NotifyDto.GameResponse.from(notification));
+                }
                 try {
                     sseEmitters.forEach(
                             (key, sseEmitter) -> {
                                 log.info("KEY : {}, Emitter : {}", key, sseEmitter);
                                 emitterRepository.saveEventCache(key, notification);
-                                sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
+
+                                if(notificationType.equals(Notify.NotificationType.FRIEND))
+                                    sendToClient(sseEmitter, key,  NotifyDto.FriendResponse.from(notification));
+                                else
+                                    sendToClient(sseEmitter, key,  NotifyDto.GameResponse.from(notification));
                             }
                     );
 
@@ -184,7 +201,7 @@ public class NotificationService {
             log.info("sendToClient ============ sendToClient completed");
         } catch (IOException e){ // 연결이 끊기거나 네트워크가 불안정한 경우
             log.info("sendToClient ============ sendToClient failed");
-            sseEmitter.completeWithError(e);
+            sseEmitter.completeWithError(e); // error가 나서 sseEmitter가 삭제
             emitterRepository.deleteById(id);
             log.error("알림을 송신하는 도중 에러가 발생했습니다 : {}", e.getMessage());
             throw new RuntimeException("연결 오류");
