@@ -103,6 +103,7 @@ const GameRoom = () => {
     })
   }
   const progressUpdate = (): void => {
+    console.log("문제 해결")
     client.current?.publish({
       destination: `/pub/game/progress`,
       body: roomUuid,
@@ -143,7 +144,9 @@ const GameRoom = () => {
       } else {
         setSelectedTheme(newTheme)
       }
-      progressReset()
+      setTimeout(() => {
+        progressReset()
+      }, 1000)
       setisIngame(true)
     }
   }, [gameStart])

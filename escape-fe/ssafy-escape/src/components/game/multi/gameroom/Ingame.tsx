@@ -31,7 +31,6 @@ const Ingame = ({
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
   const { selectedTheme, selectedThemeType } = useIngameThemeStore()
-  const router = useRouter()
   const exitGame = (e: any) => {
     e.preventDefault()
     Swal.fire({

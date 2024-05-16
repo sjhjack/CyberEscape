@@ -32,7 +32,6 @@ const Chat = ({ sendMessage, chatting }: ChatProps) => {
   }, [chatting])
 
   const send = () => {
-    console.log("눌림")
     if (userInputRef.current) {
       const messageText = userInputRef.current.value.trim()
       if (messageText !== "") {
