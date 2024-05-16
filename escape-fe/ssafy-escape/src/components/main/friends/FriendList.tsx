@@ -10,7 +10,7 @@ import postDeleteFriend from "@/services/main/friends/postDeleteFriend"
 
 // 친구 목록 불러오는 컴포넌트
 const FriendList = () => {
-  const { data: friendsData, isLoading } = useQuery({
+  const { data: friendsData } = useQuery({
     queryKey: ["friendList"],
     queryFn: getFriendList,
   })
@@ -21,9 +21,6 @@ const FriendList = () => {
     await postDeleteFriend(friendUuid)
   }
 
-  if (isLoading) {
-    return <div>로딩 중</div>
-  }
   if (!friendsData) {
     return <div>데이터 없음</div>
   }
