@@ -76,7 +76,8 @@ const Page = () => {
             isModelLoaded={isModelLoaded}
             onFinish={handleGameStart}
           /> */}
-          {selectedThemeType === "single" ? (
+          {/*for merge request */}
+          {selectedThemeType === "multi" ? (
             <>
               <Chat />
               <ProgressBar

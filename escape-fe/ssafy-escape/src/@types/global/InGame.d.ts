@@ -11,10 +11,10 @@ interface RoomProps {
 
 interface ProblemProps {
   onClose: () => void
-  penalty: number
+  penalty?: number
   timePenalty: () => void
-  setPenalty: (penalty: number) => void
-  setSubtitle: (subtitle: string) => void
+  setPenalty?: (penalty: number) => void
+  setSubtitle?: (subtitle: string) => void
   setShowSpider?: (showSpider: boolean) => void
 }
 

@@ -25,6 +25,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   async (response: AxiosResponse) => {
     // 응답의 status가 6001인 경우 리프레시 토큰 요청을 수행
+    console.log("응답 내용", response)
     if (response.data.status === 6001) {
       const originalRequest = response.config as CustomAxiosRequestConfig
       if (!originalRequest._retry) {
@@ -32,23 +33,36 @@ api.interceptors.response.use(
 
         // 리프레시 토큰을 가져오기 위한 API 요청
         const refreshToken = sessionStorage.getItem("refresh_token")
+        const { accessToken } = useUserStore.getState()
+        console.log("리프레시 토큰", refreshToken)
         try {
-          const refreshResponse = await axios.post(
-            `${api.defaults.baseURL}/auth/refresh`,
-            {
-              refresh_token: refreshToken,
-            },
-          )
+          const refreshResponse = await axios
+            .post(
+              `${api.defaults.baseURL}/auth/refresh`,
+              { refreshToken: refreshToken },
+              {
+                headers: { Authorization: `Bearer ${accessToken}` },
+              },
+            )
+            .then((response) => {
+              // Additional logic here
+              console.log(response)
+              if (response.data.data !== "") {
+                const newAccessToken = response.data.data.accessToken
+                const newRefreshToken = response.data.data.refreshToken
+                sessionStorage.setItem("access_token", newAccessToken)
+                sessionStorage.setItem("refresh_token", newRefreshToken)
+                originalRequest.headers["Authorization"] =
+                  `Bearer ${newAccessToken}`
+                console.log("refreshed")
+              }
 
-          // 새 액세스 토큰을 세션 스토리지에 저장
-          const newAccessToken = refreshResponse.data.access_token
-          sessionStorage.setItem("access_token", newAccessToken)
-
-          // 새 토큰을 기존 요청 헤더에 설정
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
+              // Return the modified config object
+              return originalRequest
+            })
 
           // 실패한 요청을 새로운 액세스 토큰으로 재시도
-          return api(originalRequest)
+          return api(refreshResponse)
         } catch (refreshError) {
           console.error("Refresh token request failed", refreshError)
           // 리프레시 토큰이 만료된 경우, 사용자에게 로그인 페이지로 이동 요청 또는 로그아웃 처리
