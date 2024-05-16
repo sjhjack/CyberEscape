@@ -23,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.cyber.escape.domain.auth.jwt.JwtFilter;
 import com.cyber.escape.domain.auth.jwt.TokenProvider;
+import com.cyber.escape.global.exception.FilterExceptionHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 	private final TokenProvider tokenProvider;
 	private final CorsConfig config;
+	private final FilterExceptionHandler filterExceptionHandler;
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -58,7 +60,7 @@ public class SecurityConfig {
 			// 		.requestMatchers("/**").authenticated()
 			// )
 
-			.addFilterAfter(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+			.addFilterAfter(new JwtFilter(tokenProvider, filterExceptionHandler), UsernamePasswordAuthenticationFilter.class)
 
 		;
 		return http.build();
