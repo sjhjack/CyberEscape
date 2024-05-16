@@ -26,18 +26,10 @@ const ThirdProblemModal = ({
     queryFn: () => getQuiz(3),
   })
   const { horror2QuizList } = useIngameOptionStore()
-  const [choices, setChoices] = useState<string[]>([])
-
-  useEffect(() => {
-    if (quizData && quizData[0] && horror2QuizList[quizData[2].quizUuid]) {
-      setChoices(horror2QuizList[quizData[2].quizUuid])
-    }
-  }, [quizData, horror2QuizList])
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
   }
-  console.log(quizData)
 
   // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
@@ -85,14 +77,18 @@ const ThirdProblemModal = ({
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[0])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][0])
+            }
           />
           <Button
             theme="fail"
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[1])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][1])
+            }
           />
         </ChoiceBox1>
         <ChoiceBox2>
@@ -101,14 +97,18 @@ const ThirdProblemModal = ({
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[2])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][2])
+            }
           />
           <Button
             theme="fail"
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[3])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][3])
+            }
           />
         </ChoiceBox2>
       </div>
