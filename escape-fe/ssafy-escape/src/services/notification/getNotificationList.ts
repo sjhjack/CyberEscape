@@ -4,7 +4,7 @@ import api from "@/services/api"
 interface GetNotificationListProps {
   status: number
   message: string
-  data: GetNotificationListDataProps[] | string;
+  data: GetNotificationListDataProps[];
 }
 
 interface GetNotificationListDataProps {
@@ -18,7 +18,7 @@ interface GetNotificationListDataProps {
   createdAt: string;
 }
 
-// 받은 친구 요청 리스트
+// 받은 알림 리스트
 const getNotificationList =
   async (): Promise<GetNotificationListDataProps[]> => {
     const accessToken = sessionStorage.getItem("access_token");
@@ -33,8 +33,6 @@ const getNotificationList =
       if (response.status === 400) {
         throw new Error(`오류: ${response.data.message}`)
       }
-      console.log("RESPONSE : ");
-      console.log(response.data);
       return response.data.data;
     } catch (error) {
       console.error(error)

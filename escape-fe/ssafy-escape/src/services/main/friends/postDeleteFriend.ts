@@ -20,7 +20,7 @@ const postDeleteFriend = async (
       throw new Error(`오류: ${response.data.message}`)
     }
     console.log(response)
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error(error)
     throw error

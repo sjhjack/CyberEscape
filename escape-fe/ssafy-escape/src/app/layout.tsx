@@ -8,7 +8,6 @@ import useUserStore from "@/stores/UserStore"
 
 // 최상위
 import { createContext, useContext, useEffect, useState } from 'react';
-import EventProvider from "@/components/EventProvider"
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],

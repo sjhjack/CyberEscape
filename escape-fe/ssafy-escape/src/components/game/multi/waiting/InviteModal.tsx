@@ -41,10 +41,10 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
       text="친구 초대"
       isFriendModal={false}
     >
-      {friendsData?.data.map((data, index) => {
+      {friendsData?.map((data, index) => {
         return (
           <FriendsList key={index}>
-            <p>{data.friendNickname}</p>
+            <p>{data.nickname}</p>
             <Button
               text="초대"
               theme="success"
