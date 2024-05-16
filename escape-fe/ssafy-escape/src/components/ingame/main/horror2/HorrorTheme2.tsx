@@ -38,7 +38,11 @@ import Result from "../../elements/common/Result"
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
 // const lookAt = { x: -4, y: 2, z: 2 }
 
-const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+const HorrorTheme2 = ({
+  isGameStart,
+  setIsModelLoaded,
+  progressUpdate,
+}: IngameMainProps) => {
   const [isSyringeClicked, setIsSyringeClicked] = useState<boolean>(false)
   const [isHammerClicked, setIsHammerClicked] = useState<boolean>(false)
   const [twoMinLater, setTwoMinLater] = useState<boolean>(false)
@@ -172,6 +176,9 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     if (isHammerClicked && isSyringeClicked) {
       await setResult("victory")
       setIsGameFinished(true)
+      if (progressUpdate) {
+        progressUpdate()
+      }
     }
   }
 
