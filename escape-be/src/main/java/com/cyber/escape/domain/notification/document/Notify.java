@@ -18,9 +18,10 @@ public class Notify {
     private ObjectId id;
     private String senderUuid;
     private String receiverUuid;
-    private String nickname;
+    private String nickname; // 친구 요청의 경우 받는 사람의 nickname, 게임 요청의 경우 보내는 사람의 nickname
     private String roomUuid;
     private String content;
+    private String profileUrl;
     private NotificationType notificationType;
     private char isRead;
     @CreatedDate
