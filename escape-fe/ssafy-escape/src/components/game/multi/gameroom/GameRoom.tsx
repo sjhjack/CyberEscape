@@ -17,7 +17,7 @@ const GameRoom = () => {
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, setSelectedTheme } = useIngameThemeStore()
   // openvidu 관련 변수
   const [chatting, setChattting] = useState<Array<chatData>>([])
   const { accessToken, userUuid, isHost } = useUserStore()
@@ -105,14 +105,18 @@ const GameRoom = () => {
       body: roomUuid,
     })
   }
-  const gameOut = async () => {
-    await patchExit({
-      roomUuid: roomUuid,
-      userUuid: userUuid || "",
+  const progressReset = (): void => {
+    client.current?.publish({
+      destination: `/pub/game/init`,
+      body: roomUuid,
     })
+  }
+  const gameOut = async () => {
+    // socket 및 openvidu session 연결 끊기
     client.current?.deactivate()
     leaveSession()
   }
+
   // 게임방 들어오면 stomp client, openvidu 연결 시작. 언마운트 되면 연결 끊기
   useEffect(() => {
     connect()
@@ -124,10 +128,27 @@ const GameRoom = () => {
   useEffect(() => {
     // guest와 host 둘 다 준비하면 게임스타트
     if (roomData?.guestReady && roomData?.hostReady) {
-      setisIngame(true)
+      if (roomData?.host?.uuid === userUuid) {
+        setSelectedTheme(selectedTheme ? selectedTheme + 1 : 1)
+      } else if (roomData?.guest?.uuid === userUuid) {
+        setSelectedTheme(selectedTheme ? selectedTheme + 2 : 3)
+      }
+      setTimeout(() => {
+        progressReset()
+        setisIngame(true)
+      }, 1000)
     }
     if (roomData?.kicked && roomData?.guest?.uuid === userUuid) {
+      patchExit({
+        roomUuid: roomUuid,
+        userUuid: userUuid || "",
+      })
       Swal.fire("방장으로부터 강제 퇴장 당했습니다")
+      router.push("/main/multi/room")
+    }
+    if (roomData?.host === null) {
+      // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음
+      Swal.fire("호스트가 이탈하여 게임이 종료되었습니다.")
       router.push("/main/multi/room")
     }
   }, [roomData])

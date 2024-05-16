@@ -93,7 +93,7 @@ const Waiting = ({
               <S.ThemeImage
                 src={
                   process.env.NEXT_PUBLIC_IMAGE_URL +
-                  `/image/${selectedTheme}.png`
+                  `/image/${selectedTheme === 2 || selectedTheme === 3 ? 1 : 4}.png`
                 }
                 alt=""
                 width={400}
