@@ -18,6 +18,7 @@ const FirstProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  progressUpdate,
 }: ProblemProps) => {
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const { solved, setSolved } = useIngameQuizStore()
@@ -28,7 +29,6 @@ const FirstProblemModal = ({
   })
 
   const { horror1QuizList } = useIngameOptionStore()
-
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
@@ -49,6 +49,9 @@ const FirstProblemModal = ({
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
+      if (progressUpdate) {
+        progressUpdate()
+      }
       onClose()
       if (setSubtitle) {
         setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
