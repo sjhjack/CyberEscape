@@ -202,6 +202,8 @@ public class RoomDto {
 		public void leaveGuest() {
 			this.guestSessionUuid = null;
 			this.guest = null;
+			this.isGuestReady = false;
+			this.isKicked = false;
 		}
 
 		public void changeReadyStatus(String sessionUuid) {
@@ -222,6 +224,16 @@ public class RoomDto {
 			} else {
 				throw new RoomException(ExceptionCodeSet.ROOM_INVALID_USER);
 			}
+
+			if(hostProgress == 4 || guestProgress == 4) {
+				isHostReady = false;
+				isGuestReady = false;
+			}
+		}
+
+		public void initProgress() {
+			hostProgress = 0;
+			guestProgress = 0;
 		}
 	}
 }
