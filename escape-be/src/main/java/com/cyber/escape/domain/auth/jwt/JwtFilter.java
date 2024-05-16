@@ -2,6 +2,7 @@ package com.cyber.escape.domain.auth.jwt;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,14 @@ public class JwtFilter extends OncePerRequestFilter {
 		FilterChain filterChain) throws ServletException, IOException {
 
 		System.out.println("URI :::::::::: " + request.getRequestURI());
+
+		log.info("Request Headers ===");
+		Enumeration<String> headerNames = request.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+			String headerValue = request.getHeader(headerName);
+			log.info("{}: {}", headerName, headerValue);
+		}
 
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
 		List<String> list = Arrays.asList(
