@@ -74,7 +74,7 @@ public class PagingDto {
 		private final String title;
 		private final int capacity;
 		private final LocalDateTime startedAt;
-		private final Long themaId;
+		private final int category;
 		private final Long userId;
 		private final String uuid;
 		private final String nickname;
@@ -85,7 +85,7 @@ public class PagingDto {
 			final String title,
 			final int capacity,
 			final LocalDateTime startedAt,
-			final Long themaId,
+			final int category,
 			final Long userId,
 			final String uuid,
 			final String nickname,
@@ -94,7 +94,7 @@ public class PagingDto {
 			this.title = title;
 			this.capacity = capacity;
 			this.startedAt = startedAt;
-			this.themaId = themaId;
+			this.category = category;
 			this.userId = userId;
 			this.uuid = uuid;
 			this.nickname = nickname;
