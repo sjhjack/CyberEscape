@@ -48,14 +48,9 @@ const ThemeCarousel = ({
 }: CarouselProps) => {
   const [currentCard, setCurrentCard] = useState<number>(0)
   const { setSelectedTheme, selectedThemeType } = useIngameThemeStore()
-  const [modeThemeData, setModeThemeData] = useState<CardInfo[]>([])
-  useEffect(() => {
-    if (selectedThemeType === "single") {
-      setModeThemeData(themeData)
-    } else {
-      setModeThemeData(themeData.splice(0, 2))
-    }
-  }, [selectedThemeType])
+  const filteredThemeData =
+    selectedThemeType === "multi" ? themeData.slice(0, 2) : themeData
+
   useEffect(() => {
     setSelectedTheme(themeIdx[currentCard])
   }, [currentCard])
@@ -73,7 +68,7 @@ const ThemeCarousel = ({
           pagination ? (pagination === true ? { clickable: true } : {}) : false
         }
       >
-        {modeThemeData?.map((item: CardInfo, index: number) => {
+        {filteredThemeData?.map((item: CardInfo, index: number) => {
           return (
             <SwiperSlide key={index}>
               <ThemeCard themeData={item} $width={width} $height={height} />
