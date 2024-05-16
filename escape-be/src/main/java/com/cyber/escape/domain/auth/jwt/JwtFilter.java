@@ -34,14 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		System.out.println("URI :::::::::: " + request.getRequestURI());
 
-		log.info("Request Headers ===");
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String headerName = headerNames.nextElement();
-			String headerValue = request.getHeader(headerName);
-			log.info("{}: {}", headerName, headerValue);
-		}
-
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
 		List<String> list = Arrays.asList(
 			"/auth/signup",		// 회원가입 페이지
