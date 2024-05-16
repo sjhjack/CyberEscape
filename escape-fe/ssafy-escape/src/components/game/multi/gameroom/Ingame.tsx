@@ -64,6 +64,7 @@ const Ingame = ({
     <S.Container>
       {selectedTheme === 1 || selectedTheme === 2 ? (
         <HorrorTheme
+          progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
