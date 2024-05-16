@@ -6,7 +6,7 @@ import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import HintModal from "../common/HintModal"
 import { useEffect, useState } from "react"
-import useHorrorOptionStore from "@/stores/HorrorOptionStore"
+import useIngameOptionStore from "@/stores/IngameOptionStore"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
 
@@ -51,7 +51,7 @@ const SecondProblemModal = ({
     queryFn: () => getQuiz(3),
   })
 
-  const { horror2QuizList } = useHorrorOptionStore()
+  const { horror2QuizList } = useIngameOptionStore()
   const [choices, setChoices] = useState<string[]>([])
 
   useEffect(() => {
@@ -78,17 +78,21 @@ const SecondProblemModal = ({
     if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("...아, 기록하려면 노트도 챙겨야지.")
-      setTimeout(() => {
-        setSubtitle("책장 어디에 꽂아놨던 것 같은데...")
+      if (setSubtitle) {
+        setSubtitle("...아, 기록하려면 노트도 챙겨야지.")
         setTimeout(() => {
-          setSubtitle("")
-        }, 10000)
-      }, 4000)
+          setSubtitle("책장 어디에 꽂아놨던 것 같은데...")
+          setTimeout(() => {
+            setSubtitle("")
+          }, 10000)
+        }, 4000)
+      }
     } else {
-      alert("오답입니다")
-      setPenalty(penalty + 1)
-      timePenalty()
+      if (penalty && setPenalty) {
+        alert("오답입니다")
+        setPenalty(penalty + 1)
+        timePenalty()
+      }
     }
   }
 

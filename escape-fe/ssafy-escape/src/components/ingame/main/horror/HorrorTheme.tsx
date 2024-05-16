@@ -30,7 +30,6 @@ import getQuiz from "@/services/ingame/getQuiz"
 import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import BloodText from "../../elements/horror2/BloodText"
 import Result from "../../elements/common/Result"
-import RequestFormatTime from "@/hooks/RequestFormatTime"
 import postUpdateRank from "@/services/main/ranking/postUpdateRank"
 import useUserStore from "@/stores/UserStore"
 import SecondToTime from "@/hooks/SecondToTime"
@@ -56,7 +55,6 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [result, setResult] = useState<string>("")
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
-  const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
   const { userUuid } = useUserStore()
 
   const timerRef = useRef<CountdownTimerHandle | null>(null)
@@ -70,8 +68,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 
   // 시간 끝났을 시 이벤트 함수
   const handleTimeOut = () => {
-    setIsTimeOut(true)
-    setResult("Timeout")
+    setResult("timeOut")
     setIsGameFinished(true)
   }
 
