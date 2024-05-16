@@ -55,7 +55,7 @@ public class RoomDto {
 	@Getter
 	public static class PostRequest {
 		private final String title;
-		private final Long themaId;
+		private final int category;
 		private final String password;
 		private final String hostUuid;
 	}
@@ -65,13 +65,13 @@ public class RoomDto {
 	public static class PostResponse {
 		private final String roomUuid;
 		private final String hostUuid;
-		private final Long themaId;
+		private final int category;
 
-		public static PostResponse of(final String roomUuid, final String hostUuid, final Long themaId) {
+		public static PostResponse of(final String roomUuid, final String hostUuid, final int category) {
 			return PostResponse.builder()
 				.roomUuid(roomUuid)
 				.hostUuid(hostUuid)
-				.themaId(themaId)
+				.category(category)
 				.build();
 		}
 	}
