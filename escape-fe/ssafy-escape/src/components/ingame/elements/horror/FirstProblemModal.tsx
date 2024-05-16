@@ -18,6 +18,7 @@ const FirstProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  progressUpdate,
 }: ProblemProps) => {
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const { solved, setSolved } = useIngameQuizStore()
