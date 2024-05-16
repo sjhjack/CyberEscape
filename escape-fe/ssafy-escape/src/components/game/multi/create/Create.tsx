@@ -13,7 +13,7 @@ import useUserStore from "@/stores/UserStore"
 import postCreateRoom from "@/services/game/room/postCreateRoom"
 interface postCreateRoomRequestProps {
   title: string
-  themaId: number
+  category: number
   password: string
   hostUuid: string
 }
@@ -39,7 +39,7 @@ const Create = () => {
 
   const data: postCreateRoomRequestProps = {
     title: title,
-    themaId: selectedTheme ? selectedTheme : 1,
+    category: selectedTheme ? selectedTheme : 1,
     password: password,
     hostUuid: userUuid ? userUuid : "",
   }
