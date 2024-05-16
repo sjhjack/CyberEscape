@@ -56,14 +56,6 @@ const GameRoom = () => {
       },
       connectHeaders,
     )
-    client.current?.publish({
-      destination: `/pub/room/connect`,
-      headers: {
-        userUuid: userUuid || "",
-        roomUuid: roomUuid,
-        userType: isHost ? "host" : "guest",
-      },
-    })
   }
   // 입장 시 소켓 연결
   const connect = () => {
@@ -85,6 +77,16 @@ const GameRoom = () => {
       },
     })
     client.current.activate()
+  }
+  const initialInfo = (): void => {
+    client.current?.publish({
+      destination: `/pub/room/connect`,
+      headers: {
+        userUuid: userUuid || "",
+        roomUuid: roomUuid,
+        userType: isHost ? "host" : "guest",
+      },
+    })
   }
   // 게임 레디 상태 바뀔 때마다 request 보내기
   const ready = (): void => {
@@ -126,6 +128,9 @@ const GameRoom = () => {
   useEffect(() => {
     connect()
     joinSession()
+    setTimeout(() => {
+      initialInfo()
+    }, 1000)
     return () => {
       gameOut()
     }
