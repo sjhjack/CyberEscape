@@ -20,6 +20,7 @@ import Keys from "../../elements/space/Basics/Keys"
 import Result from "../../elements/common/Result"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import Asteroids from "../../elements/space/Backgrounds/Asteroids"
+import LEDLight from "../../elements/space/Basics/LEDLight"
 // import LEDLight from "../../elements/space/Basics/LEDLight"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
@@ -104,7 +105,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         {/* <Asteroids /> */}
         <Videos sequences={sequences} setSequences={setSequences} />
         <RoomModel onLoaded={setIsModelLoaded} />
-        {/* <LEDLight /> */}
+        <LEDLight />
       </BasicScene>
     </>
   )
