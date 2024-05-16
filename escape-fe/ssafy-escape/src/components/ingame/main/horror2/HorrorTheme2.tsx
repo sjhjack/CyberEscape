@@ -68,7 +68,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   }
   const handleTimeOut = () => {
     setIsTimeOut(true)
-    setResult("Timeout")
+    setResult("timeOut")
     setIsGameFinished(true)
   }
 

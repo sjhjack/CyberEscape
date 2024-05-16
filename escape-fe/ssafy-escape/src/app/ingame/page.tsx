@@ -77,17 +77,6 @@ const Page = () => {
             onFinish={handleGameStart}
           /> */}
           {/*for merge request */}
-          {selectedThemeType === "multi" ? (
-            <>
-              <Chat />
-              <ProgressBar
-                id1={"오희주"}
-                id2={"김병주"}
-                value1={30}
-                value2={40}
-              />
-            </>
-          ) : null}
           <ExitGame>
             <Image
               src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/exitbutton.png"}
