@@ -15,7 +15,7 @@ public interface RankingRepository extends JpaRepository<Ranking, String> {
     Optional<Ranking> findByUserUuidAndThemaCategory(String userUuid, int themaCategory);
 //    @Query("SELECT r FROM Ranking r JOIN Thema t ON r.thema.id = t.id WHERE t.uuid = :themaUuid ORDER BY r.bestTime ASC")
 
-    @Query(value = "SELECT u.nickname, r.best_time, t.category " +
+    @Query(value = "SELECT u.nickname, r.best_time, t.category, u.profile_url " +
             "FROM ranking r " +
             "JOIN user u ON r.user_id = u.id " +
             "JOIN thema t ON r.thema_id = t.id " +

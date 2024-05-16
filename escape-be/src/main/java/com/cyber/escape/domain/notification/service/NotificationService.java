@@ -10,7 +10,11 @@ import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.dto.NotifyDto;
 import com.cyber.escape.domain.notification.repository.EmitterRepositoryImpl;
 import com.cyber.escape.domain.notification.repository.NotifyRepository;
+import com.cyber.escape.domain.user.entity.User;
+import com.cyber.escape.domain.user.repository.UserRepository;
 import com.cyber.escape.domain.user.util.UserUtil;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.UserException;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,7 @@ public class NotificationService {
     private final EmitterRepositoryImpl emitterRepository;
     // CRUD, FIND, 동적 쿼리 
     private final NotifyRepository notifyRepository;
+    private final UserRepository userRepository;
     // 복잡한 수준 쿼리, 세밀한 제어에는 TEMPLATE 사용
     private final MongoTemplate mongoTemplate;
     private final UserUtil userUtil;
@@ -120,7 +125,8 @@ public class NotificationService {
 
                 // roomUuid 자리는 비워놓는다.
                 //저장 확인
-                Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, roomUuid, notificationType, content));
+                User user = userRepository.findUserByUuid(userUtil.getLoginUserUuid()).orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
+                Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, user.getNickname(), user.getProfileUrl(), roomUuid, notificationType, content));
                 log.info("::::::::::::::::::::::::::::::::::  친구 요청 ");
                 // Notify notification = createNotify(receiverId, notificationType, content);
 
@@ -149,13 +155,15 @@ public class NotificationService {
         }
     }
 
-    private Notify createNotify(String senderUuid, String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content) {
+    private Notify createNotify(String senderUuid, String receiverUuid, String nickname, String profileUrl,
+                                String roomUuid, Notify.NotificationType notificationType, String content) {
         // Todo : sender 있는 경우, 없는 경우 나누기
         return Notify.builder()
                 .senderUuid(senderUuid)
                 .receiverUuid(receiverUuid)
                 .roomUuid(roomUuid)
-                .nickname(userUtil.getLoginUser().getNickname())
+                .nickname(nickname)
+                .profileUrl(profileUrl)
                 .notificationType(notificationType)
                 .content(content)
                 .isRead('F')

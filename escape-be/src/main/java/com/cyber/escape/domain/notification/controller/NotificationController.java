@@ -48,7 +48,7 @@ public class NotificationController {
     @GetMapping("/list")
     public ApiResponse<List<Object>> getUnreadNotifyList(){
         log.info("NotificationController ========== getNotReadNoteList() start ..");
-        return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList());
+        return new ApiResponse<>(HttpStatus.OK.value(), "안 읽은 알림 리스트입니다.", notificationService.getNotifyList());
     }
 
     /*
@@ -63,7 +63,7 @@ public class NotificationController {
         ObjectId objectId = objInfo.get("objectId");
 //        }
         notificationService.markAsRead(objectId);
-        return new ApiResponse<>(HttpStatus.OK.value(), "알림 읽음 완료 !!!", "");
+        return new ApiResponse<>(HttpStatus.OK.value(), "알림 읽음 처리가 완료되었습니다.", "");
     }
 
 
