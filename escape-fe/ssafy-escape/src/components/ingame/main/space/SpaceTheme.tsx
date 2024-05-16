@@ -34,13 +34,16 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
 
   const { selectedThemeType } = useIngameThemeStore()
-
   const handleTimeOut = () => {
     setIsTimeOut(true)
     setResult("Timeout")
     setIsGameFinished(true)
   }
-
+  const timePenalty = () => {
+    if (timerRef.current) {
+      timerRef.current.applyPenalty()
+    }
+  }
   return (
     <>
       {isGameStart ? (
@@ -84,6 +87,8 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setInteractNum={setInteractNum}
           setIsGameFinished={setIsGameFinished}
           setResult={setResult}
+          setClearTime={setClearTime}
+          timerRef={timerRef}
         />
         <Problems
           onAir={onAir}
@@ -92,6 +97,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setSequences={setSequences}
           setSubtitle={setSubtitle}
           setInteractNum={setInteractNum}
+          timePenalty={timePenalty}
         />
         {/* <Asteroids /> */}
         <Videos sequences={sequences} setSequences={setSequences} />
