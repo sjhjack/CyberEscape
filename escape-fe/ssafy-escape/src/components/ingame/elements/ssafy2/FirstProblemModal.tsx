@@ -18,13 +18,6 @@ const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
   })
 
   const { ssafy2QuizList } = useIngameOptionStore()
-  const [choices, setChoices] = useState<string[]>([])
-
-  useEffect(() => {
-    if (quizData && quizData[0] && ssafy2QuizList[quizData[0].quizUuid]) {
-      setChoices(ssafy2QuizList[quizData[0].quizUuid])
-    }
-  }, [quizData, ssafy2QuizList])
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
@@ -55,14 +48,18 @@ const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[0])}
+            onClick={() =>
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][0])
+            }
           />
           <Button
             theme="fail"
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[1])}
+            onClick={() =>
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][1])
+            }
           />
         </ChoiceBox1>
         <ChoiceBox2>
@@ -71,14 +68,18 @@ const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[2])}
+            onClick={() =>
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][2])
+            }
           />
           <Button
             theme="fail"
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[3])}
+            onClick={() =>
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][3])
+            }
           />
         </ChoiceBox2>
       </div>
