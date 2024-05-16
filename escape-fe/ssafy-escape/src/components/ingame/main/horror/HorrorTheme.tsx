@@ -136,14 +136,14 @@ const HorrorTheme = ({
   }
 
   // 문고리 클릭 시 이벤트(싱글이면 시간 갱신, 멀티면 승리 로직만)
-  const handleFinal = () => {
+  const handleFinal = async () => {
     if (selectedThemeType === "single") {
       if (timerRef.current) {
         const currentTime = timerRef.current.getTime()
         const clearSeconds =
           600 - currentTime.minutes * 60 + currentTime.seconds
         setClearTime(SecondToTime(clearSeconds))
-        postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
+        await postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
       }
     }
     setResult("victory")
