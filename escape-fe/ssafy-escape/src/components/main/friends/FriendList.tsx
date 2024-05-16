@@ -21,10 +21,6 @@ const FriendList = () => {
     await postDeleteFriend(friendUuid)
   }
 
-  const openChat = () => {
-    // 채팅방 여는 로직
-  }
-
   if (isLoading) {
     return <div>로딩 중</div>
   }
@@ -48,14 +44,7 @@ const FriendList = () => {
                 width="60px"
                 onClick={() => handleDelete(friend.friendUuid)}
               />
-            ) : (
-              <Button
-                text="채팅"
-                theme="success"
-                width="60px"
-                onClick={openChat}
-              />
-            )}
+            ) : null}
           </SubContainer>
         </div>
       ))}

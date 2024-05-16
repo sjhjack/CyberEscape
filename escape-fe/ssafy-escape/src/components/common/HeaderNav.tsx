@@ -19,65 +19,13 @@ import NotificationModal from "../notification/NotificationModal"
 import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill"
-import { formControlClasses } from "@mui/material"
+import { Badge, formControlClasses } from "@mui/material"
+import { MainColor } from "@/styles/palette"
 
 interface HeaderProps {
   Icon: React.ElementType
   text: string
   onClick: () => void
-}
-
-const EventProvider = () => {
-  const EventSource = EventSourcePolyfill || NativeEventSource
-  const accessToken = sessionStorage.getItem("access_token")
-  // if(accessToken == null) return;
-  let eventSource = new EventSource(
-    process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Connection: "keep-alive",
-        "Content-Type": "text/event-stream",
-        "X-Accel-Buffering": "no",
-      },
-
-      heartbeatTimeout: 120000,
-    },
-  )
-
-  console.log("EVENT !!!!!")
-  eventSource.onmessage = function (event) {
-    console.log("New event from server:", event.data)
-  }
-  eventSource.addEventListener("sse", function (event) {
-    console.log(event)
-    //setMessages(prevMessages => [...prevMessages, event.data]);
-  })
-
-  eventSource.onerror = function (error) {
-    console.log("ERROR OCCUR")
-    console.log(error)
-    setTimeout(async function () {
-      await eventSource.close()
-
-      eventSource = new EventSource(
-        process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Connection: "keep-alive",
-            "Content-Type": "text/event-stream",
-            "X-Accel-Buffering": "no",
-          },
-          heartbeatTimeout: 120000,
-        },
-      )
-    }, 2000)
-  }
-
-  return () => {
-    eventSource.close()
-  }
 }
 
 const MainHeader = () => {
@@ -88,6 +36,62 @@ const MainHeader = () => {
   const [isInviteAlram, setIsInviteAlram] = useState<boolean>(false)
   const [notificationModalopen, setNotificationModalopen] =
     useState<boolean>(false)
+
+  const EventProvider = () => {
+    const EventSource = EventSourcePolyfill || NativeEventSource
+    const accessToken = sessionStorage.getItem("access_token")
+    // if(accessToken == null) return;
+    let eventSource = new EventSource(
+      process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+      {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+          "X-Accel-Buffering": "no",
+          Authorization: `Bearer ${accessToken}`,
+        },
+
+        heartbeatTimeout: 120000,
+      },
+    )
+
+    console.log("EVENT !!!!!")
+    eventSource.onmessage = function (event) {
+      console.log("New event from server:", event.data)
+    }
+    eventSource.addEventListener("sse", function (event) {
+      console.log(event)
+      console.log("알림 도착")
+      //setMessages(prevMessages => [...prevMessages, event.data]);
+    })
+
+    eventSource.onerror = function (error) {
+      console.log("ERROR OCCUR")
+      console.log(error)
+      setTimeout(async function () {
+        await eventSource.close()
+
+        eventSource = new EventSource(
+          process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+          {
+            headers: {
+              "Content-Type": "text/event-stream",
+              "Cache-Control": "no-cache",
+              Connection: "keep-alive",
+              "X-Accel-Buffering": "no",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            heartbeatTimeout: 120000,
+          },
+        )
+      }, 2000)
+    }
+
+    return () => {
+      eventSource.close()
+    }
+  }
 
   const handleFriendModalClose = () => {
     setfriendModalOpen(false)
@@ -110,18 +114,24 @@ const MainHeader = () => {
       EventProvider()
   }, [])
 
+  const { data: requestData } = useQuery({
+    queryKey: ["notificationList"],
+    queryFn: () => getNotificationList(),
+  })
+
   useEffect(() => {
-    const { data: requestData } = useQuery({
-      queryKey: ["notificationList"],
-      queryFn: () => getNotificationList(),
-    })
-    if (requestData?.filter((data) => data.type === "FRIEND").length !== 0) {
-      setIsFriendAlram(true)
+    if (requestData) {
+      const hasFriendNotification = requestData.some(
+        (data) => data.type === "FRIEND",
+      )
+      const hasGameNotification = requestData.some(
+        (data) => data.type === "GAME",
+      )
+
+      setIsFriendAlram(hasFriendNotification)
+      setIsInviteAlram(hasGameNotification)
     }
-    if (requestData?.filter((data) => data.type === "GAME").length !== 0) {
-      setIsInviteAlram(true)
-    }
-  }, [])
+  }, [requestData])
 
   // 로그아웃 버튼 클릭 시
   const handleLogout = async () => {
@@ -169,13 +179,26 @@ const MainHeader = () => {
   const HeaderItem = ({ Icon, text, onClick }: HeaderProps) => (
     <Box onClick={onClick}>
       <IconBox>
-        <Icon
-          style={{
-            color: "white",
-            fontSize: "40px",
-            cursor: "pointer",
-          }}
-        />
+        {(isFriendAlram && text === "친구") ||
+        (isInviteAlram && text === "알림") ? (
+          <Badge variant="dot" color="error">
+            <Icon
+              style={{
+                color: "white",
+                fontSize: "40px",
+                cursor: "pointer",
+              }}
+            />
+          </Badge>
+        ) : (
+          <Icon
+            style={{
+              color: "white",
+              fontSize: "40px",
+              cursor: "pointer",
+            }}
+          />
+        )}
       </IconBox>
       <Text
         style={{
