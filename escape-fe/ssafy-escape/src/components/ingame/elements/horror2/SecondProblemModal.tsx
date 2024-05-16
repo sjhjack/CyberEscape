@@ -52,13 +52,6 @@ const SecondProblemModal = ({
   })
 
   const { horror2QuizList } = useIngameOptionStore()
-  const [choices, setChoices] = useState<string[]>([])
-
-  useEffect(() => {
-    if (quizData && quizData[0] && horror2QuizList[quizData[1].quizUuid]) {
-      setChoices(horror2QuizList[quizData[1].quizUuid])
-    }
-  }, [quizData, horror2QuizList])
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
@@ -131,14 +124,18 @@ const SecondProblemModal = ({
               width="100px"
               height="40px"
               opacity="0"
-              onClick={() => handleAnswerCheck(choices[0])}
+              onClick={() =>
+                handleAnswerCheck(horror2QuizList[quizData[1].quizUuid][0])
+              }
             />
             <Button
               theme="fail"
               width="100px"
               height="40px"
               opacity="0"
-              onClick={() => handleAnswerCheck(choices[1])}
+              onClick={() =>
+                handleAnswerCheck(horror2QuizList[quizData[1].quizUuid][1])
+              }
             />
           </ChoiceBox1>
           <ChoiceBox2>
@@ -147,14 +144,18 @@ const SecondProblemModal = ({
               width="100px"
               height="40px"
               opacity="0"
-              onClick={() => handleAnswerCheck(choices[2])}
+              onClick={() =>
+                handleAnswerCheck(horror2QuizList[quizData[1].quizUuid][2])
+              }
             />
             <Button
               theme="fail"
               width="100px"
               height="40px"
               opacity="0"
-              onClick={() => handleAnswerCheck(choices[3])}
+              onClick={() =>
+                handleAnswerCheck(horror2QuizList[quizData[1].quizUuid][3])
+              }
             />
           </ChoiceBox2>
         </div>
