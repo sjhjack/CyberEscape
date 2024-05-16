@@ -39,7 +39,7 @@ const Create = () => {
 
   const data: postCreateRoomRequestProps = {
     title: title,
-    category: selectedTheme ? selectedTheme : 1,
+    category: selectedTheme,
     password: password,
     hostUuid: userUuid ? userUuid : "",
   }
