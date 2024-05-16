@@ -96,7 +96,7 @@ const Waiting = ({
                   />
                 </>
               ) : (
-                <p style={{ width: "100px", height: "40px" }}></p>
+                <div style={{ width: "100px", height: "40px" }}></div>
               )}
             </S.Nickname>
           </S.UserBox>

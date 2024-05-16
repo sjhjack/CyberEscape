@@ -16,11 +16,12 @@ export const CharacterBox = styled.div`
   background-color: #eaeaea;
   border-radius: 100%;
 `
-export const Nickname = styled.p`
+export const Nickname = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 15px 0;
 `
 export const MainBox = styled.div`
   width: 50%;
