@@ -8,8 +8,8 @@ const Lights = () => {
         intensity={100}
         color={"red"}
       />
-      <directionalLight position={[5, 10, 7.5]} />
-      <directionalLight position={[59, 10, -65]} />
+      {/* <directionalLight position={[5, 10, 7.5]} />
+      <directionalLight position={[59, 10, -65]} /> */}
       {/* <pointLight
         position={[-500, 10, -180]}
         intensity={100000}
