@@ -38,7 +38,11 @@ import SecondToTime from "@/hooks/SecondToTime"
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
 // const lookAt = { x: -4, y: 2, z: 2 }
 
-const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+const HorrorTheme = ({
+  isGameStart,
+  setIsModelLoaded,
+  progressUpdate,
+}: IngameMainProps) => {
   const [isFlowerClicked, setIsFlowerClicked] = useState<boolean>(false)
   const [isKnobClicked, setIsKnobClicked] = useState<boolean>(false)
   const [twoMinLater, setTwoMinLater] = useState<boolean>(false)
@@ -136,7 +140,8 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     if (selectedThemeType === "single") {
       if (timerRef.current) {
         const currentTime = timerRef.current.getTime()
-        const clearSeconds = 600 - currentTime.minutes * 60 + currentTime.seconds
+        const clearSeconds =
+          600 - currentTime.minutes * 60 + currentTime.seconds
         setClearTime(SecondToTime(clearSeconds))
         postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
       }
@@ -179,6 +184,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       <Subtitle text={subtitle} />
       {showFirstProblem ? (
         <FirstProblemModal
+          progressUpdate={progressUpdate}
           onClose={handleFirstProblem}
           penalty={penalty}
           setPenalty={setPenalty}
@@ -188,6 +194,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       {showSecondProblem ? (
         <SecondProblemModal
+          progressUpdate={progressUpdate}
           onClose={handleSecondProblem}
           penalty={penalty}
           setPenalty={setPenalty}
@@ -197,6 +204,7 @@ const HorrorTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       {showThirdProblem ? (
         <ThirdProblemModal
+          progressUpdate={progressUpdate}
           onClose={handleThirdProblem}
           penalty={penalty}
           setPenalty={setPenalty}
