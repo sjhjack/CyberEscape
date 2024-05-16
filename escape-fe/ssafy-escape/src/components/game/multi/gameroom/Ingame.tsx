@@ -41,7 +41,7 @@ const Ingame = ({
       cancelButtonText: "아니요",
     }).then((result) => {
       if (result.isConfirmed) {
-        router.push("/main")
+        window.location.href = "/main"
       }
     })
   }
