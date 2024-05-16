@@ -11,17 +11,14 @@ import Waiting from "./Waiting"
 import Ingame from "./Ingame"
 import Swal from "sweetalert2"
 // socket cleint, openvidu session, 게임 입장 및 퇴장 다 여기서 관리
-interface chatData {
-  userName: string
-  message: string
-}
 
 const GameRoom = () => {
   const router = useRouter()
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(20)
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, setSelectedTheme } = useIngameThemeStore()
+  const [gameStart, setGameStart] = useState<boolean>(false)
   // openvidu 관련 변수
   const [chatting, setChattting] = useState<Array<chatData>>([])
   const { accessToken, userUuid, isHost } = useUserStore()
@@ -29,7 +26,18 @@ const GameRoom = () => {
     roomUuid,
     setChattting,
   )
-
+  const sendMessage = (text: string) => {
+    session
+      ?.signal({
+        data: text,
+      })
+      .then(() => {
+        console.log("Message successfully sent")
+      })
+      .catch((error: Error) => {
+        console.error(error)
+      })
+  }
   // stomp client 관련 변수
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
   const [isReady, setIsReady] = useState<boolean>(false)
@@ -92,14 +100,24 @@ const GameRoom = () => {
       body: roomUuid,
     })
   }
-  const gameOut = async () => {
-    await patchExit({
-      roomUuid: roomUuid,
-      userUuid: userUuid || "",
+  const progressUpdate = (): void => {
+    client.current?.publish({
+      destination: `/pub/game/progress`,
+      body: roomUuid,
     })
+  }
+  const progressReset = (): void => {
+    client.current?.publish({
+      destination: `/pub/game/init`,
+      body: roomUuid,
+    })
+  }
+  const gameOut = async () => {
+    // socket 및 openvidu session 연결 끊기
     client.current?.deactivate()
     leaveSession()
   }
+
   // 게임방 들어오면 stomp client, openvidu 연결 시작. 언마운트 되면 연결 끊기
   useEffect(() => {
     connect()
@@ -109,12 +127,32 @@ const GameRoom = () => {
     }
   }, [])
   useEffect(() => {
-    // guest와 host 둘 다 준비하면 게임스타트
-    if (roomData?.guestReady && roomData?.hostReady) {
+    if (gameStart) {
+      if (roomData?.host?.uuid === userUuid) {
+        setSelectedTheme(selectedTheme ? selectedTheme + 1 : 1)
+      } else if (roomData?.guest?.uuid === userUuid) {
+        setSelectedTheme(selectedTheme ? selectedTheme + 2 : 3)
+      }
+      progressReset()
       setisIngame(true)
     }
+  }, [gameStart])
+  useEffect(() => {
+    // guest와 host 둘 다 준비하면 게임스타트
+    if (roomData?.guestReady && roomData?.hostReady) {
+      setGameStart(true)
+    }
     if (roomData?.kicked && roomData?.guest?.uuid === userUuid) {
+      patchExit({
+        roomUuid: roomUuid,
+        userUuid: userUuid || "",
+      })
       Swal.fire("방장으로부터 강제 퇴장 당했습니다")
+      router.push("/main/multi/room")
+    }
+    if (roomData?.host === null) {
+      // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음
+      Swal.fire("호스트가 이탈하여 게임이 종료되었습니다.")
       router.push("/main/multi/room")
     }
   }, [roomData])
@@ -123,13 +161,18 @@ const GameRoom = () => {
     <>
       <audio ref={audioRef} style={{ display: "none" }} controls></audio>
       {isIngame ? (
-        <Ingame />
+        <Ingame
+          roomData={roomData}
+          progressUpdate={progressUpdate}
+          sendMessage={sendMessage}
+          chatting={chatting}
+        />
       ) : (
         <Waiting
-          session={session}
           chatting={chatting}
           ready={ready}
           kick={kick}
+          sendMessage={sendMessage}
           roomData={roomData}
           isReady={isReady}
           selectedTheme={selectedTheme || 1}

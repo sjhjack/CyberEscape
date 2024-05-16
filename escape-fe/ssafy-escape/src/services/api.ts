@@ -25,7 +25,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   async (response: AxiosResponse) => {
     // 응답의 status가 6001인 경우 리프레시 토큰 요청을 수행
-    console.log("응답 내용", response)
     if (response.data.status === 6001) {
       const originalRequest = response.config as CustomAxiosRequestConfig
       if (!originalRequest._retry) {
