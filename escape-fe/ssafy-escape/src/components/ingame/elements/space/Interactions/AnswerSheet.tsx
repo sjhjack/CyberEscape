@@ -13,6 +13,7 @@ const AnswerSheet = ({
   move,
   setBall,
   setInteractNum,
+  timePenalty,
 }: any) => {
   const [isAnswer, setIsAnswer] = useState(false)
 
@@ -52,6 +53,7 @@ const AnswerSheet = ({
       new_audio.play()
     } else {
       // 틀리면 시간 차감 로직
+      timePenalty()
 
       if (onAir) return
 

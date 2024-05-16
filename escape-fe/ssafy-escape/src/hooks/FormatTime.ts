@@ -1,3 +1,5 @@
+// HH:MM:SS -> M분 S초로 바꾸어 줌
+
 const FormatTime = (time: string) => {
   const parts = time.split(":")
 
