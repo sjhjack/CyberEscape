@@ -30,7 +30,7 @@ const Room = ({ roomData }: any) => {
     if (roomData.hasPassword) {
       setShowModal(true)
     } else {
-      setSelectedTheme(roomData.themaId)
+      setSelectedTheme(roomData.category)
 
       await patchJoin({
         roomUuid: roomData.uuid,
@@ -52,7 +52,7 @@ const Room = ({ roomData }: any) => {
         <Image
           src={
             process.env.NEXT_PUBLIC_IMAGE_URL +
-            `/image/${roomData.themaId}emoticon.png`
+            `/image/${roomData.category}emoticon.png`
           }
           alt="테마 이모티콘"
           width={70}
@@ -61,7 +61,7 @@ const Room = ({ roomData }: any) => {
         <S.Title>{roomData.title}</S.Title>
         <S.Menu>인원: {roomData.capacity}/2</S.Menu>
         <S.Menu>방장: {roomData.nickname}</S.Menu>
-        <S.Menu>테마: {themes[roomData.themaId]}</S.Menu>
+        <S.Menu>테마: {themes[roomData.category]}</S.Menu>
       </S.RoomBox>
     </>
   )

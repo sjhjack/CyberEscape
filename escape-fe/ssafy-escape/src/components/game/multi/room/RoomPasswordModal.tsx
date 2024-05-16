@@ -13,7 +13,7 @@ interface RoomMainModalProps {
     title: string
     capacity: number
     startedAt: Date
-    themaId: number
+    category: number
     userId: number
     uuid: string
     nickname: string
