@@ -7,6 +7,7 @@ import InviteModal from "@/components/game/multi/gameroom/InviteModal"
 import HeaderNav from "@/components/common/HeaderNav"
 import Button from "@/components/common/Button"
 import useUserStore from "@/stores/UserStore"
+import useIngameThemeStore from "@/stores/IngameTheme"
 import HomeRoom from "@/components/home/HomeRoom"
 import { Canvas } from "@react-three/fiber"
 import CameraMoveToPosition, {
@@ -21,7 +22,6 @@ interface GameRoomProps {
   sendMessage: (text: string) => void
   roomData: PubResponseData | null
   isReady: boolean
-  selectedTheme: number
 }
 const Waiting = ({
   chatting,
@@ -30,15 +30,23 @@ const Waiting = ({
   sendMessage,
   roomData,
   isReady,
-  selectedTheme,
 }: GameRoomProps) => {
   const { userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
   const handleModalClose = (): void => {
     setShowModal(false)
   }
+  const [imgNumber, setImgNumber] = useState<number>(0)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const pointerLockControlsRef = useRef<CameraMoveToPositionRef>(null)
+  const { selectedTheme } = useIngameThemeStore()
+  useEffect(() => {
+    if (selectedTheme === 1 || selectedTheme === 2 || selectedTheme === 3) {
+      setImgNumber(1)
+    } else {
+      setImgNumber(4)
+    }
+  }, [selectedTheme])
   return (
     <>
       <Canvas
@@ -88,7 +96,7 @@ const Waiting = ({
                   />
                 </>
               ) : (
-                <div style={{ width: "100px", height: "40px" }}></div>
+                <p style={{ width: "100px", height: "40px" }}></p>
               )}
             </S.Nickname>
           </S.UserBox>
@@ -96,8 +104,7 @@ const Waiting = ({
             <S.MainContentBox>
               <S.ThemeImage
                 src={
-                  process.env.NEXT_PUBLIC_IMAGE_URL +
-                  `/image/${selectedTheme === 2 || selectedTheme === 3 ? 1 : 4}.png`
+                  process.env.NEXT_PUBLIC_IMAGE_URL + `/image/${imgNumber}.png`
                 }
                 alt=""
                 width={400}
