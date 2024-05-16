@@ -23,7 +23,7 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 				room.title,
 				room.capacity,
 				room.startedAt,
-				room.thema.id,
+				room.thema.category,
 				room.host.id,
 				room.uuid,
 				user.nickname,
