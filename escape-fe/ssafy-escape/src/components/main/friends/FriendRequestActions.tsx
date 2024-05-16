@@ -6,7 +6,7 @@ import Button from "@/components/common/Button"
 import { useQuery } from "@tanstack/react-query"
 import postReadNotification from "@/services/notification/postReadNotification"
 // import postFriendRequest from "@/services/main/friends/postFriendAddition"
-import postFriendAddition from "@/services/main/friends/postFriendAddition";
+import postFriendAddition from "@/services/main/friends/postFriendAddition"
 import getFriendList from "@/services/main/friends/getFriendList"
 import getNotificationList from "@/services/notification/getNotificationList"
 import { StyledString } from "next/dist/build/swc"
@@ -18,50 +18,56 @@ const FriendRequestActions = () => {
     queryFn: () => getNotificationList(),
   })
 
-
-  const handleRequest = async (requestUserUuid: string, notificationId : string) => {
+  const handleRequest = async (
+    requestUserUuid: string,
+    notificationId: string,
+  ) => {
     // console.log("친구 채팅")
 
     // console.log("친구 수락 완료")
     await postFriendAddition(requestUserUuid)
-    
+
     // 읽음 처리
-    postReadNotification(notificationId);
+    postReadNotification(notificationId)
   }
 
-  const handleDeny = async (notificationId : string) => {
-    postReadNotification(notificationId);
+  const handleDeny = async (notificationId: string) => {
+    postReadNotification(notificationId)
   }
 
   return (
     <div>
       <Text>받은 친구 요청 목록</Text>
-      {requestData?.filter((data)=> data.type === "FRIEND")
-                  .map((user) => (
-        <div key={user.senderUuid}>
-          <SubContainer>
-            <ProfileBox>
-              <PersonIcon sx={{ fontSize: "35px" }} />
-              <div>{user.nickname}</div>
-            </ProfileBox>
-            <ButtonBox>
-              <Button
-                text="수락"
-                theme="success"
-                width="60px"
-                onClick={() => handleRequest(user.senderUuid, user.id)}
-              />
-              <Button 
-                text="거절" 
-                theme="fail" 
-                width="60px" 
-                onClick={() => handleDeny(user.id)}
-               />
-              {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}
-            </ButtonBox>
-          </SubContainer>
-        </div>
-      ))}
+      {requestData?.length === 0 ? (
+        <NoText>받은 친구 요청이 없습니다.</NoText>
+      ) : null}
+      {requestData
+        ?.filter((data) => data.type === "FRIEND")
+        .map((user) => (
+          <div key={user.senderUuid}>
+            <SubContainer>
+              <ProfileBox>
+                <PersonIcon sx={{ fontSize: "35px" }} />
+                <div>{user.nickname}</div>
+              </ProfileBox>
+              <ButtonBox>
+                <Button
+                  text="수락"
+                  theme="success"
+                  width="60px"
+                  onClick={() => handleRequest(user.senderUuid, user.id)}
+                />
+                <Button
+                  text="거절"
+                  theme="fail"
+                  width="60px"
+                  onClick={() => handleDeny(user.id)}
+                />
+                {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}
+              </ButtonBox>
+            </SubContainer>
+          </div>
+        ))}
     </div>
   )
 }
@@ -71,6 +77,11 @@ export default FriendRequestActions
 const Text = styled.div`
   padding-left: 5px;
   font-weight: bold;
+`
+const NoText = styled.div`
+  font-size: 14px;
+  text-align: center;
+  padding: 5px;
 `
 const SubContainer = styled.div`
   display: flex;

@@ -19,7 +19,6 @@ const Ranking = () => {
     data: rankingData,
     fetchNextPage,
     hasNextPage,
-    isLoading,
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ["rankingList", themeuuid[activeTheme]],
@@ -63,9 +62,6 @@ const Ranking = () => {
   //     queryFn: () => postRankingList(page, themeuuid),
   //   })
 
-  if (isLoading) {
-    return <div>로딩 중</div>
-  }
   if (!rankingData) {
     return <div>데이터 없음</div>
   }
