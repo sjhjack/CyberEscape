@@ -185,7 +185,7 @@ public class RoomServiceImpl implements RoomService {
 				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
 		}
 
-		log.info("hostUuid : {}", host.getUuid());
+		log.info("hostUuid : {}, category : {}", host.getUuid(), postRequest.getCategory());
 
 		Thema thema = themaRepository.findByCategory(postRequest.getCategory())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
