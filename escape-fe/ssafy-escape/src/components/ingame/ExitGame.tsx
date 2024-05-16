@@ -7,20 +7,20 @@ import styled from "styled-components"
 const ExitGame = ({ href, children }: any) => {
   //   const router = useRouter()
 
-  useEffect(() => {
-    const handleClickInsideButton = (event: MouseEvent) => {
-      event.stopPropagation()
-    }
+  // useEffect(() => {
+  //   const handleClickInsideButton = (event: MouseEvent) => {
+  //     event.stopPropagation()
+  //   }
 
-    const ButtonContainer = document.getElementById(
-      "button-container",
-    ) as HTMLElement
-    ButtonContainer.addEventListener("click", handleClickInsideButton)
+  //   const ButtonContainer = document.getElementById(
+  //     "button-container",
+  //   ) as HTMLElement
+  //   ButtonContainer.addEventListener("click", handleClickInsideButton)
 
-    return () => {
-      ButtonContainer.removeEventListener("click", handleClickInsideButton)
-    }
-  }, [])
+  //   return () => {
+  //     ButtonContainer.removeEventListener("click", handleClickInsideButton)
+  //   }
+  // }, [])
 
   return <Button id="button-container">{children}</Button>
 }
