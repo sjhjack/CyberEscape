@@ -18,21 +18,24 @@ const FriendRequestActions = () => {
     queryFn: () => getNotificationList(),
   })
 
-  // 친구 채팅 부분 로직 호출하도록 고침
+
   const handleRequest = async (requestUserUuid: string, notificationId : string) => {
     // console.log("친구 채팅")
 
     // console.log("친구 수락 완료")
-    // await postFriendAddition(requestUserUuid)
+    await postFriendAddition(requestUserUuid)
     
     // 읽음 처리
+    postReadNotification(notificationId);
+  }
+
+  const handleDeny = async (notificationId : string) => {
     postReadNotification(notificationId);
   }
 
   return (
     <div>
       <Text>받은 친구 요청 목록</Text>
-      // 친구 요청만 렌더링
       {requestData?.filter((data)=> data.type === "FRIEND")
                   .map((user) => (
         <div key={user.senderUuid}>
@@ -48,7 +51,12 @@ const FriendRequestActions = () => {
                 width="60px"
                 onClick={() => handleRequest(user.senderUuid, user.id)}
               />
-              <Button text="거절" theme="fail" width="60px" />
+              <Button 
+                text="거절" 
+                theme="fail" 
+                width="60px" 
+                onClick={() => handleDeny(user.id)}
+               />
               {/* 거절 누르면 안보이도록 처리?? 백엔드와 논의 */}
             </ButtonBox>
           </SubContainer>
