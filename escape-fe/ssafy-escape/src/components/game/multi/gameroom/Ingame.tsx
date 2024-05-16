@@ -104,8 +104,12 @@ const Ingame = ({
               <ProgressBar
                 id1={roomData?.host?.nickname}
                 id2={roomData?.guest?.nickname}
-                value1={roomData?.hostProgress}
-                value2={roomData?.guestProgress}
+                value1={
+                  roomData?.hostProgress ? roomData?.hostProgress * 25 : 0
+                }
+                value2={
+                  roomData?.guestProgress ? roomData?.guestProgress * 25 : 0
+                }
               />
             </>
           ) : null}
