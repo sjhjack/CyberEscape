@@ -1,79 +1,43 @@
-import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import { useEffect, useState } from "react"
-import HintModal from "../common/HintModal"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
-import getQuiz from "@/services/ingame/getQuiz"
 import { useQuery } from "@tanstack/react-query"
+import getQuiz from "@/services/ingame/getQuiz"
+import useIngameOptionStore from "@/stores/IngameOptionStore"
 
 // 첫 번째 문제 모달
-// 문제 모달 중복 코드 많아서 추후 리팩토링 필요
-const FirstProblemModal = ({
-  onClose,
-  penalty,
-  setPenalty,
-  setSubtitle,
-  timePenalty,
-  setShowSpider,
-}: ProblemProps) => {
-  const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
+const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
   const { solved, setSolved } = useIngameQuizStore()
+
   const { data: quizData } = useQuery({
-    queryKey: ["quizList", 3],
-    queryFn: () => getQuiz(3),
+    queryKey: ["quizList", 6],
+    queryFn: () => getQuiz(6),
   })
 
-  const { horror2QuizList } = useIngameOptionStore()
+  const { ssafy2QuizList } = useIngameOptionStore()
   const [choices, setChoices] = useState<string[]>([])
 
   useEffect(() => {
-    if (quizData && quizData[0] && horror2QuizList[quizData[0].quizUuid]) {
-      setChoices(horror2QuizList[quizData[0].quizUuid])
+    if (quizData && quizData[0] && ssafy2QuizList[quizData[0].quizUuid]) {
+      setChoices(ssafy2QuizList[quizData[0].quizUuid])
     }
-  }, [quizData, horror2QuizList])
+  }, [quizData, ssafy2QuizList])
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
   }
 
-  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
-  const handleOpenModal = () => {
-    setHintModalOpen(true)
-    timePenalty()
-  }
-  const handleCloseModal = () => {
-    setHintModalOpen(false)
-  }
+  // 선지 클릭 시 정답여부 확인
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setTimeout(() => {
-        if (setShowSpider) {
-          setShowSpider(true)
-        }
-      }, 500)
-      if (setSubtitle) {
-        setSubtitle("이제 백업은 됐고...")
-        setTimeout(() => {
-          setSubtitle(
-            "이 근처에 실험에 쓸 약물에 대해 적어놓은 종이가 있었던 것 같은데...버렸나?",
-          )
-          setTimeout(() => {
-            setSubtitle("")
-          }, 10000)
-        }, 4000)
-      }
     } else {
-      if (penalty && setPenalty) {
-        alert("오답입니다")
-        setPenalty(penalty + 1)
-        timePenalty()
-      }
+      alert("오답입니다.")
+      timePenalty()
     }
   }
 
@@ -84,6 +48,7 @@ const FirstProblemModal = ({
         <CloseIconBox onClick={onClose}>
           <CloseIcon sx={{ fontSize: 40 }} />
         </CloseIconBox>
+
         <ChoiceBox1>
           <Button
             theme="fail"
@@ -117,20 +82,6 @@ const FirstProblemModal = ({
           />
         </ChoiceBox2>
       </div>
-      <HintIconBox onClick={handleOpenModal}>
-        <Image
-          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
-          alt="힌트 아이콘"
-          width={35}
-          height={35}
-        />
-        <div>힌트보기</div>
-      </HintIconBox>
-      <HintModal
-        open={hintModalopen}
-        onClose={handleCloseModal}
-        quizUuid={quizData[0].quizUuid}
-      />
     </MainContainer>
   )
 }
@@ -141,7 +92,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 52%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
@@ -166,18 +117,7 @@ const ChoiceBox2 = styled(ChoiceBox1)`
 const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 65px;
-  top: 60px;
+  right: 110px;
+  top: 75px;
   z-index: 10;
-`
-
-const HintIconBox = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  left: 70px;
-  top: 63px;
-  z-index: 10;
-  font-size: 16px;
 `
