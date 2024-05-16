@@ -14,7 +14,7 @@ interface roomListDataProps {
   title: string
   capacity: number
   startedAt: string
-  themaId: number
+  category: number
   userId: number
   uuid: string
   nickname: string
