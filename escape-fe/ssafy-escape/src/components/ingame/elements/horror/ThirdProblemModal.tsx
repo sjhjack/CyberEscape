@@ -17,6 +17,7 @@ const ThirdProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  progressUpdate,
 }: ProblemProps) => {
   const [showExtraImage, setShowExtraImage] = useState(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
@@ -68,6 +69,9 @@ const ThirdProblemModal = ({
 
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
+      if (progressUpdate) {
+        progressUpdate()
+      }
       setSolved(solved + 1)
       onClose()
       if (setSubtitle) {
