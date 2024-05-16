@@ -1,48 +1,26 @@
-import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
-import HintModal from "../common/HintModal"
 import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
 import useIngameOptionStore from "@/stores/IngameOptionStore"
 
 // 첫 번째 문제 모달
-// 문제 모달 중복 코드 많아서 추후 리팩토링 필요
-const FirstProblemModal = ({
-  onClose,
-  penalty,
-  setPenalty,
-  setSubtitle,
-  timePenalty,
-}: ProblemProps) => {
-  const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
+const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
   const { solved, setSolved } = useIngameQuizStore()
 
   const { data: quizData } = useQuery({
-    queryKey: ["quizList", 2],
-    queryFn: () => getQuiz(2),
+    queryKey: ["quizList", 6],
+    queryFn: () => getQuiz(6),
   })
 
-  const { horror1QuizList } = useIngameOptionStore()
-
+  const { ssafy2QuizList } = useIngameOptionStore()
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
-  }
-
-  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
-  const handleOpenModal = () => {
-    setHintModalOpen(true)
-    timePenalty()
-  }
-
-  // 힌트 모달 닫기
-  const handleCloseModal = () => {
-    setHintModalOpen(false)
   }
 
   // 선지 클릭 시 정답여부 확인
@@ -50,24 +28,12 @@ const FirstProblemModal = ({
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      if (setSubtitle) {
-        setSubtitle("뭔가 단서가 될 만한 것을 찾아봐야겠어.")
-        setTimeout(() => {
-          setSubtitle("서랍장을 한번 뒤져볼까?")
-          setTimeout(() => {
-            setSubtitle("")
-          }, 10000)
-        }, 4000)
-      }
     } else {
       alert("오답입니다.")
-      if (penalty && setPenalty) {
-        setPenalty(penalty + 1)
-        timePenalty()
-      }
+      timePenalty()
     }
   }
-  console.log(quizData)
+
   return (
     <MainContainer>
       <div>
@@ -83,7 +49,7 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][0])
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][0])
             }
           />
           <Button
@@ -92,7 +58,7 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][1])
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][1])
             }
           />
         </ChoiceBox1>
@@ -103,7 +69,7 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][2])
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][2])
             }
           />
           <Button
@@ -112,25 +78,11 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][3])
+              handleAnswerCheck(ssafy2QuizList[quizData[0].quizUuid][3])
             }
           />
         </ChoiceBox2>
       </div>
-      <HintIconBox onClick={handleOpenModal}>
-        <Image
-          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
-          alt="힌트 아이콘"
-          width={35}
-          height={35}
-        />
-        <div>힌트보기</div>
-      </HintIconBox>
-      <HintModal
-        open={hintModalopen}
-        onClose={handleCloseModal}
-        quizUuid={quizData[0].quizUuid}
-      />
     </MainContainer>
   )
 }
@@ -169,15 +121,4 @@ const CloseIconBox = styled.div`
   right: 110px;
   top: 75px;
   z-index: 10;
-`
-
-const HintIconBox = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  left: 165px;
-  top: 70px;
-  z-index: 10;
-  font-size: 16px;
 `

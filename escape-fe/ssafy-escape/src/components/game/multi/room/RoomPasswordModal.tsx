@@ -13,7 +13,7 @@ interface RoomMainModalProps {
     title: string
     capacity: number
     startedAt: Date
-    themaId: number
+    category: number
     userId: number
     uuid: string
     nickname: string
@@ -36,20 +36,18 @@ const RoomPasswordModal = ({
   }
 
   const confirmPassword = async () => {
-    const response = await patchJoin({
-      roomUuid: roomData.uuid,
-      userUuid: userUuid || "",
-      password: password,
-    })
-    handleClose()
-    if (response.status === 200) {
-      router.push(`/gameroom/${roomData.uuid}`)
-    } else if (response.status === 8000) {
-      Swal.fire("비밀번호가 일치하지 않습니다.")
-      return
-    } else if (response.status === 8001) {
-      Swal.fire("대기방 입장 최대 인원을 초과했습니다.")
-      return
+    try {
+      const response = await patchJoin({
+        roomUuid: roomData.uuid,
+        userUuid: userUuid || "",
+        password: password,
+      })
+      handleClose()
+      if (response.status === 200) {
+        router.push(`/gameroom/${roomData.uuid}`)
+      }
+    } catch (error) {
+      throw error
     }
   }
   return (

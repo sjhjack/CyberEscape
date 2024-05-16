@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import HintModal from "../common/HintModal"
-import useHorrorOptionStore from "@/stores/HorrorOptionStore"
+import useIngameOptionStore from "@/stores/IngameOptionStore"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
 
@@ -25,19 +25,11 @@ const ThirdProblemModal = ({
     queryKey: ["quizList", 3],
     queryFn: () => getQuiz(3),
   })
-  const { horror2QuizList } = useHorrorOptionStore()
-  const [choices, setChoices] = useState<string[]>([])
-
-  useEffect(() => {
-    if (quizData && quizData[0] && horror2QuizList[quizData[2].quizUuid]) {
-      setChoices(horror2QuizList[quizData[2].quizUuid])
-    }
-  }, [quizData, horror2QuizList])
+  const { horror2QuizList } = useIngameOptionStore()
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
   }
-  console.log(quizData)
 
   // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
@@ -52,20 +44,24 @@ const ThirdProblemModal = ({
     if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("이런, 시간이...서둘러 나가야겠군.")
-      setTimeout(() => {
-        setSubtitle("...아, 제일 중요한 걸 놓고 갈 뻔했네.")
+      if (setSubtitle) {
+        setSubtitle("이런, 시간이...서둘러 나가야겠군.")
         setTimeout(() => {
-          setSubtitle("주사기랑 망치가 어디있지?")
+          setSubtitle("...아, 제일 중요한 걸 놓고 갈 뻔했네.")
           setTimeout(() => {
-            setSubtitle("")
-          }, 10000)
+            setSubtitle("주사기랑 망치가 어디있지?")
+            setTimeout(() => {
+              setSubtitle("")
+            }, 10000)
+          }, 4000)
         }, 4000)
-      }, 4000)
+      }
     } else {
-      alert("오답입니다")
-      setPenalty(penalty + 1)
-      timePenalty()
+      if (penalty && setPenalty) {
+        alert("오답입니다")
+        setPenalty(penalty + 1)
+        timePenalty()
+      }
     }
   }
   return (
@@ -81,14 +77,18 @@ const ThirdProblemModal = ({
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[0])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][0])
+            }
           />
           <Button
             theme="fail"
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[1])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][1])
+            }
           />
         </ChoiceBox1>
         <ChoiceBox2>
@@ -97,14 +97,18 @@ const ThirdProblemModal = ({
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[2])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][2])
+            }
           />
           <Button
             theme="fail"
             width="100px"
             height="40px"
             opacity="0"
-            onClick={() => handleAnswerCheck(choices[3])}
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][3])
+            }
           />
         </ChoiceBox2>
       </div>

@@ -37,7 +37,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const { selectedThemeType } = useIngameThemeStore()
   const handleTimeOut = () => {
     setIsTimeOut(true)
-    setResult("Timeout")
+    setResult("timeOut")
     setIsGameFinished(true)
   }
   const timePenalty = () => {
