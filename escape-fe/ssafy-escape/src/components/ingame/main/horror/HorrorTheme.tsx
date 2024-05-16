@@ -148,6 +148,9 @@ const HorrorTheme = ({
     }
     setResult("victory")
     setIsGameFinished(true)
+    if (progressUpdate) {
+      progressUpdate()
+    }
   }
 
   // 첫 번째 문제 모달

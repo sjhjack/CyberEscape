@@ -17,6 +17,7 @@ const SecondProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  progressUpdate,
 }: ProblemProps) => {
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const { solved, setSolved } = useIngameQuizStore()
@@ -46,6 +47,9 @@ const SecondProblemModal = ({
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
       setSolved(solved + 1)
+      if (progressUpdate) {
+        progressUpdate()
+      }
       onClose()
       if (setSubtitle) {
         setSubtitle("...정신이 이상해지는 것 같아.")
