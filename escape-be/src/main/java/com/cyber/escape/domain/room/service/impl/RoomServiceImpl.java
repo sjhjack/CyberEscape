@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class RoomServiceImpl implements RoomService {
-	private static final Long[] themaIds = {1L, 4L};
+	private static final int[] categories = {1, 4};
 
 	private final UserRepository userRepository;
 	private final RoomRepository roomRepository;
@@ -91,12 +91,12 @@ public class RoomServiceImpl implements RoomService {
 
 			User host = userRepository.findUserByUuid(user1.getUserUuid())
 				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
-			int randomIndex = (int) (Math.random() * (themaIds.length - 1));
-			Long themaId = themaIds[randomIndex];
+			int randomIndex = (int) (Math.random() * (categories.length - 1));
+			int category = categories[randomIndex];
 
 			RoomDto.PostRequest postRequest = RoomDto.PostRequest.builder()
 				.title(host.getNickname() + "의 대기실")
-				.themaId(themaId)
+				.category(category)
 				.password("")
 				.hostUuid(user1.getUserUuid())
 				.build();
@@ -187,7 +187,7 @@ public class RoomServiceImpl implements RoomService {
 
 		log.info("hostUuid : {}", host.getUuid());
 
-		Thema thema = themaRepository.findById(postRequest.getThemaId())
+		Thema thema = themaRepository.findByCategory(postRequest.getCategory())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
 
 		Room newRoom = Room.of(postRequest.getTitle(), capacity, host, thema);
@@ -204,7 +204,7 @@ public class RoomServiceImpl implements RoomService {
 
 		log.info("created room title : {}, hasPassword : {}", newRoom.getTitle(), newRoom.isHasPassword());
 
-		return RoomDto.PostResponse.of(newRoom.getUuid(), newRoom.getHostUuid(), thema.getId());
+		return RoomDto.PostResponse.of(newRoom.getUuid(), newRoom.getHostUuid(), thema.getCategory());
 	}
 
 	@Transactional

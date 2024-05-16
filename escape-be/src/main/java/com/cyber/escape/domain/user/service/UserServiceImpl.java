@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
                     UserDto.SearchNicknameResponse.builder()
                     .nickname(user.getNickname())
                     .userUuid(user.getUuid())
+                    .profileUrl(user.getProfileUrl())
                     .relationship(relationship)
                     .build();
 
