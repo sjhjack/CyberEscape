@@ -18,6 +18,7 @@ import NotificationModal from "../notification/NotificationModal"
 import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
+import { formControlClasses } from "@mui/material"
 
 interface HeaderProps {
   Icon: React.ElementType
@@ -26,37 +27,47 @@ interface HeaderProps {
 }
 
 const EventProvider = () => {
-  const EventSource = EventSourcePolyfill || NativeEventSource
+  const EventSource = EventSourcePolyfill || NativeEventSource;
   const accessToken = sessionStorage.getItem('access_token');
   // if(accessToken == null) return;
-  console.log(accessToken)
-  let eventSource = new EventSource('http://localhost:8080/notify/subscribe',{
+  let eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
       headers: {
-      Authorization: `Bearer ${accessToken}`,
-      Connection: 'keep-alive',
+        Authorization: `Bearer ${accessToken}`,
+        Connection: 'keep-alive',
+        'Content-Type': 'text/event-stream',
+        'X-Accel-Buffering': 'no',
       },
+      
+      heartbeatTimeout: 120000
   });
   
   console.log("EVENT !!!!!");
   eventSource.onmessage = function(event) {
       console.log('New event from server:', event.data);
   };
-  eventSource.addEventListener('sse', function(event) {
+  eventSource.addEventListener('sse', function(event : any) {
+      console.log(event);
       console.log('Message:', event.data);
       //setMessages(prevMessages => [...prevMessages, event.data]);
   });
+
   eventSource.onerror = function(error){
       console.log("ERROR OCCUR");
       console.log(error)
-      setTimeout(function() {
-        eventSource.close();
-        eventSource = new EventSource('http://localhost:8080/notify/subscribe',{
+      setTimeout(async function() {
+        await eventSource.close();
+        
+        eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
           headers: {
             Authorization: `Bearer ${accessToken}`,
             Connection: 'keep-alive',
-          }
+            'Content-Type': 'text/event-stream',
+            'X-Accel-Buffering': 'no',
+          },
+          heartbeatTimeout: 120000
         });
-      }, 2000);  }
+      }, 2000);  
+  }
 
   return () => {
       eventSource.close();
@@ -80,16 +91,17 @@ const MainHeader = () => {
   const queryClient = new QueryClient()
 
   useEffect(() => {
-    // queryClient.prefetchQuery({
-    //   queryKey: ["friendList"],
-    //   queryFn: getFriendList,
-    // }),
+    queryClient.prefetchQuery({
+      queryKey: ["friendList"],
+      queryFn: getFriendList,
+    }),
     queryClient.prefetchQuery({
       queryKey: ["invitedList"],
       queryFn: getNotificationList,
     }),
 
     EventProvider();
+    
   }, [])
 
   // 로그아웃 버튼 클릭 시
