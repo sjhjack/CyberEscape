@@ -18,6 +18,10 @@ const patchJoin = async (
     )
     if (response.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
+    } else if (response.status === 8000) {
+      throw new Error(`오류: ${response.data.message}`)
+    } else if (response.status === 8001) {
+      throw new Error(`오류: ${response.data.message}`)
     }
     return response.data
   } catch (error) {

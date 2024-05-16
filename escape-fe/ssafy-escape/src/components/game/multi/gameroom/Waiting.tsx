@@ -7,6 +7,7 @@ import InviteModal from "@/components/game/multi/gameroom/InviteModal"
 import HeaderNav from "@/components/common/HeaderNav"
 import Button from "@/components/common/Button"
 import useUserStore from "@/stores/UserStore"
+import useIngameThemeStore from "@/stores/IngameTheme"
 import HomeRoom from "@/components/home/HomeRoom"
 import { Canvas } from "@react-three/fiber"
 import CameraMoveToPosition, {
@@ -21,7 +22,6 @@ interface GameRoomProps {
   sendMessage: (text: string) => void
   roomData: PubResponseData | null
   isReady: boolean
-  selectedTheme: number
 }
 const Waiting = ({
   chatting,
@@ -30,15 +30,23 @@ const Waiting = ({
   sendMessage,
   roomData,
   isReady,
-  selectedTheme,
 }: GameRoomProps) => {
   const { userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
   const handleModalClose = (): void => {
     setShowModal(false)
   }
+  const [imgNumber, setImgNumber] = useState<number>(0)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const pointerLockControlsRef = useRef<CameraMoveToPositionRef>(null)
+  const { selectedTheme } = useIngameThemeStore()
+  useEffect(() => {
+    if (selectedTheme === 1 || selectedTheme === 2 || selectedTheme === 3) {
+      setImgNumber(1)
+    } else {
+      setImgNumber(4)
+    }
+  }, [selectedTheme])
   return (
     <>
       <Canvas
@@ -69,7 +77,9 @@ const Waiting = ({
                 width={100}
                 height={100}
               />
-              {roomData?.hostReady ? <div>준비완료</div> : null}
+              {roomData?.hostReady ? (
+                <S.ReadyImage src={`/image/ready.png`} />
+              ) : null}
             </S.CharacterBox>
             <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
             <S.Nickname>
@@ -85,15 +95,16 @@ const Waiting = ({
                     }}
                   />
                 </>
-              ) : null}
+              ) : (
+                <p style={{ width: "100px", height: "40px" }}></p>
+              )}
             </S.Nickname>
           </S.UserBox>
           <S.MainBox>
             <S.MainContentBox>
               <S.ThemeImage
                 src={
-                  process.env.NEXT_PUBLIC_IMAGE_URL +
-                  `/image/${selectedTheme === 2 || selectedTheme === 3 ? 1 : 4}.png`
+                  process.env.NEXT_PUBLIC_IMAGE_URL + `/image/${imgNumber}.png`
                 }
                 alt=""
                 width={400}
@@ -116,7 +127,9 @@ const Waiting = ({
                     width={100}
                     height={100}
                   />
-                  {roomData?.guestReady ? <div>준비완료</div> : null}
+                  {roomData?.guestReady ? (
+                    <S.ReadyImage src={`/image/ready.png`} />
+                  ) : null}
                 </S.CharacterBox>
                 <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
                 <S.Nickname>
@@ -137,7 +150,7 @@ const Waiting = ({
                       <Button
                         text={"강제퇴장"}
                         theme={"fail"}
-                        width="80px"
+                        width="100px"
                         height="40px"
                         onClick={() => {
                           kick()
