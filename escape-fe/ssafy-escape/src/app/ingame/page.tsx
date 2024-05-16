@@ -63,7 +63,7 @@ const Page = () => {
         //   isModelLoaded={isModelLoaded}
         //   onFinish={handleGameStart}
         // />
-        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme}/>
+        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme} />
       ) : null}
       {isModelLoaded ? (
         <div>
@@ -71,7 +71,7 @@ const Page = () => {
             isModelLoaded={isModelLoaded}
             onFinish={handleGameStart}
           /> */}
-          {selectedThemeType === "multi" ? (
+          {selectedThemeType === "single" ? (
             <>
               <Chat />
               <ProgressBar

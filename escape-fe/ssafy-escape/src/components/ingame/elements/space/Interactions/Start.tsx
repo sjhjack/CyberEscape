@@ -34,17 +34,17 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
 
   // const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  const onMusicStart = () => {
-    const audio = new Audio(
-      process.env.NEXT_PUBLIC_IMAGE_URL + `/music/SpeckInTime.mp3`,
-    )
-    audio.play()
-    audio.loop = true
-    // audioRef.current = audio
-    // if (audioRef.current) {
-    //   audioRef.current.play()
-    // }
-  }
+  // const onMusicStart = () => {
+  //   const audio = new Audio(
+  //     process.env.NEXT_PUBLIC_IMAGE_URL + `/music/SpeckInTime.mp3`,
+  //   )
+  //   audio.play()
+  //   audio.loop = true
+  // audioRef.current = audio
+  // if (audioRef.current) {
+  //   audioRef.current.play()
+  // }
+  // }
 
   useEffect(() => {
     if (sequence === 2) {
@@ -60,7 +60,7 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
 
   const handleClick = () => {
     if (sequence === 1 && !onAir) {
-      onMusicStart()
+      // onMusicStart()
       setOnAir(true)
       dub1()
       setShowInstruction(false)
@@ -72,6 +72,11 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
       process.env.NEXT_PUBLIC_IMAGE_URL + "/dubbing/space/start/start_1.mp3",
     )
     audio.play()
+    const new_audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + `/music/SpeckInTime.mp3`,
+    )
+    new_audio.play()
+    new_audio.loop = true
     setSubtitle("정신이 드십니까?")
     setTimeout(() => {
       setSequence((n) => n + 1)

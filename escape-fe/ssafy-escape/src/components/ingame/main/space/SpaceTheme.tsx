@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"

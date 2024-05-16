@@ -35,7 +35,7 @@ const FirstProblemModal = ({
       setChoices(horror1QuizList[quizData[0].quizUuid])
     }
   }, [quizData, horror1QuizList])
-  
+
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
   }
