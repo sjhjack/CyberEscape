@@ -1,6 +1,4 @@
-import { Canvas } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
-
 import Lights from "@/components/ingame/elements/ssafy/Lights"
 import BasicScene from "@/components/ingame/BasicScene"
 import Player from "@/components/ingame/elements/common/Player"
@@ -11,7 +9,9 @@ import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import Start from "../../elements/ssafy/Start"
 import Notebook from "../../elements/ssafy/NoteBook"
 import Subtitle from "../../elements/common/Subtitle"
-import useIngameSolvedStore from "@/stores/IngameQuizStore"
+import useIngameQuizStore from "@/stores/IngameQuizStore"
+import Result from "../../elements/common/Result"
+import useIngameThemeStore from "@/stores/IngameTheme"
 
 // const startPosition = { x: 8, y: 8, z: 1 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -23,14 +23,27 @@ const SsafyTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [penalty, setPenalty] = useState<number>(0)
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
-  const [result, setResult] = useState<string>("")
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
-  const { solved } = useIngameSolvedStore()
+  const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
+  const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
+  const [result, setResult] = useState<string>("")
+  const { solved } = useIngameQuizStore()
+  const { selectedThemeType } = useIngameThemeStore()
+  const [clearTime, setClearTime] = useState<string>("")
+
+  // 시간 깎는 패널티 함수
+  const timePenalty = () => {
+    if (timerRef.current) {
+      timerRef.current.applyPenalty()
+    }
+  }
+
   const handleTimeOut = () => {
     setIsTimeOut(true)
-    setResult("Timeout")
+    setResult("timeOut")
     setIsGameFinished(true)
   }
+
   const handleFirstProblem = () => {
     if (solved === 0) {
       setShowFirstProblem(!showFirstProblem)
@@ -46,6 +59,42 @@ const SsafyTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           )}
           <Start setSubtitle={setSubtitle} />
         </>
+      ) : null}
+      <Subtitle text={subtitle} />
+      {/* {showFirstProblem ? (
+        <FirstProblemModal
+          onClose={handleFirstProblem}
+          penalty={penalty}
+          setPenalty={setPenalty}
+          setSubtitle={setSubtitle}
+          timePenalty={timePenalty}
+        />
+      ) : null}
+      {showSecondProblem ? (
+        <SecondProblemModal
+          onClose={handleSecondProblem}
+          penalty={penalty}
+          setPenalty={setPenalty}
+          setSubtitle={setSubtitle}
+          timePenalty={timePenalty}
+        />
+      ) : null}
+      {showThirdProblem ? (
+        <ThirdProblemModal
+          onClose={handleThirdProblem}
+          penalty={penalty}
+          setPenalty={setPenalty}
+          setSubtitle={setSubtitle}
+          timePenalty={timePenalty}
+        />
+      ) : null} */}
+      {isGameFinished ? (
+        <Result
+          type={result}
+          themeIdx={1}
+          selectedThemeType={selectedThemeType}
+          clearTime={clearTime}
+        />
       ) : null}
       <BasicScene interactNum={interactNum} onAir={true}>
         <MeshObjects />

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import HintModal from "../common/HintModal"
-import useHorrorOptionStore from "@/stores/HorrorOptionStore"
+import useIngameOptionStore from "@/stores/IngameOptionStore"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
 
@@ -25,7 +25,7 @@ const ThirdProblemModal = ({
     queryKey: ["quizList", 3],
     queryFn: () => getQuiz(3),
   })
-  const { horror2QuizList } = useHorrorOptionStore()
+  const { horror2QuizList } = useIngameOptionStore()
   const [choices, setChoices] = useState<string[]>([])
 
   useEffect(() => {
@@ -52,20 +52,24 @@ const ThirdProblemModal = ({
     if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("이런, 시간이...서둘러 나가야겠군.")
-      setTimeout(() => {
-        setSubtitle("...아, 제일 중요한 걸 놓고 갈 뻔했네.")
+      if (setSubtitle) {
+        setSubtitle("이런, 시간이...서둘러 나가야겠군.")
         setTimeout(() => {
-          setSubtitle("주사기랑 망치가 어디있지?")
+          setSubtitle("...아, 제일 중요한 걸 놓고 갈 뻔했네.")
           setTimeout(() => {
-            setSubtitle("")
-          }, 10000)
+            setSubtitle("주사기랑 망치가 어디있지?")
+            setTimeout(() => {
+              setSubtitle("")
+            }, 10000)
+          }, 4000)
         }, 4000)
-      }, 4000)
+      }
     } else {
-      alert("오답입니다")
-      setPenalty(penalty + 1)
-      timePenalty()
+      if (penalty && setPenalty) {
+        alert("오답입니다")
+        setPenalty(penalty + 1)
+        timePenalty()
+      }
     }
   }
   return (

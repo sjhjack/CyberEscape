@@ -1,84 +1,54 @@
-import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
-import HintModal from "../common/HintModal"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
 import useIngameOptionStore from "@/stores/IngameOptionStore"
 
-// 두 번째 문제 모달
-const SecondProblemModal = ({
-  onClose,
-  penalty,
-  setPenalty,
-  setSubtitle,
-  timePenalty,
-}: ProblemProps) => {
-  const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
+// 세 번째 문제 모달
+const ThirdProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
   const { solved, setSolved } = useIngameQuizStore()
 
   const { data: quizData } = useQuery({
-    queryKey: ["quizList", 2],
-    queryFn: () => getQuiz(2),
+    queryKey: ["quizList", 6],
+    queryFn: () => getQuiz(6),
   })
 
-  const { horror1QuizList } = useIngameOptionStore()
+  const { ssafy2QuizList } = useIngameOptionStore()
   const [choices, setChoices] = useState<string[]>([])
 
   useEffect(() => {
-    if (quizData && quizData[0] && horror1QuizList[quizData[1].quizUuid]) {
-      setChoices(horror1QuizList[quizData[1].quizUuid])
+    if (quizData && quizData[2] && ssafy2QuizList[quizData[2].quizUuid]) {
+      setChoices(ssafy2QuizList[quizData[2].quizUuid])
     }
-  }, [quizData, horror1QuizList])
+  }, [quizData, ssafy2QuizList])
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
   }
 
-  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
-  const handleOpenModal = () => {
-    setHintModalOpen(true)
-    timePenalty()
-  }
-
-  // 힌트 모달 닫기
-  const handleCloseModal = () => {
-    setHintModalOpen(false)
-  }
-
+  // 선지 클릭 시 정답여부 확인
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      if (setSubtitle) {
-        setSubtitle("...정신이 이상해지는 것 같아.")
-        setTimeout(() => {
-          setSubtitle("혹시 책에서 단서가 있지 않을까?")
-          setTimeout(() => {
-            setSubtitle("")
-          }, 10000)
-        }, 4000)
-      }
     } else {
-      if (penalty && setPenalty) {
-        alert("오답입니다.")
-        setPenalty(penalty + 1)
-        timePenalty()
-      }
+      alert("오답입니다.")
+      timePenalty()
     }
   }
-  console.log(quizData)
+
   return (
     <MainContainer>
       <div>
-        <img src={quizData[1].url} width={550} height={550} alt="두번째 문제" />
+        <img src={quizData[1].url} width={600} height={550} alt="세번째 문제" />
         <CloseIconBox onClick={onClose}>
           <CloseIcon sx={{ fontSize: 40 }} />
         </CloseIconBox>
+
         <ChoiceBox1>
           <Button
             theme="fail"
@@ -112,25 +82,11 @@ const SecondProblemModal = ({
           />
         </ChoiceBox2>
       </div>
-      <HintIconBox onClick={handleOpenModal}>
-        <Image
-          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
-          alt="힌트 아이콘"
-          width={35}
-          height={35}
-        />
-        <div>힌트보기</div>
-      </HintIconBox>
-      <HintModal
-        open={hintModalopen}
-        onClose={handleCloseModal}
-        quizUuid={quizData[1].quizUuid}
-      />
     </MainContainer>
   )
 }
 
-export default SecondProblemModal
+export default ThirdProblemModal
 
 const MainContainer = styled.div`
   display: flex;
@@ -148,31 +104,20 @@ const ChoiceBox1 = styled.div`
   position: absolute;
   top: 40%;
   left: 50%;
-  transform: translate(-40%, 30%);
-  gap: 60px;
+  transform: translate(-40%, 20%);
+  gap: 30px;
   margin-top: 30px;
 `
 
 const ChoiceBox2 = styled(ChoiceBox1)`
-  top: 53%;
+  top: 50%;
   transform: translate(-40%, 45%);
 `
 
 const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 60px;
-  top: 92px;
+  right: 110px;
+  top: 75px;
   z-index: 10;
-`
-
-const HintIconBox = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  left: 60px;
-  top: 90px;
-  z-index: 10;
-  font-size: 16px;
 `
