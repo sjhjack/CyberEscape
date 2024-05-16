@@ -12,7 +12,7 @@ import postFriendAddition from "@/services/main/friends/postFriendAddition"
 // 게임 초대 요청 리스트
 const InvitedList = () => {
   const { data: invitedList, isLoading } = useQuery({
-    queryKey: ["invitedList"],
+    queryKey: ["notificationList"],
     queryFn: () => getNotificationList(),
   })
 

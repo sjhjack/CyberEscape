@@ -14,7 +14,7 @@ import { StyledString } from "next/dist/build/swc"
 // 받은 친구 요청 목록 조회
 const FriendRequestActions = () => {
   const { data: requestData } = useQuery({
-    queryKey: ["getNotificationList"],
+    queryKey: ["notificationList"],
     queryFn: () => getNotificationList(),
   })
 
