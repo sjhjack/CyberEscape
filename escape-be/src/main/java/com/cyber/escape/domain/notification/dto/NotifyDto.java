@@ -45,6 +45,7 @@ public class NotifyDto {
         String nickname;
         String content;
         String type;
+        String profileUrl;
         char isRead;
         LocalDateTime createdAt;
 
@@ -54,6 +55,7 @@ public class NotifyDto {
                     .senderUuid(notify.getSenderUuid())
                     .content(notify.getContent())
                     .nickname(notify.getNickname())
+                    .profileUrl(notify.getProfileUrl())
                     .type(notify.getNotificationType().name())
                     .isRead(notify.getIsRead())
                     .createdAt(notify.getCreatedAt())
@@ -69,6 +71,7 @@ public class NotifyDto {
         String nickname;
         String content;
         String type;
+        String profileUrl;
         char isRead;
         LocalDateTime createdAt;
 
@@ -78,6 +81,7 @@ public class NotifyDto {
                     .content(notify.getContent())
                     .type(notify.getNotificationType().name())
                     .isRead(notify.getIsRead())
+                    .profileUrl(notify.getProfileUrl())
                     .createdAt(notify.getCreatedAt())
                     .build();
         }
