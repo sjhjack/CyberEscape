@@ -33,4 +33,6 @@ const Button = styled.button`
   right: 0;
   margin: 15px;
   background: none;
+  border: none;
+  cursor: pointer;
 `

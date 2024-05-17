@@ -49,7 +49,11 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       {isGameStart ? (
         <>
           {!isGameFinished && (
-            <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
+            <CountdownTimer
+              color={"white"}
+              ref={timerRef}
+              onTimeOut={handleTimeOut}
+            />
           )}
           <Start onAir={onAir} setOnAir={setOnAir} setSubtitle={setSubtitle} />
         </>
