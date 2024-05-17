@@ -62,3 +62,14 @@ export const ReadyImage = styled.img`
   height: 120px;
   pointer-events: none; // Ensures that the overlay does not interfere with mouse events
 `
+export const QuitButton = styled.button`
+  position: absolute;
+  top: 53%;
+  width: 80px;
+  height: 30px;
+  background-color: #ff0000;
+  border: none;
+  border-radius: 10%;
+  color: white;
+  cursor: pointer;
+`
