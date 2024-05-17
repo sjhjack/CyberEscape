@@ -3,14 +3,14 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { styled } from "styled-components"
-import PersonIcon from "@mui/icons-material/Person"
 import SearchIcon from "@mui/icons-material/Search"
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import Button from "@/components/common/Button"
 import MainModal from "@/components/common/MainModal"
 import Input from "@/components/common/Input"
 import postUserSearch from "@/services/main/friends/postUserSearch"
-// import postFriendRequest from "@/services/main/friends/postFriendRequest"
+import postFriendRequest from "@/services/main/friends/postFriendRequest"
+import Swal from "sweetalert2"
 
 interface FriendRequestModalProps {
   open: boolean
@@ -31,15 +31,23 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
     enabled: false,
   })
 
+  // 검색 시
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log(keyword + "로 검색")
-    refetch()
+    if (keyword.trim()) {
+      refetch()
+    }
   }
-  // const handleRequest = async (id: string) => {
-  //   await postFriendRequest(myid, id)
-  //   console.log("친구 요청")
-  // }
+
+  //
+  const handleRequest = async (id: string) => {
+    await postFriendRequest(id, "FRIEND")
+    Swal.fire({
+      title: "친구 요청 완료!",
+      width: "500px",
+      padding: "40px",
+    })
+  }
 
   return (
     <div>
@@ -61,23 +69,25 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
             />
           ) : null}
         </InputBox>
-        {!searchData ? (
+        {!searchData || searchData.length === 0 ? (
           <EmptyText>결과가 없습니다.</EmptyText>
         ) : (
           <div>
-            {searchData?.data.map((user, i) => (
+            {searchData.map((user, i) => (
               <div key={i}>
                 <MainContainer>
                   <ProfileBox>
-                    <PersonIcon sx={{ fontSize: "35px" }} />
+                    <ProfileImg src={user.profileUrl} alt="프로필 이미지" />
                     <div>{user.nickname}</div>
                   </ProfileBox>
-                  <Button
-                    text="요청"
-                    theme="success"
-                    width="60px"
-                    // onClick={() => handleRequest(user.id)}
-                  />
+                  {user.relationship === "추가" ? (
+                    <Button
+                      text={user.relationship}
+                      theme="success"
+                      width="60px"
+                      onClick={() => handleRequest(user.userUuid)}
+                    />
+                  ) : null}
                 </MainContainer>
               </div>
             ))}
@@ -100,8 +110,16 @@ const MainContainer = styled.div`
 const ProfileBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 `
+
+const ProfileImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+  object-fit: cover;
+`
+
 const EmptyText = styled.div`
   padding: 10px;
   text-align: center;

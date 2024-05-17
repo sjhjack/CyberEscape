@@ -23,7 +23,7 @@ const Result = ({
   clearTime,
 }: ResultProps) => {
   const router = useRouter()
-  const { data: myRankingData, isLoading } = useQuery({
+  const { data: myRankingData } = useQuery({
     queryKey: ["myRanking", themeIdx],
     queryFn: () =>
       themeIdx !== null
@@ -41,13 +41,9 @@ const Result = ({
     }
   }
 
-  // if (isLoading) {
-  //   return <div>로딩 중</div>
-  // }
-
-  // if (!myRankingData) {
-  //   return <div>데이터 없음</div>
-  // }
+  if (!myRankingData) {
+    return <div>데이터 없음</div>
+  }
 
   return selectedThemeType === "single" ? (
     /* 싱글일 경우 */

@@ -18,6 +18,11 @@ const Start = ({ setSubtitle }: StartProps) => {
   }, [sequence])
 
   const dub1 = () => {
+    const new_audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + `/music/HorrorBgm2.mp3`,
+    )
+    new_audio.play()
+    new_audio.loop = true
     setSubtitle("...오랜만에 좋은 실험체를 손에 넣어서 기분이 좋군.")
     setTimeout(() => {
       setSequence((n) => n + 1)
