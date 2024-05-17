@@ -10,6 +10,7 @@ import patchExit from "@/services/game/room/patchExit"
 import Waiting from "./Waiting"
 import Ingame from "./Ingame"
 import Swal from "sweetalert2"
+import Countdown from "./CountDown"
 // socket cleint, openvidu session, 게임 입장 및 퇴장 다 여기서 관리
 
 const GameRoom = () => {
@@ -20,6 +21,8 @@ const GameRoom = () => {
   const { selectedTheme } = useIngameThemeStore()
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameTheme, setGameTheme] = useState<number>(0)
+  const [showCountdown, setShowCountdown] = useState<boolean>(false)
+
   // openvidu 관련 변수
   const [chatting, setChattting] = useState<Array<chatData>>([])
   const { accessToken, userUuid, isHost } = useUserStore()
@@ -96,9 +99,18 @@ const GameRoom = () => {
     })
   }
   const kick = (): void => {
-    client.current?.publish({
-      destination: `/pub/room/kickGuest`,
-      body: roomUuid,
+    Swal.fire({
+      title: "정말 퇴장시키겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      cancelButtonText: "아니요",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        client.current?.publish({
+          destination: `/pub/room/kickGuest`,
+          body: roomUuid,
+        })
+      }
     })
   }
   const progressUpdate = (): void => {
@@ -148,10 +160,7 @@ const GameRoom = () => {
       } else {
         setGameTheme(selectedTheme + 2)
       }
-
-      setTimeout(() => {
-        setisIngame(true)
-      }, 5000)
+      setShowCountdown(true)
     }
     // gameStart를 추적하면서 false일 때는 ingame도 false. 처음 렌더링, 게임 끝나고 다시 대기방 돌아올 때
     else {
@@ -208,6 +217,14 @@ const GameRoom = () => {
   return (
     <>
       <audio ref={audioRef} style={{ display: "none" }} controls></audio>
+      {showCountdown ? (
+        <Countdown
+          onCountdownComplete={() => {
+            setShowCountdown(false)
+            setisIngame(true)
+          }}
+        />
+      ) : null}
       {isIngame ? (
         <Ingame
           roomData={roomData}
