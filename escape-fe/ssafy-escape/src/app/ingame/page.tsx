@@ -1,13 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Chat from "@/components/ingame/Chat"
 import ExitGame from "@/components/ingame/ExitGame"
-import ProgressBar from "@/components/ingame/ProgressBar"
 import Image from "next/image"
 import * as S from "./ingameStyle"
 import SpaceTheme from "../../components/ingame/main/space/SpaceTheme"
-// import StartingCountDown from "@/components/ingame/StartingCountDown"
 import HorrorTheme from "@/components/ingame/main/horror/HorrorTheme"
 import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
@@ -17,7 +14,7 @@ import SsafyTheme2 from "@/components/ingame/main/ssafy2/SsafyTheme2"
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
-  const { selectedTheme, selectedThemeType } = useIngameThemeStore()
+  const { selectedTheme } = useIngameThemeStore()
 
   const onStartClick = () => {
     const canvas = document.querySelector("canvas")
@@ -64,20 +61,10 @@ const Page = () => {
       ) : null}
 
       {isModelLoaded && !isGameStart ? (
-        // <StartingCountDown
-        //   isModelLoaded={isModelLoaded}
-        //   onFinish={handleGameStart}
-        // />
         <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme} />
       ) : null}
       {isModelLoaded ? (
         <div>
-          {/* <StartingCountDown
-            isModelLoaded={isModelLoaded}
-            onFinish={handleGameStart}
-          /> */}
-          {/*for merge request */}
-
           <ExitGame>
             <Image
               src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/exitbutton.png"}
@@ -87,9 +74,13 @@ const Page = () => {
             />
           </ExitGame>
         </div>
-      ) : (
-        <S.LoadingText>로딩 중...</S.LoadingText>
-      )}
+      ) : !isModelLoaded &&
+        (selectedTheme === 1 || selectedTheme === 2 || selectedTheme === 3) ? (
+        <S.LoadingText>Now Loading...</S.LoadingText>
+      ) : !isModelLoaded &&
+        (selectedTheme === 4 || selectedTheme === 5 || selectedTheme === 6) ? (
+        <S.LoadingText style={{ color: "white" }}>Now Loading...</S.LoadingText>
+      ) : null}
     </S.Container>
   )
 }
