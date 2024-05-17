@@ -34,6 +34,7 @@ import BloodText from "../../elements/horror2/BloodText"
 import PlaySound from "../../PlaySound"
 import Result from "../../elements/common/Result"
 import useUserStore from "@/stores/UserStore"
+
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
 // const lookAt = { x: -4, y: 2, z: 2 }
@@ -53,7 +54,7 @@ const HorrorTheme2 = ({
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
-  const { solved } = useIngameQuizStore()
+  const { solved, reset } = useIngameQuizStore()
   const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const [interactNum, setInteractNum] = useState<number>(1)
@@ -202,6 +203,7 @@ const HorrorTheme2 = ({
       }
       setIsGameFinished(true)
       setTimeout(() => {
+        reset()
         setIsGameFinished(false)
       }, 5000)
     }
