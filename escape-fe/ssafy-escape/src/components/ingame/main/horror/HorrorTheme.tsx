@@ -33,6 +33,7 @@ import Result from "../../elements/common/Result"
 import postUpdateRank from "@/services/main/ranking/postUpdateRank"
 import useUserStore from "@/stores/UserStore"
 import SecondToTime from "@/hooks/SecondToTime"
+import useIngameQuizStore from "@/stores/IngameQuizStore"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -53,7 +54,6 @@ const HorrorTheme = ({
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
-  const { solved } = useIngameSolvedStore()
   const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const [interactNum, setInteractNum] = useState<number>(1)
@@ -62,7 +62,7 @@ const HorrorTheme = ({
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const { userUuid, isHost } = useUserStore()
-
+  const { solved, reset } = useIngameQuizStore()
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
   // 시간 깎는 패널티 함수
@@ -172,11 +172,13 @@ const HorrorTheme = ({
         }
       }
       setIsGameFinished(true)
-      // 게임 종료 후, 5초 뒤 게임 종료 처리 해제
       if (progressReset) {
         progressReset()
       }
+
+      // 게임 종료 후, 5초 뒤 게임 종료 처리 해제
       setTimeout(() => {
+        reset()
         setIsGameFinished(false)
       }, 5000)
     }
