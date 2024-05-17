@@ -33,6 +33,7 @@ import Result from "../../elements/common/Result"
 import postUpdateRank from "@/services/main/ranking/postUpdateRank"
 import useUserStore from "@/stores/UserStore"
 import SecondToTime from "@/hooks/SecondToTime"
+import useIngameQuizStore from "@/stores/IngameQuizStore"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -42,6 +43,8 @@ const HorrorTheme = ({
   isGameStart,
   setIsModelLoaded,
   progressUpdate,
+  progressReset,
+  roomData,
 }: IngameMainProps) => {
   const [isFlowerClicked, setIsFlowerClicked] = useState<boolean>(false)
   const [isKnobClicked, setIsKnobClicked] = useState<boolean>(false)
@@ -51,7 +54,6 @@ const HorrorTheme = ({
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
-  const { solved } = useIngameSolvedStore()
   const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const [interactNum, setInteractNum] = useState<number>(1)
@@ -59,8 +61,8 @@ const HorrorTheme = ({
   const [result, setResult] = useState<string>("")
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
-  const { userUuid } = useUserStore()
-
+  const { userUuid, isHost } = useUserStore()
+  const { solved, reset } = useIngameQuizStore()
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
   // 시간 깎는 패널티 함수
@@ -146,13 +148,41 @@ const HorrorTheme = ({
         await postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
       }
     }
-    setResult("victory")
-    setIsGameFinished(true)
     if (progressUpdate) {
       progressUpdate()
     }
   }
+  useEffect(() => {
+    // 둘 중 한 명이 경기를 끝내면
+    if (roomData?.guestProgress === 4 || roomData?.hostProgress === 4) {
+      // 호스트
+      if (isHost) {
+        if (roomData?.hostProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.guestProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      // 게스트
+      else {
+        if (roomData?.guestProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.hostProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      setIsGameFinished(true)
+      if (progressReset) {
+        progressReset()
+      }
 
+      // 게임 종료 후, 5초 뒤 게임 종료 처리 해제
+      setTimeout(() => {
+        reset()
+        setIsGameFinished(false)
+      }, 5000)
+    }
+  }, [roomData])
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
     if (solved === 0) {

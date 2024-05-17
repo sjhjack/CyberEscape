@@ -14,6 +14,7 @@ import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
 import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
 import SsafyTheme2 from "@/components/ingame/main/ssafy2/SsafyTheme2"
+import Swal from "sweetalert2"
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
@@ -29,7 +30,19 @@ const Page = () => {
   const handleGameStart = () => {
     setIsGameStart(true)
   }
-
+  const exitGame = (e: any) => {
+    e.preventDefault()
+    Swal.fire({
+      title: "정말 나가시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      cancelButtonText: "아니요",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/main"
+      }
+    })
+  }
   useEffect(() => {
     document.addEventListener("click", onStartClick)
   }, [])
@@ -82,6 +95,7 @@ const Page = () => {
             <Image
               src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/exitbutton.png"}
               alt="exit game image"
+              onClick={(e) => exitGame(e)}
               width="40"
               height="40"
             />
