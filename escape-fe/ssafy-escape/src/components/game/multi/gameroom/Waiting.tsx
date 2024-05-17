@@ -21,7 +21,6 @@ interface GameRoomProps {
   kick: () => void
   sendMessage: (text: string) => void
   roomData: PubResponseData | null
-  isReady: boolean
 }
 const Waiting = ({
   chatting,
@@ -29,7 +28,6 @@ const Waiting = ({
   kick,
   sendMessage,
   roomData,
-  isReady,
 }: GameRoomProps) => {
   const { userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -86,8 +84,8 @@ const Waiting = ({
               {roomData?.host?.uuid === userUuid ? (
                 <>
                   <Button
-                    text={isReady ? "준비완료" : "게임시작"}
-                    theme={isReady ? "fail" : "success"}
+                    text={roomData?.hostReady ? "준비완료" : "게임시작"}
+                    theme={roomData?.hostReady ? "fail" : "success"}
                     width="100px"
                     height="40px"
                     onClick={() => {
@@ -136,8 +134,8 @@ const Waiting = ({
                   {roomData?.guest?.uuid === userUuid ? (
                     <>
                       <Button
-                        text={isReady ? "준비완료" : "게임시작"}
-                        theme={isReady ? "fail" : "success"}
+                        text={roomData?.guestReady ? "준비완료" : "게임시작"}
+                        theme={roomData?.guestReady ? "fail" : "success"}
                         width="100px"
                         height="40px"
                         onClick={() => {

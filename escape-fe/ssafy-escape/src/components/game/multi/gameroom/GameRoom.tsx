@@ -17,8 +17,9 @@ const GameRoom = () => {
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(10)
-  const { selectedTheme, setSelectedTheme } = useIngameThemeStore()
+  const { selectedTheme } = useIngameThemeStore()
   const [gameStart, setGameStart] = useState<boolean>(false)
+  const [gameTheme, setGameTheme] = useState<number>(0)
   // openvidu 관련 변수
   const [chatting, setChattting] = useState<Array<chatData>>([])
   const { accessToken, userUuid, isHost } = useUserStore()
@@ -40,7 +41,6 @@ const GameRoom = () => {
   }
   // stomp client 관련 변수
   const client = useRef<StompJs.Client | null>(null) // Ref for storing the client object
-  const [isReady, setIsReady] = useState<boolean>(false)
   const [isIngame, setisIngame] = useState<boolean>(false)
   const [roomData, setRoomData] = useState<PubResponseData | null>(null)
   const connectHeaders = {
@@ -90,7 +90,6 @@ const GameRoom = () => {
   }
   // 게임 레디 상태 바뀔 때마다 request 보내기
   const ready = (): void => {
-    setIsReady(!isReady)
     client.current?.publish({
       destination: `/pub/room/ready`,
       body: roomUuid,
@@ -137,16 +136,22 @@ const GameRoom = () => {
     }
   }, [])
   useEffect(() => {
+    // 게임 시작
     if (gameStart) {
-      const newTheme = isHost ? selectedTheme + 1 : selectedTheme + 2
+      // let randomNum1, randomNum2
+      // do {
+      //   randomNum1 = Math.floor(Math.random() * 2) + 1
+      //   randomNum2 = Math.floor(Math.random() * 2) + 1
+      // } while (randomNum1 === randomNum2)
       if (isHost) {
-        setSelectedTheme(newTheme)
+        setGameTheme(selectedTheme + 1)
       } else {
-        setSelectedTheme(newTheme)
+        setGameTheme(selectedTheme + 2)
       }
+
       setTimeout(() => {
         progressReset()
-      }, 1000)
+      }, 5000)
       setisIngame(true)
     }
     // gameStart를 추적하면서 false일 때는 ingame도 false. 처음 렌더링, 게임 끝나고 다시 대기방 돌아올 때
@@ -171,12 +176,14 @@ const GameRoom = () => {
 
     // 게임 종료 조건
     if (roomData?.hostProgress === 4 || roomData?.guestProgress === 4) {
-      // 예시, 게스트나 호스트 둘 중 한 명이 게임을 끝내면 5초 후에 대기방으로 이동
-      setTimeout(() => {
-        setGameStart(false)
-      }, 5000)
+      // 예시, 인게임 중일 때, 게스트나 호스트 둘 중 한 명이 게임을 끝내면 5초 후에 대기방으로 이동
+      if (isIngame) {
+        setTimeout(() => {
+          setGameStart(false)
+        }, 5000)
+      }
     }
-    if (isIngame && !roomData?.guest) {
+    if (isIngame && roomData?.guest === null) {
       // 게임 중에 게스트가 이탈하면
       Swal.fire("상대방이 이탈하였습니다. 게임을 종료합니다")
       setTimeout(() => {
@@ -194,6 +201,7 @@ const GameRoom = () => {
           progressUpdate={progressUpdate}
           sendMessage={sendMessage}
           chatting={chatting}
+          gameTheme={gameTheme}
         />
       ) : (
         <Waiting
@@ -202,7 +210,6 @@ const GameRoom = () => {
           kick={kick}
           sendMessage={sendMessage}
           roomData={roomData}
-          isReady={isReady}
         />
       )}
     </>

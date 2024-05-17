@@ -171,6 +171,10 @@ const HorrorTheme = ({
         }
       }
       setIsGameFinished(true)
+      // 게임 종료 후, 10초 뒤 게임 종료 처리 해제
+      setTimeout(() => {
+        setIsGameFinished(false)
+      }, 5000)
     }
   }, [roomData])
   // 첫 번째 문제 모달
