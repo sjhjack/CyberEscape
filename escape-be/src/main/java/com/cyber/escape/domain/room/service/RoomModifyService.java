@@ -16,6 +16,7 @@ public interface RoomModifyService {
 
 	String deleteRoom(final RoomDto.Request request);
 	String inviteUserToRoom(RoomDto.Request request);
+	String acceptInvitation(final RoomDto.Request acceptRequest);
 	String joinRoom(final RoomDto.JoinRequest joinRequest);
 	String exitRoom(final RoomDto.Request request);
 	String kickGuestFromRoom(final RoomDto.KickRequest kickRequest);

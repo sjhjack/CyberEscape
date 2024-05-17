@@ -48,6 +48,7 @@ public class RankingDto {
         private String nickname;
         private Time bestTime;
         private int category;
+        private String profileUrl;
     }
 
     @Getter

@@ -28,12 +28,13 @@ spring:
     multipart:
       max-file-size: 10MB
 
-#  jpa:
+  jpa:
+    open-in-view : false
 #    properties:
 #      hibernate:
-#        show_sql: true
 #        format_sql: true
 #        use_sql_comments: true
+
 
 rabbit:
   chat-queue-name: ${MQ_QUEUE_NAME}
@@ -68,3 +69,10 @@ openvidu:
 
 room:
   matching-key: ${MATCHING_QUEUE_KEY}
+
+# hikari log
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: TRACE
