@@ -89,6 +89,11 @@ const Container = styled.div`
   font-size: 58px;
   color: ${(props) => props.color};
   z-index: 99;
+  text-shadow:
+    2px 2px 0px black,
+    -2px -2px 0px black,
+    2px -2px 0px black,
+    -2px 2px 0px black;
 `
 
 const TimerDigit = styled.span`
