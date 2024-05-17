@@ -95,9 +95,9 @@ public class RoomManager {
 		return room;
 	}
 
-	public RoomDto.StompResponse initProgress(String roomUuid) {
+	public RoomDto.StompResponse resetStatus(String roomUuid) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
-		room.initProgress();
+		room.resetStatus();
 
 		return room;
 	}
