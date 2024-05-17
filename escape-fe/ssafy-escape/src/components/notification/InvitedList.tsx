@@ -8,19 +8,26 @@ import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
 import postReadNotification from "@/services/notification/postReadNotification"
 import postAcceptance from "@/services/game/room/postAcceptance"
+import { useRouter } from "next/navigation"
 // 게임 초대 요청 리스트
 const InvitedList = () => {
   const { data: notificationList, refetch } = useQuery({
     queryKey: ["notificationList"],
     queryFn: () => getNotificationList(),
   })
-
+  const router = useRouter()
   // 초대 요청 수락 시
   const handleAccept = async (roomUuid: string, notificationId: string) => {
-    await postAcceptance({roomUuid : roomUuid})
-    // 초대된 방으로 이동하는 로직
-    await postReadNotification(notificationId)
-    refetch()
+    try{
+      await postAcceptance({roomUuid : roomUuid})
+      // 알림 읽음 처리
+      await postReadNotification(notificationId)
+      router.push(`/gameroom/${roomUuid}`)
+      refetch()
+    }
+    catch(e){
+
+    }
   }
 
   // 초대 요청 거절 시
