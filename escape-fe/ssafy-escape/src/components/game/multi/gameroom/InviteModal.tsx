@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import MainModal from "@/components/common/MainModal"
 import Button from "@/components/common/Button"
 import styled from "styled-components"
-import postFriendList from "@/services/main/friends/postFriendList"
+import getFriendList from "@/services/main/friends/getFriendList"
 import postInvite from "@/services/game/room/postInvite"
 import { useQuery } from "@tanstack/react-query"
 import { useRouter, usePathname } from "next/navigation"
@@ -22,7 +22,7 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
   const roomUuid: string = pathname.substring(20)
   const { data: friendsData, isLoading } = useQuery({
     queryKey: ["friendList"],
-    queryFn: postFriendList,
+    queryFn: getFriendList,
   })
   const sendInvitation = (roomUuid: string, userUuid: string) => {
     postInvite({
@@ -41,10 +41,10 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
       text="친구 초대"
       isFriendModal={false}
     >
-      {friendsData?.data.map((data, index) => {
+      {friendsData?.map((data, index) => {
         return (
           <FriendsList key={index}>
-            <p>{data.friendNickname}</p>
+            <p>{data.nickname}</p>
             <Button
               text="초대"
               theme="success"

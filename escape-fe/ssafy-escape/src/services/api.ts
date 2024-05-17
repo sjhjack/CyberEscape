@@ -6,6 +6,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
 }
 const baseURL = process.env.NEXT_PUBLIC_URL
+
 const api = axios.create({
   baseURL: baseURL,
   headers: {

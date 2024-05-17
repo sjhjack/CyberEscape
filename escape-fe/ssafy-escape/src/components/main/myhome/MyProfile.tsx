@@ -33,9 +33,9 @@ const MyProfile = () => {
     useState<boolean>(false)
   const [newNickname, setNewNickname] = useState<string>("")
 
-  const { data: myRankingData, isLoading } = useQuery({
-    queryKey: ["myRanking", themeIdx[activeTheme]],
-    queryFn: () => postMyRanking(themeIdx[activeTheme]),
+  const { data: myRankingData } = useQuery({
+    queryKey: ["myRanking", themeuuid[activeTheme]],
+    queryFn: () => postMyRanking(userUuid, themeuuid[activeTheme]),
   })
 
   console.log(myRankingData)
@@ -93,9 +93,6 @@ const MyProfile = () => {
     setNewNickname(autoNickname)
   }
 
-  if (isLoading) {
-    return <div>로딩 중</div>
-  }
   if (!myRankingData) {
     return <div>데이터 없음</div>
   }
