@@ -16,7 +16,7 @@ interface InviteModalProps {
 
 const InviteModal = ({ open, handleClose }: InviteModalProps) => {
   const pathname: string = usePathname()
-  const roomUuid: string = pathname.substring(20)
+  const roomUuid: string = pathname.substring(10)
   const {
     data: friendsData,
     fetchNextPage,
@@ -50,6 +50,8 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
 
   // 초대 요청 시
   const sendInvitation = (roomUuid: string, userUuid: string) => {
+    console.log("초대를 보내요~~ roomUuid : ");
+    console.log(roomUuid);
     postInvite({
       roomUuid: roomUuid,
       userUuid: userUuid ? userUuid : "",
