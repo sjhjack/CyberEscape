@@ -16,7 +16,7 @@ import patchNicknameChange from "@/services/main/nickname/patchNicknameChange"
 import useUserStore from "@/stores/UserStore"
 import Swal from "sweetalert2"
 import patchChangeProfileImg from "@/services/user/patchChangeProfileImg"
-import postUpdateRank from "@/services/main/ranking/postUpdateRank"
+// import { CircularProgress } from "@mui/material"
 
 interface ImageProps {
   $isActive: boolean
@@ -93,6 +93,9 @@ const MyProfile = () => {
     setNewNickname(autoNickname)
   }
 
+  // if (isLoading) {
+  //   return <CircularProgress />
+  // }
   if (!myRankingData) {
     return <div>데이터 없음</div>
   }
