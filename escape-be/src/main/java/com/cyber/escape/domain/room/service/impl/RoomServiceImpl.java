@@ -241,35 +241,42 @@ public class RoomServiceImpl implements RoomService {
 		return "";
 	}
 
-	public void acceptInvitation(final RoomDto.Request request) {
-		// Todo : broadcasting 공부 후 개발
-		// 비밀번호 check 필요
-		
-		// 이것도 필요 없을 것 같은데? joinRoom()으로 퉁치면 되잖아
-		// Todo : capacity 변경
+	@Transactional
+	public String acceptInvitation(final RoomDto.Request acceptRequest) {
+		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, acceptRequest.getRoomUuid());
+
+		checkJoinRoomValidation(findRoom, "", true);
+		findRoom.setCapacity(2);
+
+		return findRoom.getUuid();
 	}
 
 	@Transactional
 	public String joinRoom(final RoomDto.JoinRequest joinRequest) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, joinRequest.getRoomUuid());
 
-		checkJoinRoomValidation(findRoom, joinRequest.getPassword());
+		checkJoinRoomValidation(findRoom, joinRequest.getPassword(), false);
 		findRoom.setCapacity(2);
 
 		return findRoom.getUuid();
 	}
 
-	private void checkJoinRoomValidation(Room findRoom, String password) {
+	private void checkJoinRoomValidation(Room findRoom, String password, Boolean isInvited) {
 		// 비밀번호 불일치
+		if(findRoom.getCapacity() >= 2) {
+			throw new RoomException(ExceptionCodeSet.ROOM_CAPACITY_OVER);
+		}
+
+		// 초대로 받은 거면 패스워드 검사는 따로 하지 않는다.
+		if(isInvited) return;
+
 		if(findRoom.getPassword() != null) {
 			if(!bCryptPasswordEncoder.matches(password, findRoom.getPassword())){
 				throw new RoomException(ExceptionCodeSet.ROOM_PASSWORD_MISMATCH);
 			}
 		}
 		// 정원 초과
-		if(findRoom.getCapacity() >= 2) {
-			throw new RoomException(ExceptionCodeSet.ROOM_CAPACITY_OVER);
-		}
+
 	}
 
 	@Transactional
