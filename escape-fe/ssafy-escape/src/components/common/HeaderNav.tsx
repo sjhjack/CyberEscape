@@ -12,11 +12,15 @@ import {
   QueryClient,
   HydrationBoundary,
   dehydrate,
+  useQuery,
 } from "@tanstack/react-query"
-import postFriendList from "@/services/main/friends/postFriendList"
+import getFriendList from "@/services/main/friends/getFriendList"
 import NotificationModal from "../notification/NotificationModal"
-import postInvitedList from "@/services/notification/postInvitedList"
+import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill"
+import { Badge, formControlClasses } from "@mui/material"
+import { MainColor } from "@/styles/palette"
 
 interface HeaderProps {
   Icon: React.ElementType
@@ -28,8 +32,66 @@ const MainHeader = () => {
   const router = useRouter()
   const { logout } = useUserStore()
   const [friendModalopen, setfriendModalOpen] = useState<boolean>(false)
+  const [isFriendAlram, setIsFriendAlram] = useState<boolean>(false)
+  const [isInviteAlram, setIsInviteAlram] = useState<boolean>(false)
   const [notificationModalopen, setNotificationModalopen] =
     useState<boolean>(false)
+
+  const EventProvider = () => {
+    const EventSource = EventSourcePolyfill || NativeEventSource
+    const accessToken = sessionStorage.getItem("access_token")
+    // if(accessToken == null) return;
+    let eventSource = new EventSource(
+      process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+      {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+          "X-Accel-Buffering": "no",
+          Authorization: `Bearer ${accessToken}`,
+        },
+
+        heartbeatTimeout: 120000,
+      },
+    )
+
+    console.log("EVENT !!!!!")
+    eventSource.onmessage = function (event) {
+      console.log("New event from server:", event.data)
+    }
+    eventSource.addEventListener("sse", function (event) {
+      console.log(event)
+      console.log("알림 도착")
+      //setMessages(prevMessages => [...prevMessages, event.data]);
+    })
+
+    eventSource.onerror = function (error) {
+      console.log("ERROR OCCUR")
+      console.log(error)
+      setTimeout(async function () {
+        await eventSource.close()
+
+        eventSource = new EventSource(
+          process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+          {
+            headers: {
+              "Content-Type": "text/event-stream",
+              "Cache-Control": "no-cache",
+              Connection: "keep-alive",
+              "X-Accel-Buffering": "no",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            heartbeatTimeout: 120000,
+          },
+        )
+      }, 2000)
+    }
+
+    return () => {
+      eventSource.close()
+    }
+  }
 
   const handleFriendModalClose = () => {
     setfriendModalOpen(false)
@@ -39,16 +101,37 @@ const MainHeader = () => {
   }
 
   const queryClient = new QueryClient()
+
   useEffect(() => {
     queryClient.prefetchQuery({
       queryKey: ["friendList"],
-      queryFn: postFriendList,
+      queryFn: () => getFriendList(1),
     }),
       queryClient.prefetchQuery({
-        queryKey: ["invitedList"],
-        queryFn: postInvitedList,
-      })
+        queryKey: ["notificationList"],
+        queryFn: getNotificationList,
+      }),
+      EventProvider()
   }, [])
+
+  const { data: requestData } = useQuery({
+    queryKey: ["notificationList"],
+    queryFn: () => getNotificationList(),
+  })
+
+  useEffect(() => {
+    if (requestData) {
+      const hasFriendNotification = requestData.some(
+        (data) => data.type === "FRIEND",
+      )
+      const hasGameNotification = requestData.some(
+        (data) => data.type === "GAME",
+      )
+
+      setIsFriendAlram(hasFriendNotification)
+      setIsInviteAlram(hasGameNotification)
+    }
+  }, [requestData])
 
   // 로그아웃 버튼 클릭 시
   const handleLogout = async () => {
@@ -96,13 +179,26 @@ const MainHeader = () => {
   const HeaderItem = ({ Icon, text, onClick }: HeaderProps) => (
     <Box onClick={onClick}>
       <IconBox>
-        <Icon
-          style={{
-            color: "white",
-            fontSize: "40px",
-            cursor: "pointer",
-          }}
-        />
+        {(isFriendAlram && text === "친구") ||
+        (isInviteAlram && text === "알림") ? (
+          <Badge variant="dot" color="error">
+            <Icon
+              style={{
+                color: "white",
+                fontSize: "40px",
+                cursor: "pointer",
+              }}
+            />
+          </Badge>
+        ) : (
+          <Icon
+            style={{
+              color: "white",
+              fontSize: "40px",
+              cursor: "pointer",
+            }}
+          />
+        )}
       </IconBox>
       <Text
         style={{

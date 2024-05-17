@@ -10,7 +10,8 @@ import Button from "@/components/common/Button"
 import MainModal from "@/components/common/MainModal"
 import Input from "@/components/common/Input"
 import postUserSearch from "@/services/main/friends/postUserSearch"
-// import postFriendRequest from "@/services/main/friends/postFriendRequest"
+import postFriendRequest from "@/services/main/friends/postFriendRequest"
+import Swal from "sweetalert2"
 
 interface FriendRequestModalProps {
   open: boolean
@@ -31,15 +32,19 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
     enabled: false,
   })
 
+  // 검색 시
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log(keyword + "로 검색")
-    refetch()
+    if (keyword.trim()) {
+      refetch()
+    }
   }
-  // const handleRequest = async (id: string) => {
-  //   await postFriendRequest(myid, id)
-  //   console.log("친구 요청")
-  // }
+
+  //
+  const handleRequest = async (id: string) => {
+    await postFriendRequest(id, "FRIEND")
+    Swal.fire("친구 신청 완료")
+  }
 
   return (
     <div>
@@ -61,23 +66,25 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
             />
           ) : null}
         </InputBox>
-        {!searchData ? (
+        {!searchData || searchData.length === 0 ? (
           <EmptyText>결과가 없습니다.</EmptyText>
         ) : (
           <div>
-            {searchData?.data.map((user, i) => (
+            {searchData.map((user, i) => (
               <div key={i}>
                 <MainContainer>
                   <ProfileBox>
                     <PersonIcon sx={{ fontSize: "35px" }} />
                     <div>{user.nickname}</div>
                   </ProfileBox>
-                  <Button
-                    text="요청"
-                    theme="success"
-                    width="60px"
-                    // onClick={() => handleRequest(user.id)}
-                  />
+                  {user.relationship === "추가" ? (
+                    <Button
+                      text={user.relationship}
+                      theme="success"
+                      width="60px"
+                      onClick={() => handleRequest(user.userUuid)}
+                    />
+                  ) : null}
                 </MainContainer>
               </div>
             ))}
