@@ -226,7 +226,9 @@ public class RoomDto {
 			}
 		}
 
-		public void initProgress() {
+		public void resetStatus() {
+			isHostReady = false;
+			isGuestReady = false;
 			hostProgress = 0;
 			guestProgress = 0;
 		}
