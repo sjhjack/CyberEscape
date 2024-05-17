@@ -200,6 +200,9 @@ const HorrorTheme2 = ({
         }
       }
       setIsGameFinished(true)
+      setTimeout(() => {
+        setIsGameFinished(false)
+      }, 5000)
     }
   }, [roomData])
   // 첫 번째 문제 모달
