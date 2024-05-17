@@ -40,7 +40,11 @@ const Chat = ({ sendMessage, chatting }: ChatProps) => {
       }
     }
   }
-
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      send()
+    }
+  }
   return (
     <ChatContainer id="chat-container">
       <ChatBox ref={chatBoxRef}>
@@ -50,7 +54,11 @@ const Chat = ({ sendMessage, chatting }: ChatProps) => {
           </div>
         ))}
       </ChatBox>
-      <UserInput ref={userInputRef} placeholder="채팅을 입력하세요" />
+      <UserInput
+        ref={userInputRef}
+        placeholder="채팅을 입력하세요"
+        onKeyDown={handleKeyDown}
+      />
       <SendButton onClick={send}>전송</SendButton>
     </ChatContainer>
   )
