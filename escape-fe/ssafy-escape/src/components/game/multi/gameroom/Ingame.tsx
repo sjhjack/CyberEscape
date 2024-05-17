@@ -18,6 +18,7 @@ import Swal from "sweetalert2"
 interface IngameProps {
   roomData: PubResponseData | null
   progressUpdate: () => void
+  progressReset: () => void
   sendMessage: (text: string) => void
   chatting: chatData[]
   gameTheme: number
@@ -26,6 +27,7 @@ interface IngameProps {
 const Ingame = ({
   roomData,
   progressUpdate,
+  progressReset,
   sendMessage,
   chatting,
   gameTheme,
@@ -67,6 +69,7 @@ const Ingame = ({
         <HorrorTheme
           progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
+          progressReset={progressReset}
           isGameStart={isGameStart}
           roomData={roomData}
         />
@@ -79,6 +82,7 @@ const Ingame = ({
         <HorrorTheme2
           progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
+          progressReset={progressReset}
           isGameStart={isGameStart}
           roomData={roomData}
         />

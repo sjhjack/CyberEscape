@@ -110,7 +110,7 @@ const GameRoom = () => {
   }
   const progressReset = (): void => {
     client.current?.publish({
-      destination: `/pub/game/init`,
+      destination: `/pub/game/end`,
       body: roomUuid,
     })
   }
@@ -150,9 +150,8 @@ const GameRoom = () => {
       }
 
       setTimeout(() => {
-        progressReset()
+        setisIngame(true)
       }, 5000)
-      setisIngame(true)
     }
     // gameStart를 추적하면서 false일 때는 ingame도 false. 처음 렌더링, 게임 끝나고 다시 대기방 돌아올 때
     else {
@@ -207,6 +206,7 @@ const GameRoom = () => {
         <Ingame
           roomData={roomData}
           progressUpdate={progressUpdate}
+          progressReset={progressReset}
           sendMessage={sendMessage}
           chatting={chatting}
           gameTheme={gameTheme}

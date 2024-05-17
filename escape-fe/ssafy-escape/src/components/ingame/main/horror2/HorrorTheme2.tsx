@@ -42,6 +42,7 @@ const HorrorTheme2 = ({
   isGameStart,
   setIsModelLoaded,
   progressUpdate,
+  progressReset,
   roomData,
 }: IngameMainProps) => {
   const [isSyringeClicked, setIsSyringeClicked] = useState<boolean>(false)
