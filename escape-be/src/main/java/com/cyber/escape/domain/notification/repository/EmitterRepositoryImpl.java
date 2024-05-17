@@ -68,5 +68,10 @@ public class EmitterRepositoryImpl implements EmitterRepository {
                 .map(Map.Entry::getValue)  // key에 대응하는 value 추출
                 .collect(Collectors.toList());
     }
+
+    public Map<String, SseEmitter> findAllEmitters(){
+        return emitters.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
 }
 
