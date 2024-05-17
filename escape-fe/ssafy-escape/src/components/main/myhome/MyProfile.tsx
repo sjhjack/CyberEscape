@@ -33,9 +33,9 @@ const MyProfile = () => {
     useState<boolean>(false)
   const [newNickname, setNewNickname] = useState<string>("")
 
-  const { data: myRankingData, isLoading } = useQuery({
-    queryKey: ["myRanking", themeIdx[activeTheme]],
-    queryFn: () => postMyRanking(themeIdx[activeTheme]),
+  const { data: myRankingData } = useQuery({
+    queryKey: ["myRanking", themeuuid[activeTheme]],
+    queryFn: () => postMyRanking(userUuid, themeuuid[activeTheme]),
   })
 
   console.log(myRankingData)
