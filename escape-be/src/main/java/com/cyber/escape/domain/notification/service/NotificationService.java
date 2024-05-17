@@ -109,19 +109,19 @@ public class NotificationService {
             // sender가 receiver에게 친구 요청을 보낸 적이 있는지를 판별
             log.info("::::::::::::::: 친구 요청입니다.");
             List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationTypeAndIsRead(senderUuid, receiverUuid, Notify.NotificationType.FRIEND, 'F');
-            sendNotifcation(receiverUuid, "", notificationType, content, senderUuid, existNotification);
+            sendNotification(receiverUuid, "", notificationType, content, senderUuid, existNotification);
         }
         // 게임 요청이 들어왔다면
         else {
             log.info("::::::::::::::: 게임 초대 요청입니다.");
             List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationTypeAndIsRead(senderUuid, receiverUuid, Notify.NotificationType.GAME, 'F');
-            sendNotifcation(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
+            sendNotification(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
         }
         log.info("NotificationService ============= send() 끝");
 
     }
 
-    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification)
+    private void sendNotification(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification)
     {
 
         try {
