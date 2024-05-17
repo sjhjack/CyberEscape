@@ -17,12 +17,15 @@ import com.cyber.escape.global.exception.ExceptionCodeSet;
 import com.cyber.escape.global.exception.UserException;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.net.ssl.SSLException;
 
 @Service
 @RequiredArgsConstructor
@@ -118,7 +121,8 @@ public class NotificationService {
 
     }
 
-    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification) {
+    private void sendNotifcation(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification)
+    {
 
         try {
             if (existNotification.isEmpty()) {
@@ -138,15 +142,16 @@ public class NotificationService {
 
                 try {
                     sseEmitters.forEach(
-                            (key, sseEmitter) -> {
-                                log.info("KEY : {}, Emitter : {}", key, sseEmitter);
-                                emitterRepository.saveEventCache(key, notification);
+                        (key, sseEmitter) -> {
+                            log.info("KEY : {}, Emitter : {}", key, sseEmitter);
+                            emitterRepository.saveEventCache(key, notification);
 
-                                if(notificationType.equals(Notify.NotificationType.FRIEND))
-                                    sendToClient(sseEmitter, key,  NotifyDto.FriendResponse.from(notification));
-                                else
-                                    sendToClient(sseEmitter, key,  NotifyDto.GameResponse.from(notification));
+                            if (notificationType.equals(Notify.NotificationType.FRIEND)) {
+                                sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
+                            } else {
+                                sendToClient(sseEmitter, key, NotifyDto.GameResponse.from(notification));
                             }
+                        }
                     );
 
                 }
@@ -189,10 +194,11 @@ public class NotificationService {
             log.info("sendToClient ============ sendToClient completed");
         } catch (IOException e){ // 연결이 끊기거나 네트워크가 불안정한 경우
             log.info("sendToClient ============ sendToClient failed");
+            //throw new SSLException();
             sseEmitter.completeWithError(e); // error가 나서 sseEmitter가 삭제
             emitterRepository.deleteById(id);
             log.error("알림을 송신하는 도중 에러가 발생했습니다 : {}", e.getMessage());
-            throw new RuntimeException("연결 오류");
+            //throw new SseException(e);
         }
         catch (Exception e){
             log.error("ERROR : {}", e.getMessage());
@@ -246,5 +252,20 @@ public class NotificationService {
 
         String userUuid = userUtil.getLoginIdFromContextHolder();
         return emitterRepository.getMyEmitter(userUuid);
+    }
+
+
+    @Scheduled(fixedRate = 180000) // 3분마다 heartbeat 메세지 전달.
+    public void sendHeartbeat() {
+        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitters();
+        sseEmitters.forEach((key, emitter) -> {
+            try {
+                emitter.send(SseEmitter.event().id(key).name("heartbeat").data(""));
+                log.info("하트비트 메세지 전송");
+            } catch (IOException e) {
+                emitterRepository.deleteById(key);
+                log.error("하트비트 전송 실패: {}", e.getMessage());
+            }
+        });
     }
 }
