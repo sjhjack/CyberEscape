@@ -228,10 +228,11 @@ public class RoomStompHandler {
 		sendRoomInfo(roomUuid, room);
 	}
 
-	@MessageMapping("/game/init")
-	public void initProgress(@Payload String roomUuid) {
-		log.info("Initialize progress === ");
-		RoomDto.StompResponse room = roomManager.initProgress(roomUuid);
+	@MessageMapping("/game/end")
+	public void	resetStatus(@Payload String roomUuid) {
+		log.info("Game end !! === ");
+		log.info("room Uuid : {}", roomUuid);
+		RoomDto.StompResponse room = roomManager.resetStatus(roomUuid);
 		sendRoomInfo(roomUuid, room);
 	}
 
