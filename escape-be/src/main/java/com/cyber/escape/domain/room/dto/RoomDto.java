@@ -224,11 +224,6 @@ public class RoomDto {
 			} else {
 				throw new RoomException(ExceptionCodeSet.ROOM_INVALID_USER);
 			}
-
-			if(hostProgress == 4 || guestProgress == 4) {
-				isHostReady = false;
-				isGuestReady = false;
-			}
 		}
 
 		public void initProgress() {
