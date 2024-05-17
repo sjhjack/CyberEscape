@@ -9,6 +9,7 @@ interface postCreateRoomResponseProps {
 interface postCreateRoomDataProps {
   roomUuid: string
   chatRoomUuid: string
+  title: string
 }
 interface postCreateRoomRequestProps {
   title: string

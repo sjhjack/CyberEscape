@@ -19,6 +19,7 @@ const FirstProblemModal = ({
   setSubtitle,
   timePenalty,
   setShowSpider,
+  progressUpdate,
 }: ProblemProps) => {
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const { solved, setSolved } = useIngameQuizStore()
@@ -45,6 +46,9 @@ const FirstProblemModal = ({
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setSolved(solved + 1)
+      if (progressUpdate) {
+        progressUpdate()
+      }
       onClose()
       setTimeout(() => {
         if (setShowSpider) {
