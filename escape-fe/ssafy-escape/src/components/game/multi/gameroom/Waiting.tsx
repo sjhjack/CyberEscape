@@ -87,7 +87,7 @@ const Waiting = ({
                 {roomData?.host?.uuid === userUuid ? (
                   <>
                     <Button
-                      text={roomData?.hostReady ? "준비완료" : "게임시작"}
+                      text={roomData?.hostReady ? "취소" : "준비"}
                       theme={roomData?.hostReady ? "fail" : "success"}
                       width="100px"
                       height="40px"
@@ -132,13 +132,22 @@ const Waiting = ({
                     {roomData?.guestReady ? (
                       <S.ReadyImage src={`/image/ready.png`} />
                     ) : null}
+                    {roomData?.host.uuid === userUuid ? (
+                      <S.QuitButton
+                        onClick={() => {
+                          kick()
+                        }}
+                      >
+                        강퇴
+                      </S.QuitButton>
+                    ) : null}
                   </S.CharacterBox>
                   <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
                   <S.Nickname>
                     {roomData?.guest?.uuid === userUuid ? (
                       <>
                         <Button
-                          text={roomData?.guestReady ? "준비완료" : "게임시작"}
+                          text={roomData?.guestReady ? "취소" : "준비"}
                           theme={roomData?.guestReady ? "fail" : "success"}
                           width="100px"
                           height="40px"
@@ -148,17 +157,7 @@ const Waiting = ({
                         />
                       </>
                     ) : (
-                      <>
-                        <Button
-                          text={"강제퇴장"}
-                          theme={"fail"}
-                          width="100px"
-                          height="40px"
-                          onClick={() => {
-                            kick()
-                          }}
-                        />
-                      </>
+                      <div style={{ width: "100px", height: "40px" }}></div>
                     )}
                   </S.Nickname>
                 </>
