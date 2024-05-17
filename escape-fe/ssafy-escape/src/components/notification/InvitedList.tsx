@@ -7,7 +7,7 @@ import Button from "../common/Button"
 import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
 import postReadNotification from "@/services/notification/postReadNotification"
-
+import postAcceptance from "@/services/game/room/postAcceptance"
 // 게임 초대 요청 리스트
 const InvitedList = () => {
   const { data: notificationList, refetch } = useQuery({
@@ -17,7 +17,7 @@ const InvitedList = () => {
 
   // 초대 요청 수락 시
   const handleAccept = async (roomUuid: string, notificationId: string) => {
-    // await postInvitedAccept(roomUuid, userUuid)
+    await postAcceptance({roomUuid : roomUuid})
     // 초대된 방으로 이동하는 로직
     await postReadNotification(notificationId)
     refetch()
