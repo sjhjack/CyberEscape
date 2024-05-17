@@ -2,11 +2,13 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import HintModal from "../common/HintModal"
+import useIngameOptionStore from "@/stores/IngameOptionStore"
+import { useQuery } from "@tanstack/react-query"
+import getQuiz from "@/services/ingame/getQuiz"
 
 // 세 번째 문제 모달
 const ThirdProblemModal = ({
@@ -16,11 +18,14 @@ const ThirdProblemModal = ({
   setSubtitle,
   timePenalty,
 }: ProblemProps) => {
-  const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
-  const choices = ["1", "3", "5", "7"]
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
 
-  const { solved, setSolved, quizData } = useIngameQuizStore()
+  const { solved, setSolved } = useIngameQuizStore()
+  const { data: quizData } = useQuery({
+    queryKey: ["quizList", 3],
+    queryFn: () => getQuiz(3),
+  })
+  const { horror2QuizList } = useIngameOptionStore()
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
@@ -36,75 +41,80 @@ const ThirdProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
       onClose()
-      setSubtitle("이런, 시간이...서둘러 나가야겠군.")
-      setTimeout(() => {
-        setSubtitle("...아, 제일 중요한 걸 놓고 갈 뻔했네.")
+      if (setSubtitle) {
+        setSubtitle("이런, 시간이...서둘러 나가야겠군.")
         setTimeout(() => {
-          setSubtitle("주사기랑 망치가 어디있지?")
+          setSubtitle("...아, 제일 중요한 걸 놓고 갈 뻔했네.")
           setTimeout(() => {
-            setSubtitle("")
-          }, 10000)
+            setSubtitle("주사기랑 망치가 어디있지?")
+            setTimeout(() => {
+              setSubtitle("")
+            }, 10000)
+          }, 4000)
         }, 4000)
-      }, 4000)
+      }
     } else {
-      alert("오답입니다")
-      setPenalty(penalty + 1)
+      if (penalty && setPenalty) {
+        alert("오답입니다")
+        setPenalty(penalty + 1)
+        timePenalty()
+      }
     }
   }
-
   return (
     <MainContainer>
-      <Image
-        src="/image/diary.png"
-        alt="일기장 이미지"
-        width={620}
-        height={580}
-      />
-      <IconBox onClick={onClose}>
-        <CloseIcon sx={{ fontSize: 40 }} />
-      </IconBox>
-      <SubContainer>
-        <ProblemText>{problem.slice(0, problem.lastIndexOf(","))}</ProblemText>
-        <ProblemText>{extractSubstring(problem)}</ProblemText>
-        <ChoiceBox>
+      <div>
+        <img src={quizData[2].url} width={620} height={580} alt="세번째 문제" />
+        <CloseIconBox onClick={onClose}>
+          <CloseIcon sx={{ fontSize: 30 }} />
+        </CloseIconBox>
+        <ChoiceBox1>
           <Button
             theme="fail"
-            text={choices[0]}
             width="100px"
-            fontSize="22px"
-            onClick={() => handleAnswerCheck(choices[0])}
+            height="40px"
+            opacity="0"
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][0])
+            }
           />
           <Button
             theme="fail"
-            text={choices[1]}
             width="100px"
-            fontSize="22px"
-            onClick={() => handleAnswerCheck(choices[1])}
+            height="40px"
+            opacity="0"
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][1])
+            }
           />
-        </ChoiceBox>
-        <ChoiceBox>
+        </ChoiceBox1>
+        <ChoiceBox2>
           <Button
             theme="fail"
-            text={choices[2]}
             width="100px"
-            fontSize="22px"
-            onClick={() => handleAnswerCheck(choices[2])}
+            height="40px"
+            opacity="0"
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][2])
+            }
           />
           <Button
             theme="fail"
-            text={choices[3]}
             width="100px"
-            fontSize="22px"
-            onClick={() => handleAnswerCheck(choices[3])}
+            height="40px"
+            opacity="0"
+            onClick={() =>
+              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][3])
+            }
           />
-        </ChoiceBox>
-      </SubContainer>
+        </ChoiceBox2>
+      </div>
       <HintIconBox onClick={handleOpenModal}>
         <Image
-          src={"/image/hint.png"}
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
           alt="힌트 아이콘"
           width={35}
           height={35}
@@ -132,33 +142,22 @@ const MainContainer = styled.div`
   z-index: 20;
 `
 
-const SubContainer = styled.div`
+const ChoiceBox1 = styled.div`
+  display: flex;
   position: absolute;
-  top: 48%;
+  top: 40%;
   left: 50%;
-  transform: translate(-45%, -50%);
-  width: 380px;
-  height: 580px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-`
-
-const ProblemText = styled.div`
-  margin-bottom: 20px;
-  font-size: 24px;
-  word-break: keep-all;
-`
-
-const ChoiceBox = styled.div`
-  display: flex;
-  gap: 30px;
+  transform: translate(-40%, 30%);
+  gap: 60px;
   margin-top: 30px;
 `
 
-const IconBox = styled.div`
+const ChoiceBox2 = styled(ChoiceBox1)`
+  top: 53%;
+  transform: translate(-40%, 45%);
+`
+
+const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
   right: 130px;
@@ -172,7 +171,7 @@ const HintIconBox = styled.div`
   align-items: center;
   cursor: pointer;
   left: 165px;
-  top: 42px;
+  bottom: 90px;
   z-index: 10;
   font-size: 16px;
 `

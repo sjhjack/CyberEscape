@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { styled } from "styled-components"
 import { MainColor } from "@/styles/palette"
+import useIngameThemeStore from "@/stores/IngameTheme"
 
 const QuickStart = () => {
   const router = useRouter()
+  const { setSelectedThemeType } = useIngameThemeStore()
   return (
     <StartContainer>
       <div style={{ textAlign: "center" }}>
@@ -17,11 +19,11 @@ const QuickStart = () => {
         <SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/main/theme?mode=single")
+            router.push("/main/theme"), setSelectedThemeType("single")
           }}
         >
           <Image
-            src="/image/single.png"
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/single.png"}
             alt=""
             width={250}
             height={250}
@@ -32,11 +34,11 @@ const QuickStart = () => {
         <SelectMode
           className="selectmode"
           onClick={() => {
-            router.push("/main/multi")
+            router.push("/main/multi"), setSelectedThemeType("multi")
           }}
         >
           <Image
-            src="/image/multi.png"
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/multi.png"}
             alt=""
             width={250}
             height={250}
@@ -56,6 +58,15 @@ const TitleText = styled.div`
   font-weight: bold;
   color: ${MainColor};
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  
+  @font-face {
+    font-family: "PaytoneOne";
+    font-weight: 400;
+    src: url(${process.env.NEXT_PUBLIC_IMAGE_URL} + "/fonts/PaytoneOne-Regular.ttf")
+      format("truetype");
+  }
+
+  font-family: "PaytoneOne";
 `
 
 const SubTitleText = styled.div`

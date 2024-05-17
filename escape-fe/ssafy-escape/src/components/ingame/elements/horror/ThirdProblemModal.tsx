@@ -2,11 +2,13 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import extractSubstring from "@/hooks/extractSubstring"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import HintModal from "../common/HintModal"
+import { useQuery } from "@tanstack/react-query"
+import getQuiz from "@/services/ingame/getQuiz"
+import useIngameOptionStore from "@/stores/IngameOptionStore"
 
 // 세 번째 문제 모달
 const ThirdProblemModal = ({
@@ -15,20 +17,22 @@ const ThirdProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  progressUpdate,
 }: ProblemProps) => {
-  const problem = "16+9 = 1, 8+6 = 2, 14+13 = 3, 4+11 = ?"
-  const choices = ["1", "3", "5", "7"]
   const [showExtraImage, setShowExtraImage] = useState(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
+  const [index, setIndex] = useState(0)
 
-  const randomIndex = useMemo(() => {
-    const randomIndex = Math.floor(Math.random() * 4)
-    return randomIndex
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * 10)
+    setIndex(randomIndex)
   }, [])
 
   useEffect(() => {
     const playAudio = setTimeout(() => {
-      const audio = new Audio("sound/woman_scream.mp3")
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/woman_scream.mp3",
+      )
       audio.play()
       const showImg = setTimeout(() => {
         setShowExtraImage(true)
@@ -42,7 +46,13 @@ const ThirdProblemModal = ({
     return () => clearTimeout(playAudio)
   }, [])
 
-  const { solved, setSolved, quizData } = useIngameQuizStore()
+  const { solved, setSolved } = useIngameQuizStore()
+
+  const { data: quizData } = useQuery({
+    queryKey: ["quizList", 2],
+    queryFn: () => getQuiz(2),
+  })
+  const { horror1QuizList } = useIngameOptionStore()
 
   if (!quizData) {
     return <div>퀴즈 데이터가 없습니다.</div>
@@ -58,22 +68,30 @@ const ThirdProblemModal = ({
   }
 
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
+      if (progressUpdate) {
+        progressUpdate()
+      }
       setSolved(solved + 1)
       onClose()
-      setSubtitle("...그러고 보니 처음부터 문고리가 없었던 것 같은데.")
-      setTimeout(() => {
-        setSubtitle("마지막 희망이야.")
+      if (setSubtitle) {
+        setSubtitle("...그러고 보니 처음부터 문고리가 없었던 것 같은데.")
         setTimeout(() => {
-          setSubtitle("문고리...문고리를 찾아야 해.")
+          setSubtitle("마지막 희망이야.")
           setTimeout(() => {
-            setSubtitle("")
+            setSubtitle("문고리...문고리를 찾아야 해.")
+            setTimeout(() => {
+              setSubtitle("")
+            }, 10000)
           }, 10000)
-        }, 10000)
-      }, 4000)
+        }, 4000)
+      }
     } else {
-      alert("오답입니다")
-      setPenalty(penalty + 1)
+      if (penalty && setPenalty) {
+        alert("오답입니다.")
+        setPenalty(penalty + 1)
+        timePenalty()
+      }
     }
   }
 
@@ -83,7 +101,10 @@ const ThirdProblemModal = ({
         <BlackBackground>
           <HorrorImageBox>
             <Image
-              src={`/image/ghost/ghost${randomIndex}.jpg`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/ghost/ghost${index}.jpg`
+              }
               alt="귀신 이미지"
               layout="fill"
               objectFit="cover"
@@ -92,56 +113,60 @@ const ThirdProblemModal = ({
         </BlackBackground>
       )}
       <MainContainer>
-        <Image
-          src="/image/diary.png"
-          alt="일기장 이미지"
-          width={620}
-          height={580}
-        />
-        <IconBox onClick={onClose}>
-          <CloseIcon sx={{ fontSize: 40 }} />
-        </IconBox>
-        <SubContainer>
-          <ProblemText>
-            {problem.slice(0, problem.lastIndexOf(","))}
-          </ProblemText>
-          <ProblemText>{extractSubstring(problem)}</ProblemText>
-          <ChoiceBox>
+        <div>
+          <img
+            src={quizData[2].url}
+            width={620}
+            height={580}
+            alt="세번째 문제"
+          />
+          <CloseIconBox onClick={onClose}>
+            <CloseIcon sx={{ fontSize: 40 }} />
+          </CloseIconBox>
+          <ChoiceBox1>
             <Button
               theme="fail"
-              text={choices[0]}
               width="100px"
-              fontSize="22px"
-              onClick={() => handleAnswerCheck(choices[0])}
+              height="40px"
+              opacity="0"
+              onClick={() =>
+                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][0])
+              }
             />
             <Button
               theme="fail"
-              text={choices[1]}
               width="100px"
-              fontSize="22px"
-              onClick={() => handleAnswerCheck(choices[1])}
+              height="40px"
+              opacity="0"
+              onClick={() =>
+                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][1])
+              }
             />
-          </ChoiceBox>
-          <ChoiceBox>
+          </ChoiceBox1>
+          <ChoiceBox2>
             <Button
               theme="fail"
-              text={choices[2]}
               width="100px"
-              fontSize="22px"
-              onClick={() => handleAnswerCheck(choices[2])}
+              height="40px"
+              opacity="0"
+              onClick={() =>
+                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][2])
+              }
             />
             <Button
               theme="fail"
-              text={choices[3]}
               width="100px"
-              fontSize="22px"
-              onClick={() => handleAnswerCheck(choices[3])}
+              height="40px"
+              opacity="0"
+              onClick={() =>
+                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][3])
+              }
             />
-          </ChoiceBox>
-        </SubContainer>
+          </ChoiceBox2>
+        </div>
         <HintIconBox onClick={handleOpenModal}>
           <Image
-            src={"/image/hint.png"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/hint.png"}
             alt="힌트 아이콘"
             width={35}
             height={35}
@@ -170,33 +195,22 @@ const MainContainer = styled.div`
   z-index: 20;
 `
 
-const SubContainer = styled.div`
+const ChoiceBox1 = styled.div`
+  display: flex;
   position: absolute;
-  top: 48%;
+  top: 40%;
   left: 50%;
-  transform: translate(-45%, -50%);
-  width: 380px;
-  height: 580px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-`
-
-const ProblemText = styled.div`
-  margin-bottom: 20px;
-  font-size: 24px;
-  word-break: keep-all;
-`
-
-const ChoiceBox = styled.div`
-  display: flex;
-  gap: 30px;
+  transform: translate(-40%, 30%);
+  gap: 60px;
   margin-top: 30px;
 `
 
-const IconBox = styled.div`
+const ChoiceBox2 = styled(ChoiceBox1)`
+  top: 53%;
+  transform: translate(-40%, 45%);
+`
+
+const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
   right: 130px;

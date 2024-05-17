@@ -9,15 +9,14 @@ import CameraMoveToPosition, {
   CameraMoveToPositionRef,
 } from "./CameraMoveToPosition"
 import HeaderNav from "../common/HeaderNav"
-// import useUserStore from "@/stores/UserStore"
+import useUserStore from "@/stores/UserStore"
 
 interface HomeProps {
   showText?: boolean
 }
 
 const Home = ({ showText = true }: HomeProps) => {
-  // const { isLogin } = useUserStore()
-  const isLogin = false
+  const { isLogin } = useUserStore()
   const router = useRouter()
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isStartClicked, setIsStartClicked] = useState<boolean>(false)
@@ -60,11 +59,13 @@ const Home = ({ showText = true }: HomeProps) => {
         <div>
           {!isStartClicked && showText ? (
             <>
-              <S.TitleText className="paytone-one">Cyber Escape</S.TitleText>
+              {/* <S.TitleText className="paytone-one">Cyber Escape</S.TitleText>
               <S.StartButtton
                 className="paytone-one"
                 onClick={() => onMoveClick()}
-              >
+              > */}
+              <S.TitleText>Cyber Escape</S.TitleText>
+              <S.StartButtton onClick={() => onMoveClick()}>
                 START
               </S.StartButtton>
             </>

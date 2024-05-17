@@ -19,6 +19,8 @@ export const CharacterBox = styled.div`
 export const Nickname = styled.p`
   display: flex;
   justify-content: center;
+  align-items: center;
+  text-align: center;
 `
 export const MainBox = styled.div`
   width: 50%;
@@ -51,4 +53,11 @@ export const CharacterBoxContent = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+export const ReadyImage = styled.img`
+  position: absolute;
+  top: 30%;
+  width: 180px;
+  height: 120px;
+  pointer-events: none; // Ensures that the overlay does not interfere with mouse events
 `

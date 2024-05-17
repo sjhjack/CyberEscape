@@ -3,6 +3,7 @@
 interface IngameMainProps {
   isGameStart: boolean
   setIsModelLoaded: (isModelLoaded: boolean) => void
+  progressUpdate?: () => void
 }
 
 interface RoomProps {
@@ -11,10 +12,12 @@ interface RoomProps {
 
 interface ProblemProps {
   onClose: () => void
-  penalty: number
-  timePenalty : () => void
-  setPenalty: (penalty: number) => void
-  setSubtitle: (subtitle: string) => void
+  penalty?: number
+  timePenalty: () => void
+  setPenalty?: (penalty: number) => void
+  setSubtitle?: (subtitle: string) => void
+  setShowSpider?: (showSpider: boolean) => void
+  progressUpdate?: () => void
 }
 
 interface QuizDataProps {
@@ -33,4 +36,18 @@ interface ClickObjectProps {
 
 interface StartProps {
   setSubtitle: (subtitle: string) => void
+}
+
+interface PlaySoundProps {
+  penalty: number
+  role: "experiment" | "scientist"
+}
+
+interface SolvedObjectProps {
+  solved: number
+}
+
+interface chatData {
+  userName: string
+  message: string
 }

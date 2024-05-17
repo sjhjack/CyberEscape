@@ -13,11 +13,11 @@ import SsafyTheme from "@/components/ingame/main/ssafy/SsafyTheme"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import StartScene from "@/components/ingame/StartScene"
 import HorrorTheme2 from "@/components/ingame/main/horror2/HorrorTheme2"
-
+import SsafyTheme2 from "@/components/ingame/main/ssafy2/SsafyTheme2"
 const Page = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, selectedThemeType } = useIngameThemeStore()
 
   const onStartClick = () => {
     const canvas = document.querySelector("canvas")
@@ -36,24 +36,28 @@ const Page = () => {
 
   return (
     <S.Container>
-      {/* 멀티인지 확인 후 수정*/}
-      {selectedTheme === 3 ? (
+      {selectedTheme === 7 ? (
         <SpaceTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === 1 ? (
+      ) : selectedTheme === 1 || selectedTheme === 2 ? (
         <HorrorTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === 2 ? (
+      ) : selectedTheme === 4 || selectedTheme === 5 ? (
         <SsafyTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === 4 ? (
+      ) : selectedTheme === 3 ? (
         <HorrorTheme2
+          setIsModelLoaded={setIsModelLoaded}
+          isGameStart={isGameStart}
+        />
+      ) : selectedTheme === 6 ? (
+        <SsafyTheme2
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
@@ -64,20 +68,19 @@ const Page = () => {
         //   isModelLoaded={isModelLoaded}
         //   onFinish={handleGameStart}
         // />
-        <StartScene onFinish={handleGameStart} />
+        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme} />
       ) : null}
-      {/* 멀티인지 확인 후 표시 여부 수정*/}
       {isModelLoaded ? (
         <div>
           {/* <StartingCountDown
             isModelLoaded={isModelLoaded}
             onFinish={handleGameStart}
           /> */}
-          <Chat />
-          <ProgressBar id1={"오희주"} id2={"김병주"} value1={30} value2={40} />
+          {/*for merge request */}
+
           <ExitGame>
             <Image
-              src="/image/exitbutton.png"
+              src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/exitbutton.png"}
               alt="exit game image"
               width="40"
               height="40"

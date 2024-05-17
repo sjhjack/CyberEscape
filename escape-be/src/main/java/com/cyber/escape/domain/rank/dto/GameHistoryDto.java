@@ -10,8 +10,7 @@ public class GameHistoryDto {
     @Getter
     @Builder
     public static class Request{
-        private String userUuid;
-        private String themaUuid;
+        private int themaCategory;
         private LocalTime clearTime;
     }
 

@@ -6,17 +6,32 @@ const PlayMusic = () => {
   const [musicStarted, setMusicStarted] = useState(false)
   const { selectedTheme } = useIngameThemeStore()
   useEffect(() => {
+    let audio: any
     const startMusic = () => {
-      if (selectedTheme === 3) {
-        const audio = new Audio("music/SpeckInTime.mp3")
+      if (selectedTheme === 7) {
+        audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL + "/music/SpeckInTime.mp3",
+        )
         audio.play()
         audio.loop = true
-      } else if (selectedTheme === 1) {
-        const audio = new Audio("music/HorrorBgm.mp3")
+      } else if (selectedTheme === 1 || selectedTheme === 2) {
+        const audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL + "/music/HorrorBgm.mp3",
+        )
         audio.play()
         audio.loop = true
-      } else if (selectedTheme === 4) {
-        const audio = new Audio("music/HorrorBgm2.mp3")
+      } else if (selectedTheme === 3) {
+        audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL + "/music/HorrorBgm2.mp3",
+        )
+        audio.play()
+        audio.loop = true
+      } else if (selectedTheme === 4 || selectedTheme === 5) {
+        const audio = new Audio("music/SsafyBgm.mp3")
+        audio.play()
+        audio.loop = true
+      } else if (selectedTheme === 6) {
+        const audio = new Audio("music/SsafyBgm2.mp3")
         audio.play()
         audio.loop = true
       }
@@ -34,6 +49,10 @@ const PlayMusic = () => {
 
     return () => {
       document.removeEventListener("click", handleClick)
+      if (audio) {
+        audio.pause()
+        audio = null
+      }
     }
   }, [musicStarted])
 

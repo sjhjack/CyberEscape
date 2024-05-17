@@ -14,22 +14,20 @@ interface pageInfos {
 interface PaginationProps {
   pagination: pageInfos
   onPageChange: (page: number) => void
+  currentPage: number
 }
 
-const CustomPagination = ({ pagination, onPageChange }: PaginationProps) => {
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const currentPageChange = (e: React.ChangeEvent<unknown>, page: number) => {
-    setCurrentPage(page)
-  }
-
-  useEffect(() => {
-    onPageChange(currentPage)
-  }, [currentPage])
+const CustomPagination = ({
+  pagination,
+  onPageChange,
+  currentPage,
+}: PaginationProps) => {
   return (
     <Pagination
       count={pagination.totalPageCount}
+      page={currentPage}
       color="primary"
-      onChange={currentPageChange}
+      onChange={(e, page) => onPageChange(page)}
       showFirstButton
       showLastButton
     />

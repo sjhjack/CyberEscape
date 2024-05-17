@@ -13,7 +13,7 @@ import useUserStore from "@/stores/UserStore"
 import postCreateRoom from "@/services/game/room/postCreateRoom"
 interface postCreateRoomRequestProps {
   title: string
-  themaId: number
+  category: number
   password: string
   hostUuid: string
 }
@@ -23,7 +23,7 @@ const Create = () => {
   const [secretMode, setSecretMode] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
   const { selectedTheme } = useIngameThemeStore()
-  const { userUuid } = useUserStore()
+  const { userUuid, setIsHost } = useUserStore()
   const handleSecretMode = (secretMode: boolean): void => {
     setSecretMode(!secretMode)
   }
@@ -39,7 +39,7 @@ const Create = () => {
 
   const data: postCreateRoomRequestProps = {
     title: title,
-    themaId: selectedTheme ? selectedTheme : 1,
+    category: selectedTheme,
     password: password,
     hostUuid: userUuid ? userUuid : "",
   }
@@ -49,7 +49,8 @@ const Create = () => {
       return
     }
     const response = await postCreateRoom(data)
-    router.push(`waiting/${response.data.roomUuid}`)
+    setIsHost(true)
+    router.push(`/gameroom/${response.data.roomUuid}`)
   }
   return (
     <Container
