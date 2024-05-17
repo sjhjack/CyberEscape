@@ -2,6 +2,7 @@ import styled from "styled-components"
 import Image from "next/image"
 export const Title = styled.h1`
   text-align: center;
+  margin: 0;
 `
 export const ImageContainer = styled.div`
   display: flex;
