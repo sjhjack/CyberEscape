@@ -146,11 +146,11 @@ const HorrorTheme = ({
         postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
       }
     }
-    setResult("victory")
-    setIsGameFinished(true)
     if (progressUpdate) {
       progressUpdate()
     }
+    setResult("victory")
+    setIsGameFinished(true)
   }
 
   // 첫 번째 문제 모달

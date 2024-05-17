@@ -171,7 +171,6 @@ const GameRoom = () => {
 
     // 게임 종료 조건
     if (roomData?.hostProgress === 4 || roomData?.guestProgress === 4) {
-      Swal.fire("게임이 종료되었습니다. 대기방으로 이동합니다.")
       // 예시, 게스트나 호스트 둘 중 한 명이 게임을 끝내면 5초 후에 대기방으로 이동
       setTimeout(() => {
         setGameStart(false)
