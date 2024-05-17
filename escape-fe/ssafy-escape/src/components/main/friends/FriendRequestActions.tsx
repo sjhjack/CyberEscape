@@ -1,7 +1,6 @@
 "use client"
 
 import { styled } from "styled-components"
-import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
 import { useQuery } from "@tanstack/react-query"
 import postReadNotification from "@/services/notification/postReadNotification"
@@ -30,18 +29,24 @@ const FriendRequestActions = () => {
     notificationId: string,
   ) => {
     await postFriendAddition(requestUserUuid)
-    // 읽음 처리
     await postReadNotification(notificationId)
-    Swal.fire("친구 추가 완료")
+    Swal.fire({
+      title: "친구 추가 완료!",
+      width: "500px",
+      padding: "40px",
+    })
     refetchFriends()
     refetch()
   }
 
   // 친구 요청 거절 눌렀을 시
   const handleDeny = async (notificationId: string) => {
-    // 읽음 처리
     await postReadNotification(notificationId)
-    Swal.fire("친구 요청을 거절했습니다.")
+    Swal.fire({
+      title: "친구 요청을 거절했습니다.",
+      width: "500px",
+      padding: "40px",
+    })
     refetch()
   }
 
@@ -57,7 +62,7 @@ const FriendRequestActions = () => {
           <div key={user.senderUuid}>
             <SubContainer>
               <ProfileBox>
-                <PersonIcon sx={{ fontSize: "35px" }} />
+                <ProfileImg src={user.profileUrl} alt="프로필 이미지" />
                 <div>{user.nickname}</div>
               </ProfileBox>
               <ButtonBox>
@@ -104,9 +109,15 @@ const SubContainer = styled.div`
 const ProfileBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 `
 const ButtonBox = styled.div`
   display: flex;
   gap: 10px;
+`
+const ProfileImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+  object-fit: cover;
 `

@@ -12,6 +12,7 @@ interface GetNotificationListDataProps {
   senderUuid: string
   roomUuid: string
   nickname: string
+  profileUrl: string
   content: string
   type: string
   isRead: string
