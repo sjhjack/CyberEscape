@@ -12,6 +12,7 @@ interface ContainerProps {
   justifyContent?: string
   alignItems?: string
   backgroundColor?: string
+  gap?: string
 }
 interface ContainerStyleProps {
   $display?: string
@@ -19,6 +20,7 @@ interface ContainerStyleProps {
   $justifyContent?: string
   $alignItems?: string
   $backgroundColor?: string
+  $gap?: string
 }
 const Container = ({
   isBackButton = true,
@@ -28,6 +30,7 @@ const Container = ({
   justifyContent,
   alignItems,
   backgroundColor,
+  gap,
 }: ContainerProps) => {
   const router = useRouter()
   return (
@@ -37,6 +40,7 @@ const Container = ({
       $justifyContent={justifyContent}
       $alignItems={alignItems}
       $backgroundColor={backgroundColor}
+      $gap={gap}
     >
       {isBackButton ? (
         <BackIcon onClick={() => router.back()}>
@@ -65,6 +69,7 @@ const ContainerStyle = styled.div<ContainerStyleProps>`
   flex-direction: ${(props) => props.$flexDirection};
   justify-content: ${(props) => props.$justifyContent};
   align-items: ${(props) => props.$alignItems};
+  gap: ${(props) => props.$gap};
 `
 const BackIcon = styled.div`
   position: absolute;
