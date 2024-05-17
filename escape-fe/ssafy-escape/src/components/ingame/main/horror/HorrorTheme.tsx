@@ -42,6 +42,7 @@ const HorrorTheme = ({
   isGameStart,
   setIsModelLoaded,
   progressUpdate,
+  progressReset,
   roomData,
 }: IngameMainProps) => {
   const [isFlowerClicked, setIsFlowerClicked] = useState<boolean>(false)
@@ -171,7 +172,10 @@ const HorrorTheme = ({
         }
       }
       setIsGameFinished(true)
-      // 게임 종료 후, 10초 뒤 게임 종료 처리 해제
+      // 게임 종료 후, 5초 뒤 게임 종료 처리 해제
+      if (progressReset) {
+        progressReset()
+      }
       setTimeout(() => {
         setIsGameFinished(false)
       }, 5000)
