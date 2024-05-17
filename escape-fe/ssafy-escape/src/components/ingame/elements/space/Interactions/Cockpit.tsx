@@ -148,7 +148,7 @@ const Cockpit = ({
         setCurrentUrl(url3)
       }, 2000)
       setTimeout(() => {
-        const countdownInterval = setInterval(() => {
+        const countdownInterval = setInterval(async () => {
           if (currentCountdown >= 1) {
             countDownStart(currentCountdown)
             setSubtitle(currentCountdown.toString())
@@ -160,7 +160,11 @@ const Cockpit = ({
             const clearSeconds =
               600 - currentTime.minutes * 60 + currentTime.seconds
             setClearTime(SecondToTime(clearSeconds))
-            postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
+            await postUpdateRank(
+              SecondToTime(clearSeconds),
+              userUuid as string,
+              7,
+            )
             setIsGameFinished(true)
             setResult("victory")
             setSubtitle(null)

@@ -11,10 +11,10 @@ const Mode = () => {
   return (
     <Container
       display="flex"
-      justifyContent="space-between"
       alignItems="center"
       flexDirection="column"
       backgroundColor="none"
+      gap="50px"
     >
       <h1>모드 선택</h1>
       <S.MainContent>
@@ -30,11 +30,7 @@ const Mode = () => {
             width={300}
             height={300}
           />
-          <S.Text>
-            싱글
-            <br />
-            (1인)
-          </S.Text>
+          <S.Text>싱글(1인)</S.Text>
         </S.SelectMode>
         <S.SelectMode
           className="selectmode"
@@ -48,11 +44,7 @@ const Mode = () => {
             width={300}
             height={300}
           />
-          <S.Text>
-            멀티
-            <br />
-            (2인)
-          </S.Text>
+          <S.Text>멀티(2인)</S.Text>
         </S.SelectMode>
       </S.MainContent>
     </Container>

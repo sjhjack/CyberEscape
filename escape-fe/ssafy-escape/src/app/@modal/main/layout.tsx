@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname()
 
   return (
-    <Container>
+    <Container isBackButton={false}>
       {children}
       <SubContainer>
         {pathname === "/main" ||

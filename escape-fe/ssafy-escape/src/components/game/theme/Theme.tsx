@@ -29,12 +29,11 @@ const Theme = () => {
     >
       <h1>테마 선택</h1>
       <ThemeCarousel
-        width={400}
-        height={300}
+        width={650}
+        height={400}
         navigation={true}
         pagination={false}
       />
-      <div></div>
       <Button
         theme="game"
         width="200px"
