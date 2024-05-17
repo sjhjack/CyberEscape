@@ -169,7 +169,9 @@ const GameRoom = () => {
         width: "500px",
         padding: "40px",
       })
-      window.location.href = "/main"
+      setTimeout(() => {
+        window.location.href = "/main"
+      }, 3000)
     }
     if (roomData?.host === null) {
       // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음. 이 부분 추후 수정 필요
@@ -178,7 +180,10 @@ const GameRoom = () => {
         width: "500px",
         padding: "40px",
       })
-      window.location.href = "/main"
+      setTimeout(() => {
+        4
+        window.location.href = "/main"
+      }, 3000)
     }
 
     // 게임 종료 조건
@@ -194,8 +199,9 @@ const GameRoom = () => {
       // 게임 중에 게스트가 이탈하면
       Swal.fire("상대방이 이탈하였습니다. 게임을 종료합니다")
       setTimeout(() => {
-        setGameStart(false)
-      }, 3000)
+        progressReset()
+      }, 2000)
+      setGameStart(false)
     }
   }, [roomData])
 
