@@ -13,6 +13,7 @@ import "swiper/css/pagination"
 interface CarouselProps {
   width?: number
   height?: number
+  fontsize?: string
   navigation?: boolean
   pagination?: boolean
 }
@@ -44,6 +45,7 @@ const themeIdx = [1, 4, 7]
 const ThemeCarousel = ({
   width,
   height,
+  fontsize,
   navigation,
   pagination,
 }: CarouselProps) => {
@@ -72,7 +74,12 @@ const ThemeCarousel = ({
         {filteredThemeData?.map((item: CardInfo, index: number) => {
           return (
             <SwiperSlide key={index}>
-              <ThemeCard themeData={item} $width={width} $height={height} />
+              <ThemeCard
+                themeData={item}
+                $width={width}
+                $height={height}
+                fontsize={fontsize}
+              />
             </SwiperSlide>
           )
         })}
