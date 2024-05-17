@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useEffect, useState } from "react"
 import { Box } from "@react-three/drei"
 
 // 두 번째 문제가 숨겨진 곳(랜덤)
@@ -32,23 +32,23 @@ const SecondProblemObject = ({
     ],
   ]
 
-  const { firstRandomIndex, secondRandomIndex } = useMemo(() => {
+  const [indices, setIndices] = useState({ first: 0, second: 0 })
+
+  useEffect(() => {
     const firstRandomIndex = Math.floor(Math.random() * objectArr.length)
     const secondRandomIndex = Math.floor(
-      Math.random() * objectArr[0].length - 1,
+      Math.random() * (objectArr[firstRandomIndex].length - 1),
     )
-    return { firstRandomIndex, secondRandomIndex }
+    setIndices({ first: firstRandomIndex, second: secondRandomIndex })
   }, [])
 
   return solved === 1 ? (
     <>
       <Box
-        position={objectArr[firstRandomIndex][secondRandomIndex]}
-        rotation={objectArr[firstRandomIndex][4]}
+        position={objectArr[indices.first][indices.second]}
+        rotation={objectArr[indices.first][4]}
         args={
-          secondRandomIndex === 2 || secondRandomIndex === 3
-            ? [14, 5, 2]
-            : [6, 4, 2]
+          indices.second === 2 || indices.second === 3 ? [14, 5, 2] : [6, 4, 2]
         }
         onPointerOver={() => setInteractNum(2)}
         onPointerOut={() => setInteractNum(1)}

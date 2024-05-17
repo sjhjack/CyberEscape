@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 
 import com.cyber.escape.domain.room.entity.Room;
 import com.cyber.escape.domain.user.dto.UserDto;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.RoomException;
 import com.querydsl.core.annotations.QueryProjection;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,20 +23,32 @@ public class RoomDto {
 
 	@Builder
 	@Getter
+	public static class KickRequest {
+		private String roomUuid;
+
+		public KickRequest(){}
+
+		public KickRequest(String roomUuid) {
+			this.roomUuid = roomUuid;
+		}
+	}
+
+	@Builder
+	@Getter
 	public static class JoinRequest {
 		private final String roomUuid;
 		private final String userUuid;
 		private final String password;
 
-		public JoinRequest(final String roomUuid, final String userUuid, final String password){
-			this.roomUuid = roomUuid;
-			this.userUuid = userUuid;
-			this.password = password;
-		}
-
-		public JoinRequest(final String roomUuid, final String userUuid){
-			this(roomUuid, userUuid, "");
-		}
+		// public JoinRequest(final String roomUuid, final String userUuid, final String password){
+		// 	this.roomUuid = roomUuid;
+		// 	this.userUuid = userUuid;
+		// 	this.password = password;
+		// }
+		//
+		// public JoinRequest(final String roomUuid, final String userUuid){
+		// 	this(roomUuid, userUuid, "");
+		// }
 	}
 
 	@Builder
@@ -51,12 +64,14 @@ public class RoomDto {
 	@Getter
 	public static class PostResponse {
 		private final String roomUuid;
-		private final String chatRoomUuid;
+		private final String hostUuid;
+		private final Long themaId;
 
-		public static PostResponse of(final String roomUuid, final String chatRoomUuid) {
+		public static PostResponse of(final String roomUuid, final String hostUuid, final Long themaId) {
 			return PostResponse.builder()
 				.roomUuid(roomUuid)
-				.chatRoomUuid(chatRoomUuid)
+				.hostUuid(hostUuid)
+				.themaId(themaId)
 				.build();
 		}
 	}
@@ -150,34 +165,63 @@ public class RoomDto {
 
 	@Getter
 	public static class StompResponse {
-		private String hostSessionId;
-		private String guestSessionId;
+		private String hostSessionUuid;
+		private String guestSessionUuid;
 		@Setter
 		private UserDto.StompResponse host;
 		private UserDto.StompResponse guest;
+		private boolean isHostReady;
+		private boolean isGuestReady;
+		private int hostProgress;
+		private int guestProgress;
+		private boolean isKicked;
 
-		public StompResponse(String hostSessionId){
-			this.hostSessionId = hostSessionId;
+		public StompResponse(String hostSessionUuid){
+			this.hostSessionUuid = hostSessionUuid;
 		}
 
-		public void swapHost(String guestSessionId) {
-			String tmpSessionId = this.hostSessionId;
-			this.hostSessionId = guestSessionId;
-			this.guestSessionId = tmpSessionId;
+		public void swapHost(String guestSessionUuid) {
+			String tmpSessionUuid = this.hostSessionUuid;
+			this.hostSessionUuid = guestSessionUuid;
+			this.guestSessionUuid = tmpSessionUuid;
 
 			UserDto.StompResponse tmpUser = this.host;
 			this.host = this.guest;
 			this.guest = tmpUser;
 		}
 
-		public void joinGuest(String guestSessionId, UserDto.StompResponse guest){
-			this.guestSessionId = guestSessionId;
+		public void joinGuest(String guestSessionUuid, UserDto.StompResponse guest){
+			this.guestSessionUuid = guestSessionUuid;
 			this.guest = guest;
 		}
 
 		public void kickGuest() {
-			this.guestSessionId = null;
+			this.isKicked = true;
+		}
+
+		public void leaveGuest() {
+			this.guestSessionUuid = null;
 			this.guest = null;
+		}
+
+		public void changeReadyStatus(String sessionUuid) {
+			if(hostSessionUuid != null && hostSessionUuid.equals(sessionUuid)) {
+				isHostReady = !isHostReady;
+			} else if(guestSessionUuid != null && guestSessionUuid.equals(sessionUuid)) {
+				isGuestReady = !isGuestReady;
+			} else {
+				throw new RoomException(ExceptionCodeSet.ROOM_INVALID_USER);
+			}
+		}
+
+		public void updateProgress(String sessionUuid) {
+			if(hostSessionUuid != null && hostSessionUuid.equals(sessionUuid)) {
+				hostProgress++;
+			} else if(guestSessionUuid != null && guestSessionUuid.equals(sessionUuid)) {
+				guestProgress++;
+			} else {
+				throw new RoomException(ExceptionCodeSet.ROOM_INVALID_USER);
+			}
 		}
 	}
 }

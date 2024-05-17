@@ -15,14 +15,17 @@ import postIsDuplicationNickname from "@/services/main/nickname/postIsDuplicatio
 import patchNicknameChange from "@/services/main/nickname/patchNicknameChange"
 import useUserStore from "@/stores/UserStore"
 import Swal from "sweetalert2"
+import patchChangeProfileImg from "@/services/user/patchChangeProfileImg"
+import postUpdateRank from "@/services/main/ranking/postUpdateRank"
+
 interface ImageProps {
   $isActive: boolean
 }
 
 const MyProfile = () => {
-  const { nickname, profileUrl, setNickname } = useUserStore()
-  const userUuid = "임시"
-  const themeuuid = ["공포uuid", "싸피uuid", "우주uuid"]
+  const { userUuid, nickname, profileUrl, setNickname, setProfileUrl } =
+    useUserStore()
+  const themeIdx = [1, 4, 7]
   const themes = ["공포", "싸피", "우주"]
 
   const [activeTheme, setActiveTheme] = useState<number>(0)
@@ -35,6 +38,7 @@ const MyProfile = () => {
     queryFn: () => postMyRanking(userUuid, themeuuid[activeTheme]),
   })
 
+  console.log(myRankingData)
   // 테마 아이콘 클릭 시
   const handleThemeClick = (index: number) => {
     setActiveTheme(index)
@@ -58,19 +62,18 @@ const MyProfile = () => {
     }
   }
 
-  const [profileImg, setProfileImg] = useState<string>(
-    profileUrl ||
-      "https://img.freepik.com/premium-vector/cute-shark-swimming-illustration-shark-mascot-cartoon-characters-animals-icon-concept-isolated_400474-203.jpg",
-  )
+  const [profileImg, setProfileImg] = useState<string | undefined>(profileUrl)
 
   // 프로필 이미지 변경
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0]
     if (file) {
       const reader = new FileReader()
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         setProfileImg(reader.result as string)
-        // reader.result as string으로 프로필 이미지 변경(비동기처리?)
+        const newImgUrl = await patchChangeProfileImg(file)
+        setProfileUrl(newImgUrl)
+        Swal.fire("프로필 사진 변경 완료!")
       }
       reader.readAsDataURL(file)
     }
@@ -86,9 +89,8 @@ const MyProfile = () => {
 
   // 닉네임 자동 생성 버튼 클릭 시
   const handleAutoNicknameClick = async () => {
-    const response = await getAutoCreateNickname()
-    console.log(response.data)
-    setNewNickname(response.data)
+    const autoNickname = await getAutoCreateNickname()
+    setNewNickname(autoNickname)
   }
 
   if (!myRankingData) {
@@ -132,7 +134,7 @@ const MyProfile = () => {
           <NicknameSubBox>
             <SubText>{nickname}</SubText>
             <BlackEditIcon
-              src="/image/edit_black.png"
+              src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/edit_black.png"}
               alt="닉네임 수정 아이콘"
               width={25}
               height={25}
@@ -145,7 +147,7 @@ const MyProfile = () => {
       <ImageContainer>
         <ProfileImg src={profileImg} alt="내 프로필 이미지" />
         <WhiteEditIcon
-          src="/image/edit_white.png"
+          src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/edit_white.png"}
           alt="프로필 이미지 수정 아이콘"
           width={25}
           height={25}
@@ -164,7 +166,10 @@ const MyProfile = () => {
         {themes.map((theme, index) => (
           <ThemeSubBox key={index} onClick={() => handleThemeClick(index)}>
             <ThemeIcon
-              src={`/image/${themes.indexOf(theme) + 1}emoticon.png`}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/${themeIdx[index]}emoticon.png`
+              }
               alt={theme}
               width={60}
               height={60}
@@ -181,12 +186,11 @@ const MyProfile = () => {
           </ThemeSubBox>
         ))}
       </ThemeMainBox>
-
       <div style={{ textAlign: "center" }}>
         <SubText>나의 최고 기록</SubText>
-        {myRankingData.data.bestTime ? (
+        {myRankingData.bestTime !== "00:00:00" ? (
           <SubText style={{ color: "#dd3232" }}>
-            {FormatTime(myRankingData.data.bestTime)}
+            {FormatTime(myRankingData.bestTime)}
           </SubText>
         ) : (
           <NoTimeText>
@@ -203,11 +207,13 @@ export default MyProfile
 // 닉네임, 나의 최고 기록 스타일
 const SubText = styled.div`
   font-size: 22px;
+  word-break: keep-all;
+  text-align: center;
 `
 
 const NoTimeText = styled.div`
   margin-top: 5px;
-  font-size: 18px;
+  font-size: 14px;
 `
 
 const ProfileContainer = styled.div`

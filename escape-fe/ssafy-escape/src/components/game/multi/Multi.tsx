@@ -24,7 +24,7 @@ const Multi = () => {
           }}
         >
           <S.MultiImage
-            src="/image/createroom.png"
+            src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/createroom.png"}
             alt="create the room"
             width={200}
             height={200}
@@ -37,7 +37,7 @@ const Multi = () => {
           }}
         >
           <S.MultiImage
-            src="/image/enter.png"
+            src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/enter.png"}
             alt="enter the room"
             width={200}
             height={200}
@@ -46,11 +46,11 @@ const Multi = () => {
         </S.MenuContainer>
         <S.MenuContainer
           onClick={() => {
-            router.push("theme?mode=multi")
+            router.push("/main/multi/random")
           }}
         >
           <S.MultiImage
-            src="/image/random.png"
+            src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/random.png"}
             alt="random matching"
             width={200}
             height={200}

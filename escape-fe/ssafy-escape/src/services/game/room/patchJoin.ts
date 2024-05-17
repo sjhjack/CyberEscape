@@ -4,6 +4,7 @@ import api from "@/services/api"
 interface PatchJoinRequestProps {
   roomUuid: string
   userUuid: string
+  password: string
 }
 
 // 게임방 참여하기
@@ -16,6 +17,10 @@ const patchJoin = async (
       data,
     )
     if (response.status === 400) {
+      throw new Error(`오류: ${response.data.message}`)
+    } else if (response.status === 8000) {
+      throw new Error(`오류: ${response.data.message}`)
+    } else if (response.status === 8001) {
       throw new Error(`오류: ${response.data.message}`)
     }
     return response.data

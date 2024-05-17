@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"
@@ -9,73 +9,102 @@ import Stars from "../../elements/space/Backgrounds/Stars"
 // import Asteroids from "../../elements/space/Backgrounds/Asteroids"
 import Venus from "../../elements/space/Backgrounds/Venus"
 import KeyModels from "../../elements/space/Basics/KeyModels"
-import Keys from "@/data/ingame/space/Keys"
 import Sequences from "@/data/ingame/space/Sequences"
 import Interactions from "../../elements/space/Basics/Interactions"
 import Start from "../../elements/space/Interactions/Start"
 import Videos from "../../elements/space/Basics/Videos"
 import Subtitle from "../../elements/common/Subtitle"
 import Problems from "../../elements/space/Basics/Problems"
-import CountdownTimer from "../../CountdownTimer"
+import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
+import Keys from "../../elements/space/Basics/Keys"
+import Result from "../../elements/common/Result"
+import useIngameThemeStore from "@/stores/IngameTheme"
+import Asteroids from "../../elements/space/Backgrounds/Asteroids"
+// import LEDLight from "../../elements/space/Basics/LEDLight"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [sequences, setSequences] = useState(Sequences)
-  const [activeKeys, setActiveKeys] = useState(Keys)
   const [subtitle, setSubtitle] = useState(null)
   const [interactNum, setInteractNum] = useState(1)
+  const [onAir, setOnAir] = useState(false)
+  const timerRef = useRef<CountdownTimerHandle | null>(null)
+  const [result, setResult] = useState<string>("")
+  const [clearTime, setClearTime] = useState<string>("")
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
 
-  const onClick = (index: number) => {
-    const updatedKeys = [...activeKeys]
-    updatedKeys[index] = { ...updatedKeys[index], active: false }
-    setActiveKeys(updatedKeys)
-    if (index === 0) {
-      const updatedSequence = [...sequences]
-      updatedSequence[0] = { ...updatedSequence[0], done: true }
-      setSequences(updatedSequence)
-    }
-    setInteractNum(1)
+  const { selectedThemeType } = useIngameThemeStore()
+  const handleTimeOut = () => {
+    setIsTimeOut(true)
+    setResult("timeOut")
+    setIsGameFinished(true)
   }
-
+  const timePenalty = () => {
+    if (timerRef.current) {
+      timerRef.current.applyPenalty()
+    }
+  }
   return (
     <>
       {isGameStart ? (
         <>
-          <CountdownTimer />
-          <Start setSubtitle={setSubtitle} />
+          {!isGameFinished && (
+            <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
+          )}
+          <Start onAir={onAir} setOnAir={setOnAir} setSubtitle={setSubtitle} />
         </>
       ) : null}
+      {isGameFinished ? (
+        <Result
+          type={result}
+          themeIdx={7}
+          selectedThemeType={selectedThemeType}
+          clearTime={clearTime}
+        />
+      ) : null}
       <Subtitle text={subtitle} />
-      <BasicScene interactNum={interactNum}>
+      <BasicScene onAir={onAir} interactNum={interactNum}>
         <Lights />
         <Player position={[3, 1, 0]} />
         <MeshObjects />
-        <Floor rotation={[Math.PI / -2, 0, 0]} color="white" />
+        <Floor
+          position={[0, 1, 0]}
+          rotation={[Math.PI / -2, 0, 0]}
+          color="white"
+        />
         <Stars />
         <Venus />
-        {activeKeys.map(({ active, position }, index) => (
-          <KeyModels
-            key={index}
-            active={active}
-            position={position}
-            setInteractNum={setInteractNum}
-            onClick={() => onClick(index)}
-          />
-        ))}
-        <Interactions
+        <Keys
           sequences={sequences}
           setSequences={setSequences}
           setSubtitle={setSubtitle}
           setInteractNum={setInteractNum}
         />
-        <Problems
+        <Interactions
+          onAir={onAir}
+          setOnAir={setOnAir}
           sequences={sequences}
           setSequences={setSequences}
           setSubtitle={setSubtitle}
           setInteractNum={setInteractNum}
+          setIsGameFinished={setIsGameFinished}
+          setResult={setResult}
+          setClearTime={setClearTime}
+          timerRef={timerRef}
+        />
+        <Problems
+          onAir={onAir}
+          setOnAir={setOnAir}
+          sequences={sequences}
+          setSequences={setSequences}
+          setSubtitle={setSubtitle}
+          setInteractNum={setInteractNum}
+          timePenalty={timePenalty}
         />
         {/* <Asteroids /> */}
         <Videos sequences={sequences} setSequences={setSequences} />
         <RoomModel onLoaded={setIsModelLoaded} />
+        {/* <LEDLight /> */}
       </BasicScene>
     </>
   )

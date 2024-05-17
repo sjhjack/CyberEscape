@@ -1,29 +1,54 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import MainModal from "@/components/common/MainModal"
 import Input from "@/components/common/Input"
 import Button from "@/components/common/Button"
+import patchJoin from "@/services/game/room/patchJoin"
+import useUserStore from "@/stores/UserStore"
+import Swal from "sweetalert2"
 interface RoomMainModalProps {
   open: boolean
+  roomData: {
+    title: string
+    capacity: number
+    startedAt: Date
+    category: number
+    userId: number
+    uuid: string
+    nickname: string
+    hasPassword: true
+  }
   handleClose: () => void
 }
-const RoomPasswordModal = ({ open, handleClose }: RoomMainModalProps) => {
+const RoomPasswordModal = ({
+  open,
+  handleClose,
+  roomData,
+}: RoomMainModalProps) => {
+  const router = useRouter()
   const [password, setPassword] = useState<string>("")
-
+  const { userUuid } = useUserStore()
   const onPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     setPassword(event.target.value)
   }
 
-  const confirmPassword = (): void => {
-    // if (password === router.query.password) {
-    //   onClose()
-    //   router.push(`/room/${router.query.id}`)
-    // } else {
-    //   alert("비밀번호가 일치하지 않습니다.")
-    // }
+  const confirmPassword = async () => {
+    try {
+      const response = await patchJoin({
+        roomUuid: roomData.uuid,
+        userUuid: userUuid || "",
+        password: password,
+      })
+      handleClose()
+      if (response.status === 200) {
+        router.push(`/gameroom/${roomData.uuid}`)
+      }
+    } catch (error) {
+      throw error
+    }
   }
   return (
     <MainModal
