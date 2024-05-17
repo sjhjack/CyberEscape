@@ -22,7 +22,7 @@ const Create = () => {
   const [title, setTitle] = useState<string>("")
   const [secretMode, setSecretMode] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, setRoomTitle } = useIngameThemeStore()
   const { userUuid, setIsHost } = useUserStore()
   const handleSecretMode = (secretMode: boolean): void => {
     setSecretMode(!secretMode)
@@ -55,6 +55,7 @@ const Create = () => {
     }
     const response = await postCreateRoom(data)
     setIsHost(true)
+    setRoomTitle(response.data.title)
     router.push(`/gameroom/${response.data.roomUuid}`)
   }
   return (
