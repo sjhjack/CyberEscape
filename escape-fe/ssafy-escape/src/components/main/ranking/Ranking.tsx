@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents"
-import PersonIcon from "@mui/icons-material/Person"
 import FlagIcon from "@mui/icons-material/Flag"
 import postRankingList from "@/services/main/ranking/postRankingList"
 import formatTime from "@/hooks/FormatTime"
@@ -19,7 +18,6 @@ const Ranking = () => {
     data: rankingData,
     fetchNextPage,
     hasNextPage,
-    isLoading,
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ["rankingList", themeIdx[activeTheme]],
@@ -63,9 +61,6 @@ const Ranking = () => {
   //     queryFn: () => postRankingList(page, themeuuid),
   //   })
 
-  if (isLoading) {
-    return <div>로딩 중</div>
-  }
   if (!rankingData) {
     return <div>데이터 없음</div>
   }
@@ -119,7 +114,7 @@ const Ranking = () => {
                     )}
                   </S.RankPosition>
                   <S.ProfileBox>
-                    <PersonIcon sx={{ fontSize: "40px" }} />
+                    <S.ProfileImg src={rank.profileUrl} alt="프로필 이미지" />
                     <S.Nickname $isTopThree={rank.rank <= 3}>
                       {rank.nickname}
                     </S.Nickname>

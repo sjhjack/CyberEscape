@@ -165,12 +165,20 @@ const GameRoom = () => {
       setGameStart(true)
     }
     if (roomData?.kicked && roomData?.guest?.uuid === userUuid) {
-      Swal.fire("방장으로부터 강제 퇴장 당했습니다")
+      Swal.fire({
+        title: "방장으로부터 강제 퇴장 당했습니다.",
+        width: "500px",
+        padding: "40px",
+      })
       window.location.href = "/main"
     }
     if (roomData?.host === null) {
       // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음. 이 부분 추후 수정 필요
-      Swal.fire("호스트가 이탈하여 게임이 종료되었습니다.")
+      Swal.fire({
+        title: "호스트가 이탈하여 게임이 종료되었습니다.",
+        width: "500px",
+        padding: "40px",
+      })
       window.location.href = "/main"
     }
 
