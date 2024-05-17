@@ -200,11 +200,11 @@ public class RoomServiceImpl implements RoomService {
 		}
 
 		newRoom = roomRepository.save(newRoom);
-		log.info("new room password : {}", newRoom.getPassword());
 
+		log.info("new room password : {}", newRoom.getPassword());
 		log.info("created room title : {}, hasPassword : {}", newRoom.getTitle(), newRoom.isHasPassword());
 
-		return RoomDto.PostResponse.of(newRoom.getUuid(), newRoom.getHostUuid(), thema.getCategory());
+		return RoomDto.PostResponse.of(newRoom.getTitle(), newRoom.getUuid(), newRoom.getHostUuid(), thema.getCategory());
 	}
 
 	@Transactional
@@ -224,9 +224,6 @@ public class RoomServiceImpl implements RoomService {
 
 		if(checkHost(findUser.getId(), findRoom.getHostId())){
 			roomRepository.delete(findRoom);
-			// Todo : 연결된 채팅방까지 삭제 ???
-			// Todo : 방에 남아있는 Guest는 추방 조치
-
 		} else {
 			throw new RuntimeException("방장이 아닙니다.");
 		}
