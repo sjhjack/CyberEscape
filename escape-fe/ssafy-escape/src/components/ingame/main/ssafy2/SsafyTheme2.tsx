@@ -82,7 +82,7 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         <>
           {!isGameFinished && (
             <CountdownTimer
-              color={"#000000"}
+              color={"white"}
               ref={timerRef}
               onTimeOut={handleTimeOut}
             />
