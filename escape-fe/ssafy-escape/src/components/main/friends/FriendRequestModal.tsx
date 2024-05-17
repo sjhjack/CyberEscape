@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { styled } from "styled-components"
-import PersonIcon from "@mui/icons-material/Person"
 import SearchIcon from "@mui/icons-material/Search"
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import Button from "@/components/common/Button"
@@ -43,7 +42,11 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
   //
   const handleRequest = async (id: string) => {
     await postFriendRequest(id, "FRIEND")
-    Swal.fire("친구 신청 완료")
+    Swal.fire({
+      title: "친구 요청 완료!",
+      width: "500px",
+      padding: "40px",
+    })
   }
 
   return (
@@ -74,7 +77,7 @@ const FriendRequestModal = ({ open, onClose }: FriendRequestModalProps) => {
               <div key={i}>
                 <MainContainer>
                   <ProfileBox>
-                    <PersonIcon sx={{ fontSize: "35px" }} />
+                    <ProfileImg src={user.profileUrl} alt="프로필 이미지" />
                     <div>{user.nickname}</div>
                   </ProfileBox>
                   {user.relationship === "추가" ? (
@@ -107,8 +110,16 @@ const MainContainer = styled.div`
 const ProfileBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 `
+
+const ProfileImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+  object-fit: cover;
+`
+
 const EmptyText = styled.div`
   padding: 10px;
   text-align: center;
