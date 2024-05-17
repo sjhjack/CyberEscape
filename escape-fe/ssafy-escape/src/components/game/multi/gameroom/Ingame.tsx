@@ -66,6 +66,7 @@ const Ingame = ({
           progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
+          roomData={roomData}
         />
       ) : selectedTheme === 4 || selectedTheme === 5 ? (
         <SsafyTheme
@@ -77,6 +78,7 @@ const Ingame = ({
           progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
+          roomData={roomData}
         />
       ) : selectedTheme === 6 ? (
         <SsafyTheme2

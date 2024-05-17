@@ -42,6 +42,7 @@ const HorrorTheme = ({
   isGameStart,
   setIsModelLoaded,
   progressUpdate,
+  roomData,
 }: IngameMainProps) => {
   const [isFlowerClicked, setIsFlowerClicked] = useState<boolean>(false)
   const [isKnobClicked, setIsKnobClicked] = useState<boolean>(false)
@@ -59,7 +60,7 @@ const HorrorTheme = ({
   const [result, setResult] = useState<string>("")
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
-  const { userUuid } = useUserStore()
+  const { userUuid, isHost } = useUserStore()
 
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
@@ -149,10 +150,29 @@ const HorrorTheme = ({
     if (progressUpdate) {
       progressUpdate()
     }
-    setResult("victory")
-    setIsGameFinished(true)
   }
-
+  useEffect(() => {
+    // 둘 중 한 명이 경기를 끝내면
+    if (roomData?.guestProgress === 4 || roomData?.hostProgress === 4) {
+      // 호스트
+      if (isHost) {
+        if (roomData?.hostProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.guestProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      // 게스트
+      else {
+        if (roomData?.guestProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.hostProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      setIsGameFinished(true)
+    }
+  }, [roomData])
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
     if (solved === 0) {
