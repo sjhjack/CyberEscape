@@ -63,12 +63,14 @@ public class RoomDto {
 	@Builder
 	@Getter
 	public static class PostResponse {
+		private final String title;
 		private final String roomUuid;
 		private final String hostUuid;
 		private final int category;
 
-		public static PostResponse of(final String roomUuid, final String hostUuid, final int category) {
+		public static PostResponse of(final String title, final String roomUuid, final String hostUuid, final int category) {
 			return PostResponse.builder()
+				.title(title)
 				.roomUuid(roomUuid)
 				.hostUuid(hostUuid)
 				.category(category)
