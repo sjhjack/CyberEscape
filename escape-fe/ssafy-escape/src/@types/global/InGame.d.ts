@@ -4,6 +4,8 @@ interface IngameMainProps {
   isGameStart: boolean
   setIsModelLoaded: (isModelLoaded: boolean) => void
   progressUpdate?: () => void
+  progressReset?: () => void
+  roomData?: PubResponseData | null
 }
 
 interface RoomProps {

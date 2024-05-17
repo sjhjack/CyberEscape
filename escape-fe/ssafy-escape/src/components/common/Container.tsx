@@ -1,6 +1,6 @@
 "use client"
 import { ReactNode } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import styled from "styled-components"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 
@@ -12,6 +12,7 @@ interface ContainerProps {
   justifyContent?: string
   alignItems?: string
   backgroundColor?: string
+  gap?: string
 }
 interface ContainerStyleProps {
   $display?: string
@@ -19,6 +20,7 @@ interface ContainerStyleProps {
   $justifyContent?: string
   $alignItems?: string
   $backgroundColor?: string
+  $gap?: string
 }
 const Container = ({
   isBackButton = true,
@@ -28,8 +30,20 @@ const Container = ({
   justifyContent,
   alignItems,
   backgroundColor,
+  gap,
 }: ContainerProps) => {
   const router = useRouter()
+  const pathname = usePathname()
+  const segments = pathname.split("/")
+  const movePage = () => {
+    if (segments[1] === "gameroom") {
+      window.location.href = "/main/multi/room"
+    } else if (segments[1] === "main" && segments[2] === "multi") {
+      router.push("/main")
+    } else {
+      router.back()
+    }
+  }
   return (
     <ContainerStyle
       $display={display}
@@ -37,9 +51,10 @@ const Container = ({
       $justifyContent={justifyContent}
       $alignItems={alignItems}
       $backgroundColor={backgroundColor}
+      $gap={gap}
     >
       {isBackButton ? (
-        <BackIcon onClick={() => router.back()}>
+        <BackIcon onClick={() => movePage()}>
           <ArrowBackIosNewIcon />
         </BackIcon>
       ) : null}
@@ -65,6 +80,7 @@ const ContainerStyle = styled.div<ContainerStyleProps>`
   flex-direction: ${(props) => props.$flexDirection};
   justify-content: ${(props) => props.$justifyContent};
   align-items: ${(props) => props.$alignItems};
+  gap: ${(props) => props.$gap};
 `
 const BackIcon = styled.div`
   position: absolute;

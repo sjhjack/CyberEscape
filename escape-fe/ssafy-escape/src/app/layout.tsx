@@ -5,6 +5,7 @@ import QueryProvider from "../hooks/QueryClientProvider"
 import "./globals.css"
 import { usePathname } from "next/navigation"
 import useUserStore from "@/stores/UserStore"
+
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
 })
@@ -23,13 +24,13 @@ const Layout = ({
     <html>
       <body className={notoSansKr.className}>
         <QueryProvider>
-          <StyledComponentsRegistry>
-            {children}
-            {pathname !== "/ingame" &&
+            <StyledComponentsRegistry>
+              {children}
+              {pathname !== "/ingame" &&
               segments[1] !== "gameroom" &&
               isLogin &&
               modal}
-          </StyledComponentsRegistry>
+            </StyledComponentsRegistry>
         </QueryProvider>
       </body>
     </html>

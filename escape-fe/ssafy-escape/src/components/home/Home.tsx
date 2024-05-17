@@ -59,14 +59,15 @@ const Home = ({ showText = true }: HomeProps) => {
         <div>
           {!isStartClicked && showText ? (
             <>
-              {/* <S.TitleText className="paytone-one">Cyber Escape</S.TitleText>
+              <S.TitleText className="paytone-one">Cyber Escape</S.TitleText>
               <S.StartButtton
                 className="paytone-one"
                 onClick={() => onMoveClick()}
-              > */}
-              <S.TitleText>Cyber Escape</S.TitleText>
-              <S.StartButtton onClick={() => onMoveClick()}>
+              >
                 START
+                {/* <S.TitleText>Cyber Escape</S.TitleText>
+              <S.StartButtton onClick={() => onMoveClick()}>
+                START */}
               </S.StartButtton>
             </>
           ) : isStartClicked && showText ? (
