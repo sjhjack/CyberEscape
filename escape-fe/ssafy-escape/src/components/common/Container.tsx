@@ -1,6 +1,6 @@
 "use client"
 import { ReactNode } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import styled from "styled-components"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 
@@ -33,6 +33,17 @@ const Container = ({
   gap,
 }: ContainerProps) => {
   const router = useRouter()
+  const pathname = usePathname()
+  const segments = pathname.split("/")
+  const movePage = () => {
+    if (segments[1] === "gameroom") {
+      window.location.href = "/main/multi/room"
+    } else if (segments[1] === "main" && segments[2] === "multi") {
+      router.push("/main")
+    } else {
+      router.back()
+    }
+  }
   return (
     <ContainerStyle
       $display={display}
@@ -43,7 +54,7 @@ const Container = ({
       $gap={gap}
     >
       {isBackButton ? (
-        <BackIcon onClick={() => router.back()}>
+        <BackIcon onClick={() => movePage()}>
           <ArrowBackIosNewIcon />
         </BackIcon>
       ) : null}

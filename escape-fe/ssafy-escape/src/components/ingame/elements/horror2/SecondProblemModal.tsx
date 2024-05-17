@@ -18,6 +18,7 @@ const SecondProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  progressUpdate,
 }: ProblemProps) => {
   const [showExtraImage, setShowExtraImage] = useState(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
@@ -71,6 +72,9 @@ const SecondProblemModal = ({
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
       setSolved(solved + 1)
+      if (progressUpdate) {
+        progressUpdate()
+      }
       onClose()
       if (setSubtitle) {
         setSubtitle("...아, 기록하려면 노트도 챙겨야지.")
