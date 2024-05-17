@@ -6,7 +6,7 @@ import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
 import { useEffect, useState } from "react"
 import HintModal from "../common/HintModal"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
+import data from "@/data/ingame/horror/HorrorOption.json"
 import getQuiz from "@/services/ingame/getQuiz"
 import { useQuery } from "@tanstack/react-query"
 
@@ -27,14 +27,12 @@ const FirstProblemModal = ({
     queryFn: () => getQuiz(3),
   })
 
-  const { horror2QuizList } = useIngameOptionStore()
-  const [choices, setChoices] = useState<string[]>([])
-
+  const optionData: HorrorOptionData = data
   if (!quizData) {
-    return <div>퀴즈 데이터가 없습니다.</div>
+    return
   }
 
-  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
+  // 힌트 사용 시 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
     setHintModalOpen(true)
     timePenalty()
@@ -55,7 +53,7 @@ const FirstProblemModal = ({
         setSubtitle("이제 백업은 됐고...")
         setTimeout(() => {
           setSubtitle(
-            "이 근처에 실험에 쓸 약물에 대해 적어놓은 종이가 있었던 것 같은데...버렸나?",
+            "이 근처에 실험에 쓸 약물에 대해 적어놓은 메모가 있었던 것 같은데...버렸나?",
           )
           setTimeout(() => {
             setSubtitle("")
@@ -85,7 +83,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[0].quizUuid][0])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[0].quizUuid][0],
+              )
             }
           />
           <Button
@@ -94,7 +94,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[0].quizUuid][1])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[0].quizUuid][1],
+              )
             }
           />
         </ChoiceBox1>
@@ -105,7 +107,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[0].quizUuid][2])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[0].quizUuid][2],
+              )
             }
           />
           <Button
@@ -114,7 +118,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[0].quizUuid][3])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[0].quizUuid][3],
+              )
             }
           />
         </ChoiceBox2>

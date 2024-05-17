@@ -74,9 +74,7 @@ const Home = ({ showText = true }: HomeProps) => {
             <Login handleLoginback={onBackClick} />
           ) : null}
         </div>
-      ) : (
-        <div>로딩 중...</div>
-      )}
+      ) : null}
     </div>
   )
 }

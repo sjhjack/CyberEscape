@@ -130,7 +130,6 @@ const Ranking = () => {
           </S.RankingSubBox>
         </S.RankingMainBox>
       ))}
-      {isFetchingNextPage ? <div>로딩 중...</div> : null}
     </div>
   )
 }

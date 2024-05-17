@@ -6,7 +6,7 @@ import postAnswer from "@/services/ingame/postAnswer"
 import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
+import data from "@/data/ingame/ssafy/SsafyOption.json"
 
 // 두 번째 문제 모달
 const SecondProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
@@ -17,10 +17,10 @@ const SecondProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
     queryFn: () => getQuiz(6),
   })
 
-  const { ssafy2QuizList } = useIngameOptionStore()
+  const optionData: SsafyOptionData = data
 
   if (!quizData) {
-    return <div>퀴즈 데이터가 없습니다.</div>
+    return
   }
 
   // 선지 클릭 시 정답여부 확인
@@ -49,7 +49,9 @@ const SecondProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[1].quizUuid][0])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[1].quizUuid][0],
+              )
             }
           />
           <Button
@@ -58,7 +60,9 @@ const SecondProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[1].quizUuid][1])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[1].quizUuid][1],
+              )
             }
           />
         </ChoiceBox1>
@@ -69,7 +73,9 @@ const SecondProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[1].quizUuid][2])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[1].quizUuid][2],
+              )
             }
           />
           <Button
@@ -78,7 +84,9 @@ const SecondProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[1].quizUuid][3])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[1].quizUuid][3],
+              )
             }
           />
         </ChoiceBox2>

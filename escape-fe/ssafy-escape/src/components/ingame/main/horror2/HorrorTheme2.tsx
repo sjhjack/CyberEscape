@@ -6,9 +6,7 @@ import Blood from "../../elements/horror/Blood"
 import { useEffect, useRef, useState } from "react"
 import FirstProblemModal from "../../elements/horror2/FirstProblemModal"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
-import SecondProblemModal, {
-  BlackBackground,
-} from "../../elements/horror2/SecondProblemModal"
+import SecondProblemModal from "../../elements/horror2/SecondProblemModal"
 import ThirdProblemModal from "../../elements/horror2/ThirdProblemModal"
 import ThirdProblemObject from "../../elements/horror2/ThirdProblemObject"
 import Subtitle from "../../elements/common/Subtitle"
@@ -33,6 +31,8 @@ import VoodooDoll from "../../elements/horror2/VoodooDoll"
 import BloodText from "../../elements/horror2/BloodText"
 import PlaySound from "../../PlaySound"
 import Result from "../../elements/common/Result"
+import styled from "styled-components"
+import Image from "next/image"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -57,6 +57,13 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [result, setResult] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
+  const [showExtraImage, setShowExtraImage] = useState(false)
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * 10)
+    setIndex(randomIndex)
+  }, [])
 
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
@@ -101,7 +108,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     }
   }, [])
 
-  // 패널티 1개 -> 화면 까맣게 됨 / 패널티 2개 -> 빨간 글씨 출력
+  // 패널티 1개 -> 화면 까맣게 됨 / 패널티 2개 -> 빨간 글씨 출력 / 패널티 6개 -> 귀신 등장
   useEffect(() => {
     if (penalty === 1) {
       setShowBlackOut(true)
@@ -117,6 +124,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setShowBloodText(false)
         }, 500)
       }, 500)
+    } else if (penalty === 6) {
     }
   }, [penalty])
 
@@ -207,6 +215,22 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         </>
       ) : null}
       <Subtitle text={subtitle} />
+      <Subtitle text={subtitle} />
+      {showExtraImage && (
+        <BlackBackground>
+          <HorrorImageBox>
+            <Image
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/ghost/ghost${index}.jpg`
+              }
+              alt="귀신 이미지"
+              layout="fill"
+              objectFit="cover"
+            />
+          </HorrorImageBox>
+        </BlackBackground>
+      )}
       {showFirstProblem ? (
         <FirstProblemModal
           onClose={handleFirstProblem}
@@ -246,7 +270,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       <PlaySound penalty={penalty} role="scientist" />
       <BasicScene interactNum={interactNum} onAir={true}>
-        <Player position={[3, 40, 0]} speed={100} />
+        <Player position={[3, 40, 0]} speed={80} />
         <Floor
           rotation={[Math.PI / -2, 0, 0]}
           color="white"
@@ -308,3 +332,21 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
 }
 
 export default HorrorTheme2
+
+const HorrorImageBox = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 100%;
+  z-index: 25;
+`
+
+const BlackBackground = styled.div`
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 24;
+`
