@@ -88,18 +88,7 @@ const Result = ({
   ) : (
     /* 멀티일 경우 */
     <MainContainer>
-      {type === "forfeitedVictory" ? (
-        <SubContainer>
-          <MainText $type="victory">몰수승!</MainText>
-          <Button
-            width="80px"
-            height="40px"
-            text="나가기"
-            theme="fail"
-            onClick={() => handleQuit()}
-          />
-        </SubContainer>
-      ) : type === "defeat" || type === "timeOut" ? (
+      {type === "defeat" || type === "timeOut" ? (
         <SubContainer>
           <MainText $type="defeat">탈출 실패</MainText>
           {type === "defeat" ? (
@@ -107,25 +96,13 @@ const Result = ({
           ) : (
             <SubText>제 시간 안에 탈출하지 못했습니다.</SubText>
           )}
-          <Button
-            width="80px"
-            height="40px"
-            text="나가기"
-            theme="fail"
-            onClick={() => handleQuit()}
-          />
+          <SubText>5초 후 대기실로 이동합니다. </SubText>
         </SubContainer>
       ) : (
         <SubContainer>
           <MainText $type="victory">탈출 성공!</MainText>
           <SubText>상대보다 먼저 방을 탈출했습니다!</SubText>
-          <Button
-            width="80px"
-            height="40px"
-            text="나가기"
-            theme="fail"
-            onClick={() => handleQuit()}
-          />
+          <SubText>5초 후 대기실로 이동합니다. </SubText>
         </SubContainer>
       )}
     </MainContainer>

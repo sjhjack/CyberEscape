@@ -6,6 +6,8 @@ interface ThemeState {
   setSelectedTheme: (theme: number) => void
   selectedThemeType: "multi" | "single" | null
   setSelectedThemeType: (theme: "multi" | "single" | null) => void
+  roomTitle: string | null
+  setRoomTitle: (roomTitle: string) => void
 }
 
 const useIngameThemeStore = create<ThemeState>()(
@@ -16,6 +18,8 @@ const useIngameThemeStore = create<ThemeState>()(
         set({ selectedThemeType }),
       selectedTheme: 1,
       setSelectedTheme: (selectedTheme: number) => set({ selectedTheme }),
+      roomTitle: null,
+      setRoomTitle: (roomTitle: string) => set({ roomTitle }),
     }),
     {
       name: "theme-storage",
