@@ -55,7 +55,7 @@ const Create = () => {
     }
     const response = await postCreateRoom(data)
     setIsHost(true)
-    // setRoomTitle(response.data.roomTitle)
+    setRoomTitle(response.data.title)
     router.push(`/gameroom/${response.data.roomUuid}`)
   }
   return (
