@@ -37,7 +37,7 @@ const Waiting = ({
   const [imgNumber, setImgNumber] = useState<number>(0)
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const pointerLockControlsRef = useRef<CameraMoveToPositionRef>(null)
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, roomTitle } = useIngameThemeStore()
   useEffect(() => {
     if (selectedTheme === 1 || selectedTheme === 2 || selectedTheme === 3) {
       setImgNumber(1)
@@ -66,6 +66,7 @@ const Waiting = ({
       <HeaderNav />
       {roomData ? (
         <Container display="flex" justifyContent="center" alignItems="center">
+          <div>{roomTitle}</div>
           <InviteModal open={showModal} handleClose={handleModalClose} />
           <S.UserBox style={{ marginRight: "20px" }}>
             <S.CharacterBox>

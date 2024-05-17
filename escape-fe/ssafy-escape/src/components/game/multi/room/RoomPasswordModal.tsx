@@ -6,6 +6,7 @@ import Input from "@/components/common/Input"
 import Button from "@/components/common/Button"
 import patchJoin from "@/services/game/room/patchJoin"
 import useUserStore from "@/stores/UserStore"
+import useIngameThemeStore from "@/stores/IngameTheme"
 import Swal from "sweetalert2"
 interface RoomMainModalProps {
   open: boolean
@@ -29,6 +30,7 @@ const RoomPasswordModal = ({
   const router = useRouter()
   const [password, setPassword] = useState<string>("")
   const { userUuid } = useUserStore()
+  const { setRoomTitle } = useIngameThemeStore()
   const onPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
@@ -43,6 +45,7 @@ const RoomPasswordModal = ({
         password: password,
       })
       handleClose()
+      setRoomTitle(roomData.title)
       if (response.status === 200) {
         router.push(`/gameroom/${roomData.uuid}`)
       }
