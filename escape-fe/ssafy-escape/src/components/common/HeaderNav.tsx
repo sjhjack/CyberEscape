@@ -37,61 +37,67 @@ const MainHeader = () => {
   const [notificationModalopen, setNotificationModalopen] =
     useState<boolean>(false)
 
-  const EventProvider = () => {
-    const EventSource = EventSourcePolyfill || NativeEventSource
-    const accessToken = sessionStorage.getItem("access_token")
-    // if(accessToken == null) return;
-    let eventSource = new EventSource(
-      process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
-      {
-        headers: {
-          "Content-Type": "text/event-stream",
-          "Cache-Control": "no-cache",
-          Connection: "keep-alive",
-          "X-Accel-Buffering": "no",
-          Authorization: `Bearer ${accessToken}`,
-        },
+    let lastHeartbeat = Date.now();
 
-        heartbeatTimeout: 120000,
-      },
-    )
-
-    console.log("EVENT !!!!!")
-    eventSource.onmessage = function (event) {
-      console.log("New event from server:", event.data)
-    }
-    eventSource.addEventListener("sse", function (event) {
-      console.log(event)
-      console.log("알림 도착")
-      //setMessages(prevMessages => [...prevMessages, event.data]);
-    })
-
-    eventSource.onerror = function (error) {
-      console.log("ERROR OCCUR")
-      console.log(error)
-      setTimeout(async function () {
-        await eventSource.close()
-
-        eventSource = new EventSource(
-          process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
-          {
-            headers: {
-              "Content-Type": "text/event-stream",
-              "Cache-Control": "no-cache",
-              Connection: "keep-alive",
-              "X-Accel-Buffering": "no",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            heartbeatTimeout: 120000,
+    const EventProvider = () => {
+      const EventSource = EventSourcePolyfill || NativeEventSource;
+      const accessToken = sessionStorage.getItem('access_token');
+      // if(accessToken == null) return;
+      let eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Connection: 'keep-alive',
+            'X-Accel-Buffering': 'no',
           },
-        )
-      }, 2000)
-    }
-
-    return () => {
-      eventSource.close()
-    }
+          heartbeatTimeout: 1000 * 60 * 5, // 5분
+      });
+      
+      console.log("EVENT !!!!!");
+      eventSource.onmessage = function(event) {
+          console.log('New event from server:', event.data);
+      };
+      eventSource.addEventListener('sse', function(event) {
+          console.log(event);
+          //setMessages(prevMessages => [...prevMessages, event.data]);
+      });
+    
+      eventSource.addEventListener('heartbeat', function(event){
+        console.log("heart beat");
+        lastHeartbeat = Date.now();
+      })
+    
+      let retryCount = 0;
+    
+      if (retryCount >= 3) {
+        eventSource.close();
+        return;
+      }
+    
+      eventSource.addEventListener('error', function(event) {
+          console.log("ERROR OCCUR");
+          console.log(event)
+          retryCount++;
+    
+          setTimeout(async function() {
+            eventSource.close();
+            
+            eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
+              headers: {
+                  Connection: 'keep-alive',
+                  'X-Accel-Buffering': 'no',
+                  Authorization: `Bearer ${accessToken}`,
+              },
+              heartbeatTimeout: 1000 * 60 * 5,
+              withCredentials: true,
+            });
+          }, 3000);  
+      });
+    
+      return () => {
+          eventSource.close();
+      };
   }
+
 
   const handleFriendModalClose = () => {
     setfriendModalOpen(false)
