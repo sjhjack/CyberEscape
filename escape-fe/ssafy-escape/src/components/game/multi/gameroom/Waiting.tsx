@@ -132,7 +132,8 @@ const Waiting = ({
                     {roomData?.guestReady ? (
                       <S.ReadyImage src={`/image/ready.png`} />
                     ) : null}
-                    {roomData?.host.uuid === userUuid ? (
+                    {roomData?.host.uuid === userUuid &&
+                    !(roomData?.hostReady && roomData?.guestReady) ? (
                       <S.QuitButton
                         onClick={() => {
                           kick()
