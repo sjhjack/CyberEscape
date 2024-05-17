@@ -8,12 +8,13 @@ ENV RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
 ENV RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
 # 필요한 RabbitMQ 플러그인 활성화
 
-CMD rabbitmq-plugins enable rabbitmq_stomp && \
+RUN rabbitmq-plugins enable rabbitmq_stomp && \
     rabbitmq-plugins enable rabbitmq_web_stomp && \
     rabbitmq-plugins enable rabbitmq_web_stomp_examples && \
     rabbitmq-plugins enable rabbitmq_mqtt && \
     rabbitmq-plugins enable rabbitmq_web_mqtt && \
     rabbitmq-plugins enable rabbitmq_web_mqtt_examples && \
     rabbitmq-plugins enable rabbitmq_management && \
-    rabbitmq-plugins enable rabbitmq_federation && \
-    rabbitmq-server
+    rabbitmq-plugins enable rabbitmq_federation
+
+CMD ["rabbitmq-server"]
