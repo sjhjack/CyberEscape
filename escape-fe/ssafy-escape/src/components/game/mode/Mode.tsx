@@ -16,7 +16,7 @@ const Mode = () => {
       backgroundColor="none"
       gap="50px"
     >
-      <h1>모드 선택</h1>
+      <h1 style={{ margin: "0" }}>모드 선택</h1>
       <S.MainContent>
         <S.SelectMode
           className="selectmode"

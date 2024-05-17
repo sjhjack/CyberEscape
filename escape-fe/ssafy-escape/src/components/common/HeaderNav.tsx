@@ -137,7 +137,11 @@ const MainHeader = () => {
   const handleLogout = async () => {
     try {
       await logout()
-      Swal.fire("로그아웃 완료")
+      Swal.fire({
+        title: "로그아웃 완료!",
+        width: "500px",
+        padding: "40px",
+      })
       router.push("/")
     } catch (error) {
       console.error(error)

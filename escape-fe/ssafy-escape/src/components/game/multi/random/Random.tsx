@@ -74,7 +74,11 @@ const Random = () => {
           userUuid: userUuid || "",
           password: "",
         })
-        Swal.fire("매칭 완료!")
+        Swal.fire({
+          title: "매칭 완료!",
+          width: "400px",
+          padding: "40px",
+        })
         router.push(`/gameroom/${matchData.roomUuid}`)
       }
     }
