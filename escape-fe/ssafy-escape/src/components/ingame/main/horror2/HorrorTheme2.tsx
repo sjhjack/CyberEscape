@@ -222,6 +222,7 @@ const HorrorTheme2 = ({
           setSubtitle={setSubtitle}
           timePenalty={timePenalty}
           setShowSpider={setShowSpider}
+          progressUpdate={progressUpdate}
         />
       ) : null}
       {showSecondProblem ? (
@@ -231,6 +232,7 @@ const HorrorTheme2 = ({
           setPenalty={setPenalty}
           setSubtitle={setSubtitle}
           timePenalty={timePenalty}
+          progressUpdate={progressUpdate}
         />
       ) : null}
       {showThirdProblem ? (
@@ -240,6 +242,7 @@ const HorrorTheme2 = ({
           setPenalty={setPenalty}
           setSubtitle={setSubtitle}
           timePenalty={timePenalty}
+          progressUpdate={progressUpdate}
         />
       ) : null}
       {showBloodText ? <BloodText role="scientist" penalty={penalty} /> : null}
