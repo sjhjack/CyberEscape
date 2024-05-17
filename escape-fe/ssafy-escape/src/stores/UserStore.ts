@@ -2,6 +2,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import postLogout from "../services/user/postLogout"
 import postLogin from "../services/user/postLogin"
+import getNotificationSubscribe from "../services/notification/getNotificationSubscribe"
 
 interface UserState {
   isLogin: boolean
@@ -34,6 +35,7 @@ const useUserStore = create<UserState>()(
       login: async (loginId: string, password: string) => {
         try {
           const response = await postLogin(loginId, password)
+          //로그인 성공
           if (response.accessToken) {
             set({
               isLogin: true,
@@ -42,6 +44,10 @@ const useUserStore = create<UserState>()(
               profileUrl: response.profileUrl,
               accessToken: response.accessToken,
             })
+            
+            const notifyResponse = getNotificationSubscribe();
+            console.log("NOTIFY : ");
+            console.log(notifyResponse)
           } else {
             throw new Error("로그인 실패")
           }
