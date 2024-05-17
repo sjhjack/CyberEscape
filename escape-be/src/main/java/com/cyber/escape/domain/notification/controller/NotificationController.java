@@ -2,6 +2,7 @@ package com.cyber.escape.domain.notification.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.cyber.escape.domain.notification.document.Notify;
 import com.cyber.escape.domain.notification.dto.NotifyDto;
@@ -47,17 +48,22 @@ public class NotificationController {
     @GetMapping("/list")
     public ApiResponse<List<Object>> getUnreadNotifyList(){
         log.info("NotificationController ========== getNotReadNoteList() start ..");
-        return new ApiResponse<>(HttpStatus.OK.value(), "get Unread Notify List Success !!", notificationService.getNotifyList());
+        return new ApiResponse<>(HttpStatus.OK.value(), "안 읽은 알림 리스트입니다.", notificationService.getNotifyList());
     }
 
+    /*
+        Parameter :
+            StringObjId : 읽은 알림의 id
+     */
     @PostMapping("/read")
-    public ApiResponse<String> setUnreadToRead(@RequestBody List<String> stringObjectIdList){
-        List<ObjectId> objectIdList = new ArrayList<>();
-        for(String s : stringObjectIdList){
-            objectIdList.add(new ObjectId(s));
-        }
-        notificationService.markAsRead(objectIdList);
-        return new ApiResponse<>(HttpStatus.OK.value(), "알림 읽음 완료 !!!");
+    public ApiResponse<String> setUnreadToRead(@RequestBody Map<String, ObjectId> objInfo){
+//        List<ObjectId> objectIdList = new ArrayList<>();
+//        for(String s : stringObjectIdList){
+//            objectIdList.add(new ObjectId(s));
+        ObjectId objectId = objInfo.get("objectId");
+//        }
+        notificationService.markAsRead(objectId);
+        return new ApiResponse<>(HttpStatus.OK.value(), "알림 읽음 처리가 완료되었습니다.", "");
     }
 
 

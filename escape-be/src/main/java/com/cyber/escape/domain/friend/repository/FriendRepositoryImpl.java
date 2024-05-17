@@ -60,7 +60,7 @@ public class FriendRepositoryImpl {
 
         // 더미데이터 잘못 넣었네
         return jpaQueryFactory
-                .select(new QFriendDto_FriendListResponse(friend.toUser.uuid, friend.toUser.nickname))
+                .select(new QFriendDto_FriendListResponse(friend.toUser.uuid, friend.toUser.nickname, friend.toUser.profileUrl))
                 .from(friend)
                 .where(friend.fromUser.id.eq(senderId)
                         .and(

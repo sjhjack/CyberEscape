@@ -33,12 +33,14 @@ public class FriendDto {
     public static class FriendListResponse{
         private String nickname;
         private String friendUuid;
+        private String profile;
 
         @Builder
         @QueryProjection
-        public FriendListResponse(String friendUuid, String nickname){
+        public FriendListResponse(String friendUuid, String nickname, String profile){
             this.friendUuid = friendUuid;
             this.nickname = nickname;
+            this.profile = profile;
         }
     }
 }
