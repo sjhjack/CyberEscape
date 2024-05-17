@@ -2,11 +2,11 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { styled } from "styled-components"
-import PersonIcon from "@mui/icons-material/Person"
 import Button from "../common/Button"
 // import postInvitedAccept from "@/services/notification/postInvitedAccept"
 import getNotificationList from "@/services/notification/getNotificationList"
 import Swal from "sweetalert2"
+import postReadNotification from "@/services/notification/postReadNotification"
 
 // 게임 초대 요청 리스트
 const InvitedList = () => {
@@ -16,17 +16,22 @@ const InvitedList = () => {
   })
 
   // 초대 요청 수락 시
-  const handleAccept = async (roomUuid: string) => {
+  const handleAccept = async (roomUuid: string, notificationId: string) => {
     // await postInvitedAccept(roomUuid, userUuid)
     // 초대된 방으로 이동하는 로직
+    await postReadNotification(notificationId)
+    refetch()
   }
 
   // 초대 요청 거절 시
-  const handleDeny = async () => {
-    Swal.fire("초대를 거절했습니다.")
-    // 여기도 읽음 처리? 한다면 어떤 정보를 넘겨주는지?
-    // await postReadNotification(notificationId)
-    // refetch()
+  const handleDeny = async (notificationId: string) => {
+    Swal.fire({
+      title: "초대를 거절했습니다.",
+      width: "500px",
+      padding: "40px",
+    })
+    await postReadNotification(notificationId)
+    refetch()
   }
 
   if (!notificationList) {
@@ -44,7 +49,7 @@ const InvitedList = () => {
             <div key={i}>
               <MainContainer>
                 <ProfileBox>
-                  <PersonIcon sx={{ fontSize: "35px" }} />
+                  <ProfileImg src={user.profileUrl} alt="프로필 이미지" />
                   <div>{user.nickname}</div>
                 </ProfileBox>
                 <ButtonBox>
@@ -52,13 +57,13 @@ const InvitedList = () => {
                     text="수락"
                     theme="success"
                     width="60px"
-                    onClick={() => handleAccept(user.roomUuid)}
+                    onClick={() => handleAccept(user.roomUuid, user.id)}
                   />
                   <Button
                     text="거절"
                     theme="fail"
                     width="60px"
-                    onClick={() => handleDeny()}
+                    onClick={() => handleDeny(user.id)}
                   />
                 </ButtonBox>
               </MainContainer>
@@ -83,7 +88,7 @@ const MainContainer = styled.div`
 const ProfileBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 `
 const ButtonBox = styled.div`
   display: flex;
@@ -93,4 +98,11 @@ const NoText = styled.div`
   font-size: 14px;
   text-align: center;
   padding: 5px;
+`
+
+const ProfileImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+  object-fit: cover;
 `

@@ -16,7 +16,7 @@ import patchNicknameChange from "@/services/main/nickname/patchNicknameChange"
 import useUserStore from "@/stores/UserStore"
 import Swal from "sweetalert2"
 import patchChangeProfileImg from "@/services/user/patchChangeProfileImg"
-import postUpdateRank from "@/services/main/ranking/postUpdateRank"
+// import { CircularProgress } from "@mui/material"
 
 interface ImageProps {
   $isActive: boolean
@@ -34,8 +34,8 @@ const MyProfile = () => {
   const [newNickname, setNewNickname] = useState<string>("")
 
   const { data: myRankingData } = useQuery({
-    queryKey: ["myRanking", themeuuid[activeTheme]],
-    queryFn: () => postMyRanking(userUuid, themeuuid[activeTheme]),
+    queryKey: ["myRanking", themeIdx[activeTheme]],
+    queryFn: () => postMyRanking(themeIdx[activeTheme]),
   })
 
   console.log(myRankingData)
@@ -50,7 +50,11 @@ const MyProfile = () => {
     if (idDuplicate) {
       try {
         await patchNicknameChange(nickname || "", newNickname)
-        Swal.fire("닉네임 변경 완료!")
+        Swal.fire({
+          title: "닉네임 변경 완료!",
+          width: "500px",
+          padding: "40px",
+        })
         setNickname(newNickname)
         setNewNickname("")
         setIsActiveChangeNickname(false)
@@ -58,7 +62,11 @@ const MyProfile = () => {
         console.error(error)
       }
     } else {
-      Swal.fire("이미 존재하는 닉네임입니다.")
+      Swal.fire({
+        title: "이미 존재하는 닉네임입니다.",
+        width: "500px",
+        padding: "40px",
+      })
     }
   }
 
@@ -73,7 +81,11 @@ const MyProfile = () => {
         setProfileImg(reader.result as string)
         const newImgUrl = await patchChangeProfileImg(file)
         setProfileUrl(newImgUrl)
-        Swal.fire("프로필 사진 변경 완료!")
+        Swal.fire({
+          title: "프로필 사진 변경 완료!",
+          width: "500px",
+          padding: "40px",
+        })
       }
       reader.readAsDataURL(file)
     }
@@ -93,6 +105,9 @@ const MyProfile = () => {
     setNewNickname(autoNickname)
   }
 
+  // if (isLoading) {
+  //   return <CircularProgress />
+  // }
   if (!myRankingData) {
     return <div>데이터 없음</div>
   }
@@ -186,7 +201,7 @@ const MyProfile = () => {
           </ThemeSubBox>
         ))}
       </ThemeMainBox>
-      <div style={{ textAlign: "center" }}>
+      <MyRankBox>
         <SubText>나의 최고 기록</SubText>
         {myRankingData.bestTime !== "00:00:00" ? (
           <SubText style={{ color: "#dd3232" }}>
@@ -197,7 +212,7 @@ const MyProfile = () => {
             클리어 기록이 없습니다. 지금 바로 도전해보세요!
           </NoTimeText>
         )}
-      </div>
+      </MyRankBox>
     </ProfileContainer>
   )
 }
@@ -262,6 +277,11 @@ const ThemeSubBox = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
+`
+const MyRankBox = styled.div`
+  text-align: center;
+  width: 150px;
+  height: 65px;
 `
 
 const ThemeIcon = styled(Image)<ImageProps>`

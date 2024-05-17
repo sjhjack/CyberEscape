@@ -5,12 +5,18 @@ interface CardComponentProps {
   themeData: CardInfo
   $width?: number
   $height?: number
+  fontsize?: string
 }
 interface ImageStyleProps {
   $width?: number
   $height?: number
 }
-const ThemeCard = ({ themeData, $width, $height }: CardComponentProps) => {
+const ThemeCard = ({
+  themeData,
+  $width,
+  $height,
+  fontsize,
+}: CardComponentProps) => {
   return (
     <Card>
       <ThemeImageContainer $width={$width} $height={$height}>
@@ -24,7 +30,9 @@ const ThemeCard = ({ themeData, $width, $height }: CardComponentProps) => {
         <ImageText>
           <div>주제: {themeData.title}</div>
           <div>제한시간: {themeData.time}</div>
-          <div>내용: {themeData.content}</div>
+          <div style={{ wordBreak: "keep-all", fontSize: fontsize }}>
+            내용: {themeData.content}
+          </div>
         </ImageText>
       </ThemeImageContainer>
     </Card>
