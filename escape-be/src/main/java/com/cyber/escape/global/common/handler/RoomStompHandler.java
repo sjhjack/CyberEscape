@@ -228,6 +228,14 @@ public class RoomStompHandler {
 		sendRoomInfo(roomUuid, room);
 	}
 
+	@MessageMapping("/game/end")
+	public void	resetStatus(@Payload String roomUuid) {
+		log.info("Game end !! === ");
+		log.info("room Uuid : {}", roomUuid);
+		RoomDto.StompResponse room = roomManager.resetStatus(roomUuid);
+		sendRoomInfo(roomUuid, room);
+	}
+
 	private void sendRoomInfo(String roomUuid, RoomDto.StompResponse room) {
 		if(room.getHostSessionUuid() == null){
 			log.info("BroadCasting Info ========== 방 폭파 히히");
