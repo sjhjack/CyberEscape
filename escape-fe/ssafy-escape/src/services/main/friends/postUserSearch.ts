@@ -10,6 +10,7 @@ interface PostUserSearchBodyProps {
 interface PostUserSearchDataProps {
   nickname: string
   userUuid: string
+  profileUrl: string
   relationship: string
 }
 

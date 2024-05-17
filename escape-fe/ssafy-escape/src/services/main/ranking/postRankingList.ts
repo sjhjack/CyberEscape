@@ -12,6 +12,7 @@ interface PostRankingListDataProps {
   nickname: string
   bestTime: string
   themaCategory: number
+  profileUrl: string
 }
 
 // 테마별 전체 랭킹 정보 조회(20개씩 페이지네이션)

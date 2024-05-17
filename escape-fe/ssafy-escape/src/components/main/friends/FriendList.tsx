@@ -2,7 +2,6 @@
 
 import { styled } from "styled-components"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import PersonIcon from "@mui/icons-material/Person"
 import Button from "@/components/common/Button"
 import getFriendList from "@/services/main/friends/getFriendList"
 import useModalStore from "@/stores/ModalStore"
@@ -49,7 +48,11 @@ const FriendList = () => {
   // 친구 삭제 버튼 클릭 시
   const handleDelete = async (friendUuid: string) => {
     await postDeleteFriend(friendUuid)
-    Swal.fire("친구 삭제 완료")
+    Swal.fire({
+      title: "친구 삭제 완료!",
+      width: "500px",
+      padding: "40px",
+    })
     refetch()
   }
 
@@ -66,7 +69,7 @@ const FriendList = () => {
               {page.map((friend, idx) => (
                 <SubContainer key={idx}>
                   <ProfileBox>
-                    <PersonIcon sx={{ fontSize: "35px" }} />
+                    <ProfileImg src={friend.profile} alt="프로필 이미지" />
                     <div>{friend.nickname}</div>
                   </ProfileBox>
                   {isDeleteMode && (
@@ -106,5 +109,11 @@ const SubContainer = styled.div`
 const ProfileBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
+`
+const ProfileImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+  object-fit: cover;
 `
