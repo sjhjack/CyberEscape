@@ -43,14 +43,13 @@ const MainHeader = () => {
       const EventSource = EventSourcePolyfill || NativeEventSource;
       const accessToken = sessionStorage.getItem('access_token');
       // if(accessToken == null) return;
-      const url = "http://localhost:8080";
       let eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
           headers: {
             Authorization: `Bearer ${accessToken}`,
             Connection: 'keep-alive',
             'X-Accel-Buffering': 'no',
           },
-          heartbeatTimeout: 6000 * 60 * 3, // 1시간
+          heartbeatTimeout: 1000 * 60 * 5, // 5분
       });
       
       console.log("EVENT !!!!!");
@@ -64,7 +63,6 @@ const MainHeader = () => {
     
       eventSource.addEventListener('heartbeat', function(event){
         console.log("heart beat");
-        console.log(event);
         lastHeartbeat = Date.now();
       })
     
@@ -89,7 +87,7 @@ const MainHeader = () => {
                   'X-Accel-Buffering': 'no',
                   Authorization: `Bearer ${accessToken}`,
               },
-              heartbeatTimeout: 6000 * 60 * 3,
+              heartbeatTimeout: 1000 * 60 * 5,
               withCredentials: true,
             });
           }, 3000);  
