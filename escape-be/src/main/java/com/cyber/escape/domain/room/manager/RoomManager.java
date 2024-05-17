@@ -95,13 +95,6 @@ public class RoomManager {
 		return room;
 	}
 
-	public RoomDto.StompResponse initProgress(String roomUuid) {
-		RoomDto.StompResponse room = getRoom(roomUuid);
-		room.initProgress();
-
-		return room;
-	}
-
 	private RoomDto.StompResponse getRoom(String roomUuid) {
 		log.info("찾으려는 대기방 UUID : {}", roomUuid);
 		log.info("map size : {}", roomMap.size());
