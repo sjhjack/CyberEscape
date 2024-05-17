@@ -10,6 +10,7 @@ interface GetFriendListBodyProps {
 interface GetFriendListDataProps {
   nickname: string
   friendUuid: string
+  profile: string
 }
 
 // 친구 목록 조회

@@ -45,7 +45,12 @@ const Create = () => {
   }
   const createRoom = async () => {
     if (buttonDisabled()) {
-      Swal.fire({ icon: "error", text: "모든 항목을 채워주세요" })
+      Swal.fire({
+        icon: "error",
+        text: "모든 항목을 채워주세요",
+        width: "500px",
+        padding: "40px",
+      })
       return
     }
     const response = await postCreateRoom(data)
@@ -68,8 +73,9 @@ const Create = () => {
         <S.MenuBox>
           <S.ThemeMenu>테마</S.ThemeMenu>
           <ThemeCarousel
-            width={300}
-            height={220}
+            width={380}
+            height={250}
+            fontsize="12px"
             navigation={true}
             pagination={true}
           />
