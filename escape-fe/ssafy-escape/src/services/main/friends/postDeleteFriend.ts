@@ -1,20 +1,18 @@
 import API_PATH from "@/constants/path"
 import api from "@/services/api"
 
-interface PostFriendAdditionBodyProps {
+interface PostFriendDeleteBodyProps {
   status: number
   message: string
   data: string
 }
 
-// 친구 수락
-const postFriendAddition = async (toUserUuid: string): Promise<string> => {
+// 친구 삭제
+const postDeleteFriend = async (friendUuid: string): Promise<string> => {
   try {
-    const response = await api.post<PostFriendAdditionBodyProps>(
-      API_PATH.MAIN.FRIEND.ADDITION,
-      {
-        toUserUuid,
-      },
+    const response = await api.post<PostFriendDeleteBodyProps>(
+      API_PATH.MAIN.FRIEND.DELETE,
+      { friendUuid },
     )
     if (response.data.status === 400) {
       throw new Error(`오류: ${response.data.message}`)
@@ -26,4 +24,4 @@ const postFriendAddition = async (toUserUuid: string): Promise<string> => {
   }
 }
 
-export default postFriendAddition
+export default postDeleteFriend
