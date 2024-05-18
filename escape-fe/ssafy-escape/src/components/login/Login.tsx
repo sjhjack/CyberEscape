@@ -41,7 +41,11 @@ const Login = ({ handleLoginback }: LoginProps) => {
     // 아이디 유효성 검사 통과 시
     try {
       await login(loginId, password)
-      Swal.fire("로그인 성공")
+      Swal.fire({
+        title: "로그인 성공!",
+        width: "500px",
+        padding: "40px",
+      })
       router.push("/main")
     } catch (error) {
       console.error(error)
@@ -57,12 +61,20 @@ const Login = ({ handleLoginback }: LoginProps) => {
     const idRegex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/
     // 아이디 유효성 검사
     if (!idRegex.test(loginId)) {
-      Swal.fire("아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!")
+      Swal.fire({
+        title: "아이디는 3~20자 사이 대소문자 또는 숫자만 입력해 주세요!",
+        width: "500px",
+        padding: "40px",
+      })
       return
     }
     try {
       await postSignUp(loginId, password)
-      Swal.fire("회원가입 성공!")
+      Swal.fire({
+        title: "회원가입 성공!",
+        width: "500px",
+        padding: "40px",
+      })
       handleLoginback()
     } catch (error) {
       console.error(error)

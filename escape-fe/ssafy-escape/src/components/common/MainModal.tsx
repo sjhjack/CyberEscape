@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode } from "react"
+import { ReactNode, useEffect } from "react"
 import styled from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Modal from "@mui/material/Modal"
@@ -37,6 +37,15 @@ const MainModal = ({
     isDeleteMode,
     setIsDeleteMode,
   } = useModalStore()
+
+  useEffect(() => {
+    return () => {
+      if (isFriendModal) {
+        setIsDeleteMode(false)
+      }
+    }
+  }, [])
+
   return (
     <div>
       <Modal
@@ -44,6 +53,7 @@ const MainModal = ({
         onClose={onClose}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
+        sx={{ zIndex: 1020 }}
       >
         <ModalBox $width={width} $height={height}>
           <div style={{ position: "relative" }}>

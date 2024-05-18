@@ -18,20 +18,23 @@ import Swal from "sweetalert2"
 interface IngameProps {
   roomData: PubResponseData | null
   progressUpdate: () => void
+  progressReset: () => void
   sendMessage: (text: string) => void
   chatting: chatData[]
+  gameTheme: number
 }
 
 const Ingame = ({
   roomData,
   progressUpdate,
+  progressReset,
   sendMessage,
   chatting,
+  gameTheme,
 }: IngameProps) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isGameStart, setIsGameStart] = useState(false)
-  const { selectedTheme, selectedThemeType } = useIngameThemeStore()
-  const router = useRouter()
+  const { selectedThemeType } = useIngameThemeStore()
   const exitGame = (e: any) => {
     e.preventDefault()
     Swal.fire({
@@ -62,22 +65,28 @@ const Ingame = ({
 
   return (
     <S.Container>
-      {selectedTheme === 1 || selectedTheme === 2 ? (
+      {gameTheme === 1 || gameTheme === 2 ? (
         <HorrorTheme
+          progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
+          progressReset={progressReset}
           isGameStart={isGameStart}
+          roomData={roomData}
         />
-      ) : selectedTheme === 4 || selectedTheme === 5 ? (
+      ) : gameTheme === 4 || gameTheme === 5 ? (
         <SsafyTheme
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
         />
-      ) : selectedTheme === 3 ? (
+      ) : gameTheme === 3 ? (
         <HorrorTheme2
+          progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
+          progressReset={progressReset}
           isGameStart={isGameStart}
+          roomData={roomData}
         />
-      ) : selectedTheme === 6 ? (
+      ) : gameTheme === 6 ? (
         <SsafyTheme2
           setIsModelLoaded={setIsModelLoaded}
           isGameStart={isGameStart}
@@ -89,7 +98,7 @@ const Ingame = ({
         //   isModelLoaded={isModelLoaded}
         //   onFinish={handleGameStart}
         // />
-        <StartScene onFinish={handleGameStart} selectedTheme={selectedTheme} />
+        <StartScene onFinish={handleGameStart} selectedTheme={gameTheme} />
       ) : null}
       {isModelLoaded ? (
         <div>
@@ -103,8 +112,12 @@ const Ingame = ({
               <ProgressBar
                 id1={roomData?.host?.nickname}
                 id2={roomData?.guest?.nickname}
-                value1={roomData?.hostProgress}
-                value2={roomData?.guestProgress}
+                value1={
+                  roomData?.hostProgress ? roomData?.hostProgress * 25 : 0
+                }
+                value2={
+                  roomData?.guestProgress ? roomData?.guestProgress * 25 : 0
+                }
               />
             </>
           ) : null}

@@ -3,6 +3,9 @@
 interface IngameMainProps {
   isGameStart: boolean
   setIsModelLoaded: (isModelLoaded: boolean) => void
+  progressUpdate?: () => void
+  progressReset?: () => void
+  roomData?: PubResponseData | null
 }
 
 interface RoomProps {
@@ -16,6 +19,7 @@ interface ProblemProps {
   setPenalty?: (penalty: number) => void
   setSubtitle?: (subtitle: string) => void
   setShowSpider?: (showSpider: boolean) => void
+  progressUpdate?: () => void
 }
 
 interface QuizDataProps {

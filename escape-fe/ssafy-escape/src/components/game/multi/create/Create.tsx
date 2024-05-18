@@ -22,7 +22,7 @@ const Create = () => {
   const [title, setTitle] = useState<string>("")
   const [secretMode, setSecretMode] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, setRoomTitle } = useIngameThemeStore()
   const { userUuid, setIsHost } = useUserStore()
   const handleSecretMode = (secretMode: boolean): void => {
     setSecretMode(!secretMode)
@@ -45,11 +45,17 @@ const Create = () => {
   }
   const createRoom = async () => {
     if (buttonDisabled()) {
-      Swal.fire({ icon: "error", text: "모든 항목을 채워주세요" })
+      Swal.fire({
+        icon: "error",
+        text: "모든 항목을 채워주세요",
+        width: "500px",
+        padding: "40px",
+      })
       return
     }
     const response = await postCreateRoom(data)
     setIsHost(true)
+    setRoomTitle(response.data.title)
     router.push(`/gameroom/${response.data.roomUuid}`)
   }
   return (
@@ -68,8 +74,9 @@ const Create = () => {
         <S.MenuBox>
           <S.ThemeMenu>테마</S.ThemeMenu>
           <ThemeCarousel
-            width={300}
-            height={220}
+            width={380}
+            height={250}
+            fontsize="12px"
             navigation={true}
             pagination={true}
           />

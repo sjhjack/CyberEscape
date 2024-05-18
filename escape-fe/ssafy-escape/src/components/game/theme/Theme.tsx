@@ -6,13 +6,18 @@ import ThemeCarousel from "@/components/common/ThemeCarousel"
 import Button from "@/components/common/Button"
 import Swal from "sweetalert2"
 import useIngameThemeStore from "@/stores/IngameTheme"
+
 const Theme = () => {
   const router = useRouter()
   const { selectedThemeType } = useIngameThemeStore()
 
   const gameStart = (): void => {
     if (selectedThemeType === "single") {
-      Swal.fire("게임을 시작합니다.")
+      Swal.fire({
+        title: "게임을 시작합니다.",
+        width: "500px",
+        padding: "40px",
+      })
       router.push("/ingame")
     } else {
       alert("잘못된 접근입니다. ")
@@ -27,14 +32,13 @@ const Theme = () => {
       alignItems="center"
       backgroundColor="none"
     >
-      <h1>테마 선택</h1>
+      <h1 style={{ margin: "0" }}>테마 선택</h1>
       <ThemeCarousel
-        width={400}
-        height={300}
+        width={550}
+        height={350}
         navigation={true}
         pagination={false}
       />
-      <div></div>
       <Button
         theme="game"
         width="200px"
