@@ -7,12 +7,12 @@ const Videos = ({ sequences, setSequences }: any) => {
 
   return (
     <>
-      <Video1
+      {/* <Video1
         url={url1}
         position={[-16.5, 5, -64]}
         rotation={[0, -Math.PI / 2, 0]}
         scale={[13, 4, 6]}
-      />
+      /> */}
       {/* <Video2
         url={url2}
         position={[-128.651, 3.5, 85.6]}
