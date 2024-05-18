@@ -129,8 +129,8 @@ const Cockpit = ({
             }, 4000)
             setTimeout(() => {
               const new_audio2 = new Audio(
-                // process.env.NEXT_PUBLIC_IMAGE_URL +
-                "/dubbing/space/sequence/living_key.mp3",
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                  "/dubbing/space/sequence/living_key.mp3",
               )
               new_audio2.play()
               setSubtitle("생활실에서 키 모양의 물체가 감지되었습니다.")
@@ -178,15 +178,14 @@ const Cockpit = ({
             postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
 
             const new_audio = new Audio(
-              // process.env.NEXT_PUBLIC_IMAGE_URL +
-              "/sound/rocket_launch.mp3",
+              process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/rocket_launch.mp3",
             )
             new_audio.play()
 
             setTimeout(() => {
               const new_audio2 = new Audio(
-                // process.env.NEXT_PUBLIC_IMAGE_URL +
-                "/dubbing/space/sequence/congratulations.mp3",
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                  "/dubbing/space/sequence/congratulations.mp3",
               )
               new_audio2.play()
             }, 1000)

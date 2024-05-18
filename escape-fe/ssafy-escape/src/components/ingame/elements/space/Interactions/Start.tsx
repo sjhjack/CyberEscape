@@ -129,8 +129,8 @@ const Start = ({ onAir, setOnAir, setSubtitle }: any) => {
     }, 9000)
     setTimeout(() => {
       const audio = new Audio(
-        // process.env.NEXT_PUBLIC_IMAGE_URL +
-        "/dubbing/space/sequence/server_key.mp3",
+        process.env.NEXT_PUBLIC_IMAGE_URL +
+          "/dubbing/space/sequence/server_key.mp3",
       )
       audio.play()
       setSubtitle("서버실에서 키 모양의 물체가 감지되었습니다.")
