@@ -8,7 +8,8 @@ import HintModal from "../common/HintModal"
 import { useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
+import Swal from "sweetalert2"
+import data from "@/data/ingame/horror/HorrorOption.json"
 
 // 두 번째 문제 모달
 const SecondProblemModal = ({
@@ -19,24 +20,37 @@ const SecondProblemModal = ({
   timePenalty,
   progressUpdate,
 }: ProblemProps) => {
+  const [openHint, setOpenHint] = useState<boolean>(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
-  const { solved, setSolved } = useIngameQuizStore()
-
+  const { solved, hint, setSolved, setHint } = useIngameQuizStore()
+  console.log(hint, openHint)
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 2],
     queryFn: () => getQuiz(2),
   })
 
-  const { horror1QuizList } = useIngameOptionStore()
+  const optionData: HorrorOptionData = data
 
   if (!quizData) {
-    return <div>퀴즈 데이터가 없습니다.</div>
+    return
   }
 
-  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
+  // 힌트 볼 때 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
-    setHintModalOpen(true)
-    timePenalty()
+    if (hint === 1) {
+      setHint(0)
+      setOpenHint(true)
+      setHintModalOpen(true)
+      timePenalty()
+    } else if (hint === 0 && openHint) {
+      setHintModalOpen(true)
+    } else if (hint === 0) {
+      Swal.fire({
+        title: "힌트를 모두 사용했습니다.",
+        width: "500px",
+        padding: "40px",
+      })
+    }
   }
 
   // 힌트 모달 닫기
@@ -54,21 +68,26 @@ const SecondProblemModal = ({
       if (setSubtitle) {
         setSubtitle("...정신이 이상해지는 것 같아.")
         setTimeout(() => {
-          setSubtitle("혹시 책에서 단서가 있지 않을까?")
+          setSubtitle("혹시 책들 중에 단서가 있지 않을까?")
           setTimeout(() => {
             setSubtitle("")
           }, 10000)
         }, 4000)
       }
     } else {
+      Swal.fire({
+        title: "오답!",
+        icon: "error",
+        width: "500px",
+        padding: "40px",
+      })
       if (penalty && setPenalty) {
-        alert("오답입니다.")
         setPenalty(penalty + 1)
         timePenalty()
       }
     }
   }
-  console.log(quizData)
+
   return (
     <MainContainer>
       <div>
@@ -83,7 +102,9 @@ const SecondProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[1].quizUuid][0])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[1].quizUuid][0],
+              )
             }
           />
           <Button
@@ -92,7 +113,9 @@ const SecondProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[1].quizUuid][1])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[1].quizUuid][1],
+              )
             }
           />
         </ChoiceBox1>
@@ -103,7 +126,9 @@ const SecondProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[1].quizUuid][2])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[1].quizUuid][2],
+              )
             }
           />
           <Button
@@ -112,7 +137,9 @@ const SecondProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[1].quizUuid][3])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[1].quizUuid][3],
+              )
             }
           />
         </ChoiceBox2>
