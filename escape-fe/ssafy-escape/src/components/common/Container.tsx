@@ -3,7 +3,9 @@ import { ReactNode } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import styled from "styled-components"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
-
+import useIngameThemeStore from "@/stores/IngameTheme"
+import useUserStore from "@/stores/UserStore"
+import patchExit from "@/services/game/room/patchExit"
 interface ContainerProps {
   children: ReactNode
   isBackButton?: boolean // 뒤로 가기 버튼 유무
@@ -35,9 +37,22 @@ const Container = ({
   const router = useRouter()
   const pathname = usePathname()
   const segments = pathname.split("/")
-  const movePage = () => {
+  const { roomUuid } = useIngameThemeStore()
+  const { userUuid } = useUserStore()
+  const gameOut = async () => {
+    try {
+      const rr = await patchExit({
+        roomUuid: roomUuid || "",
+        userUuid: userUuid || "",
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  const movePage = async () => {
     if (segments[1] === "gameroom") {
-      window.location.href = "/main/multi/room"
+      await gameOut()
+      window.location.href = "/main"
     } else if (segments[1] === "main" && segments[2] === "multi") {
       router.push("/main")
     } else {

@@ -1,12 +1,13 @@
 "use client"
 import useOpenViduSession from "@/hooks/OpenviduSession"
 import React, { useState, useEffect, useRef } from "react"
-import { useRouter, usePathname } from "next/navigation"
+import { usePathname } from "next/navigation"
 import * as StompJs from "@stomp/stompjs"
 import SockJS from "sockjs-client"
 import useUserStore from "@/stores/UserStore"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import patchExit from "@/services/game/room/patchExit"
+
 import Waiting from "./Waiting"
 import Ingame from "./Ingame"
 import Swal from "sweetalert2"
@@ -14,11 +15,10 @@ import Countdown from "./CountDown"
 // socket cleint, openvidu session, 게임 입장 및 퇴장 다 여기서 관리
 
 const GameRoom = () => {
-  const router = useRouter()
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(10)
-  const { selectedTheme } = useIngameThemeStore()
+  const { selectedTheme, setRoomUuid } = useIngameThemeStore()
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameTheme, setGameTheme] = useState<number>(0)
   const [showCountdown, setShowCountdown] = useState<boolean>(false)
@@ -126,7 +126,7 @@ const GameRoom = () => {
       body: roomUuid,
     })
   }
-  const gameOut = async () => {
+  const gameOut = (): void => {
     // socket 및 openvidu session 연결 끊기
     client.current?.deactivate()
     leaveSession()
@@ -141,6 +141,7 @@ const GameRoom = () => {
     connect()
     joinSession()
     setTimeout(() => {
+      setRoomUuid(roomUuid)
       initialInfo()
     }, 1000)
     return () => {
@@ -180,7 +181,7 @@ const GameRoom = () => {
       })
       setTimeout(() => {
         window.location.href = "/main"
-      }, 3000)
+      }, 2000)
     }
     if (roomData?.host === null) {
       // 호스트가 나가면 대기방이 저절로 삭제되기 때문에 patchExit 할 필요가 없음. 이 부분 추후 수정 필요
@@ -190,9 +191,8 @@ const GameRoom = () => {
         padding: "40px",
       })
       setTimeout(() => {
-        4
         window.location.href = "/main"
-      }, 3000)
+      }, 2000)
     }
 
     // 게임 종료 조건
@@ -236,6 +236,7 @@ const GameRoom = () => {
         />
       ) : (
         <Waiting
+          showCountdown={showCountdown}
           chatting={chatting}
           ready={ready}
           kick={kick}
