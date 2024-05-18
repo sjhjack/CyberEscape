@@ -22,8 +22,8 @@ const Stars = ({ trigger }: any) => {
       const animateStars = () => {
         starsRef.current.position.x += 4.5
         starsRef.current.rotation.y += 0.004
-        if (starsRef.current.position.x > 1100) {
-          starsRef.current.position.x = -1100
+        if (starsRef.current.position.x > 700) {
+          starsRef.current.position.x = -700
         }
         requestAnimationFrame(animateStars)
       }
@@ -38,9 +38,9 @@ const Stars = ({ trigger }: any) => {
     for (let i = 0; i < 10000; i++) {
       let x, y, z, distance
       do {
-        x = THREE.MathUtils.randFloatSpread(1000)
-        y = THREE.MathUtils.randFloatSpread(1000)
-        z = THREE.MathUtils.randFloatSpread(1000)
+        x = THREE.MathUtils.randFloatSpread(1500)
+        y = THREE.MathUtils.randFloatSpread(1500)
+        z = THREE.MathUtils.randFloatSpread(1500)
         distance = Math.sqrt(x * x + y * y + z * z)
       } while (distance < minDistance)
 
