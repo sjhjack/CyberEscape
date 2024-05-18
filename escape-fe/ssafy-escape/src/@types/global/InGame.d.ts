@@ -53,3 +53,16 @@ interface chatData {
   userName: string
   message: string
 }
+
+interface OptionList {
+  [key: string]: string[]
+}
+
+interface HorrorOptionData {
+  horror1QuizList: OptionList
+  horror2QuizList: OptionList
+}
+interface SsafyOptionData {
+  ssafy1QuizList: OptionList
+  ssafy2QuizList: OptionList
+}
