@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useGLTF } from "@react-three/drei"
 import { Mesh, MeshStandardMaterial } from "three"
 
@@ -16,6 +16,21 @@ const Key1 = ({
   setInteractNum,
 }: any) => {
   const { scene } = useGLTF(process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/key.glb")
+
+  const possibleLocations = [
+    [-54, 1.6, -131],
+    [-51, 1.6, -113],
+    [-54, 1.6, -178],
+    [-12, 1.6, -182],
+    [1, 1.6, -152],
+  ]
+
+  const [position, setPosition] = useState<any>([100, 100, 100])
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * possibleLocations.length)
+    setPosition(possibleLocations[randomIndex])
+  }, [])
 
   const onClick = () => {
     const updatedSequence = [...sequences]
@@ -42,7 +57,7 @@ const Key1 = ({
               key={index}
               geometry={child.geometry}
               material={child.material}
-              position={[24, 0.6, -95]}
+              position={position}
               scale={[0.2, 0.2, 0.2]}
               onClick={onClick}
               onPointerOver={() => {
