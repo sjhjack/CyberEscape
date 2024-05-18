@@ -8,7 +8,7 @@ interface RoomProps {
 
 const RoomModel = ({ onLoaded }: RoomProps) => {
   const gltf = useGLTF(
-    "/glb/textureapply64.glb",
+    "/glb/textureapply65.glb",
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/textureapply57.glb",
     true,
   )
