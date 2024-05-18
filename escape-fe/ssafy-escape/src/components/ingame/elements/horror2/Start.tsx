@@ -1,7 +1,40 @@
 import { useEffect, useState } from "react"
+import styled from "styled-components"
+
+interface ContainerProps {
+  opacity: number
+}
+
+const Container = styled.div<ContainerProps>`
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  z-index: 10;
+  opacity: ${(props) => props.opacity};
+  transition: opacity 0.5s ease;
+`
+
+const Instructions = styled.div`
+  text-align: center;
+`
 
 const Start = ({ setSubtitle }: StartProps) => {
-  const [sequence, setSequence] = useState(1)
+  const [sequence, setSequence] = useState(0)
+  const [showInstruction, setShowInstruction] = useState(true)
+  const [containerOpacity, setContainerOpacity] = useState(1)
+  const [isNull, setIsNull] = useState(false)
+
+  const handleClick = () => {
+    setSequence(1)
+    setShowInstruction(false)
+  }
 
   useEffect(() => {
     if (sequence === 1) {
@@ -26,18 +59,17 @@ const Start = ({ setSubtitle }: StartProps) => {
     setSubtitle("...오랜만에 좋은 실험체를 손에 넣어서 기분이 좋군.")
     setTimeout(() => {
       setSequence((n) => n + 1)
+      setContainerOpacity(0)
       setSubtitle("")
     }, 4000)
   }
 
   const dub2 = () => {
+    setSubtitle("이번 실험은 반드시 성공시켜야 해. 반드시...!")
     setTimeout(() => {
-      setSubtitle("이번 실험은 반드시 성공시켜야 해. 반드시...!")
-      setTimeout(() => {
-        setSequence((n) => n + 1)
-        setSubtitle("")
-      }, 4000)
-    }, 5000)
+      setSequence((n) => n + 1)
+      setSubtitle("")
+    }, 4000)
   }
 
   const dub3 = () => {
@@ -61,10 +93,19 @@ const Start = ({ setSubtitle }: StartProps) => {
     setTimeout(() => {
       setSequence((n) => n + 1)
       setSubtitle("")
-    }, 6000)
+    }, 10000)
+    setIsNull(true)
   }
 
-  return <></>
+  return !isNull ? (
+    <Container opacity={containerOpacity} onClick={handleClick}>
+      {showInstruction ? (
+        <Instructions>
+          <p>Click to start</p>
+        </Instructions>
+      ) : null}
+    </Container>
+  ) : null
 }
 
 export default Start
