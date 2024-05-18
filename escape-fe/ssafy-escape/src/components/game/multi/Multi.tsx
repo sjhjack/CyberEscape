@@ -37,8 +37,7 @@ const Multi = () => {
           }}
         >
           <S.MultiImage
-            // src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/enter.png"}
-            src={"/image/enter.png"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/enter.png"}
             alt="enter the room"
             width={200}
             height={200}
@@ -51,8 +50,7 @@ const Multi = () => {
           }}
         >
           <S.MultiImage
-            // src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/random.png"}
-            src={"/image/random.png"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/random.png"}
             alt="random matching"
             width={200}
             height={200}
