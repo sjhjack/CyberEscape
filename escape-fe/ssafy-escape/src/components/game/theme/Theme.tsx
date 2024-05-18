@@ -14,11 +14,15 @@ const Theme = () => {
   const gameStart = (): void => {
     if (selectedThemeType === "single") {
       Swal.fire({
-        title: "게임을 시작합니다.",
-        width: "500px",
-        padding: "40px",
+        title: "게임을 시작하시겠습니까??",
+        showCancelButton: true,
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push("/ingame")
+        }
       })
-      router.push("/ingame")
     } else {
       alert("잘못된 접근입니다. ")
       router.push("mode")

@@ -234,7 +234,11 @@ const HorrorTheme2 = ({
       {isGameStart ? (
         <>
           {!isGameFinished && (
-            <CountdownTimer ref={timerRef} onTimeOut={handleTimeOut} />
+            <CountdownTimer
+              color={"white"}
+              ref={timerRef}
+              onTimeOut={handleTimeOut}
+            />
           )}
           <Start setSubtitle={setSubtitle} />
         </>
