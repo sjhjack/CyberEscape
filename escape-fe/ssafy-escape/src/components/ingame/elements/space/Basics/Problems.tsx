@@ -14,15 +14,10 @@ const Problems = ({
   setSubtitle,
   timePenalty,
 }: any) => {
-  const [url1, setUrl1] = useState(
-    process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
-  )
-  const [url2, setUrl2] = useState(
-    process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
-  )
-  const [url3, setUrl3] = useState(
-    process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
-  )
+  const defaultURL = process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png"
+  const [url1, setUrl1] = useState(defaultURL)
+  const [url2, setUrl2] = useState(defaultURL)
+  const [url3, setUrl3] = useState(defaultURL)
   const [uuid1, setUuid1] = useState("")
   const [uuid2, setUuid2] = useState("")
   const [uuid3, setUuid3] = useState("")
@@ -30,20 +25,23 @@ const Problems = ({
   const [secondBall, setSecondBall] = useState(true)
   const [thirdBall, setThirdBall] = useState(true)
 
-  const fetchData = async () => {
-    try {
-      const quizs = await getQuiz(7)
-      setUrl1(quizs[0].url)
-      setUrl2(quizs[1].url)
-      setUrl3(quizs[2].url)
-      setUuid1(quizs[0].quizUuid)
-      setUuid2(quizs[1].quizUuid)
-      setUuid3(quizs[2].quizUuid)
-    } catch (error) {
-      console.error("Error fetching quizs:", error)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const quizs = await getQuiz(7)
+        setUrl1(quizs[0].url)
+        setUrl2(quizs[1].url)
+        setUrl3(quizs[2].url)
+        setUuid1(quizs[0].quizUuid)
+        setUuid2(quizs[1].quizUuid)
+        setUuid3(quizs[2].quizUuid)
+      } catch (error) {
+        console.error("Error fetching quizs:", error)
+      }
     }
-  }
-  fetchData()
+
+    fetchData()
+  }, [])
 
   const system_rollback = () => {
     const audio = new Audio(
