@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber"
 import { PointerLockControls } from "@react-three/drei"
 import { PointerLockControls as PointerLockControlsImpl } from "three/examples/jsm/controls/PointerLockControls.js"
 import { Physics } from "@react-three/cannon"
+import PlayMusic from "./PlayMusic"
 import Crosshair from "./Crosshair"
 import styled from "styled-components"
 
@@ -10,8 +11,6 @@ interface BasicSceneProps {
   onAir: boolean
   interactNum: number
   children: ReactNode
-  isLock: boolean
-  setIsLock: (isLock: boolean) => void
 }
 
 const FullScreenOverlay = styled.div`
@@ -25,46 +24,38 @@ const FullScreenOverlay = styled.div`
   z-index: 0;
 `
 
-const BasicScene = ({
-  onAir,
-  interactNum,
-  children,
-  isLock,
-  setIsLock,
-}: BasicSceneProps) => {
+const BasicScene = ({ onAir, interactNum, children }: BasicSceneProps) => {
   const [isPointerLocked, setIsPointerLocked] = useState(false)
 
   const controlsRef = useRef<any>()
 
-  // useEffect(() => {
-  //   const handlePointerLockChange = () => {
-  //     setIsPointerLocked(
-  //       document.pointerLockElement === controlsRef.current.domElement,
-  //     )
-  //   }
+  useEffect(() => {
+    const handlePointerLockChange = () => {
+      setIsPointerLocked(
+        document.pointerLockElement === controlsRef.current.domElement,
+      )
+    }
 
-  //   document.addEventListener("pointerlockchange", handlePointerLockChange)
+    document.addEventListener("pointerlockchange", handlePointerLockChange)
 
-  //   return () => {
-  //     document.removeEventListener("pointerlockchange", handlePointerLockChange)
-  //   }
-  // }, [])
+    return () => {
+      document.removeEventListener("pointerlockchange", handlePointerLockChange)
+    }
+  }, [])
 
   const handlePointerLock = () => {
     const element = controlsRef.current.domElement
     element.requestPointerLock()
   }
 
-  const handleLock = () => {
-    setIsLock(false)
-  }
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {/* <PlayMusic /> */}
       <Canvas shadows camera={{ fov: 50 }}>
         <Physics gravity={[0, -9.8, 0]}>{children}</Physics>
         <PointerLockControls ref={controlsRef} pointerSpeed={0.5} />
       </Canvas>
-      {/* <FullScreenOverlay onClick={handlePointerLock}></FullScreenOverlay> */}
+      <FullScreenOverlay onClick={handlePointerLock}></FullScreenOverlay>
       {isPointerLocked && <Crosshair interactNum={interactNum} />}
     </div>
   )
