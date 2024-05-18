@@ -90,7 +90,6 @@ const Page = () => {
             onFinish={handleGameStart}
           /> */}
           {/*for merge request */}
-
           <ExitGame>
             <Image
               src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/exitbutton.png"}
