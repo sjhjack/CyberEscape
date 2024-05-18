@@ -14,13 +14,11 @@ import Portrait from "../../elements/horror/Portrait"
 import Art from "../../elements/horror/Art"
 import BloodPool from "../../elements/horror/BloodPool"
 import FirstProblemModal from "../../elements/horror/FirstProblemModal"
-import useIngameSolvedStore from "@/stores/IngameQuizStore"
 import SecondProblemObject from "../../elements/horror/SecondProblemObject"
 import SecondProblemModal from "../../elements/horror/SecondProblemModal"
 import ThirdProblemModal from "../../elements/horror/ThirdProblemModal"
 import ThirdProblemObject from "../../elements/horror/ThirdProblemObject"
 import Knob from "../../elements/horror/Knob"
-import KnobObject from "../../elements/horror/KnobObject"
 import Start from "../../elements/horror/Start"
 import Subtitle from "../../elements/common/Subtitle"
 import PlaySound from "../../PlaySound"
@@ -163,33 +161,39 @@ const HorrorTheme = ({
     setInteractNum(1)
   }
 
-  // 숨겨진 문고리 찾아서 클릭 시 이벤트
-  const handleKnobClick = () => {
-    setIsKnobClicked(true)
-    setSubtitle("얼른, 얼른 밖으로 나가야 해.")
-    setTimeout(() => {
-      setSubtitle("제발 열려라, 제발...")
+  // 숨겨진 문고리 찾아서 클릭 시 이벤트(싱글이면 시간 갱신, 멀티면 승리 로직만)
+  const handleKnobClick = async () => {
+    if (!isKnobClicked) {
+      setIsKnobClicked(true)
+      setSubtitle("얼른, 얼른 밖으로 나가야 해.")
       setTimeout(() => {
-        setSubtitle("")
+        setSubtitle("제발 열려라, 제발...")
+        setTimeout(() => {
+          setSubtitle("")
+        }, 4000)
       }, 4000)
-    }, 4000)
-  }
-
-  // 문고리 클릭 시 이벤트(싱글이면 시간 갱신, 멀티면 승리 로직만)
-  const handleFinal = async () => {
-    if (selectedThemeType === "single") {
-      if (timerRef.current) {
-        const currentTime = timerRef.current.getTime()
-        const clearSeconds =
-          600 - currentTime.minutes * 60 + currentTime.seconds
-        setClearTime(SecondToTime(clearSeconds))
-        await postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
+    } else {
+      if (selectedThemeType === "single") {
+        if (timerRef.current) {
+          const currentTime = timerRef.current.getTime()
+          const clearSeconds =
+            600 - currentTime.minutes * 60 + currentTime.seconds
+          setClearTime(SecondToTime(clearSeconds))
+          await postUpdateRank(
+            SecondToTime(clearSeconds),
+            userUuid as string,
+            1,
+          )
+        }
+        setResult("victory")
+        setIsGameFinished(true)
+      }
+      if (progressUpdate) {
+        progressUpdate()
       }
     }
-    if (progressUpdate) {
-      progressUpdate()
-    }
   }
+
   useEffect(() => {
     // 둘 중 한 명이 경기를 끝내면
     if (roomData?.guestProgress === 4 || roomData?.hostProgress === 4) {
@@ -339,12 +343,6 @@ const HorrorTheme = ({
 
         <Knob
           onClick={handleKnobClick}
-          isFind={isKnobClicked}
-          solved={solved}
-          setInteractNum={setInteractNum}
-        />
-        <KnobObject
-          onClick={handleFinal}
           isFind={isKnobClicked}
           solved={solved}
           setInteractNum={setInteractNum}
