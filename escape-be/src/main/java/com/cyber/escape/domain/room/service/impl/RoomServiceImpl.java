@@ -200,7 +200,7 @@ public class RoomServiceImpl implements RoomService {
 		}
 
 		newRoom = roomRepository.save(newRoom);
-
+		log.info("new room uuid : {}", newRoom.getUuid());
 		log.info("new room password : {}", newRoom.getPassword());
 		log.info("created room title : {}, hasPassword : {}", newRoom.getTitle(), newRoom.isHasPassword());
 
@@ -234,6 +234,7 @@ public class RoomServiceImpl implements RoomService {
 	public String inviteUserToRoom(final RoomDto.Request request) {
 		// 알림 전송 및 MongoDB에 저장
 		// 이 부분에 알림 send 메소드 넣으면 끝
+		log.info("request userUuid : {}, roomUuid : {}", request.getUserUuid(), request.getRoomUuid());
 		notificationService.send(request.getUserUuid(), request.getRoomUuid(), Notify.NotificationType.GAME, "게임 요청입니다.");
 		return "";
 	}
