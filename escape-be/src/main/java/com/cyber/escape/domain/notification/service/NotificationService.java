@@ -2,6 +2,7 @@ package com.cyber.escape.domain.notification.service;
 
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +115,8 @@ public class NotificationService {
         // 게임 요청이 들어왔다면
         else {
             log.info("::::::::::::::: 게임 초대 요청입니다.");
-            List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndNotificationTypeAndIsRead(senderUuid, receiverUuid, Notify.NotificationType.GAME, 'F');
+            // A 유저가 B 유저로 보낸, 아직 안 읽은 요청이 있는 경우는 안 온다.
+            List<Notify> existNotification = notifyRepository.findBySenderUuidAndReceiverUuidAndRoomUuidAndIsRead(senderUuid, receiverUuid, roomUuid, 'F');
             sendNotification(receiverUuid, roomUuid, notificationType, content, senderUuid, existNotification);
         }
         log.info("NotificationService ============= send() 끝");
@@ -124,14 +126,14 @@ public class NotificationService {
     private void sendNotification(String receiverUuid, String roomUuid, Notify.NotificationType notificationType, String content, String senderUuid, List<Notify> existNotification)
     {
 
+        // 게임의 경우 있어도, 최신의 것을
         try {
             if (existNotification.isEmpty()) {
 
-                // roomUuid 자리는 비워놓는다.
-                //저장 확인
+                // roomUuid 자리는 비워 놓는다.
                 User user = userRepository.findUserByUuid(userUtil.getLoginUserUuid()).orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND));
                 Notify notification = notifyRepository.save(createNotify(senderUuid, receiverUuid, user.getNickname(), user.getProfileUrl(), roomUuid, notificationType, content));
-                log.info("::::::::::::::::::::::::::::::::::  친구 요청 ");
+                log.info("::::::::::::::::::::::::::::::::::  알림 요청 ");
                 // Notify notification = createNotify(receiverId, notificationType, content);
 
                 // receiver = 현재 로그인 한 유저 = 알림 받을 사람
@@ -145,7 +147,6 @@ public class NotificationService {
                         (key, sseEmitter) -> {
                             log.info("KEY : {}, Emitter : {}", key, sseEmitter);
                             emitterRepository.saveEventCache(key, notification);
-
                             if (notificationType.equals(Notify.NotificationType.FRIEND)) {
                                 sendToClient(sseEmitter, key, NotifyDto.FriendResponse.from(notification));
                             } else {
@@ -177,6 +178,13 @@ public class NotificationService {
                 .notificationType(notificationType)
                 .content(content)
                 .isRead('F')
+                .createdAt(LocalDateTime.of(
+                    LocalDateTime.now().getYear(),
+                    LocalDateTime.now().getMonth(),
+                    LocalDateTime.now().getDayOfMonth(),
+                    LocalDateTime.now().getHour(),
+                    LocalDateTime.now().getMinute()
+                ))
                 .build();
     }
 
@@ -210,16 +218,19 @@ public class NotificationService {
     // 안 읽은 목록들 추출
     public List<Object> getNotifyList(){
         String userUuid = userUtil.getLoginUserUuid();
-        List<Notify> notifyList = notifyRepository.findByReceiverUuidAndIsRead(userUuid, 'F');
-
+        List<Notify> notifyList = notifyRepository.findByReceiverUuidAndIsReadOrderByCreatedAt(userUuid, 'F');
         List<Object> response = new ArrayList<>();
+        boolean isFirst = false;
 
         for(Notify notify : notifyList){
             if(notify.getNotificationType().equals(Notify.NotificationType.FRIEND)){
                 response.add(NotifyDto.FriendResponse.from(notify));
             }
-            else if(notify.getNotificationType().equals(Notify.NotificationType.GAME)){
-                response.add(NotifyDto.GameResponse.from(notify));
+            else if(notify.getNotificationType().equals(Notify.NotificationType.GAME)) {
+                if (!isFirst) {
+                    response.add(NotifyDto.GameResponse.from(notify));
+                    isFirst = true;
+                }
             }
         }
 
@@ -249,7 +260,6 @@ public class NotificationService {
     }
 
     public List<SseEmitter> getMyEmitter(){
-
         String userUuid = userUtil.getLoginIdFromContextHolder();
         return emitterRepository.getMyEmitter(userUuid);
     }
