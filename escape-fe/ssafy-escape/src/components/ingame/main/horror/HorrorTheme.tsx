@@ -34,6 +34,8 @@ import postUpdateRank from "@/services/main/ranking/postUpdateRank"
 import useUserStore from "@/stores/UserStore"
 import SecondToTime from "@/hooks/SecondToTime"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
+import styled from "styled-components"
+import Image from "next/image"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
@@ -62,7 +64,17 @@ const HorrorTheme = ({
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const { userUuid, isHost } = useUserStore()
-  const { solved, reset } = useIngameQuizStore()
+  const { solved, reset } = useIngameQuizStore()  
+  const [showExtraImage, setShowExtraImage] = useState(false)
+  const [index, setIndex] = useState(0)
+  const [showBlackOut, setShowBlackOut] = useState<boolean>(false)
+
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * 10)
+    setIndex(randomIndex)
+  }, [])
+
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
   // 시간 깎는 패널티 함수
@@ -86,9 +98,36 @@ const HorrorTheme = ({
     })
   }, [])
 
-  // 패널티 2개 -> 빨간 글씨 출력
+  // 패널티 2개 -> 빨간 글씨 출력 / 4개 -> 귀신 등장 / 6개 -> 남자 비명소리
   useEffect(() => {
     if (penalty === 2) {
+      setShowBloodText(true)
+      setTimeout(() => {
+        setTimeout(() => {
+          setShowBloodText(false)
+        }, 500)
+      }, 500)
+    } else if (penalty === 4) {
+      const playAudio = setTimeout(() => {
+        const audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/woman_scream.mp3",
+        )
+        audio.play()
+        const showImg = setTimeout(() => {
+          setShowExtraImage(true)
+          const hideImg = setTimeout(() => {
+            setShowExtraImage(false)
+          }, 1300)
+          return () => clearTimeout(hideImg)
+        }, 500)
+        return () => clearTimeout(showImg)
+      }, 5000)
+      return () => clearTimeout(playAudio)
+    } else if (penalty === 6) {
+      const audio = new Audio(
+        process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/man_scream.mp3",
+      )
+      audio.play()
       setShowBloodText(true)
       setTimeout(() => {
         setTimeout(() => {
@@ -183,10 +222,14 @@ const HorrorTheme = ({
       }, 5000)
     }
   }, [roomData])
+
+
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
     if (solved === 0) {
+      setIsLock(false)
       setShowFirstProblem(!showFirstProblem)
+      console.log(isLock)
     }
   }
 
@@ -219,6 +262,22 @@ const HorrorTheme = ({
         </>
       ) : null}
       <Subtitle text={subtitle} />
+      {showExtraImage && (
+        <BlackBackground>
+          <HorrorImageBox>
+            <Image
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL +
+                `/image/ghost/ghost${index}.jpg`
+              }
+              alt="귀신 이미지"
+              layout="fill"
+              objectFit="cover"
+            />
+          </HorrorImageBox>
+        </BlackBackground>
+      )}
+      {showBlackOut ? <BlackBackground></BlackBackground> : null}
       {showFirstProblem ? (
         <FirstProblemModal
           progressUpdate={progressUpdate}
@@ -259,9 +318,14 @@ const HorrorTheme = ({
       ) : null}
       <PlaySound penalty={penalty} role="experiment" />
       {showBloodText ? <BloodText role="experiment" penalty={penalty} /> : null}
-      <BasicScene interactNum={interactNum} onAir={true}>
+      <BasicScene
+        interactNum={interactNum}
+        onAir={true}
+        isLock={isLock}
+        setIsLock={setIsLock}
+      >
         <Lights penalty={penalty} solved={solved} />
-        <Player position={[3, 50, 0]} speed={100} />
+        <Player position={[3, 50, 0]} speed={70} />
         <Floor
           rotation={[Math.PI / -2, 0, 0]}
           color="white"
@@ -312,3 +376,21 @@ const HorrorTheme = ({
 }
 
 export default HorrorTheme
+
+const HorrorImageBox = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 100%;
+  z-index: 25;
+`
+
+const BlackBackground = styled.div`
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 24;
+`
