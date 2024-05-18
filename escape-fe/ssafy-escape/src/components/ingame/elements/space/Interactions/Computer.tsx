@@ -10,6 +10,9 @@ const Computer = ({
   setSequences,
   setSubtitle,
   setInteractNum,
+  trigger,
+  setTrigger,
+  timePenalty,
 }: any) => {
   const meshRef = useRef()
   const geometry = useMemo(() => new BoxGeometry(3, 3, 3), [])
@@ -59,6 +62,41 @@ const Computer = ({
       setTimeout(() => {
         setSubtitle(null)
       }, 12500)
+      setTimeout(() => {
+        const updatedTrigger = [...trigger]
+        updatedTrigger[1] = { ...updatedTrigger[1], activate: true }
+        setTrigger(updatedTrigger)
+      }, 14000)
+      setTimeout(() => {
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/crash_1.mp3",
+        )
+        setSubtitle("우주선이 소행성과 충돌하였습니다.")
+        new_audio.play()
+      }, 17000)
+      setTimeout(() => {
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/crash_2.mp3",
+        )
+        setSubtitle("충돌 과정에서 중력 유지장치가 고장났습니다.")
+        new_audio.play()
+      }, 20000)
+      setTimeout(() => {
+        const new_audio = new Audio(
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/crash_3.mp3",
+        )
+        timePenalty()
+        timePenalty()
+        timePenalty()
+        setSubtitle("남은 시간이 얼마 없습니다..")
+        new_audio.play()
+      }, 23400)
+      setTimeout(() => {
+        setSubtitle(null)
+      }, 27000)
     } else {
       if (onAir) return
       setOnAir(true)

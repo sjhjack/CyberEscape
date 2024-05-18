@@ -19,7 +19,7 @@ const MeshObjects = () => {
       />
       <BaseBox
         position={[-23, 2, 13.5]}
-        args={[70, 7, 1]}
+        args={[80, 7, 1]}
         color={"red"}
         opacity={0}
       />
@@ -54,14 +54,14 @@ const MeshObjects = () => {
         opacity={0}
       />
       <BaseBox
-        position={[-82, 2, -57]}
-        args={[45, 7, 23]}
+        position={[-83.5, 2, -57]}
+        args={[49, 7, 23]}
         color={"red"}
         opacity={0}
       />
       <BaseBox
-        position={[-82, 2, -88]}
-        args={[45, 7, 23]}
+        position={[-83.5, 2, -88]}
+        args={[49, 7, 23]}
         color={"red"}
         opacity={0}
       />
@@ -144,7 +144,7 @@ const MeshObjects = () => {
         opacity={0}
       />
       <BaseBox
-        position={[-104.5, 2, -73]}
+        position={[-109.5, 2, -73]}
         args={[1, 7, 10]}
         color={"red"}
         opacity={0}
