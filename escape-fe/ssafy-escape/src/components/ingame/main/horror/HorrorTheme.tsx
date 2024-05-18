@@ -64,11 +64,10 @@ const HorrorTheme = ({
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const { userUuid, isHost } = useUserStore()
-  const { solved, reset } = useIngameQuizStore()  
+  const { solved, reset } = useIngameQuizStore()
   const [showExtraImage, setShowExtraImage] = useState(false)
   const [index, setIndex] = useState(0)
   const [showBlackOut, setShowBlackOut] = useState<boolean>(false)
-
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * 10)
@@ -223,13 +222,10 @@ const HorrorTheme = ({
     }
   }, [roomData])
 
-
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
     if (solved === 0) {
-      setIsLock(false)
       setShowFirstProblem(!showFirstProblem)
-      console.log(isLock)
     }
   }
 
@@ -318,12 +314,7 @@ const HorrorTheme = ({
       ) : null}
       <PlaySound penalty={penalty} role="experiment" />
       {showBloodText ? <BloodText role="experiment" penalty={penalty} /> : null}
-      <BasicScene
-        interactNum={interactNum}
-        onAir={true}
-        isLock={isLock}
-        setIsLock={setIsLock}
-      >
+      <BasicScene interactNum={interactNum} onAir={true}>
         <Lights penalty={penalty} solved={solved} />
         <Player position={[3, 50, 0]} speed={70} />
         <Floor
