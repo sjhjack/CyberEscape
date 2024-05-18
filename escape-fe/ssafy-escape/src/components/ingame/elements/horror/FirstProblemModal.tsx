@@ -8,7 +8,8 @@ import HintModal from "../common/HintModal"
 import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
+import Swal from "sweetalert2"
+import data from "@/data/ingame/horror/HorrorOption.json"
 
 // 첫 번째 문제 모달
 // 문제 모달 중복 코드 많아서 추후 리팩토링 필요
@@ -20,24 +21,50 @@ const FirstProblemModal = ({
   timePenalty,
   progressUpdate,
 }: ProblemProps) => {
+  const [openHint, setOpenHint] = useState<boolean>(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
-  const { solved, setSolved } = useIngameQuizStore()
+  const { solved, hint, setSolved, setHint } = useIngameQuizStore()
+
+  // useEffect(() => {
+  //   const handleClickInsideChat = (event: MouseEvent) => {
+  //     event.stopPropagation()
+  //   }
+
+  //   const chatContainer = document.getElementById(
+  //     "chat-container",
+  //   ) as HTMLElement
+  //   chatContainer.addEventListener("click", handleClickInsideChat)
+
+  //   return () => {
+  //     chatContainer.removeEventListener("click", handleClickInsideChat)
+  //   }
+  // }, [])
 
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 2],
     queryFn: () => getQuiz(2),
   })
 
-  const { horror1QuizList } = useIngameOptionStore()
-
   if (!quizData) {
-    return <div>퀴즈 데이터가 없습니다.</div>
+    return
   }
 
-  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
+  // 힌트 볼 때 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
-    setHintModalOpen(true)
-    timePenalty()
+    if (hint === 1) {
+      setHint(0)
+      setOpenHint(true)
+      setHintModalOpen(true)
+      timePenalty()
+    } else if (hint === 0 && openHint) {
+      setHintModalOpen(true)
+    } else if (hint === 0) {
+      Swal.fire({
+        title: "힌트를 모두 사용했습니다.",
+        width: "500px",
+        padding: "40px",
+      })
+    }
   }
 
   // 힌트 모달 닫기
@@ -63,16 +90,23 @@ const FirstProblemModal = ({
         }, 4000)
       }
     } else {
-      alert("오답입니다.")
+      Swal.fire({
+        title: "오답!",
+        icon: "error",
+        width: "500px",
+        padding: "40px",
+      })
       if (penalty && setPenalty) {
         setPenalty(penalty + 1)
         timePenalty()
       }
     }
   }
-  console.log(quizData)
+
+  const optionData: HorrorOptionData = data
+
   return (
-    <MainContainer>
+    <MainContainer id="chat-container">
       <div>
         <img src={quizData[0].url} width={600} height={550} alt="첫번째 문제" />
         <CloseIconBox onClick={onClose}>
@@ -86,7 +120,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][0])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[0].quizUuid][0],
+              )
             }
           />
           <Button
@@ -95,7 +131,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][1])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[0].quizUuid][1],
+              )
             }
           />
         </ChoiceBox1>
@@ -106,7 +144,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][2])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[0].quizUuid][2],
+              )
             }
           />
           <Button
@@ -115,7 +155,9 @@ const FirstProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror1QuizList[quizData[0].quizUuid][3])
+              handleAnswerCheck(
+                optionData["horror1QuizList"][quizData[0].quizUuid][3],
+              )
             }
           />
         </ChoiceBox2>
