@@ -69,24 +69,24 @@ const Computer = ({
       }, 14000)
       setTimeout(() => {
         const new_audio = new Audio(
-          // process.env.NEXT_PUBLIC_IMAGE_URL +
-          "/dubbing/space/sequence/crash_1.mp3",
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/crash_1.mp3",
         )
         setSubtitle("우주선이 소행성과 충돌하였습니다.")
         new_audio.play()
       }, 17000)
       setTimeout(() => {
         const new_audio = new Audio(
-          // process.env.NEXT_PUBLIC_IMAGE_URL +
-          "/dubbing/space/sequence/crash_2.mp3",
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/crash_2.mp3",
         )
         setSubtitle("충돌 과정에서 중력 유지장치가 고장났습니다.")
         new_audio.play()
       }, 20000)
       setTimeout(() => {
         const new_audio = new Audio(
-          // process.env.NEXT_PUBLIC_IMAGE_URL +
-          "/dubbing/space/sequence/crash_3.mp3",
+          process.env.NEXT_PUBLIC_IMAGE_URL +
+            "/dubbing/space/sequence/crash_3.mp3",
         )
         timePenalty()
         timePenalty()
