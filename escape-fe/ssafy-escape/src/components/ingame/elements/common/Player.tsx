@@ -45,6 +45,7 @@ const Player = (props: any) => {
   }, [])
 
   useEffect(() => {
+    if (!props.trigger) return
     if (
       (props.trigger[0].activate === true &&
         props.trigger[2].activate === true) ||
