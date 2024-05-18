@@ -22,6 +22,7 @@ interface GameRoomProps {
   kick: () => void
   sendMessage: (text: string) => void
   roomData: PubResponseData | null
+  showCountdown: boolean
 }
 const Waiting = ({
   chatting,
@@ -29,6 +30,7 @@ const Waiting = ({
   kick,
   sendMessage,
   roomData,
+  showCountdown,
 }: GameRoomProps) => {
   const { userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -84,7 +86,7 @@ const Waiting = ({
               </S.CharacterBox>
               <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
               <S.Nickname>
-                {roomData?.host?.uuid === userUuid ? (
+                {roomData?.host?.uuid === userUuid && !showCountdown ? (
                   <>
                     <Button
                       text={roomData?.hostReady ? "취소" : "준비"}
@@ -145,7 +147,7 @@ const Waiting = ({
                   </S.CharacterBox>
                   <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
                   <S.Nickname>
-                    {roomData?.guest?.uuid === userUuid ? (
+                    {roomData?.guest?.uuid === userUuid && !showCountdown ? (
                       <>
                         <Button
                           text={roomData?.guestReady ? "취소" : "준비"}
