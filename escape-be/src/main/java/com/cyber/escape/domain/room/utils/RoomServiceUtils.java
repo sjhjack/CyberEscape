@@ -2,6 +2,8 @@ package com.cyber.escape.domain.room.utils;
 
 import com.cyber.escape.domain.room.entity.Room;
 import com.cyber.escape.domain.room.repository.RoomRepository;
+import com.cyber.escape.global.exception.ExceptionCodeSet;
+import com.cyber.escape.global.exception.RoomException;
 
 public class RoomServiceUtils {
 
@@ -17,7 +19,7 @@ public class RoomServiceUtils {
 	) {
 		// 여기서 validation check까지 수행한다.
 		return repository.findRoomByUuid(uuid)
-			.orElseThrow(() -> new NullPointerException("존재하지 않는 방입니다."));
+			.orElseThrow(() -> new RoomException(ExceptionCodeSet.ROOM_NOT_FOUND));
 	}
 }
 
