@@ -81,7 +81,9 @@ const Waiting = ({
                   height={100}
                 />
                 {roomData?.hostReady ? (
-                  <S.ReadyImage src={`/image/ready.png`} />
+                  <S.ReadyImage
+                    src={process.env.NEXT_PUBLIC_IMAGE_URL + `/image/ready.png`}
+                  />
                 ) : null}
               </S.CharacterBox>
               <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
@@ -132,7 +134,11 @@ const Waiting = ({
                       height={100}
                     />
                     {roomData?.guestReady ? (
-                      <S.ReadyImage src={`/image/ready.png`} />
+                      <S.ReadyImage
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_URL + `/image/ready.png`
+                        }
+                      />
                     ) : null}
                     {roomData?.host.uuid === userUuid &&
                     !(roomData?.hostReady && roomData?.guestReady) ? (
