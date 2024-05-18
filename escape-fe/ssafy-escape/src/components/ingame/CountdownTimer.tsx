@@ -15,12 +15,13 @@ export interface CountdownTimerHandle {
 
 interface CountdownTimerProps {
   onTimeOut: () => void
+  color: string
 }
 
 const CountdownTimer: ForwardRefRenderFunction<
   CountdownTimerHandle,
   CountdownTimerProps
-> = ({ onTimeOut }: CountdownTimerProps, ref) => {
+> = ({ onTimeOut, color }: CountdownTimerProps, ref) => {
   const [time, setTime] = useState({
     minutes: 10,
     seconds: 0,
@@ -68,7 +69,7 @@ const CountdownTimer: ForwardRefRenderFunction<
     return () => clearInterval(interval)
   }, [onTimeOut])
   return (
-    <Container>
+    <Container color={color}>
       <TimerDigit>{time.minutes.toString().padStart(2, "0")}</TimerDigit>:
       <TimerDigit>{time.seconds.toString().padStart(2, "0")}</TimerDigit>
     </Container>
@@ -86,8 +87,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 58px;
-  color: white;
+  color: ${(props) => props.color};
   z-index: 99;
+  text-shadow:
+    2px 2px 0px black,
+    -2px -2px 0px black,
+    2px -2px 0px black,
+    -2px 2px 0px black;
 `
 
 const TimerDigit = styled.span`
