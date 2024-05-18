@@ -6,8 +6,7 @@ import postAnswer from "@/services/ingame/postAnswer"
 import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
-
+import data from "@/data/ingame/ssafy/SsafyOption.json"
 // 세 번째 문제 모달
 const ThirdProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
   const { solved, setSolved } = useIngameQuizStore()
@@ -17,10 +16,10 @@ const ThirdProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
     queryFn: () => getQuiz(6),
   })
 
-  const { ssafy2QuizList } = useIngameOptionStore()
+  const optionData: SsafyOptionData = data
 
   if (!quizData) {
-    return <div>퀴즈 데이터가 없습니다.</div>
+    return
   }
 
   // 선지 클릭 시 정답여부 확인
@@ -49,7 +48,9 @@ const ThirdProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[2].quizUuid][0])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[2].quizUuid][0],
+              )
             }
           />
           <Button
@@ -58,7 +59,9 @@ const ThirdProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[2].quizUuid][1])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[2].quizUuid][1],
+              )
             }
           />
         </ChoiceBox1>
@@ -69,7 +72,9 @@ const ThirdProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[2].quizUuid][2])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[2].quizUuid][2],
+              )
             }
           />
           <Button
@@ -78,7 +83,9 @@ const ThirdProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(ssafy2QuizList[quizData[2].quizUuid][3])
+              handleAnswerCheck(
+                optionData["ssafy2QuizList"][quizData[2].quizUuid][3],
+              )
             }
           />
         </ChoiceBox2>

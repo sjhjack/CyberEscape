@@ -24,7 +24,8 @@ const Home = ({ showText = true }: HomeProps) => {
 
   const onMoveClick = () => {
     pointerLockControlsRef.current?.moveToPosition(3, 1, -7)
-    if (isLogin) {
+    const accessToken = sessionStorage.getItem("access_token")
+    if (accessToken) {
       router.push("/main")
     } else {
       setIsStartClicked(true)
@@ -74,9 +75,7 @@ const Home = ({ showText = true }: HomeProps) => {
             <Login handleLoginback={onBackClick} />
           ) : null}
         </div>
-      ) : (
-        <div>로딩 중...</div>
-      )}
+      ) : null}
     </div>
   )
 }

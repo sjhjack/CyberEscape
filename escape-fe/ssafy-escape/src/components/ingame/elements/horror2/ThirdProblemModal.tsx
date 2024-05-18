@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import postAnswer from "@/services/ingame/postAnswer"
 import useIngameQuizStore from "@/stores/IngameQuizStore"
 import HintModal from "../common/HintModal"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
+import data from "@/data/ingame/horror/HorrorOption.json"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
 
@@ -26,10 +26,10 @@ const ThirdProblemModal = ({
     queryKey: ["quizList", 3],
     queryFn: () => getQuiz(3),
   })
-  const { horror2QuizList } = useIngameOptionStore()
 
+  const optionData: HorrorOptionData = data
   if (!quizData) {
-    return <div>퀴즈 데이터가 없습니다.</div>
+    return
   }
 
   // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
@@ -82,7 +82,9 @@ const ThirdProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][0])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[2].quizUuid][0],
+              )
             }
           />
           <Button
@@ -91,7 +93,9 @@ const ThirdProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][1])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[2].quizUuid][1],
+              )
             }
           />
         </ChoiceBox1>
@@ -102,7 +106,9 @@ const ThirdProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][2])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[2].quizUuid][2],
+              )
             }
           />
           <Button
@@ -111,7 +117,9 @@ const ThirdProblemModal = ({
             height="40px"
             opacity="0"
             onClick={() =>
-              handleAnswerCheck(horror2QuizList[quizData[2].quizUuid][3])
+              handleAnswerCheck(
+                optionData["horror2QuizList"][quizData[2].quizUuid][3],
+              )
             }
           />
         </ChoiceBox2>
