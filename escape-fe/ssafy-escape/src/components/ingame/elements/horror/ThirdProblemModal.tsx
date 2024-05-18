@@ -102,8 +102,13 @@ const ThirdProblemModal = ({
         }, 4000)
       }
     } else {
+      Swal.fire({
+        title: "오답!",
+        icon: "error",
+        width: "500px",
+        padding: "40px",
+      })
       if (penalty && setPenalty) {
-        alert("오답입니다.")
         setPenalty(penalty + 1)
         timePenalty()
       }
@@ -146,7 +151,7 @@ const ThirdProblemModal = ({
               opacity="0"
               onClick={() =>
                 handleAnswerCheck(
-                  optionData["horror1QuizList"][quizData[2].quizUuid][1],
+                  optionData["horror1QuizList"][quizData[2].quizUuid][0],
                 )
               }
             />
@@ -170,7 +175,7 @@ const ThirdProblemModal = ({
               opacity="0"
               onClick={() =>
                 handleAnswerCheck(
-                  optionData["horror1QuizList"][quizData[2].quizUuid][1],
+                  optionData["horror1QuizList"][quizData[2].quizUuid][2],
                 )
               }
             />
@@ -181,7 +186,7 @@ const ThirdProblemModal = ({
               opacity="0"
               onClick={() =>
                 handleAnswerCheck(
-                  optionData["horror1QuizList"][quizData[2].quizUuid][1],
+                  optionData["horror1QuizList"][quizData[2].quizUuid][3],
                 )
               }
             />
