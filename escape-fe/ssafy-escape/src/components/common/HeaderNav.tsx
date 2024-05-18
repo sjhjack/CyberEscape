@@ -37,67 +37,95 @@ const MainHeader = () => {
   const [notificationModalopen, setNotificationModalopen] =
     useState<boolean>(false)
 
-    let lastHeartbeat = Date.now();
+  let lastHeartbeat = Date.now()
 
-    const EventProvider = () => {
-      const EventSource = EventSourcePolyfill || NativeEventSource;
-      const accessToken = sessionStorage.getItem('access_token');
-      // if(accessToken == null) return;
-      let eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Connection: 'keep-alive',
-            'X-Accel-Buffering': 'no',
-          },
-          heartbeatTimeout: 1000 * 60 * 5, // 5분
-      });
-      
-      console.log("EVENT !!!!!");
-      eventSource.onmessage = function(event) {
-          console.log('New event from server:', event.data);
-      };
-      eventSource.addEventListener('sse', function(event) {
-          console.log(event);
-          //setMessages(prevMessages => [...prevMessages, event.data]);
-      });
-    
-      eventSource.addEventListener('heartbeat', function(event){
-        console.log("heart beat");
-        lastHeartbeat = Date.now();
-      })
-    
-      let retryCount = 0;
-    
-      if (retryCount >= 3) {
-        eventSource.close();
-        return;
+  const EventProvider = () => {
+    const EventSource = EventSourcePolyfill || NativeEventSource
+    const accessToken = sessionStorage.getItem("access_token")
+    // if(accessToken == null) return;
+    let eventSource = new EventSource(
+      process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Connection: "keep-alive",
+          "X-Accel-Buffering": "no",
+        },
+        heartbeatTimeout: 1000 * 60 * 5, // 5분
+      },
+    )
+
+    console.log("EVENT !!!!!")
+    eventSource.onmessage = function (event) {
+      console.log("New event from server:", event.data)
+    }
+    eventSource.addEventListener("sse", function (event) {
+      const messageEvent = event as MessageEvent
+
+      let parsedData: any
+
+      try {
+        parsedData = JSON.parse(messageEvent.data)
+      } catch (e) {
+        parsedData = messageEvent.data
       }
-    
-      eventSource.addEventListener('error', function(event) {
-          console.log("ERROR OCCUR");
-          console.log(event)
-          retryCount++;
-    
-          setTimeout(async function() {
-            eventSource.close();
-            
-            eventSource = new EventSource(process.env.NEXT_PUBLIC_URL + '/notify/subscribe',{
-              headers: {
-                  Connection: 'keep-alive',
-                  'X-Accel-Buffering': 'no',
-                  Authorization: `Bearer ${accessToken}`,
-              },
-              heartbeatTimeout: 1000 * 60 * 5,
-              withCredentials: true,
-            });
-          }, 3000);  
-      });
-    
-      return () => {
-          eventSource.close();
-      };
-  }
 
+      if (
+        parsedData &&
+        typeof parsedData === "object" &&
+        "type" in parsedData
+      ) {
+        if (parsedData.type === "FRIEND") {
+          setIsFriendAlram(true)
+        } else if (parsedData.type === "GAME") {
+          setIsInviteAlram(true)
+        }
+      } else {
+        console.log(
+          "The data does not contain 'type' information or is not in JSON format.",
+        )
+      }
+    })
+
+    eventSource.addEventListener("heartbeat", function (event) {
+      console.log("heart beat")
+      lastHeartbeat = Date.now()
+    })
+
+    let retryCount = 0
+
+    if (retryCount >= 3) {
+      eventSource.close()
+      return
+    }
+
+    eventSource.addEventListener("error", function (event) {
+      console.log("ERROR OCCUR")
+      console.log(event)
+      retryCount++
+
+      setTimeout(async function () {
+        eventSource.close()
+
+        eventSource = new EventSource(
+          process.env.NEXT_PUBLIC_URL + "/notify/subscribe",
+          {
+            headers: {
+              Connection: "keep-alive",
+              "X-Accel-Buffering": "no",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            heartbeatTimeout: 1000 * 60 * 5,
+            withCredentials: true,
+          },
+        )
+      }, 3000)
+    })
+
+    return () => {
+      eventSource.close()
+    }
+  }
 
   const handleFriendModalClose = () => {
     setfriendModalOpen(false)

@@ -18,15 +18,20 @@ const InvitedList = () => {
   const router = useRouter()
   // 초대 요청 수락 시
   const handleAccept = async (roomUuid: string, notificationId: string) => {
-    try{
-      await postAcceptance({roomUuid : roomUuid})
+    try {
+      await postAcceptance({ roomUuid: roomUuid })
       // 알림 읽음 처리
       await postReadNotification(notificationId)
       router.push(`/gameroom/${roomUuid}`)
       refetch()
-    }
-    catch(e){
-
+    } catch (error) {
+      if (error instanceof Error) {
+        Swal.fire(
+          "존재하지 않는 방입니다.",
+          error instanceof Error ? error.message : "",
+          "error",
+        )
+      }
     }
   }
 
