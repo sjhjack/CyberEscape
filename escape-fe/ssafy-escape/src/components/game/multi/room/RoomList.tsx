@@ -15,7 +15,7 @@ interface Themes {
 const Room = ({ roomData }: any) => {
   const { setIsHost, userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
-  const { setSelectedTheme } = useIngameThemeStore()
+  const { setSelectedTheme, setRoomTitle } = useIngameThemeStore()
   const router = useRouter()
   const themes: Themes = {
     1: "공포",
@@ -30,15 +30,19 @@ const Room = ({ roomData }: any) => {
     if (roomData.hasPassword) {
       setShowModal(true)
     } else {
-      setSelectedTheme(roomData.category)
-
-      await patchJoin({
-        roomUuid: roomData.uuid,
-        userUuid: userUuid || "",
-        password: "",
-      })
-      // 방 목록에서 입장하는 것은 게스트
-      router.push(`/gameroom/${roomData.uuid}`)
+      try {
+        await patchJoin({
+          roomUuid: roomData.uuid,
+          userUuid: userUuid || "",
+          password: "",
+        })
+        setSelectedTheme(roomData.category)
+        setRoomTitle(roomData.title)
+        // 방 목록에서 입장하는 것은 게스트
+        router.push(`/gameroom/${roomData.uuid}`)
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
   return (

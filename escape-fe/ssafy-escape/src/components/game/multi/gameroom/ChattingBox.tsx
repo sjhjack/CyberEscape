@@ -34,6 +34,11 @@ const ChattingBox = ({ chatData, sendMessage }: ChattingBoxProps) => {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
     }
   }, [chatData])
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      submitChat()
+    }
+  }
 
   return (
     <MainContainer>
@@ -47,7 +52,12 @@ const ChattingBox = ({ chatData, sendMessage }: ChattingBoxProps) => {
         })}
       </ChatBox>
       <ChatInput>
-        <input type="text" value={text} onChange={handleChangeInput} />
+        <input
+          type="text"
+          value={text}
+          onChange={handleChangeInput}
+          onKeyDown={handleKeyDown}
+        />
         <KeyboardReturnIcon onClick={submitChat} />
       </ChatInput>
     </MainContainer>

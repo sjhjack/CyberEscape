@@ -163,7 +163,7 @@ const Cockpit = ({
         setCurrentUrl(url3)
       }, 2000)
       setTimeout(() => {
-        const countdownInterval = setInterval(() => {
+        const countdownInterval = setInterval(async () => {
           if (currentCountdown >= 1) {
             countDownStart(currentCountdown)
             setSubtitle(currentCountdown.toString())
@@ -175,7 +175,11 @@ const Cockpit = ({
             const clearSeconds =
               600 - currentTime.minutes * 60 + currentTime.seconds
             setClearTime(SecondToTime(clearSeconds))
-            postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
+            await postUpdateRank(
+              SecondToTime(clearSeconds),
+              userUuid as string,
+              7,
+            )
 
             const new_audio = new Audio(
               process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/rocket_launch.mp3",
@@ -195,6 +199,7 @@ const Cockpit = ({
               setResult("victory")
               setSubtitle(null)
             }, 6000)
+
             clearInterval(countdownInterval)
           }
         }, 1000)

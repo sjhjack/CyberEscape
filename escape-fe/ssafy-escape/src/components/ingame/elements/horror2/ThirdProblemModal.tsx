@@ -17,6 +17,7 @@ const ThirdProblemModal = ({
   setPenalty,
   setSubtitle,
   timePenalty,
+  progressUpdate,
 }: ProblemProps) => {
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
 
@@ -43,6 +44,9 @@ const ThirdProblemModal = ({
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[2].quizUuid, answer)).right) {
       setSolved(solved + 1)
+      if (progressUpdate) {
+        progressUpdate()
+      }
       onClose()
       if (setSubtitle) {
         setSubtitle("이런, 시간이...서둘러 나가야겠군.")

@@ -33,12 +33,19 @@ import VoodooDoll from "../../elements/horror2/VoodooDoll"
 import BloodText from "../../elements/horror2/BloodText"
 import PlaySound from "../../PlaySound"
 import Result from "../../elements/common/Result"
+import useUserStore from "@/stores/UserStore"
 
 // const startPosition = { x: 8, y: 8, z: -2 }
 // const startTargetPosition = { x: 4, y: 3, z: -2 }
 // const lookAt = { x: -4, y: 2, z: 2 }
 
-const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+const HorrorTheme2 = ({
+  isGameStart,
+  setIsModelLoaded,
+  progressUpdate,
+  progressReset,
+  roomData,
+}: IngameMainProps) => {
   const [isSyringeClicked, setIsSyringeClicked] = useState<boolean>(false)
   const [isHammerClicked, setIsHammerClicked] = useState<boolean>(false)
   const [twoMinLater, setTwoMinLater] = useState<boolean>(false)
@@ -47,7 +54,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
-  const { solved } = useIngameQuizStore()
+  const { solved, reset } = useIngameQuizStore()
   const { selectedThemeType } = useIngameThemeStore()
   const [subtitle, setSubtitle] = useState<string>("")
   const [interactNum, setInteractNum] = useState<number>(1)
@@ -57,7 +64,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [result, setResult] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
-
+  const { isHost } = useUserStore()
   const timerRef = useRef<CountdownTimerHandle | null>(null)
 
   // 시간 깎는 패널티 함수
@@ -170,11 +177,37 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   // 마지막 문 클릭 시 이벤트
   const handleFinal = async () => {
     if (isHammerClicked && isSyringeClicked) {
-      await setResult("victory")
-      setIsGameFinished(true)
+      if (progressUpdate) {
+        progressUpdate()
+      }
     }
   }
-
+  useEffect(() => {
+    // 둘 중 한 명이 경기를 끝내면
+    if (roomData?.guestProgress === 4 || roomData?.hostProgress === 4) {
+      // 호스트
+      if (isHost) {
+        if (roomData?.hostProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.guestProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      // 게스트
+      else {
+        if (roomData?.guestProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.hostProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      setIsGameFinished(true)
+      setTimeout(() => {
+        reset()
+        setIsGameFinished(false)
+      }, 5000)
+    }
+  }, [roomData])
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
     if (solved === 0) {
@@ -215,6 +248,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setSubtitle={setSubtitle}
           timePenalty={timePenalty}
           setShowSpider={setShowSpider}
+          progressUpdate={progressUpdate}
         />
       ) : null}
       {showSecondProblem ? (
@@ -224,6 +258,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setPenalty={setPenalty}
           setSubtitle={setSubtitle}
           timePenalty={timePenalty}
+          progressUpdate={progressUpdate}
         />
       ) : null}
       {showThirdProblem ? (
@@ -233,6 +268,7 @@ const HorrorTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setPenalty={setPenalty}
           setSubtitle={setSubtitle}
           timePenalty={timePenalty}
+          progressUpdate={progressUpdate}
         />
       ) : null}
       {showBloodText ? <BloodText role="scientist" penalty={penalty} /> : null}

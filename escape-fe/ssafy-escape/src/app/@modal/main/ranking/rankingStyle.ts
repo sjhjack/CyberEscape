@@ -44,7 +44,7 @@ export const CustomImage = styled(Image)<ImageProps>`
 
 export const RankingMainBox = styled.div`
   width: 70vw;
-  height: 53vh;
+  height: 48vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,7 +56,7 @@ export const RankingSubBox = styled.div`
   /* background-color: #ebebeb; */
   border-radius: 20px;
   padding: 15px;
-  width: 35vw;
+  width: 38vw;
   height: inherit;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -97,9 +97,16 @@ export const ProfileBox = styled.div`
   gap: 10px;
   flex-grow: 1;
 `
+export const ProfileImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+  object-fit: cover;
+`
 
 export const Nickname = styled.div<TopThreeProps>`
   flex: 1;
+  font-size: 20px;
   font-weight: ${(props) => (props.$isTopThree ? "bold" : "normal")};
 `
 

@@ -27,6 +27,7 @@
     "cannon": "^0.6.2",
     "event-source-polyfill": "^1.0.31",
     "framer-motion-3d": "^11.1.9",
+    "event-source-polyfill": "^1.0.31",
     "install": "^0.13.0",
     "leva": "^0.9.35",
     "next": "14.2.1",
