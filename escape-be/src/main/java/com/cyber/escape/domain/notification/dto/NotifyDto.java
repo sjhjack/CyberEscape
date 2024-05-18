@@ -67,7 +67,7 @@ public class NotifyDto {
     @Builder
     public static class GameResponse {
         String id;
-        String gameUuid;
+        String roomUuid;
         String nickname;
         String content;
         String type;
@@ -79,6 +79,8 @@ public class NotifyDto {
             return GameResponse.builder()
                     .id(notify.getId().toString())
                     .content(notify.getContent())
+                    .nickname(notify.getNickname())
+                    .roomUuid(notify.getRoomUuid())
                     .type(notify.getNotificationType().name())
                     .isRead(notify.getIsRead())
                     .profileUrl(notify.getProfileUrl())
