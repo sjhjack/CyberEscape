@@ -3,7 +3,6 @@ import api from "@/services/api"
 
 interface PostAcceptanceRequestProps {
   roomUuid: string
-  userUuid: string
 }
 
 // 게임방 초대 응하기
