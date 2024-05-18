@@ -22,6 +22,7 @@ interface GameRoomProps {
   kick: () => void
   sendMessage: (text: string) => void
   roomData: PubResponseData | null
+  showCountdown: boolean
 }
 const Waiting = ({
   chatting,
@@ -29,6 +30,7 @@ const Waiting = ({
   kick,
   sendMessage,
   roomData,
+  showCountdown,
 }: GameRoomProps) => {
   const { userUuid } = useUserStore()
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -79,12 +81,14 @@ const Waiting = ({
                   height={100}
                 />
                 {roomData?.hostReady ? (
-                  <S.ReadyImage src={`/image/ready.png`} />
+                  <S.ReadyImage
+                    src={process.env.NEXT_PUBLIC_IMAGE_URL + `/image/ready.png`}
+                  />
                 ) : null}
               </S.CharacterBox>
               <S.Nickname>{roomData?.host?.nickname}</S.Nickname>
               <S.Nickname>
-                {roomData?.host?.uuid === userUuid ? (
+                {roomData?.host?.uuid === userUuid && !showCountdown ? (
                   <>
                     <Button
                       text={roomData?.hostReady ? "취소" : "준비"}
@@ -130,9 +134,14 @@ const Waiting = ({
                       height={100}
                     />
                     {roomData?.guestReady ? (
-                      <S.ReadyImage src={`/image/ready.png`} />
+                      <S.ReadyImage
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_URL + `/image/ready.png`
+                        }
+                      />
                     ) : null}
-                    {roomData?.host.uuid === userUuid ? (
+                    {roomData?.host.uuid === userUuid &&
+                    !(roomData?.hostReady && roomData?.guestReady) ? (
                       <S.QuitButton
                         onClick={() => {
                           kick()
@@ -144,7 +153,7 @@ const Waiting = ({
                   </S.CharacterBox>
                   <S.Nickname>{roomData?.guest?.nickname}</S.Nickname>
                   <S.Nickname>
-                    {roomData?.guest?.uuid === userUuid ? (
+                    {roomData?.guest?.uuid === userUuid && !showCountdown ? (
                       <>
                         <Button
                           text={roomData?.guestReady ? "취소" : "준비"}
