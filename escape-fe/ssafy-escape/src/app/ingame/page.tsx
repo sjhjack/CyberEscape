@@ -78,6 +78,12 @@ const Page = () => {
       ) : null}
       {isModelLoaded ? (
         <div>
+          {/* <StartingCountDown
+            isModelLoaded={isModelLoaded}
+            onFinish={handleGameStart}
+          /> */}
+          {/*for merge request */}
+
           <ExitGame>
             <Image
               src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/exitbutton.png"}

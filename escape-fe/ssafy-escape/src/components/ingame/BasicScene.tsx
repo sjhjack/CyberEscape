@@ -1,6 +1,7 @@
-import { ReactNode, useState, useEffect, useRef } from "react"
+import { ReactNode, useState, useEffect, useRef, useCallback } from "react"
 import { Canvas } from "@react-three/fiber"
 import { PointerLockControls } from "@react-three/drei"
+import { PointerLockControls as PointerLockControlsImpl } from "three/examples/jsm/controls/PointerLockControls.js"
 import { Physics } from "@react-three/cannon"
 import Crosshair from "./Crosshair"
 import styled from "styled-components"
@@ -21,6 +22,7 @@ const FullScreenOverlay = styled.div`
   height: 100%;
   opacity: 0;
   cursor: cursor;
+  z-index: 0;
 `
 
 const BasicScene = ({
@@ -32,7 +34,7 @@ const BasicScene = ({
 }: BasicSceneProps) => {
   const [isPointerLocked, setIsPointerLocked] = useState(false)
 
-  const controlsRef = useRef<any>(null)
+  const controlsRef = useRef<any>()
 
   // useEffect(() => {
   //   const handlePointerLockChange = () => {
@@ -60,7 +62,7 @@ const BasicScene = ({
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <Canvas shadows camera={{ fov: 50 }}>
         <Physics gravity={[0, -9.8, 0]}>{children}</Physics>
-        {isLock ? <PointerLockControls /> : null}
+        <PointerLockControls ref={controlsRef} pointerSpeed={0.5} />
       </Canvas>
       {/* <FullScreenOverlay onClick={handlePointerLock}></FullScreenOverlay> */}
       {isPointerLocked && <Crosshair interactNum={interactNum} />}
