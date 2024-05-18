@@ -123,7 +123,7 @@ const Player = (props: any) => {
         )
         euler.y += rotationChange.y
         euler.x += rotationChange.x
-        euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.x))
+        // euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.x))
         camera.quaternion.setFromEuler(euler)
       }
 
