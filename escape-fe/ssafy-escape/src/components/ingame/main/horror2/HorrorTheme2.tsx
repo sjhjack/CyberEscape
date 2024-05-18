@@ -294,7 +294,9 @@ const HorrorTheme2 = ({
         />
         <MeshObjects />
         <Environment
-          files="/hdr/concrete_tunnel_02_1k.hdr"
+          files={
+            process.env.NEXT_PUBLIC_IMAGE_URL + "/hdr/concrete_tunnel_02_1k.hdr"
+          }
           environmentIntensity={environmentIntensity}
           resolution={90}
         >
