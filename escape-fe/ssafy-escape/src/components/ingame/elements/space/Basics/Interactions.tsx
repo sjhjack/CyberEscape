@@ -17,7 +17,10 @@ const Interactions = ({
   setIsGameFinished,
   setResult,
   setClearTime,
-  timerRef
+  timerRef,
+  trigger,
+  setTrigger,
+  timePenalty,
 }: any) => {
   return (
     <>
@@ -33,6 +36,8 @@ const Interactions = ({
         setResult={setResult}
         setClearTime={setClearTime}
         timerRef={timerRef}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
       <Computer
         position={[-43, 4, -162.9]}
@@ -42,6 +47,9 @@ const Interactions = ({
         setSequences={setSequences}
         setSubtitle={setSubtitle}
         setInteractNum={setInteractNum}
+        trigger={trigger}
+        setTrigger={setTrigger}
+        timePenalty={timePenalty}
       />
       <Door1
         onAir={onAir}
