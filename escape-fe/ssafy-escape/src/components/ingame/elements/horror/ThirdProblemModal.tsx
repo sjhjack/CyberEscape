@@ -8,7 +8,8 @@ import useIngameQuizStore from "@/stores/IngameQuizStore"
 import HintModal from "../common/HintModal"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-import useIngameOptionStore from "@/stores/IngameOptionStore"
+import Swal from "sweetalert2"
+import data from "@/data/ingame/horror/HorrorOption.json"
 
 // 세 번째 문제 모달
 const ThirdProblemModal = ({
@@ -22,6 +23,7 @@ const ThirdProblemModal = ({
   const [showExtraImage, setShowExtraImage] = useState(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const [index, setIndex] = useState(0)
+  const [openHint, setOpenHint] = useState<boolean>(false)
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * 10)
@@ -38,31 +40,44 @@ const ThirdProblemModal = ({
         setShowExtraImage(true)
         const hideImg = setTimeout(() => {
           setShowExtraImage(false)
-        }, 900)
+        }, 1300)
         return () => clearTimeout(hideImg)
-      }, 300)
+      }, 500)
       return () => clearTimeout(showImg)
-    }, 8000)
+    }, 5000)
     return () => clearTimeout(playAudio)
   }, [])
 
-  const { solved, setSolved } = useIngameQuizStore()
+  const { solved, hint, setSolved, setHint } = useIngameQuizStore()
 
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 2],
     queryFn: () => getQuiz(2),
   })
-  const { horror1QuizList } = useIngameOptionStore()
 
+  const optionData: HorrorOptionData = data
   if (!quizData) {
-    return <div>퀴즈 데이터가 없습니다.</div>
+    return
   }
 
-  // 힌트 볼 때마다 시간 30초 깎는 패널티 적용
+  // 힌트 볼 때 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
-    setHintModalOpen(true)
-    timePenalty()
+    if (hint === 1) {
+      setHint(0)
+      setOpenHint(true)
+      setHintModalOpen(true)
+      timePenalty()
+    } else if (hint === 0 && openHint) {
+      setHintModalOpen(true)
+    } else if (hint === 0) {
+      Swal.fire({
+        title: "힌트를 모두 사용했습니다.",
+        width: "500px",
+        padding: "40px",
+      })
+    }
   }
+
   const handleCloseModal = () => {
     setHintModalOpen(false)
   }
@@ -83,7 +98,7 @@ const ThirdProblemModal = ({
             setTimeout(() => {
               setSubtitle("")
             }, 10000)
-          }, 10000)
+          }, 4000)
         }, 4000)
       }
     } else {
@@ -130,7 +145,9 @@ const ThirdProblemModal = ({
               height="40px"
               opacity="0"
               onClick={() =>
-                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][0])
+                handleAnswerCheck(
+                  optionData["horror1QuizList"][quizData[2].quizUuid][1],
+                )
               }
             />
             <Button
@@ -139,7 +156,9 @@ const ThirdProblemModal = ({
               height="40px"
               opacity="0"
               onClick={() =>
-                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][1])
+                handleAnswerCheck(
+                  optionData["horror1QuizList"][quizData[2].quizUuid][1],
+                )
               }
             />
           </ChoiceBox1>
@@ -150,7 +169,9 @@ const ThirdProblemModal = ({
               height="40px"
               opacity="0"
               onClick={() =>
-                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][2])
+                handleAnswerCheck(
+                  optionData["horror1QuizList"][quizData[2].quizUuid][1],
+                )
               }
             />
             <Button
@@ -159,7 +180,9 @@ const ThirdProblemModal = ({
               height="40px"
               opacity="0"
               onClick={() =>
-                handleAnswerCheck(horror1QuizList[quizData[2].quizUuid][3])
+                handleAnswerCheck(
+                  optionData["horror1QuizList"][quizData[2].quizUuid][1],
+                )
               }
             />
           </ChoiceBox2>
