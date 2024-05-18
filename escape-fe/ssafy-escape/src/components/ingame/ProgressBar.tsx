@@ -6,14 +6,19 @@ const Container = styled.div`
   position: absolute;
   margin-left: 20px;
   width: 20%;
-  height: 200px;
+  height: 160px;
   bottom: 0;
   left: 0;
 `
 
 const IDBox = styled.div`
   color: white;
-  font-size: 30px;
+  font-size: 25px;
+  text-shadow:
+    1px 1px 0px black,
+    -1px -1px 0px black,
+    1px -1px 0px black,
+    -1px 1px 0px black;
 `
 
 const ProgressBarBox = styled.div`
