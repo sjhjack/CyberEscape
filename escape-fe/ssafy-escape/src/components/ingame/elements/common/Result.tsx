@@ -42,7 +42,7 @@ const Result = ({
   }
 
   if (!myRankingData) {
-    return <div>데이터 없음</div>
+    return
   }
 
   return selectedThemeType === "single" ? (
