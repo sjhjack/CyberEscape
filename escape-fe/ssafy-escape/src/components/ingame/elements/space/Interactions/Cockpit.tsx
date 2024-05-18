@@ -18,6 +18,8 @@ const Cockpit = ({
   setIsGameFinished,
   setClearTime,
   timerRef,
+  trigger,
+  setTrigger,
 }: any) => {
   const meshRef = useRef()
   const geometry = useMemo(() => new BoxGeometry(2, 2, 2), [])
@@ -87,14 +89,16 @@ const Cockpit = ({
   const { camera } = useThree()
 
   const handleClick = () => {
-    console.log(sequences)
     if (
       sequences[0].done === true &&
       sequences[1].done === false &&
       sequences[5].done === false &&
       !onAir &&
-      camera.position.x < -90
+      camera.position.x < -100
     ) {
+      const updatedTrigger = [...trigger]
+      updatedTrigger[0] = { ...updatedTrigger[0], activate: true }
+      setTrigger(updatedTrigger)
       setOnAir(true)
       tryEscape()
       tryEscapeSoundEffect()
@@ -139,6 +143,9 @@ const Cockpit = ({
       sequences[5].done === false &&
       !onAir
     ) {
+      const updatedTrigger = [...trigger]
+      updatedTrigger[2] = { ...updatedTrigger[2], activate: true }
+      setTrigger(updatedTrigger)
       setOnAir(true)
       tryEscape()
       setSubtitle("비상 탈출을 시도합니다.")
@@ -161,9 +168,26 @@ const Cockpit = ({
               600 - currentTime.minutes * 60 + currentTime.seconds
             setClearTime(SecondToTime(clearSeconds))
             postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 1)
-            setIsGameFinished(true)
-            setResult("victory")
-            setSubtitle(null)
+
+            const new_audio = new Audio(
+              // process.env.NEXT_PUBLIC_IMAGE_URL +
+              "/sound/rocket_launch.mp3",
+            )
+            new_audio.play()
+
+            setTimeout(() => {
+              const new_audio2 = new Audio(
+                // process.env.NEXT_PUBLIC_IMAGE_URL +
+                "/dubbing/space/sequence/congratulations.mp3",
+              )
+              new_audio2.play()
+            }, 1000)
+
+            setTimeout(() => {
+              setIsGameFinished(true)
+              setResult("victory")
+              setSubtitle(null)
+            }, 6000)
             clearInterval(countdownInterval)
           }
         }, 1000)

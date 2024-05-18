@@ -1,43 +1,52 @@
 import { useThree } from "@react-three/fiber"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState, useRef } from "react"
 import * as THREE from "three"
 
-const Stars = () => {
+const Stars = ({ trigger }: any) => {
   const { scene } = useThree()
   scene.background = new THREE.Color("black")
 
+  const starsRef = useRef<any>(null)
+  const [isWarping, setIsWarping] = useState(false)
+
   useEffect(() => {
-    const stars = new Array(0)
-    for (let i = 0; i < 10000; i++) {
-      let x = THREE.MathUtils.randFloatSpread(2000)
-      let y = THREE.MathUtils.randFloatSpread(2000)
-      let z = THREE.MathUtils.randFloatSpread(2000)
-      stars.push(x, y, z)
+    if (trigger[2].activate === true) {
+      setTimeout(() => {
+        setIsWarping(true)
+      }, 13000)
     }
+  }, [trigger])
 
-    const starsGeometry = new THREE.BufferGeometry()
-    starsGeometry.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(stars, 3),
-    )
-    const starsMaterial = new THREE.PointsMaterial({ color: 0x888888 })
-    const starField = new THREE.Points(starsGeometry, starsMaterial)
-    scene.add(starField)
-
-    // Clean up
-    return () => {
-      scene.remove(starField)
+  useEffect(() => {
+    if (isWarping) {
+      const animateStars = () => {
+        starsRef.current.position.x += 2.5
+        starsRef.current.rotation.y += 0.0004
+        if (starsRef.current.position.x > 900) {
+          starsRef.current.position.x = -900
+        }
+        requestAnimationFrame(animateStars)
+      }
+      animateStars()
     }
-  }, [scene])
+  }, [isWarping])
 
   const starsGeometry = useMemo(() => {
-    const stars = new Array(0)
+    const stars = []
+    const minDistance = 300
+
     for (let i = 0; i < 10000; i++) {
-      let x = THREE.MathUtils.randFloatSpread(2000)
-      let y = THREE.MathUtils.randFloatSpread(2000)
-      let z = THREE.MathUtils.randFloatSpread(2000)
+      let x, y, z, distance
+      do {
+        x = THREE.MathUtils.randFloatSpread(2000)
+        y = THREE.MathUtils.randFloatSpread(2000)
+        z = THREE.MathUtils.randFloatSpread(2000)
+        distance = Math.sqrt(x * x + y * y + z * z)
+      } while (distance < minDistance)
+
       stars.push(x, y, z)
     }
+
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute(
       "position",
@@ -47,16 +56,21 @@ const Stars = () => {
   }, [])
 
   const starsMaterial = useMemo(
-    () => new THREE.PointsMaterial({ color: 0x888888 }),
+    () =>
+      new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 3,
+        // map: new THREE.TextureLoader().load("path_to_your_star_texture.png"),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        opacity: 0.7,
+      }),
     [],
   )
 
-  const starsField = useMemo(
-    () => <points geometry={starsGeometry} material={starsMaterial} />,
-    [starsGeometry, starsMaterial],
+  return (
+    <points ref={starsRef} geometry={starsGeometry} material={starsMaterial} />
   )
-
-  return starsField
 }
 
 export default Stars
