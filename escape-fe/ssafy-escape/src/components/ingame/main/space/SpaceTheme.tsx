@@ -20,6 +20,8 @@ import Keys from "../../elements/space/Basics/Keys"
 import Result from "../../elements/common/Result"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import Asteroids from "../../elements/space/Backgrounds/Asteroids"
+import LEDLight from "../../elements/space/Basics/LEDLight"
+import Triggers from "@/data/ingame/space/Triggers"
 // import LEDLight from "../../elements/space/Basics/LEDLight"
 
 const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
@@ -32,6 +34,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [clearTime, setClearTime] = useState<string>("")
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
+  const [trigger, setTrigger] = useState(Triggers)
 
   const { selectedThemeType } = useIngameThemeStore()
   const handleTimeOut = () => {
@@ -44,6 +47,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       timerRef.current.applyPenalty()
     }
   }
+
   return (
     <>
       {isGameStart ? (
@@ -63,17 +67,18 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         />
       ) : null}
       <Subtitle text={subtitle} />
+
       <BasicScene onAir={onAir} interactNum={interactNum}>
         <Lights />
-        <Player position={[3, 1, 0]} />
+        <Player position={[3, 1, 0]} trigger={trigger} sequences={sequences} />
         <MeshObjects />
         <Floor
           position={[0, 1, 0]}
           rotation={[Math.PI / -2, 0, 0]}
           color="white"
         />
-        <Stars />
-        <Venus />
+        <Stars trigger={trigger} />
+        {/* <Venus /> */}
         <Keys
           sequences={sequences}
           setSequences={setSequences}
@@ -91,6 +96,9 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           setResult={setResult}
           setClearTime={setClearTime}
           timerRef={timerRef}
+          trigger={trigger}
+          setTrigger={setTrigger}
+          timePenalty={timePenalty}
         />
         <Problems
           onAir={onAir}
