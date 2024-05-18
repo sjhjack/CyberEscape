@@ -20,10 +20,10 @@ const Stars = ({ trigger }: any) => {
   useEffect(() => {
     if (isWarping) {
       const animateStars = () => {
-        starsRef.current.position.x += 2.5
-        starsRef.current.rotation.y += 0.0004
-        if (starsRef.current.position.x > 900) {
-          starsRef.current.position.x = -900
+        starsRef.current.position.x += 4.5
+        starsRef.current.rotation.y += 0.004
+        if (starsRef.current.position.x > 1100) {
+          starsRef.current.position.x = -1100
         }
         requestAnimationFrame(animateStars)
       }
@@ -38,9 +38,9 @@ const Stars = ({ trigger }: any) => {
     for (let i = 0; i < 10000; i++) {
       let x, y, z, distance
       do {
-        x = THREE.MathUtils.randFloatSpread(2000)
-        y = THREE.MathUtils.randFloatSpread(2000)
-        z = THREE.MathUtils.randFloatSpread(2000)
+        x = THREE.MathUtils.randFloatSpread(1000)
+        y = THREE.MathUtils.randFloatSpread(1000)
+        z = THREE.MathUtils.randFloatSpread(1000)
         distance = Math.sqrt(x * x + y * y + z * z)
       } while (distance < minDistance)
 
@@ -59,7 +59,7 @@ const Stars = ({ trigger }: any) => {
     () =>
       new THREE.PointsMaterial({
         color: 0xffffff,
-        size: 3,
+        size: 2,
         // map: new THREE.TextureLoader().load("path_to_your_star_texture.png"),
         transparent: true,
         blending: THREE.AdditiveBlending,

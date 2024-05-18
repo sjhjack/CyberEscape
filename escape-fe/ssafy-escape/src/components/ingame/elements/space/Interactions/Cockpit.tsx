@@ -128,9 +128,17 @@ const Cockpit = ({
               setSubtitle("서버실에서 수리가 필요합니다.")
             }, 4000)
             setTimeout(() => {
+              const new_audio2 = new Audio(
+                // process.env.NEXT_PUBLIC_IMAGE_URL +
+                "/dubbing/space/sequence/living_key.mp3",
+              )
+              new_audio2.play()
+              setSubtitle("생활실에서 키 모양의 물체가 감지되었습니다.")
+            }, 6000)
+            setTimeout(() => {
               setSubtitle(null)
               setOnAir(false)
-            }, 6000)
+            }, 8000)
             const updatedSequence = [...sequences]
             updatedSequence[1] = { ...updatedSequence[1], done: true }
             setSequences(updatedSequence)
