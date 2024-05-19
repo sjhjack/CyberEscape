@@ -11,6 +11,7 @@ interface BasicSceneProps {
   onAir: boolean
   interactNum: number
   children: ReactNode
+  mouseSpeed: number
 }
 
 const FullScreenOverlay = styled.div`
@@ -24,7 +25,12 @@ const FullScreenOverlay = styled.div`
   z-index: 0;
 `
 
-const BasicScene = ({ onAir, interactNum, children }: BasicSceneProps) => {
+const BasicScene = ({
+  onAir,
+  interactNum,
+  children,
+  mouseSpeed,
+}: BasicSceneProps) => {
   const [isPointerLocked, setIsPointerLocked] = useState(false)
 
   const controlsRef = useRef<any>()
@@ -53,7 +59,7 @@ const BasicScene = ({ onAir, interactNum, children }: BasicSceneProps) => {
       {/* <PlayMusic /> */}
       <Canvas shadows camera={{ fov: 50 }}>
         <Physics gravity={[0, -9.8, 0]}>{children}</Physics>
-        <PointerLockControls ref={controlsRef} pointerSpeed={0.5} />
+        <PointerLockControls ref={controlsRef} pointerSpeed={mouseSpeed} />
       </Canvas>
       <FullScreenOverlay onClick={handlePointerLock}></FullScreenOverlay>
       {isPointerLocked && <Crosshair interactNum={interactNum} />}
