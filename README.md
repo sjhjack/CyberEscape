@@ -38,9 +38,9 @@
 
 ## 🤝 Member
 
-| <a href="https://github.com/baejw3074"><img src="https://github.com/baejw3074.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href=""><img src="" width="120"/></a> |  <a href=""><img src="" width="120"/></a>   | <a href="https://github.com/amsan2"><img src="https://avatars.githubusercontent.com/u/88939170?v=4" width="120"/></a> |
+| <a href="https://github.com/baejw3074"><img src="https://github.com/baejw3074.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href="https://github.com/ohiju"><img src="https://github.com/ohiju.png" width="120"/></a> |  <a href="https://github.com/defkimbyeongju"><img src="https://github.com/defkimbyeongju.png" width="120"/></a>   | <a href="https://github.com/amsan2"><img src="https://avatars.githubusercontent.com/u/88939170?v=4" width="120"/></a> |
 | :---------------------------------------: | :----------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: | :--------------------------------------: | :-----------------------------------------: | :--------------------------------------: |
-|                [배정우](https://github.com/baejw3074)                 |                               [송정훈](https://github.com/sjhjack)                               |                                 [배진현](https://github.com/JinHyeonBae)                                 |                [오희주]()                | [김병주](https://github.com/defkimbyeongju) |                [류지원](https://github.com/amsan2)                |
+|                [배정우](https://github.com/baejw3074)                 |                               [송정훈](https://github.com/sjhjack)                               |                                 [배진현](https://github.com/JinHyeonBae)                                 |                [오희주](https://github.com/ohiju)                | [김병주](https://github.com/defkimbyeongju) |                [류지원](https://github.com/amsan2)                |
 
 <br>
 
@@ -88,7 +88,8 @@
 
 <br>
 
-- Team: 자율 너머 백수 (배정우, 오희주, 송정훈, 김병주, 배진현, 류지원)
+- #### Team
+  - 자율 너머 백수 (배정우, 오희주, 송정훈, 김병주, 배진현, 류지원)
 
 <br>
 
@@ -196,6 +197,8 @@
 #### 오희주
 
 - 프론트엔드 팀장
+- 우주 테마 스토리 구성
+- draw call 등 게임 최적화
 
 #### 김병주
 
@@ -243,12 +246,14 @@
 
 💡 테마별 랜덤 퀴즈 출제
 
-- [o] 테마 별 랜덤 퀴즈 문제 출제
-- [o] 퀴즈 결과 조회
-- [o] 퀴즈 별 힌트 조회
-- [o] 퀴즈 정답 제출
+- [x] 테마 별 랜덤 퀴즈 문제 출제
+- [x] 퀴즈 결과 조회
+- [x] 퀴즈 별 힌트 조회
+- [x] 퀴즈 정답 제출
 
 ### 친구
+
+💡 같이 게임을 즐길 수 있는 친구 기능
 
 - [x] 유저 검색
 - [x] 친구 리스트 조회
@@ -257,6 +262,8 @@
 - [x] 친구 삭제
 
 ### 게임 대기방
+
+💡 게임 대기방 상호작용
 
 - [x] 게임방 리스트 조회
 - [x] 게임방 생성
@@ -267,6 +274,8 @@
 - [x] 게임방 설정 변경
 
 ### 인게임
+
+💡 게임 시 사용자들 상호작용
 
 - [x] 멀티 모드 시 유저별 정보 공유
 
@@ -285,6 +294,8 @@
 - [x] 테마별 유저 최고 기록 조회
 
 ### 알림
+
+💡 게임 초대 및 친구 추가 알림 기능
 
 - [x] 안 읽은 요청 조회
 - [x] 알림 읽음 처리
