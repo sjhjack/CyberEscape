@@ -256,6 +256,14 @@ const MeshObjects = () => {
         opacity={0}
       />
 
+      {/**천장 */}
+      <BaseBox
+        position={[0, 50, 0]}
+        args={[1000, 1, 1000]}
+        color={"red"}
+        opacity={0}
+      />
+
       <Server />
       <CylinderGlass position={[59, 0, -65]} />
     </>
