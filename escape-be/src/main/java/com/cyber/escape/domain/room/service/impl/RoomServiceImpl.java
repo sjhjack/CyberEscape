@@ -189,8 +189,8 @@ public class RoomServiceImpl implements RoomService {
 
 		Thema thema = themaRepository.findByCategory(postRequest.getCategory())
 			.orElseThrow(() -> new EntityNotFoundException("일치하는 테마가 없습니다."));
-
-		Room newRoom = Room.of(postRequest.getTitle(), capacity, host, thema);
+		
+		Room newRoom = Room.of(postRequest.getTitle(), 1, host, thema);
 		log.info("req room raw password : {}", postRequest.getPassword());
 
 		if(!postRequest.getPassword().isEmpty()) {
