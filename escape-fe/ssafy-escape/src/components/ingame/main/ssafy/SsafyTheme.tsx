@@ -23,8 +23,14 @@ import SecondToTime from "@/hooks/SecondToTime"
 import Plant from "../../elements/ssafy/Plant"
 import ThirdProblemObject from "../../elements/ssafy/ThirdProblemObject"
 import FinalDoorObject from "../../elements/ssafy/FinalDoorObject"
-
-const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
+import useIngameQuizStore from "@/stores/IngameQuizStore"
+const SsafyTheme = ({
+  isGameStart,
+  setIsModelLoaded,
+  progressUpdate,
+  progressReset,
+  roomData,
+}: IngameMainProps) => {
   const [subtitle, setSubtitle] = useState<string>("")
   const timerRef = useRef<CountdownTimerHandle | null>(null)
   const [interactNum, setInteractNum] = useState<number>(1)
@@ -63,9 +69,9 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   // 대사 수정 부탁드립니다
   useEffect(() => {
     if (isSolvedFirstProblem && isSolvedSecondProblem && isSolvedThirdProblem) {
-      setSubtitle("이제 방 문으로 나갈 수 있다는 대사")
+      setSubtitle("휴... 이제 자유다!!")
       setTimeout(() => {
-        setSubtitle("이제 방 문으로 나갈 수 있다는 대사2")
+        setSubtitle("굿바이 멀캠! 나는 한강으로 간다!")
         setTimeout(() => {
           setSubtitle("")
         }, 4000)
@@ -85,8 +91,41 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       }
       setResult("victory")
       setIsGameFinished(true)
+      if (progressUpdate) {
+        progressUpdate()
+      }
     }
   }
+  useEffect(() => {
+    // 둘 중 한 명이 경기를 끝내면
+    if (roomData?.guestProgress === 4 || roomData?.hostProgress === 4) {
+      // 호스트
+      if (isHost) {
+        if (roomData?.hostProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.guestProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      // 게스트
+      else {
+        if (roomData?.guestProgress === 4) {
+          setResult("victory")
+        } else if (roomData?.hostProgress === 4) {
+          setResult("defeat")
+        }
+      }
+      setIsGameFinished(true)
+      if (progressReset) {
+        progressReset()
+      }
+
+      // 게임 종료 후, 5초 뒤 게임 종료 처리 해제
+      setTimeout(() => {
+        setIsGameFinished(false)
+      }, 5000)
+    }
+  }, [roomData])
 
   // 시간이 다 됐을 경우
   const handleTimeOut = () => {
@@ -126,6 +165,7 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       <Subtitle text={subtitle} />
       {showFirstProblem && !isSolvedFirstProblem ? (
         <FirstProblemModal
+          progressUpdate={progressUpdate}
           onClose={handleFirstProblem}
           timePenalty={timePenalty}
           setIsSolvedProblem={setIsSolvedFirstProblem}
@@ -133,6 +173,7 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       {showSecondProblem && !isSolvedSecondProblem ? (
         <SecondProblemModal
+          progressUpdate={progressUpdate}
           onClose={handleSecondProblem}
           timePenalty={timePenalty}
           setIsSolvedProblem={setIsSolvedSecondProblem}
@@ -140,6 +181,7 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       {showThirdProblem && !isSolvedThirdProblem ? (
         <ThirdProblemModal
+          progressUpdate={progressUpdate}
           onClose={handleThirdProblem}
           timePenalty={timePenalty}
           setIsSolvedProblem={setIsSolvedThirdProblem}
@@ -198,4 +240,4 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   )
 }
 
-export default SsafyTheme2
+export default SsafyTheme

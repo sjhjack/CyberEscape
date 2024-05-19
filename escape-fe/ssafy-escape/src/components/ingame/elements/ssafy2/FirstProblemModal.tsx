@@ -6,8 +6,12 @@ import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
 
 // 첫 번째 문제 모달
-const FirstProblemModal = ({ onClose, timePenalty, setIsSolvedProblem }: SSAFTYProblemProps) => {
-
+const FirstProblemModal = ({
+  onClose,
+  timePenalty,
+  setIsSolvedProblem,
+  progressUpdate,
+}: SSAFTYProblemProps) => {
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 6],
     queryFn: () => getQuiz(6),
@@ -21,6 +25,9 @@ const FirstProblemModal = ({ onClose, timePenalty, setIsSolvedProblem }: SSAFTYP
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setIsSolvedProblem(true)
+      if (progressUpdate) {
+        progressUpdate()
+      }
       onClose()
       // 문제 맞췄을 때 대사 띄워주는게 좋을 듯 합니다
     } else {
