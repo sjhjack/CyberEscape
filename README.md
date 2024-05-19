@@ -82,9 +82,9 @@
   - #### Frontend
     - <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
     - <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"><img src="https://img.shields.io/badge/20.10.0-515151?style=for-the-badge">
-    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
-    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/pinia-2c4f7c?style=for-the-badge"><img src="https://img.shields.io/badge/gsap-006600?style=for-the-badge"><img src="https://img.shields.io/badge/d3-FF9E0F?style=for-the-badge">
-    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white">
+    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/nextjs-%2335495e.svg?style=for-the-badge&logo=nextdotjs&logoColor=%234FC08D">
+    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/zustand-2c4f7c?style=for-the-badge"><img src="https://img.shields.io/badge/sockJs-006600?style=for-the-badge"><img src="https://img.shields.io/badge/stomp-FF9E0F?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E">
 
 <br>
 
@@ -96,7 +96,7 @@
 
 ## 🌐 System Architecture
 
-![아키텍처3-removebg-preview](/uploads/6c0dd96df87d5ba0d473bec77039a440/아키텍처3-removebg-preview.png)
+![아키텍처5-removebg-preview](/uploads/4392516a24d986e94decb026ac8f8e85/아키텍처5-removebg-preview.png)
 
 <br>
 
@@ -120,33 +120,42 @@
 
 ### Site Layout
 
-- ### 메인 페이지
+- #### 메인 페이지
 
   ![메인](/uploads/5145c6b473d93eb011807604ba753a17/메인.PNG)
 
-- 테마 선택 페이지
+- #### 테마 선택 페이지
 
-- ### 멀티 모드 시 게임 참여 선택지
+  ![테마선택](/uploads/2adef02733af322f3237c0be4e02b21b/테마선택.PNG)
+
+- #### 멀티 모드 시 게임 참여 선택지
 
   ![멀티_모드](/uploads/891bf2b51ed97b2b0d061600c119a0a6/멀티_모드.PNG)
 
-- ### 게임방 생성
+- #### 게임방 생성
 
   ![방_생성](/uploads/dd7adce2ed9a7530e17524ff5ffe92d5/방_생성.PNG)
 
-- ### 게임방 리스트
+- #### 게임방 리스트
 
   ![방리스트](/uploads/6221c59962161c16f0d17a7ac378f773/방리스트.PNG)
 
-- ### 게임 대기방 페이지
+- #### 게임 대기방 페이지
 
-- ### 랭킹 페이지
+  ![게임대기방](/uploads/62ec194fee17351cc1dbce5266d378e6/게임대기방.PNG)
+
+- #### 랭킹 페이지
 
   ![랭킹_페이지](/uploads/22f9cd8fbee3966fae622667d76f1452/랭킹_페이지.PNG)
 
-- ### 게임 방법 설명 페이지
+- #### 게임 방법 설명 페이지
 
-- ### 로그인 / 회원가입 페이지
+  ![게임설명](/uploads/5e6c7510dce3255a68d3fb95bca89970/게임설명.PNG)
+
+- #### 로그인 / 회원가입 페이지
+
+  ![로그인](/uploads/6b6901ba628eda6e1dc33513500f10de/로그인.PNG)
+  ![회원가입](/uploads/8bc198a242e9acb35be95875a9a7cf24/회원가입.PNG)
 
 <br>
 
@@ -198,7 +207,7 @@
 
 #### 류지원
 
-- 프론트엔드 멤버
+- 프론트엔드 팀원
 
 <br>
 
@@ -231,10 +240,10 @@
 
 💡 테마별 랜덤 퀴즈 출제
 
-- [x] 테마 별 랜덤 퀴즈 문제 출제
-- [x] 퀴즈 결과 조회
-- [x] 퀴즈 별 힌트 조회
-- [x] 퀴즈 정답 제출
+- [o] 테마 별 랜덤 퀴즈 문제 출제
+- [o] 퀴즈 결과 조회
+- [o] 퀴즈 별 힌트 조회
+- [o] 퀴즈 정답 제출
 
 ### 친구
 
