@@ -75,8 +75,11 @@ const Ingame = ({
         />
       ) : gameTheme === 4 || gameTheme === 5 ? (
         <SsafyTheme
+          progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
+          progressReset={progressReset}
           isGameStart={isGameStart}
+          roomData={roomData}
         />
       ) : gameTheme === 3 ? (
         <HorrorTheme2
@@ -88,8 +91,11 @@ const Ingame = ({
         />
       ) : gameTheme === 6 ? (
         <SsafyTheme2
+          progressUpdate={progressUpdate}
           setIsModelLoaded={setIsModelLoaded}
+          progressReset={progressReset}
           isGameStart={isGameStart}
+          roomData={roomData}
         />
       ) : null}
 
