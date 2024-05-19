@@ -11,14 +11,6 @@ export const TitleText = styled.div`
   transform: translate(-50%, -50%);
   white-space: nowrap;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-  @font-face {
-    font-family: "PaytoneOne";
-    font-weight: 400;
-    src: url(${process.env.NEXT_PUBLIC_IMAGE_URL} + "/fonts/PaytoneOne-Regular.ttf")
-      format("truetype");
-  }
-
-  font-family: "PaytoneOne";
 `
 
 export const StartButtton = styled.button`
