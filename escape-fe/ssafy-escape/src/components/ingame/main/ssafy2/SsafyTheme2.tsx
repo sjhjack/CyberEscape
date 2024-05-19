@@ -36,6 +36,7 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     useState<boolean>(false)
   const [isSolvedThirdProblem, setIsSolvedThirdProblem] =
     useState<boolean>(false)
+  const [mouseSpeed, setMouseSpeed] = useState(0.5)
 
   // 시간 깎는 패널티 함수
   const timePenalty = () => {
@@ -136,7 +137,11 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           selectedThemeType={selectedThemeType}
         />
       ) : null}
-      <BasicScene interactNum={interactNum} onAir={true}>
+      <BasicScene
+        interactNum={interactNum}
+        onAir={true}
+        mouseSpeed={mouseSpeed}
+      >
         <MeshObjects />
         <Lights />
         <Diary
