@@ -84,6 +84,10 @@ const ChatBox = styled.div`
   padding: 10px;
   margin-bottom: 8px;
   color: white;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const UserInput = styled.input`
