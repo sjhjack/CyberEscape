@@ -29,7 +29,7 @@ const themeData: CardInfo[] = [
     title: "SSAFY",
     time: "5분",
     content:
-      "날씨도 좋은데 도망가고 싶은 걸? 프로님의 눈길을 피해 멀티캠퍼스를 탈출하라!",
+      "날씨도 좋은데 한강으로 도망가고 싶은 걸? 하지만, 오늘 풀어야 할 문제들을 모두 풀기 전에는 나갈 수 없다. 교육 프로님에게 들키기 전에 문제를 풀고 멀티캠퍼스를 탈출하라!",
     image: process.env.NEXT_PUBLIC_IMAGE_URL + "/image/4.png",
   },
   {

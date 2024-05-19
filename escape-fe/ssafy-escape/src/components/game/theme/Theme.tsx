@@ -14,7 +14,7 @@ const Theme = () => {
   const gameStart = (): void => {
     if (selectedThemeType === "single") {
       Swal.fire({
-        title: "게임을 시작하시겠습니까??",
+        title: "게임을 시작하시겠습니까?",
         showCancelButton: true,
         confirmButtonText: "확인",
         cancelButtonText: "취소",
