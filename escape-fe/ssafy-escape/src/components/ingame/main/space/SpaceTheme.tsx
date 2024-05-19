@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import RoomModel from "@/components/ingame/elements/space/Backgrounds/RoomModel"
 import Player from "../../elements/common/Player"
 import BasicScene from "../../BasicScene"
@@ -35,6 +35,7 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
   const [trigger, setTrigger] = useState(Triggers)
+  const [mouseSpeed, setMouseSpeed] = useState(0.5)
 
   const { selectedThemeType } = useIngameThemeStore()
   const handleTimeOut = () => {
@@ -47,6 +48,12 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       timerRef.current.applyPenalty()
     }
   }
+
+  useEffect(() => {
+    if (trigger[1].activate === true) {
+      setMouseSpeed(0.2)
+    }
+  }, [trigger])
 
   return (
     <>
@@ -72,7 +79,11 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       ) : null}
       <Subtitle text={subtitle} />
 
-      <BasicScene onAir={onAir} interactNum={interactNum}>
+      <BasicScene
+        onAir={onAir}
+        interactNum={interactNum}
+        mouseSpeed={mouseSpeed}
+      >
         <Lights />
         <Player position={[3, 1, 0]} trigger={trigger} sequences={sequences} />
         <MeshObjects />
