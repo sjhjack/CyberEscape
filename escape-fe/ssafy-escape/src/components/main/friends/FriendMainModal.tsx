@@ -3,7 +3,7 @@ import FriendList from "@/components/main/friends/FriendList"
 import MainModal from "@/components/common/MainModal"
 import useModalStore from "@/stores/ModalStore"
 import FriendRequestActions from "./FriendRequestActions"
-import { createContext, useContext } from "react"
+import { createContext, useContext, useEffect } from "react"
 import getFriendList from "@/services/main/friends/getFriendList"
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 
@@ -13,7 +13,8 @@ const FriendContext = createContext({
 export const useFriendContext = () => useContext(FriendContext)
 
 const FriendMainModal = ({ open, onClose }: ModalProps) => {
-  const { isRequestModalOpen, setIsRequestModalOpen } = useModalStore()
+  const { isRequestModalOpen, setIsRequestModalOpen, setIsDeleteMode } =
+    useModalStore()
   const handleRequestModalClose = () => {
     setIsRequestModalOpen(false)
   }
@@ -24,6 +25,12 @@ const FriendMainModal = ({ open, onClose }: ModalProps) => {
     getNextPageParam: (lastPage, allPages) => allPages.length + 1,
   })
 
+  useEffect(() => {
+    if (open) {
+      refetch()
+      setIsDeleteMode(false)
+    }
+  }, [open, refetch])
 
   return (
     <FriendContext.Provider value={{ refetchFriends: refetch }}>
