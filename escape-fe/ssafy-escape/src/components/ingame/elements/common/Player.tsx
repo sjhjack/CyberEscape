@@ -159,7 +159,7 @@ const Player = (props: any) => {
         ref={ref as React.MutableRefObject<THREE.Mesh>}
       >
         <sphereGeometry args={props.args || [2, 0.1, 0.1]} />
-        <meshStandardMaterial color="#ff0000" opacity={1} transparent />
+        <meshStandardMaterial color="#ff0000" opacity={0} transparent />
       </mesh>
     </>
   )
