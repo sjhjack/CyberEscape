@@ -7,7 +7,6 @@ const SsafyClassRoom = ({ onLoaded }: RoomProps) => {
     process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy/classroom_merged.glb",
     true,
   )
-  // const { scene } = useGLTF("/glb/ssafy/classroom_merged.glb", true)
 
   useEffect(() => {
     if (scene) {
