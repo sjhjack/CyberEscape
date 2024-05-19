@@ -87,7 +87,7 @@ const SecondProblemModal = ({
       }
     } else {
       if (penalty && setPenalty) {
-        alert("오답입니다")
+        alert("오답!")
         setPenalty(penalty + 1)
         timePenalty()
       }
