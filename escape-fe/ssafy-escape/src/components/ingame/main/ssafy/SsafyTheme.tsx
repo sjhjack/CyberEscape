@@ -84,7 +84,7 @@ const SsafyTheme = ({
       if (timerRef.current) {
         const currentTime = timerRef.current.getTime()
         const clearSeconds =
-          300 - currentTime.minutes * 60 + currentTime.seconds
+          300 - (currentTime.minutes * 60 + currentTime.seconds)
         setClearTime(SecondToTime(clearSeconds))
         await postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 4)
       }
