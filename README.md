@@ -38,9 +38,9 @@
 
 ## 🤝 Member
 
-| <a href="https://github.com/baejw3074"><img src="https://github.com/baejw3074.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href=""><img src="" width="120"/></a> |  <a href=""><img src="" width="120"/></a>   | <a href=""><img src="" width="120"/></a> |
+| <a href="https://github.com/baejw3074"><img src="https://github.com/baejw3074.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href=""><img src="" width="120"/></a> |  <a href=""><img src="" width="120"/></a>   | <a href="https://github.com/amsan2"><img src="https://avatars.githubusercontent.com/u/88939170?v=4" width="120"/></a> |
 | :---------------------------------------: | :----------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: | :--------------------------------------: | :-----------------------------------------: | :--------------------------------------: |
-|                [배정우](https://github.com/baejw3074)                 |                               [송정훈](https://github.com/sjhjack)                               |                                 [배진현](https://github.com/JinHyeonBae)                                 |                [오희주]()                | [김병주](https://github.com/defkimbyeongju) |                [류지원]()                |
+|                [배정우](https://github.com/baejw3074)                 |                               [송정훈](https://github.com/sjhjack)                               |                                 [배진현](https://github.com/JinHyeonBae)                                 |                [오희주]()                | [김병주](https://github.com/defkimbyeongju) |                [류지원](https://github.com/amsan2)                |
 
 <br>
 
@@ -208,7 +208,10 @@
 #### 류지원
 
 - 프론트엔드 팀원
-
+- 회원 관리 및 공통 컴포넌트 제작
+- 메인페이지(마이홈, 랭킹, 게임설명)구현
+- 친구 및 알림 기능 ui 구현
+- 공포테마 및 싸피테마 구현
 <br>
 
 <br>
