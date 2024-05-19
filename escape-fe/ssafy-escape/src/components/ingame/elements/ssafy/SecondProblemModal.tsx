@@ -11,8 +11,8 @@ const SecondProblemModal = ({
   setIsSolvedProblem,
 }: SSAFTYProblemProps) => {
   const { data: quizData } = useQuery({
-    queryKey: ["quizList", 6],
-    queryFn: () => getQuiz(6),
+    queryKey: ["quizList", 5],
+    queryFn: () => getQuiz(5),
   })
 
   if (!quizData) {
@@ -42,28 +42,28 @@ const SecondProblemModal = ({
         <ChoiceBox>
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("1")}
           />
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("2")}
           />
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("3")}
           />
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("4")}
@@ -92,7 +92,7 @@ const ChoiceBox = styled.div`
   flex-direction: column;
   position: absolute;
   top: 45%;
-  left: 30%;
+  left: 37%;
   transform: translate(-40%, 10%);
   gap: 15px;
   margin-top: 30px;
