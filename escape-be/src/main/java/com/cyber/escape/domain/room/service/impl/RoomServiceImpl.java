@@ -240,13 +240,13 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Transactional
-	public String acceptInvitation(final RoomDto.Request acceptRequest) {
+	public RoomDto.AcceptResponse acceptInvitation(final RoomDto.Request acceptRequest) {
 		Room findRoom = RoomServiceUtils.findByUuid(roomRepository, acceptRequest.getRoomUuid());
 
 		checkJoinRoomValidation(findRoom, "", true);
 		findRoom.setCapacity(2);
 
-		return findRoom.getUuid();
+		return RoomDto.AcceptResponse.from(findRoom);
 	}
 
 	@Transactional
