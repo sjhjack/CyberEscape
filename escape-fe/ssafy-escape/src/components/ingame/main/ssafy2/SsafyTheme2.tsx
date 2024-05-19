@@ -141,6 +141,7 @@ const SsafyTheme2 = ({
               color={"white"}
               ref={timerRef}
               onTimeOut={handleTimeOut}
+              minutes={5}
             />
           )}
           <Start setSubtitle={setSubtitle} />

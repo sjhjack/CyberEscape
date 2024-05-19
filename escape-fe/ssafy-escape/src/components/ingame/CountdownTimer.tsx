@@ -16,14 +16,15 @@ export interface CountdownTimerHandle {
 interface CountdownTimerProps {
   onTimeOut: () => void
   color: string
+  minutes?: number
 }
 
 const CountdownTimer: ForwardRefRenderFunction<
   CountdownTimerHandle,
   CountdownTimerProps
-> = ({ onTimeOut, color }: CountdownTimerProps, ref) => {
+> = ({ onTimeOut, color, minutes }: CountdownTimerProps, ref) => {
   const [time, setTime] = useState({
-    minutes: 10,
+    minutes: minutes || 10,
     seconds: 0,
   })
 
