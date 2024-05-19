@@ -3,8 +3,7 @@ import { useEffect } from "react"
 
 const Plant = () => {
   const plant = useGLTF(
-    // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy2/plant.glb",
-    "/glb/ssafy/plant.glb",
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy2/plant.glb",
     true,
   )
 
