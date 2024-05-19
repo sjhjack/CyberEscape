@@ -4,15 +4,16 @@ import Button from "@/components/common/Button"
 import postAnswer from "@/services/ingame/postAnswer"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-// 두 번째 문제 모달
-const SecondProblemModal = ({
+
+// 첫 번째 문제 모달
+const FirstProblemModal = ({
   onClose,
   timePenalty,
   setIsSolvedProblem,
 }: SSAFTYProblemProps) => {
   const { data: quizData } = useQuery({
-    queryKey: ["quizList", 6],
-    queryFn: () => getQuiz(6),
+    queryKey: ["quizList", 5],
+    queryFn: () => getQuiz(5),
   })
 
   if (!quizData) {
@@ -21,7 +22,7 @@ const SecondProblemModal = ({
 
   // 선지 클릭 시 정답여부 확인
   const handleAnswerCheck = async (answer: string) => {
-    if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
+    if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
       setIsSolvedProblem(true)
       onClose()
       // 문제 맞췄을 때 대사 띄워주는게 좋을 듯 합니다
@@ -34,7 +35,7 @@ const SecondProblemModal = ({
   return (
     <MainContainer>
       <div>
-        <img src={quizData[1].url} width={700} height={550} alt="두번째 문제" />
+        <img src={quizData[0].url} width={600} height={550} alt="첫번째 문제" />
         <CloseIconBox onClick={onClose}>
           <CloseIcon sx={{ fontSize: 40 }} />
         </CloseIconBox>
@@ -42,28 +43,28 @@ const SecondProblemModal = ({
         <ChoiceBox>
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("1")}
           />
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("2")}
           />
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("3")}
           />
           <Button
             theme="fail"
-            width="280px"
+            width="350px"
             height="30px"
             opacity="0"
             onClick={() => handleAnswerCheck("4")}
@@ -74,7 +75,7 @@ const SecondProblemModal = ({
   )
 }
 
-export default SecondProblemModal
+export default FirstProblemModal
 
 const MainContainer = styled.div`
   display: flex;
@@ -92,7 +93,7 @@ const ChoiceBox = styled.div`
   flex-direction: column;
   position: absolute;
   top: 45%;
-  left: 30%;
+  left: 37%;
   transform: translate(-40%, 10%);
   gap: 15px;
   margin-top: 30px;
@@ -102,6 +103,6 @@ const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
   right: 30px;
-  top: 30px;
+  top: 25px;
   z-index: 10;
 `

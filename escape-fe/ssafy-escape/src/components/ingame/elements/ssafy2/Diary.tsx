@@ -1,12 +1,22 @@
 import { useGLTF } from "@react-three/drei"
 import { useEffect } from "react"
 
-const Diary = ({ onClick, setInteractNum }: ClickObjectProps) => {
+const Diary = ({
+  onClick,
+  setInteractNum,
+  isSolvedProblem,
+}: ClickObjectProps) => {
   const diary = useGLTF(
     // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy2/diary.glb",
     "/glb/ssafy2/diary.glb",
     true,
   )
+
+  const handlePointerOver = () => {
+    if (!isSolvedProblem) {
+      setInteractNum(2)
+    }
+  }
 
   useEffect(() => {
     if (diary.scene) {
@@ -19,7 +29,7 @@ const Diary = ({ onClick, setInteractNum }: ClickObjectProps) => {
     <primitive
       object={diary.scene}
       scale={1}
-      onPointerOver={() => setInteractNum(2)}
+      onPointerOver={handlePointerOver}
       onPointerOut={() => setInteractNum(1)}
       onClick={onClick}
     />
