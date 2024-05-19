@@ -9,25 +9,29 @@ import Swal from "sweetalert2"
 import postReadNotification from "@/services/notification/postReadNotification"
 import postAcceptance from "@/services/game/room/postAcceptance"
 import { useRouter } from "next/navigation"
+import useIngameThemeStore from "@/stores/IngameTheme"
+import useUserStore from "@/stores/UserStore"
 // 게임 초대 요청 리스트
 const InvitedList = () => {
   const { data: notificationList, refetch } = useQuery({
     queryKey: ["notificationList"],
     queryFn: () => getNotificationList(),
   })
+  const { setSelectedTheme, setRoomTitle } = useIngameThemeStore()
+  const { setIsHost } = useUserStore()
   const router = useRouter()
   // 초대 요청 수락 시
   const handleAccept = async (roomUuid: string, notificationId: string) => {
-    try{
-      await postAcceptance({roomUuid : roomUuid})
+    try {
+      const response = await postAcceptance({ roomUuid: roomUuid })
+      setSelectedTheme(response.data.themaCategory)
+      setRoomTitle(response.data.title)
+      setIsHost(false)
       // 알림 읽음 처리
       await postReadNotification(notificationId)
       router.push(`/gameroom/${roomUuid}`)
       refetch()
-    }
-    catch(e){
-
-    }
+    } catch (e) {}
   }
 
   // 초대 요청 거절 시
