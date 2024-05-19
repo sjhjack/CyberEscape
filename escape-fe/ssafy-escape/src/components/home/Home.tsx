@@ -15,15 +15,16 @@ interface HomeProps {
   showText?: boolean
 }
 
+  const paytoneOne = Paytone_One({
+    subsets: ["latin"],
+    weight: "400",
+  })
+
 const Home = ({ showText = true }: HomeProps) => {
   const router = useRouter()
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isStartClicked, setIsStartClicked] = useState<boolean>(false)
   const pointerLockControlsRef = useRef<CameraMoveToPositionRef>(null)
-  const paytoneOne = Paytone_One({
-    subsets: ["latin"],
-    weight: "400",
-  })
 
   const onMoveClick = () => {
     pointerLockControlsRef.current?.moveToPosition(3, 1, -7)
