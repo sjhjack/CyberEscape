@@ -86,7 +86,7 @@ public class RoomController {
 	}
 
 	@PostMapping("/acceptance")
-	public ApiResponse<String> acceptRoom(@RequestBody RoomDto.Request acceptRequest){
+	public ApiResponse<RoomDto.AcceptResponse> acceptRoom(@RequestBody RoomDto.Request acceptRequest){
 		return new ApiResponse<>(HttpStatus.OK.value(), "대기실로 입장합니다.", roomModifyService.acceptInvitation(acceptRequest));
 	}
 }
