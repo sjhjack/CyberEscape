@@ -15,10 +15,10 @@ interface HomeProps {
   showText?: boolean
 }
 
-  const paytoneOne = Paytone_One({
-    subsets: ["latin"],
-    weight: "400",
-  })
+const paytoneOne = Paytone_One({
+  subsets: ["latin"],
+  weight: "400",
+})
 
 const Home = ({ showText = true }: HomeProps) => {
   const router = useRouter()
