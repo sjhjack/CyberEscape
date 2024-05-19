@@ -7,13 +7,13 @@ import { MainColor } from "@/styles/palette"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import { Paytone_One } from "next/font/google"
 
-const QuickStart = () => {
-  const router = useRouter()
-  const { setSelectedThemeType } = useIngameThemeStore()
-  const paytoneOne = Paytone_One({
+const paytoneOne = Paytone_One({
     subsets: ["latin"],
     weight: "400",
   })
+const QuickStart = () => {
+  const router = useRouter()
+  const { setSelectedThemeType } = useIngameThemeStore()
   return (
     <StartContainer>
       <div style={{ textAlign: "center" }}>
