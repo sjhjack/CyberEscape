@@ -261,12 +261,12 @@ const MainHeader = () => {
           open={friendModalopen}
           onClose={handleFriendModalClose}
         />
-      </HydrationBoundary>
 
-      <NotificationModal
-        open={notificationModalopen}
-        onClose={handleNotificationModalClose}
-      />
+        <NotificationModal
+          open={notificationModalopen}
+          onClose={handleNotificationModalClose}
+        />
+      </HydrationBoundary>
     </ParentDiv>
   )
 }
