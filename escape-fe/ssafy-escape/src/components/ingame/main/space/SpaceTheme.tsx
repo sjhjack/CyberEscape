@@ -85,7 +85,11 @@ const SpaceTheme = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         mouseSpeed={mouseSpeed}
       >
         <Lights />
-        <Player position={[3, 20, 0]} trigger={trigger} sequences={sequences} />
+        <Player
+          position={[3, 1.5, 0]}
+          trigger={trigger}
+          sequences={sequences}
+        />
         <MeshObjects />
         <Floor
           position={[0, 1, 0]}
