@@ -63,9 +63,9 @@ const SsafyTheme2 = ({
   // 대사 수정 부탁드립니다
   useEffect(() => {
     if (isSolvedFirstProblem && isSolvedSecondProblem && isSolvedThirdProblem) {
-      setSubtitle("이제 방 문으로 나갈 수 있다는 대사")
+      setSubtitle("이 금쪽이 녀석들 도망가게 놔둘 순 없지.")
       setTimeout(() => {
-        setSubtitle("이제 방 문으로 나갈 수 있다는 대사2")
+        setSubtitle("꼼짝 마! 어디 못 도망가!")
         setTimeout(() => {
           setSubtitle("")
         }, 4000)
