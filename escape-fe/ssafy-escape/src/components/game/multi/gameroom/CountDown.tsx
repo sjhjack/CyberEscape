@@ -51,7 +51,7 @@ const GameStart = styled.div`
 const Seconds = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 10%;
+  margin-top: 3%;
   color: #ae0000;
   font-size: 10em;
   text-shadow: 2px 2px 2px rgba(255, 255, 255, 0.5);
