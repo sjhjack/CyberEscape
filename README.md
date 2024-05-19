@@ -198,7 +198,9 @@
 
 - 프론트엔드 팀장
 - 우주 테마 스토리 구성
+- 인게임 공통 컴포넌트 제작
 - draw call 등 게임 최적화
+- axios instance화 및 refresh token 구현
 
 #### 김병주
 
