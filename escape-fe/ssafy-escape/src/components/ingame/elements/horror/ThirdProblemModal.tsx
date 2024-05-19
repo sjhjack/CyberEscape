@@ -102,12 +102,7 @@ const ThirdProblemModal = ({
         }, 4000)
       }
     } else {
-      Swal.fire({
-        title: "오답!",
-        icon: "error",
-        width: "500px",
-        padding: "40px",
-      })
+      alert("오답!")
       if (penalty && setPenalty) {
         setPenalty(penalty + 1)
         timePenalty()

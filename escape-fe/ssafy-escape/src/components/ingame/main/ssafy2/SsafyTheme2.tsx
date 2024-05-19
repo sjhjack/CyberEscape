@@ -6,9 +6,8 @@ import Floor from "@/components/ingame/elements/common/Floor"
 import SsafyOffice from "../../elements/ssafy2/SsafyOffice"
 import CountdownTimer, { CountdownTimerHandle } from "../../CountdownTimer"
 import Start from "../../elements/ssafy2/Start"
-// import MeshObjects from "../../elements/ssafy2/MeshObjects"
+import MeshObjects from "../../elements/ssafy2/MeshObjects"
 import Diary from "../../elements/ssafy2/Diary"
-import useIngameQuizStore from "@/stores/IngameQuizStore"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import { QueryClient } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
@@ -27,11 +26,17 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
   const [interactNum, setInteractNum] = useState<number>(1)
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false)
   const [result, setResult] = useState<string>("")
-  const { solved } = useIngameQuizStore()
   const { selectedThemeType } = useIngameThemeStore()
   const [showFirstProblem, setShowFirstProblem] = useState<boolean>(false)
   const [showSecondProblem, setShowSecondProblem] = useState<boolean>(false)
   const [showThirdProblem, setShowThirdProblem] = useState<boolean>(false)
+  const [isSolvedFirstProblem, setIsSolvedFirstProblem] =
+    useState<boolean>(false)
+  const [isSolvedSecondProblem, setIsSolvedSecondProblem] =
+    useState<boolean>(false)
+  const [isSolvedThirdProblem, setIsSolvedThirdProblem] =
+    useState<boolean>(false)
+  const [mouseSpeed, setMouseSpeed] = useState(0.5)
 
   // 시간 깎는 패널티 함수
   const timePenalty = () => {
@@ -48,6 +53,19 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
       queryFn: () => getQuiz(6),
     })
   }, [])
+
+  // 대사 수정 부탁드립니다
+  useEffect(() => {
+    if (isSolvedFirstProblem && isSolvedSecondProblem && isSolvedThirdProblem) {
+      setSubtitle("이제 방 문으로 나갈 수 있다는 대사")
+      setTimeout(() => {
+        setSubtitle("이제 방 문으로 나갈 수 있다는 대사2")
+        setTimeout(() => {
+          setSubtitle("")
+        }, 4000)
+      }, 4000)
+    }
+  }, [isSolvedFirstProblem, isSolvedSecondProblem, isSolvedThirdProblem])
 
   // 마지막 문 클릭 시
   const handleFinal = () => {
@@ -91,22 +109,25 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
         </>
       ) : null}
       <Subtitle text={subtitle} />
-      {showFirstProblem ? (
+      {showFirstProblem && !isSolvedFirstProblem ? (
         <FirstProblemModal
           onClose={handleFirstProblem}
           timePenalty={timePenalty}
+          setIsSolvedProblem={setIsSolvedFirstProblem}
         />
       ) : null}
-      {showSecondProblem ? (
+      {showSecondProblem && !isSolvedSecondProblem ? (
         <SecondProblemModal
           onClose={handleSecondProblem}
           timePenalty={timePenalty}
+          setIsSolvedProblem={setIsSolvedSecondProblem}
         />
       ) : null}
-      {showThirdProblem ? (
+      {showThirdProblem && !isSolvedThirdProblem ? (
         <ThirdProblemModal
           onClose={handleThirdProblem}
           timePenalty={timePenalty}
+          setIsSolvedProblem={setIsSolvedThirdProblem}
         />
       ) : null}
       {isGameFinished ? (
@@ -116,24 +137,39 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           selectedThemeType={selectedThemeType}
         />
       ) : null}
-      <BasicScene interactNum={interactNum} onAir={true}>
-        {/* <MeshObjects /> */}
+      <BasicScene
+        interactNum={interactNum}
+        onAir={true}
+        mouseSpeed={mouseSpeed}
+      >
+        <MeshObjects />
         <Lights />
-        <Diary onClick={handleThirdProblem} setInteractNum={setInteractNum} />
-        <FirstProblemObject
-          onClick={handleFirstProblem}
+        <Diary
+          onClick={handleThirdProblem}
           setInteractNum={setInteractNum}
+          isSolvedProblem={isSolvedThirdProblem}
         />
-        <SecondProblemObject
-          onClick={handleSecondProblem}
-          setInteractNum={setInteractNum}
-        />
-        <FinalDoorObject
-          onClick={handleFinal}
-          setInteractNum={setInteractNum}
-          solved={solved}
-        />
-        <Player position={[0, 7, 0]} speed={40} args={[0, 0, 0]} />
+        {!isSolvedFirstProblem ? (
+          <FirstProblemObject
+            onClick={handleFirstProblem}
+            setInteractNum={setInteractNum}
+          />
+        ) : null}
+        {!isSolvedSecondProblem ? (
+          <SecondProblemObject
+            onClick={handleSecondProblem}
+            setInteractNum={setInteractNum}
+          />
+        ) : null}
+        {isSolvedFirstProblem &&
+        isSolvedSecondProblem &&
+        isSolvedThirdProblem ? (
+          <FinalDoorObject
+            onClick={handleFinal}
+            setInteractNum={setInteractNum}
+          />
+        ) : null}
+        <Player position={[0, 7, 0]} speed={30} args={[0, 0, 0]} />
         <Floor
           rotation={[Math.PI / -2, 0, 0]}
           color="white"

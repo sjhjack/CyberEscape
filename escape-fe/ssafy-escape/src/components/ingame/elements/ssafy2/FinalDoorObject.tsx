@@ -2,11 +2,7 @@ import { useEffect, useState } from "react"
 import { Box } from "@react-three/drei"
 
 // 마지막 나갈 수 있는 문(랜덤)
-const FinalDoorObject = ({
-  onClick,
-  solved,
-  setInteractNum,
-}: ClickObjectProps) => {
+const FinalDoorObject = ({ onClick, setInteractNum }: ClickObjectProps) => {
   const objectArr: [number, number, number][] = [
     [-34, 10, -35],
     [-57, 10, -35],
@@ -19,7 +15,7 @@ const FinalDoorObject = ({
     setIndex(randomIndex)
   }, [])
 
-  return solved === 3 ? (
+  return (
     <Box
       position={objectArr[index]}
       rotation={[0, 0, 0]}
@@ -35,7 +31,7 @@ const FinalDoorObject = ({
         opacity={0}
       />
     </Box>
-  ) : null
+  )
 }
 
 export default FinalDoorObject
