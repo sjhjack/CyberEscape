@@ -173,8 +173,8 @@ const Cockpit = ({
             setOnAir(false)
             const currentTime = timerRef.current.getTime()
             const clearSeconds =
-              600 - currentTime.minutes * 60 + currentTime.seconds
-            setClearTime(SecondToTime(clearSeconds))
+              600 - (currentTime.minutes * 60 + currentTime.seconds)
+            await setClearTime(SecondToTime(clearSeconds))
             await postUpdateRank(
               SecondToTime(clearSeconds),
               userUuid as string,
