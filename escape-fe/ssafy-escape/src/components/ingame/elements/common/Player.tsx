@@ -78,7 +78,7 @@ const Player = (props: any) => {
   useFrame((state, delta) => {
     if (ref.current) {
       ref.current.getWorldPosition(camera.position)
-      camera.position.y = props.position[1] + 4
+      camera.position.y = props.position[1] + 3.5
     }
 
     if (shouldMove && !isImmobile) {
@@ -159,7 +159,7 @@ const Player = (props: any) => {
         ref={ref as React.MutableRefObject<THREE.Mesh>}
       >
         <sphereGeometry args={props.args || [2, 0.1, 0.1]} />
-        <meshStandardMaterial color="#ff0000" opacity={0} transparent />
+        <meshStandardMaterial color="#ff0000" opacity={1} transparent />
       </mesh>
     </>
   )
