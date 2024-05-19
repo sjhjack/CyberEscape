@@ -9,6 +9,7 @@ const SecondProblemModal = ({
   onClose,
   timePenalty,
   setIsSolvedProblem,
+  progressUpdate,
 }: SSAFTYProblemProps) => {
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 6],
@@ -23,6 +24,9 @@ const SecondProblemModal = ({
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[1].quizUuid, answer)).right) {
       setIsSolvedProblem(true)
+      if (progressUpdate) {
+        progressUpdate()
+      }
       onClose()
       // 문제 맞췄을 때 대사 띄워주는게 좋을 듯 합니다
     } else {

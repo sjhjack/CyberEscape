@@ -7,8 +7,7 @@ const Diary = ({
   isSolvedProblem,
 }: ClickObjectProps) => {
   const diary = useGLTF(
-    // process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy2/diary.glb",
-    "/glb/ssafy2/diary.glb",
+    process.env.NEXT_PUBLIC_IMAGE_URL + "/glb/ssafy2/diary.glb",
     true,
   )
 
