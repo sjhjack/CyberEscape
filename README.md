@@ -38,7 +38,7 @@
 
 ## 🤝 Member
 
-| <a href=""><img src="g" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href=""><img src="" width="120"/></a> |  <a href=""><img src="" width="120"/></a>   | <a href=""><img src="" width="120"/></a> |
+| <a href="https://github.com/baejw3074"><img src="https://github.com/baejw3074.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href=""><img src="" width="120"/></a> |  <a href=""><img src="" width="120"/></a>   | <a href=""><img src="" width="120"/></a> |
 | :---------------------------------------: | :----------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: | :--------------------------------------: | :-----------------------------------------: | :--------------------------------------: |
 |                [배정우](https://github.com/baejw3074)                 |                               [송정훈](https://github.com/sjhjack)                               |                                 [배진현](https://github.com/JinHyeonBae)                                 |                [오희주]()                | [김병주](https://github.com/defkimbyeongju) |                [류지원]()                |
 
