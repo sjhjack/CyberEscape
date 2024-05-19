@@ -42,6 +42,7 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
     useState<boolean>(false)
   const [clearTime, setClearTime] = useState<string>("")
   const { userUuid, isHost } = useUserStore()
+  const [mouseSpeed, setMouseSpeed] = useState(0.5)
 
   // 시간 깎는 패널티 함수
   const timePenalty = () => {
@@ -152,7 +153,11 @@ const SsafyTheme2 = ({ isGameStart, setIsModelLoaded }: IngameMainProps) => {
           clearTime={clearTime}
         />
       ) : null}
-      <BasicScene interactNum={interactNum} onAir={true}>
+      <BasicScene
+        interactNum={interactNum}
+        onAir={true}
+        mouseSpeed={mouseSpeed}
+      >
         <MeshObjects />
         <Lights />
         <Player position={[-3, 11, 10]} speed={40} args={[0, 0, 0]} />

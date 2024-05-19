@@ -26,23 +26,23 @@ const Player = (props: any) => {
     ...props,
   }))
 
-  const [rotationChange, setRotationChange] = useState({ x: 0, y: 0 })
-  useEffect(() => {
-    const onMouseMove = (event: MouseEvent) => {
-      if (!gravity) return
-      const { movementX, movementY } = event
+  // const [rotationChange, setRotationChange] = useState({ x: 0, y: 0 })
+  // useEffect(() => {
+  //   const onMouseMove = (event: MouseEvent) => {
+  //     if (!gravity) return
+  //     const { movementX, movementY } = event
 
-      setRotationChange((prev) => ({
-        x: prev.x - movementY * 0.00009,
-        y: prev.y - movementX * 0.00009,
-      }))
-    }
+  //     setRotationChange((prev) => ({
+  //       x: prev.x - movementY * 0.00009,
+  //       y: prev.y - movementX * 0.00009,
+  //     }))
+  //   }
 
-    document.addEventListener("mousemove", onMouseMove)
-    return () => {
-      document.removeEventListener("mousemove", onMouseMove)
-    }
-  }, [])
+  //   document.addEventListener("mousemove", onMouseMove)
+  //   return () => {
+  //     document.removeEventListener("mousemove", onMouseMove)
+  //   }
+  // }, [])
 
   useEffect(() => {
     if (!props.trigger) return
@@ -118,15 +118,15 @@ const Player = (props: any) => {
     }
 
     if (camera && !gravity) {
-      if (ref.current) {
-        const euler = new THREE.Euler().setFromQuaternion(
-          ref.current.quaternion,
-        )
-        euler.y += rotationChange.y
-        euler.x += rotationChange.x
-        // euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.x))
-        camera.quaternion.setFromEuler(euler)
-      }
+      // if (ref.current) {
+      //   const euler = new THREE.Euler().setFromQuaternion(
+      //     ref.current.quaternion,
+      //   )
+      //   euler.y += rotationChange.y
+      //   euler.x += rotationChange.x
+      //   // euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.x))
+      //   camera.quaternion.setFromEuler(euler)
+      // }
 
       const oscillationHeight = Math.sin(state.clock.elapsedTime * 3) * 0.5 // Adjust frequency and amplitude as needed
       camera.position.y += oscillationHeight
