@@ -1,23 +1,17 @@
 import { styled } from "styled-components"
 import CloseIcon from "@mui/icons-material/Close"
 import Button from "@/components/common/Button"
-import useIngameQuizStore from "@/stores/IngameQuizStore"
 import postAnswer from "@/services/ingame/postAnswer"
-import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import getQuiz from "@/services/ingame/getQuiz"
-import data from "@/data/ingame/ssafy/SsafyOption.json"
 
 // 첫 번째 문제 모달
-const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
-  const { solved, setSolved } = useIngameQuizStore()
+const FirstProblemModal = ({ onClose, timePenalty, setIsSolvedProblem }: SSAFTYProblemProps) => {
 
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 6],
     queryFn: () => getQuiz(6),
   })
-
-  const optionData: SsafyOptionData = data
 
   if (!quizData) {
     return
@@ -26,10 +20,11 @@ const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
   // 선지 클릭 시 정답여부 확인
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
-      setSolved(solved + 1)
+      setIsSolvedProblem(true)
       onClose()
+      // 문제 맞췄을 때 대사 띄워주는게 좋을 듯 합니다
     } else {
-      alert("오답입니다.")
+      alert("오답!")
       timePenalty()
     }
   }
@@ -42,54 +37,36 @@ const FirstProblemModal = ({ onClose, timePenalty }: ProblemProps) => {
           <CloseIcon sx={{ fontSize: 40 }} />
         </CloseIconBox>
 
-        <ChoiceBox1>
+        <ChoiceBox>
           <Button
             theme="fail"
-            width="100px"
-            height="40px"
+            width="280px"
+            height="30px"
             opacity="0"
-            onClick={() =>
-              handleAnswerCheck(
-                optionData["ssafy2QuizList"][quizData[0].quizUuid][0],
-              )
-            }
+            onClick={() => handleAnswerCheck("1")}
           />
           <Button
             theme="fail"
-            width="100px"
-            height="40px"
+            width="280px"
+            height="30px"
             opacity="0"
-            onClick={() =>
-              handleAnswerCheck(
-                optionData["ssafy2QuizList"][quizData[0].quizUuid][1],
-              )
-            }
-          />
-        </ChoiceBox1>
-        <ChoiceBox2>
-          <Button
-            theme="fail"
-            width="100px"
-            height="40px"
-            opacity="0"
-            onClick={() =>
-              handleAnswerCheck(
-                optionData["ssafy2QuizList"][quizData[0].quizUuid][2],
-              )
-            }
+            onClick={() => handleAnswerCheck("2")}
           />
           <Button
             theme="fail"
-            width="100px"
-            height="40px"
+            width="280px"
+            height="30px"
             opacity="0"
-            onClick={() =>
-              handleAnswerCheck(
-                optionData["ssafy2QuizList"][quizData[0].quizUuid][3],
-              )
-            }
+            onClick={() => handleAnswerCheck("3")}
           />
-        </ChoiceBox2>
+          <Button
+            theme="fail"
+            width="280px"
+            height="30px"
+            opacity="0"
+            onClick={() => handleAnswerCheck("4")}
+          />
+        </ChoiceBox>
       </div>
     </MainContainer>
   )
@@ -108,25 +85,21 @@ const MainContainer = styled.div`
   z-index: 20;
 `
 
-const ChoiceBox1 = styled.div`
+const ChoiceBox = styled.div`
   display: flex;
+  flex-direction: column;
   position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-40%, 20%);
-  gap: 30px;
+  top: 45%;
+  left: 30%;
+  transform: translate(-40%, 10%);
+  gap: 15px;
   margin-top: 30px;
-`
-
-const ChoiceBox2 = styled(ChoiceBox1)`
-  top: 50%;
-  transform: translate(-40%, 45%);
 `
 
 const CloseIconBox = styled.div`
   position: absolute;
   cursor: pointer;
-  right: 110px;
-  top: 75px;
+  right: 30px;
+  top: 25px;
   z-index: 10;
 `

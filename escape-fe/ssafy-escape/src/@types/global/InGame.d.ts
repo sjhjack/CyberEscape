@@ -22,6 +22,13 @@ interface ProblemProps {
   progressUpdate?: () => void
 }
 
+interface SSAFTYProblemProps {
+  onClose: () => void
+  timePenalty: () => void
+  progressUpdate?: () => void
+  setIsSolvedProblem: (isSolved: boolean) => void
+}
+
 interface QuizDataProps {
   quizUuid: string
   content: string
@@ -33,6 +40,7 @@ interface ClickObjectProps {
   onClick: () => void
   isFind?: boolean
   solved?: number
+  isSolvedProblem?: boolean
   setInteractNum: (interactNum: number) => void
 }
 
@@ -62,7 +70,8 @@ interface HorrorOptionData {
   horror1QuizList: OptionList
   horror2QuizList: OptionList
 }
-interface SsafyOptionData {
-  ssafy1QuizList: OptionList
-  ssafy2QuizList: OptionList
+
+declare module "three/examples/jsm/utils/SkeletonUtils" {
+  import { Object3D } from "three"
+  export function clone(source: Object3D): Object3D
 }
