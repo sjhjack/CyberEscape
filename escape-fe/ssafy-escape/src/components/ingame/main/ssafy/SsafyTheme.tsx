@@ -66,7 +66,6 @@ const SsafyTheme = ({
     })
   }, [])
 
-  // 대사 수정 부탁드립니다
   useEffect(() => {
     if (isSolvedFirstProblem && isSolvedSecondProblem && isSolvedThirdProblem) {
       setSubtitle("휴... 이제 자유다!!")
@@ -85,7 +84,7 @@ const SsafyTheme = ({
       if (timerRef.current) {
         const currentTime = timerRef.current.getTime()
         const clearSeconds =
-          600 - currentTime.minutes * 60 + currentTime.seconds
+          300 - currentTime.minutes * 60 + currentTime.seconds
         setClearTime(SecondToTime(clearSeconds))
         await postUpdateRank(SecondToTime(clearSeconds), userUuid as string, 4)
       }
@@ -157,6 +156,7 @@ const SsafyTheme = ({
               color={"white"}
               ref={timerRef}
               onTimeOut={handleTimeOut}
+              minutes={5}
             />
           )}
           <Start setSubtitle={setSubtitle} />
