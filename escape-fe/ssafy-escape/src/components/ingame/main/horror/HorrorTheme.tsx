@@ -178,7 +178,7 @@ const HorrorTheme = ({
         if (timerRef.current) {
           const currentTime = timerRef.current.getTime()
           const clearSeconds =
-            480 - currentTime.minutes * 60 + currentTime.seconds
+            480 - (currentTime.minutes * 60 + currentTime.seconds)
           setClearTime(SecondToTime(clearSeconds))
           await postUpdateRank(
             SecondToTime(clearSeconds),
