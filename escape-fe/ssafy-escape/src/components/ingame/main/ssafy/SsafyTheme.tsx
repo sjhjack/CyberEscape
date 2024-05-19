@@ -134,6 +134,10 @@ const SsafyTheme = ({
 
   // 첫 번째 문제 모달
   const handleFirstProblem = () => {
+    const new_audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + `/sound/ssafy_security.mp3`,
+    )
+    new_audio.play()
     setShowFirstProblem(!showFirstProblem)
   }
 
