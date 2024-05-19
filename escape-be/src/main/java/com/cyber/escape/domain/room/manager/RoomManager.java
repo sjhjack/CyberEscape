@@ -38,8 +38,9 @@ public class RoomManager {
 	public RoomDto.StompResponse joinRoom(String roomUuid, String userUuid, String guestSessionId) {
 		RoomDto.StompResponse room = getRoom(roomUuid);
 
-		if (isGuestInRoom(room)) {
-			UserDto.StompResponse guest = UserDto.StompResponse.from(userRepository.findUserByUuid(userUuid)
+		if (isRoomAvailableForGuest(room)) {
+			UserDto.StompResponse guest = UserDto.StompResponse.from(
+				userRepository.findUserByUuid(userUuid)
 				.orElseThrow(() -> new UserException(ExceptionCodeSet.USER_NOT_FOUND)));
 
 			room.joinGuest(guestSessionId, guest);
@@ -121,7 +122,7 @@ public class RoomManager {
 		}
 	}
 
-	private boolean isGuestInRoom(RoomDto.StompResponse room) {
+	private boolean isRoomAvailableForGuest(RoomDto.StompResponse room) {
 		if(room.getGuestSessionUuid() == null){
 			return true;
 		}
