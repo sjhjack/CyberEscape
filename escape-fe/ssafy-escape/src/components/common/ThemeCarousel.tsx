@@ -20,14 +20,14 @@ interface CarouselProps {
 const themeData: CardInfo[] = [
   {
     title: "공포",
-    time: "10분",
+    time: "8분",
     content:
       "당신은 일과를 마치고 귀가하던 중 납치를 당해 정신을 잃었고, 눈을 떠보니 낯선 병실 안이었습니다. 간간히 정체불명의 비명소리가 들립니다. 이대로 있다가는 저 비명소리의 주인이 되고 말 거예요! 제한 시간 내에 병실에 숨겨져 있는 단서를 찾아 싸이코패스 과학자에게서 탈출해야 합니다.",
     image: process.env.NEXT_PUBLIC_IMAGE_URL + "/image/1.png",
   },
   {
     title: "SSAFY",
-    time: "10분",
+    time: "5분",
     content:
       "날씨도 좋은데 도망가고 싶은 걸? 프로님의 눈길을 피해 멀티캠퍼스를 탈출하라!",
     image: process.env.NEXT_PUBLIC_IMAGE_URL + "/image/4.png",
