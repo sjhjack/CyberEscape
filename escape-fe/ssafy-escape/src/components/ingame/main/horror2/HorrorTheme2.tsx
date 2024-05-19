@@ -247,12 +247,12 @@ const HorrorTheme2 = ({
               color={"white"}
               ref={timerRef}
               onTimeOut={handleTimeOut}
+              minutes={8}
             />
           )}
           <Start setSubtitle={setSubtitle} />
         </>
       ) : null}
-      <Subtitle text={subtitle} />
       <Subtitle text={subtitle} />
       {showExtraImage && (
         <BlackBackground>
