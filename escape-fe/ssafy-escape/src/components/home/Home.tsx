@@ -9,14 +9,18 @@ import CameraMoveToPosition, {
   CameraMoveToPositionRef,
 } from "./CameraMoveToPosition"
 import HeaderNav from "../common/HeaderNav"
-import useUserStore from "@/stores/UserStore"
+import { Paytone_One } from "next/font/google"
 
 interface HomeProps {
   showText?: boolean
 }
 
+const paytoneOne = Paytone_One({
+  subsets: ["latin"],
+  weight: "400",
+})
+
 const Home = ({ showText = true }: HomeProps) => {
-  const { isLogin } = useUserStore()
   const router = useRouter()
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isStartClicked, setIsStartClicked] = useState<boolean>(false)
@@ -60,15 +64,14 @@ const Home = ({ showText = true }: HomeProps) => {
         <div>
           {!isStartClicked && showText ? (
             <>
-              <S.TitleText className="paytone-one">Cyber Escape</S.TitleText>
+              <S.TitleText className={paytoneOne.className}>
+                Cyber Escape
+              </S.TitleText>
               <S.StartButtton
-                className="paytone-one"
+                className={paytoneOne.className}
                 onClick={() => onMoveClick()}
               >
                 START
-                {/* <S.TitleText>Cyber Escape</S.TitleText>
-              <S.StartButtton onClick={() => onMoveClick()}>
-                START */}
               </S.StartButtton>
             </>
           ) : isStartClicked && showText ? (

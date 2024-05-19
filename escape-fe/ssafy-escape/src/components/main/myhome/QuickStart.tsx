@@ -5,14 +5,19 @@ import Image from "next/image"
 import { styled } from "styled-components"
 import { MainColor } from "@/styles/palette"
 import useIngameThemeStore from "@/stores/IngameTheme"
+import { Paytone_One } from "next/font/google"
 
+const paytoneOne = Paytone_One({
+  subsets: ["latin"],
+  weight: "400",
+})
 const QuickStart = () => {
   const router = useRouter()
   const { setSelectedThemeType } = useIngameThemeStore()
   return (
     <StartContainer>
       <div style={{ textAlign: "center" }}>
-        <TitleText>Cyber Escape</TitleText>
+        <TitleText className={paytoneOne.className}>Cyber Escape</TitleText>
         <SubTitleText>바로 시작하기</SubTitleText>
       </div>
       <MainContent>
@@ -58,15 +63,6 @@ const TitleText = styled.div`
   font-weight: bold;
   color: ${MainColor};
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-  
-  @font-face {
-    font-family: "PaytoneOne";
-    font-weight: 400;
-    src: url(${process.env.NEXT_PUBLIC_IMAGE_URL} + "/fonts/PaytoneOne-Regular.ttf")
-      format("truetype");
-  }
-
-  font-family: "PaytoneOne";
 `
 
 const SubTitleText = styled.div`

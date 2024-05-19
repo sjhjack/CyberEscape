@@ -22,12 +22,19 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ["friendList"],
     queryFn: ({ pageParam }) => getFriendList(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => allPages.length + 1,
   })
+
+  useEffect(() => {
+    if (open) {
+      refetch()
+    }
+  }, [open, refetch])
 
   const handleScroll = (event: Event) => {
     const target = event.target as Document
@@ -50,8 +57,6 @@ const InviteModal = ({ open, handleClose }: InviteModalProps) => {
 
   // 초대 요청 시
   const sendInvitation = (roomUuid: string, userUuid: string) => {
-    console.log("초대를 보내요~~ roomUuid : ");
-    console.log(roomUuid);
     postInvite({
       roomUuid: roomUuid,
       userUuid: userUuid ? userUuid : "",
