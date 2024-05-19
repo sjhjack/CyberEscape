@@ -91,9 +91,9 @@ const FirstProblemModal = ({
       }
     } else {
       alert("오답!")
+      timePenalty()
       if (penalty && setPenalty) {
         setPenalty(penalty + 1)
-        timePenalty()
       }
     }
   }
