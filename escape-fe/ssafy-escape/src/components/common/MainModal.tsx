@@ -99,6 +99,7 @@ const ModalBox = styled.div<ModalStyleProps>`
   background-color: white;
   padding: 20px;
   overflow: hidden;
+  z-index: 100;
 `
 
 const ButtonBox = styled.div`

@@ -65,10 +65,10 @@ const FirstProblemModal = ({
         }, 4000)
       }
     } else {
+      alert("오답!")
+      timePenalty()
       if (penalty && setPenalty) {
-        alert("오답!")
         setPenalty(penalty + 1)
-        timePenalty()
       }
     }
   }
