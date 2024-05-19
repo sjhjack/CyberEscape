@@ -66,6 +66,7 @@ const HorrorTheme2 = ({
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false)
   const [showExtraImage, setShowExtraImage] = useState(false)
   const [index, setIndex] = useState(0)
+  const [mouseSpeed, setMouseSpeed] = useState(0.5)
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * 10)
@@ -309,7 +310,11 @@ const HorrorTheme2 = ({
         />
       ) : null}
       <PlaySound penalty={penalty} role="scientist" />
-      <BasicScene interactNum={interactNum} onAir={true}>
+      <BasicScene
+        interactNum={interactNum}
+        onAir={true}
+        mouseSpeed={mouseSpeed}
+      >
         <Player position={[3, 40, 0]} speed={80} />
         <Floor
           rotation={[Math.PI / -2, 0, 0]}
