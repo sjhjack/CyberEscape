@@ -1,7 +1,40 @@
 import { useEffect, useState } from "react"
+import styled from "styled-components"
 
+interface ContainerProps {
+  opacity: number
+}
+
+const Container = styled.div<ContainerProps>`
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  z-index: 10;
+  opacity: ${(props) => props.opacity};
+  transition: opacity 0.5s ease;
+`
+
+const Instructions = styled.div`
+  text-align: center;
+`
+// 프로방 스크립트 수정 부탁드립니다
 const Start = ({ setSubtitle }: StartProps) => {
-  const [sequence, setSequence] = useState(1)
+  const [sequence, setSequence] = useState(0)
+  const [showInstruction, setShowInstruction] = useState(true)
+  const [containerOpacity, setContainerOpacity] = useState(1)
+  const [isNull, setIsNull] = useState(false)
+
+  const handleClick = () => {
+    setSequence(1)
+    setShowInstruction(false)
+  }
 
   useEffect(() => {
     if (sequence === 1) {
@@ -20,9 +53,15 @@ const Start = ({ setSubtitle }: StartProps) => {
   }, [sequence])
 
   const dub1 = () => {
+    const new_audio = new Audio(
+      process.env.NEXT_PUBLIC_IMAGE_URL + `/music/SsafyBgm2.mp3`,
+    )
+    new_audio.play()
+    new_audio.loop = true
     setSubtitle("뭐야 그 사이 잠깐 졸았었네")
     setTimeout(() => {
       setSequence((n) => n + 1)
+      setContainerOpacity(0)
       setSubtitle("")
     }, 4000)
   }
@@ -68,9 +107,18 @@ const Start = ({ setSubtitle }: StartProps) => {
     setTimeout(() => {
       setSubtitle("")
     }, 10000)
+    setIsNull(true)
   }
 
-  return <></>
+  return !isNull ? (
+    <Container opacity={containerOpacity} onClick={handleClick}>
+      {showInstruction ? (
+        <Instructions>
+          <p>Click to start</p>
+        </Instructions>
+      ) : null}
+    </Container>
+  ) : null
 }
 
 export default Start
