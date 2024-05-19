@@ -120,6 +120,25 @@ public class RoomDto {
 		}
 	}
 
+
+	// 초대 응답 받았을 때의 반환값
+	@Builder
+	@Getter
+	public static class AcceptResponse{
+		private final String roomUuid;
+		private final String title;
+		private final int themaCategory;
+
+		public static AcceptResponse from(Room room){
+			return AcceptResponse
+					.builder()
+					.roomUuid(room.getUuid())
+					.title(room.getTitle())
+					.themaCategory(room.getThema().getCategory())
+					.build();
+		}
+	}
+
 	@Builder
 	@Getter
 	public static class Response {
