@@ -31,7 +31,15 @@ const InvitedList = () => {
       await postReadNotification(notificationId)
       router.push(`/gameroom/${roomUuid}`)
       refetch()
-    } catch (e) {}
+    } catch (error) {
+      if (error instanceof Error) {
+        Swal.fire(
+          "존재하지 않는 방입니다.",
+          error instanceof Error ? error.message : "",
+          "error",
+        )
+      }
+    }
   }
 
   // 초대 요청 거절 시
