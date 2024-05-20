@@ -23,13 +23,18 @@ const SecondProblemModal = ({
   const [openHint, setOpenHint] = useState<boolean>(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const { solved, hint, setSolved, setHint } = useIngameQuizStore()
-  console.log(hint, openHint)
+  const [optionData, setOptionData] = useState<HorrorOptionData | null>(null)
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 2],
     queryFn: () => getQuiz(2),
   })
+  useEffect(() => {
+    setOptionData(data)
+  }, [])
 
-  const optionData: HorrorOptionData = data
+  if (!optionData) {
+    return
+  }
 
   if (!quizData) {
     return
