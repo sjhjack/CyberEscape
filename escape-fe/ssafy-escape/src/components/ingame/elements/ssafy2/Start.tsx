@@ -58,7 +58,7 @@ const Start = ({ setSubtitle }: StartProps) => {
     )
     new_audio.play()
     new_audio.loop = true
-    setSubtitle("뭐야 그 사이 잠깐 졸았었네")
+    setSubtitle("싸늘하다. 가슴에 비수가 날아와 꽂힌다.")
     setTimeout(() => {
       setSequence((n) => n + 1)
       setContainerOpacity(0)
@@ -68,7 +68,7 @@ const Start = ({ setSubtitle }: StartProps) => {
 
   const dub2 = () => {
     setTimeout(() => {
-      setSubtitle("아 오늘 날씨도 좋은데 한강이나 가고 싶다")
+      setSubtitle("동작 그만!! ")
       setTimeout(() => {
         setSequence((n) => n + 1)
         setSubtitle("")
@@ -77,7 +77,7 @@ const Start = ({ setSubtitle }: StartProps) => {
   }
 
   const dub3 = () => {
-    setSubtitle("몰래 도망가버릴까...?")
+    setSubtitle("금쪽이들이 탈출을 시도하는 제보를 입수했다. ")
     setTimeout(() => {
       setSequence((n) => n + 1)
       setSubtitle("")
@@ -86,7 +86,7 @@ const Start = ({ setSubtitle }: StartProps) => {
 
   const dub4 = () => {
     setTimeout(() => {
-      setSubtitle("프로님 죄송합니다!!!!!")
+      setSubtitle("얼른 내 업무를 마치고 강의장으로 가야 돼")
       setTimeout(() => {
         setSequence((n) => n + 1)
         setSubtitle("")
@@ -95,7 +95,7 @@ const Start = ({ setSubtitle }: StartProps) => {
   }
 
   const dub5 = () => {
-    setSubtitle("노트북에 뭔가 단서가 있을 것 같아.")
+    setSubtitle("PC에 뭔가 단서가 있을 것 같아.")
     setTimeout(() => {
       setSequence((n) => n + 1)
       setSubtitle("")
@@ -103,7 +103,7 @@ const Start = ({ setSubtitle }: StartProps) => {
   }
 
   const dub6 = () => {
-    setSubtitle("칠판도 좀 수상한데?")
+    setSubtitle("시간이 많지 않아. 서둘러")
     setTimeout(() => {
       setSubtitle("")
     }, 10000)
