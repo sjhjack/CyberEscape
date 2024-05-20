@@ -4,19 +4,82 @@ spring:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-  hikari:
-    maximum-pool-size:180
-    minimum-idle:10
+    hikari:
+      maximum-pool-size: 10 # CP(active + idle)를 조정한다.
+      minimum-idle: 10 # 최소 idle connection 개수를 조정한다.
+      connection-timeout: 5000
+      validation-timeout: 2000
+      idle-timeout: 600000
+      max-lifetime: 1800000 # idle connection의 생존 시간.
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
   data:
     redis:
       host: ${REDIS_HOST} # Redis 서버 호스트 주소
       port: 6379      # Redis 서버 포트
       database: 0
-#    mongodb:
-#      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority&appName=${MONGO_APPNAME}
-#      database: ${MONGO_DBNAME}
-  rabbitmq:
-    host: ${MQ_HOST}
-    port: ${MQ_PORT}
-    username: ${MQ_USER_NAME}
-    password: ${MQ_PASSWORD}
+    mongodb:
+      uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority
+      database: ${MONGO_DBNAME}
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+  jpa:
+    open-in-view : false
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        use_sql_comments: true
+
+server:
+  tomcat:
+    max-connections: 1500
+    accept-count: 100
+    threads:
+      max: 90
+
+
+rabbit:
+  chat-queue-name: ${MQ_QUEUE_NAME}
+  exchange-name: ${MQ_EXCHANGE_NAME}
+  host: ${MQ_HOST}
+  port: ${MQ_PORT}
+  username: ${MQ_USER_NAME}
+  password: ${MQ_PASSWORD}
+
+# S3 설정 추가
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    file:
+      name: ${DEFAULT_FILE_NAME}
+      url: ${DEFAULT_FILE_URL}
+
+secretKeyPlain: ${KEY}
+
+openvidu:
+  url: ${OPENVIDU_URL}
+  secret: ${OPENVIDU_SECRET}
+
+room:
+  matching-key: ${MATCHING_QUEUE_KEY}
+
+# hikari log
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: TRACE
