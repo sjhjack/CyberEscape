@@ -24,7 +24,15 @@ const ThirdProblemModal = ({
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const [index, setIndex] = useState(0)
   const [openHint, setOpenHint] = useState<boolean>(false)
+  const [optionData, setOptionData] = useState<HorrorOptionData | null>(null)
 
+  useEffect(() => {
+    setOptionData(data)
+  }, [])
+
+  if (!optionData) {
+    return
+  }
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * 10)
     setIndex(randomIndex)
@@ -55,7 +63,6 @@ const ThirdProblemModal = ({
     queryFn: () => getQuiz(2),
   })
 
-  const optionData: HorrorOptionData = data
   if (!quizData) {
     return
   }
