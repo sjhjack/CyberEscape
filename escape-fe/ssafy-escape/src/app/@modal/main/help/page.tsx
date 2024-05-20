@@ -13,7 +13,7 @@ const Page = () => {
       <MainContainer>
         <ImgBox>
           <Image
-            src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/single_1.PNG"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/single_1.PNG"}
             alt=""
             width={700}
             height={450}
@@ -31,7 +31,9 @@ const Page = () => {
         <SmallBox>
           <ImgBox>
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/single_2.PNG"}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/single_2.PNG"
+              }
               alt=""
               width={400}
               height={250}
@@ -39,7 +41,9 @@ const Page = () => {
           </ImgBox>
           <ImgBox>
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/single_22.PNG"}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/single_22.PNG"
+              }
               alt=""
               width={400}
               height={250}
@@ -53,7 +57,9 @@ const Page = () => {
         <SmallBox>
           <ImgBox>
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/single_3.PNG"}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/single_3.PNG"
+              }
               alt=""
               width={400}
               height={250}
@@ -61,7 +67,9 @@ const Page = () => {
           </ImgBox>
           <ImgBox>
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/space_1.PNG"}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/space_1.PNG"
+              }
               alt=""
               width={400}
               height={250}
@@ -76,7 +84,9 @@ const Page = () => {
         <SmallBox>
           <ImgBox>
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/single_5.PNG"}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/single_5.PNG"
+              }
               alt=""
               width={400}
               height={250}
@@ -84,7 +94,9 @@ const Page = () => {
           </ImgBox>
           <ImgBox>
             <Image
-              src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/single_6.PNG"}
+              src={
+                process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/single_6.PNG"
+              }
               alt=""
               width={400}
               height={250}
@@ -101,7 +113,7 @@ const Page = () => {
         </Text>
         <ImgBox>
           <Image
-            src={process.env.NEXT_PUBLIC_IMAGE_URL +"/image/help/multi_1.PNG"}
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + "/image/help/multi_1.PNG"}
             alt=""
             width={700}
             height={450}
@@ -126,7 +138,7 @@ const MainContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 70vw;
-  height: 63vh;
+  height: 60vh;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
