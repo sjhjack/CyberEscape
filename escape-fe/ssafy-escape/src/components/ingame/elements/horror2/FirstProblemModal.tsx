@@ -27,8 +27,16 @@ const FirstProblemModal = ({
     queryKey: ["quizList", 3],
     queryFn: () => getQuiz(3),
   })
+  const [optionData, setOptionData] = useState<HorrorOptionData | null>(null)
 
-  const optionData: HorrorOptionData = data
+  useEffect(() => {
+    setOptionData(data)
+  }, [])
+
+  if (!optionData) {
+    return
+  }
+
   if (!quizData) {
     return
   }

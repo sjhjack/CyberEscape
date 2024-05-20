@@ -20,6 +20,7 @@ const ThirdProblemModal = ({
   progressUpdate,
 }: ProblemProps) => {
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
+  const [optionData, setOptionData] = useState<HorrorOptionData | null>(null)
 
   const { solved, setSolved } = useIngameQuizStore()
   const { data: quizData } = useQuery({
@@ -27,7 +28,13 @@ const ThirdProblemModal = ({
     queryFn: () => getQuiz(3),
   })
 
-  const optionData: HorrorOptionData = data
+  useEffect(() => {
+    setOptionData(data)
+  }, [])
+
+  if (!optionData) {
+    return
+  }
   if (!quizData) {
     return
   }
