@@ -10,6 +10,7 @@ import CameraMoveToPosition, {
 } from "./CameraMoveToPosition"
 import HeaderNav from "../common/HeaderNav"
 import { Paytone_One } from "next/font/google"
+import useUserStore from "@/stores/UserStore"
 
 interface HomeProps {
   showText?: boolean
@@ -25,11 +26,12 @@ const Home = ({ showText = true }: HomeProps) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [isStartClicked, setIsStartClicked] = useState<boolean>(false)
   const pointerLockControlsRef = useRef<CameraMoveToPositionRef>(null)
+  const { isLogin } = useUserStore()
 
   const onMoveClick = () => {
     pointerLockControlsRef.current?.moveToPosition(3, 1, -7)
     const accessToken = sessionStorage.getItem("access_token")
-    if (accessToken) {
+    if (accessToken && isLogin) {
       router.push("/main")
     } else {
       setIsStartClicked(true)
