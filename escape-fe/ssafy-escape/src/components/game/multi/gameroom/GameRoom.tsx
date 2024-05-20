@@ -7,7 +7,6 @@ import SockJS from "sockjs-client"
 import useUserStore from "@/stores/UserStore"
 import useIngameThemeStore from "@/stores/IngameTheme"
 import patchExit from "@/services/game/room/patchExit"
-
 import Waiting from "./Waiting"
 import Ingame from "./Ingame"
 import Swal from "sweetalert2"
@@ -18,7 +17,8 @@ const GameRoom = () => {
   const baseUrl = process.env.NEXT_PUBLIC_URL
   const pathname: string = usePathname()
   const roomUuid: string = pathname.substring(10)
-  const { selectedTheme, setRoomUuid } = useIngameThemeStore()
+  const { selectedTheme, setRoomUuid, setSelectedThemeType } =
+    useIngameThemeStore()
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameTheme, setGameTheme] = useState<number>(0)
   const [showCountdown, setShowCountdown] = useState<boolean>(false)
@@ -138,6 +138,7 @@ const GameRoom = () => {
 
   // 게임방 들어오면 stomp client, openvidu 연결 시작. 언마운트 되면 연결 끊기
   useEffect(() => {
+    setSelectedThemeType("multi")
     connect()
     joinSession()
     setTimeout(() => {
