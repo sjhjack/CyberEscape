@@ -32,9 +32,6 @@ const ThirdProblemModal = ({
     setOptionData(data)
   }, [])
 
-  if (!optionData) {
-    return
-  }
   if (!quizData) {
     return
   }
@@ -74,6 +71,9 @@ const ThirdProblemModal = ({
         setPenalty(penalty + 1)
       }
     }
+  }
+  if (!optionData) {
+    return
   }
   return (
     <MainContainer>
