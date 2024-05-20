@@ -62,15 +62,17 @@
 
 - #### 개발 언어 및 라이브러리
   - #### Backend
-    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/3.2.2-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/3.2.4-515151?style=for-the-badge">
     - <img src="https://img.shields.io/badge/Build-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"><img src="https://img.shields.io/badge/8.5-515151?style=for-the-badge">
-    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/17.0.2-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/21-515151?style=for-the-badge">
     - <img src="https://img.shields.io/badge/IDE-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white"><img src="https://img.shields.io/badge/2021.2.4-515151?style=for-the-badge">
-    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img alt="Spring Security" src ="https://img.shields.io/badge/springsecurity-6DB33F.svg?&style=for-the-badge&logo=springsecurity&logoColor=white"/><img src="https://img.shields.io/badge/6.2.1-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img alt="Spring Security" src ="https://img.shields.io/badge/springsecurity-6DB33F.svg?&style=for-the-badge&logo=springsecurity&logoColor=white"/><img src="https://img.shields.io/badge/6.2.3-515151?style=for-the-badge">
       <img alt="FLYWAY" src ="https://img.shields.io/badge/flyway-CC0200.svg?&style=for-the-badge&logo=flyway&logoColor=white"/><img src="https://img.shields.io/badge/9.22.3-515151?style=for-the-badge">
       <img alt="QUERYDSL" src ="https://img.shields.io/badge/querydsl-0078C0.svg?&style=for-the-badge"/><img src="https://img.shields.io/badge/5.0.0-515151?style=for-the-badge">
-      <img alt="MAPSTRUCT" src ="https://img.shields.io/badge/mapstruct-FF282D.svg?&style=for-the-badge"/><img src="https://img.shields.io/badge/1.5.3.Final-515151?style=for-the-badge">
       <img alt="JJWT" src ="https://img.shields.io/badge/jjwt-F0047F.svg?&style=for-the-badge"/><img src="https://img.shields.io/badge/0.11.2-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/DB-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/mysql-%23323330.svg?style=for-the-badge&logo=mysql&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/8.3-515151?style=for-the-badge">
+    <img src="https://img.shields.io/badge/mongodb-%23323330.svg?style=for-the-badge&logo=mongodb&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/5.0.0-515151?style=for-the-badge">
+
   - #### Infra
     - <img src="https://img.shields.io/badge/OS-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white"><img src="https://img.shields.io/badge/20.04.6 LTS-515151?style=for-the-badge">
     - <img src="https://img.shields.io/badge/DB-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/8.3.0-515151?style=for-the-badge">
@@ -83,13 +85,14 @@
     - <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
     - <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"><img src="https://img.shields.io/badge/20.10.0-515151?style=for-the-badge">
     - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/nextjs-%2335495e.svg?style=for-the-badge&logo=nextdotjs&logoColor=%234FC08D">
-    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/three.js-F54E7F?style=for-the-badge"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/zustand-2c4f7c?style=for-the-badge"><img src="https://img.shields.io/badge/sockJs-006600?style=for-the-badge"><img src="https://img.shields.io/badge/stomp-FF9E0F?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/three.js-6DB33F?style=for-the-badge&logo=three.js&logoColor=white"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge&logo=axios&logoColor=white"><img src="https://img.shields.io/badge/zustand-2c4f7c?style=for-the-badge&logo=zustand&logoColor=white"><img src="https://img.shields.io/badge/sockJs-006600?style=for-the-badge&logo=sockJs&logoColor=white"><img src="https://img.shields.io/badge/stomp-FF9E0F?style=for-the-badge&logo=stomp&logoColor=white">
     - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/typescript-%23323330.svg?style=for-the-badge&logo=typescript&logoColor=%23F7DF1E">
+
 
 <br>
 
 - #### Team
-  - 자율 너머 백수 (배정우, 오희주, 송정훈, 김병주, 배진현, 류지원)
+  - #### 자율 너머 백수 (배정우, 오희주, 송정훈, 김병주, 배진현, 류지원)
 
 <br>
 
