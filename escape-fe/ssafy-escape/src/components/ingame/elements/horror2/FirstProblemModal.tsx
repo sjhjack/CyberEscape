@@ -33,14 +33,6 @@ const FirstProblemModal = ({
     setOptionData(data)
   }, [])
 
-  if (!optionData) {
-    return
-  }
-
-  if (!quizData) {
-    return
-  }
-
   // 힌트 사용 시 시간 30초 깎는 패널티 적용
   const handleOpenModal = () => {
     setHintModalOpen(true)
@@ -48,6 +40,9 @@ const FirstProblemModal = ({
   }
   const handleCloseModal = () => {
     setHintModalOpen(false)
+  }
+  if (!quizData) {
+    return
   }
   const handleAnswerCheck = async (answer: string) => {
     if ((await postAnswer(quizData[0].quizUuid, answer)).right) {
@@ -79,6 +74,9 @@ const FirstProblemModal = ({
         setPenalty(penalty + 1)
       }
     }
+  }
+  if (!optionData) {
+    return
   }
 
   return (
