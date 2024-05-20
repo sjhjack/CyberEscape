@@ -24,21 +24,11 @@ const FirstProblemModal = ({
   const [openHint, setOpenHint] = useState<boolean>(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const { solved, hint, setSolved, setHint } = useIngameQuizStore()
+  const [optionData, setOptionData] = useState<HorrorOptionData | null>(null)
 
-  // useEffect(() => {
-  //   const handleClickInsideChat = (event: MouseEvent) => {
-  //     event.stopPropagation()
-  //   }
-
-  //   const chatContainer = document.getElementById(
-  //     "chat-container",
-  //   ) as HTMLElement
-  //   chatContainer.addEventListener("click", handleClickInsideChat)
-
-  //   return () => {
-  //     chatContainer.removeEventListener("click", handleClickInsideChat)
-  //   }
-  // }, [])
+  useEffect(() => {
+    setOptionData(data)
+  }, [])
 
   const { data: quizData } = useQuery({
     queryKey: ["quizList", 2],
@@ -46,6 +36,9 @@ const FirstProblemModal = ({
   })
 
   if (!quizData) {
+    return
+  }
+  if (!optionData) {
     return
   }
 
@@ -97,8 +90,6 @@ const FirstProblemModal = ({
       }
     }
   }
-
-  const optionData: HorrorOptionData = data
 
   return (
     <MainContainer id="chat-container">

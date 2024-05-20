@@ -23,6 +23,7 @@ const SecondProblemModal = ({
   const [showExtraImage, setShowExtraImage] = useState(false)
   const [hintModalopen, setHintModalOpen] = useState<boolean>(false)
   const [index, setIndex] = useState(0)
+  const [optionData, setOptionData] = useState<HorrorOptionData | null>(null)
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * 10)
@@ -52,7 +53,14 @@ const SecondProblemModal = ({
     queryKey: ["quizList", 3],
     queryFn: () => getQuiz(3),
   })
-  const optionData: HorrorOptionData = data
+
+  useEffect(() => {
+    setOptionData(data)
+  }, [])
+
+  if (!optionData) {
+    return
+  }
 
   if (!quizData) {
     return
