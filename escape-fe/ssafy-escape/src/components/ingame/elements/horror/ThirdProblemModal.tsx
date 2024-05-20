@@ -30,47 +30,47 @@ const ThirdProblemModal = ({
     setOptionData(data)
   }, [])
 
-  if (!optionData) {
-    return
-  }
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * 10)
     setIndex(randomIndex)
   }, [])
-
+  
   useEffect(() => {
     const playAudio = setTimeout(() => {
       const audio = new Audio(
         process.env.NEXT_PUBLIC_IMAGE_URL + "/sound/woman_scream.mp3",
-      )
-      audio.play()
-      const showImg = setTimeout(() => {
-        setShowExtraImage(true)
-        const hideImg = setTimeout(() => {
-          setShowExtraImage(false)
-        }, 1300)
-        return () => clearTimeout(hideImg)
-      }, 500)
-      return () => clearTimeout(showImg)
-    }, 5000)
-    return () => clearTimeout(playAudio)
-  }, [])
-
-  const { solved, hint, setSolved, setHint } = useIngameQuizStore()
-
-  const { data: quizData } = useQuery({
-    queryKey: ["quizList", 2],
-    queryFn: () => getQuiz(2),
-  })
-
-  if (!quizData) {
-    return
-  }
-
-  // 힌트 볼 때 시간 30초 깎는 패널티 적용
-  const handleOpenModal = () => {
-    if (hint === 1) {
-      setHint(0)
+        )
+        audio.play()
+        const showImg = setTimeout(() => {
+          setShowExtraImage(true)
+          const hideImg = setTimeout(() => {
+            setShowExtraImage(false)
+          }, 1300)
+          return () => clearTimeout(hideImg)
+        }, 500)
+        return () => clearTimeout(showImg)
+      }, 5000)
+      return () => clearTimeout(playAudio)
+    }, [])
+    
+    const { solved, hint, setSolved, setHint } = useIngameQuizStore()
+    
+    const { data: quizData } = useQuery({
+      queryKey: ["quizList", 2],
+      queryFn: () => getQuiz(2),
+    })
+    
+    if (!quizData) {
+      return
+    }
+    
+    if (!optionData) {
+      return
+    }
+    // 힌트 볼 때 시간 30초 깎는 패널티 적용
+    const handleOpenModal = () => {
+      if (hint === 1) {
+        setHint(0)
       setOpenHint(true)
       setHintModalOpen(true)
       timePenalty()
