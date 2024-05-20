@@ -1,0 +1,18 @@
+{
+  "status": 200,
+  "message": "내가 받은 친구 요청 목록 리스트입니다.",
+  "data": [
+    {
+      "requestUserUuid": "오희주의 uuid",
+      "nickname": "오희주"
+    },
+    {
+      "requestUserUuid": "오희주의 uuid",
+      "nickname": "오희주"
+    },
+    {
+      "requestUserUuid": "오희주의 uuid",
+      "nickname": "오희주"
+    }
+  ]
+}

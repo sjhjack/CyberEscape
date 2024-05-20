@@ -1,0 +1,12 @@
+{
+  "status": 200,
+  "message": "닉네임 검색 성공",
+  "data": [
+    {
+      "nickname": "nickname1"
+    },
+    {
+      "nickname": "nickname2"
+    }
+  ]
+}

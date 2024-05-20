@@ -1,0 +1,36 @@
+{
+  "status": 200,
+  "message": "테마별 랭킹 조회 성공",
+  "data": [
+    {
+      "rank": 1,
+      "nickname": "김싸피",
+      "bestTime": "00:08:15",
+      "category": 2
+    },
+    {
+      "rank": 2,
+      "nickname": "춤추는 호랑이",
+      "bestTime": "00:08:15",
+      "category": 2
+    },
+    {
+      "rank": 3,
+      "nickname": "놀란 상어",
+      "bestTime": "00:08:20",
+      "category": 2
+    },
+    {
+      "rank": 4,
+      "nickname": "삼겹살 굽는 아이언맨",
+      "bestTime": "00:08:35",
+      "category": 2
+    },
+    {
+      "rank": 5,
+      "nickname": "하싸피",
+      "bestTime": "00:09:15",
+      "category": 2
+    }
+  ]
+}

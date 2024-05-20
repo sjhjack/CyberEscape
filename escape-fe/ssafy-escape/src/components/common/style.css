@@ -1,0 +1,22 @@
+/* 캐러셀에서 next, prev 버튼 위치 조정하기 */
+.swiper-button-next,
+.swiper-button-prev {
+  color: black !important; /* 버튼 색상 변경 */
+  width: 20px !important; /* 버튼 너비 조정 */
+  height: 20px !important; /* 버튼 높이 조정 */
+  top: 60% !important; /* 버튼을 세로 중앙에 위치 */
+  transform: translateY(-50%) !important; /* 버튼을 세로 중앙 정렬 */
+}
+
+.swiper-button-next {
+  right: 50px !important; /* 오른쪽 버튼 위치 조정 */
+}
+
+.swiper-button-prev {
+  left: 50px !important; /* 왼쪽 버튼 위치 조정 */
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px !important; /* 버튼 내 아이콘 크기 조정 */
+}
