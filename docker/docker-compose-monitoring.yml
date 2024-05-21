@@ -26,7 +26,7 @@ services:
     ports:
       - "3020:3020"
     volumes:
-      - home/ubuntu/volume/grafana-data:/var/lib/grafana
+      - /home/ubuntu/volume/grafana-data:/var/lib/grafana
       - ./conf/grafana/provisioning/:/etc/grafana/provisioning/
     user: root
     restart: always
