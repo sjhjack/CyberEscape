@@ -12,7 +12,7 @@ services:
       - ./conf/prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     ports:
-      - 9090:9090
+      - "9090:9090"
     command:
       - '--storage.tsdb.path=/prometheus'
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -24,10 +24,11 @@ services:
     image: grafana/grafana
     container_name: grafana
     ports:
-      - 3020:3020
+      - "3020:3020"
     volumes:
-      - ~/volume/grafana-data:/var/lib/grafana
+      - home/ubuntu/volume/grafana-data:/var/lib/grafana
       - ./conf/grafana/provisioning/:/etc/grafana/provisioning/
+    user: root
     restart: always
     privileged: true
     depends_on:
