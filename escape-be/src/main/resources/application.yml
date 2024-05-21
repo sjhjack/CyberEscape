@@ -83,3 +83,9 @@ logging:
     com:
       zaxxer:
         hikari: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
