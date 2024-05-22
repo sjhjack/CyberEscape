@@ -37,7 +37,9 @@ public class JwtFilter extends OncePerRequestFilter {
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
 		List<String> list = Arrays.asList(
 			"/auth/signup",		// 회원가입 페이지
-			"/auth/signin"		// 로그인 페이지
+			"/auth/signin",		// 로그인 페이지
+			"/actuator",
+			"/actuator/prometheus"
 			// "/ws-stomp"			// STOMP
 		);
 
