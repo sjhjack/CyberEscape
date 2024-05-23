@@ -30,7 +30,7 @@ const RoomPasswordModal = ({
   const router = useRouter()
   const [password, setPassword] = useState<string>("")
   const { userUuid } = useUserStore()
-  const { setRoomTitle } = useIngameThemeStore()
+  const { setRoomTitle, setSelectedTheme } = useIngameThemeStore()
   const onPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
@@ -45,6 +45,7 @@ const RoomPasswordModal = ({
         password: password,
       })
       handleClose()
+      setSelectedTheme(roomData.category)
       setRoomTitle(roomData.title)
       if (response.status === 200) {
         router.push(`/gameroom/${roomData.uuid}`)
