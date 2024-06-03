@@ -100,7 +100,7 @@
 
 ## 🌐 System Architecture
 
-![아키텍처5-removebg-preview](/uploads/4392516a24d986e94decb026ac8f8e85/아키텍처5-removebg-preview.png)
+![아키텍처](https://github.com/sjhjack/CyberEscape/assets/102958758/faca7f8a-c878-46e2-a80a-c93c03811f6a)
 
 <br>
 
@@ -108,7 +108,7 @@
 
 ## 💾 ERD
 
-![erd](/uploads/9beb06a336a9f53906ee193db6c7039b/erd.PNG)
+![erd](https://github.com/sjhjack/CyberEscape/assets/102958758/7700f07b-12fc-4b11-8750-cc7f7e1a475e)
 
 <br>
 
@@ -126,40 +126,40 @@
 
 - #### 메인 페이지
 
-  ![메인](/uploads/5145c6b473d93eb011807604ba753a17/메인.PNG)
+  ![메인](https://github.com/sjhjack/CyberEscape/assets/102958758/15bae1b8-f346-476f-88e7-4485f5a56123)
 
 - #### 테마 선택 페이지
 
-  ![테마선택](/uploads/2adef02733af322f3237c0be4e02b21b/테마선택.PNG)
+  ![테마선택](https://github.com/sjhjack/CyberEscape/assets/102958758/35411afe-df56-43ab-aa95-cacddf0dbdca)
 
 - #### 멀티 모드 시 게임 참여 선택지
 
-  ![멀티_모드](/uploads/891bf2b51ed97b2b0d061600c119a0a6/멀티_모드.PNG)
+  ![멀티_모드](https://github.com/sjhjack/CyberEscape/assets/102958758/0b0276a0-994b-4897-9015-4bfd1f0393f9)
 
 - #### 게임방 생성
 
-  ![방_생성](/uploads/dd7adce2ed9a7530e17524ff5ffe92d5/방_생성.PNG)
+  ![방_생성](https://github.com/sjhjack/CyberEscape/assets/102958758/1d910f11-5d32-4938-b9de-23774b023705)
 
 - #### 게임방 리스트
 
-  ![방리스트](/uploads/6221c59962161c16f0d17a7ac378f773/방리스트.PNG)
+  ![방리스트](https://github.com/sjhjack/CyberEscape/assets/102958758/0a9ae6e0-e8bc-4043-bc1c-6a336af4001a)
 
 - #### 게임 대기방 페이지
 
-  ![게임대기방](/uploads/62ec194fee17351cc1dbce5266d378e6/게임대기방.PNG)
+  ![게임대기방](https://github.com/sjhjack/CyberEscape/assets/102958758/752c03b6-f610-40f6-9df3-6fd72e8806e0)
 
 - #### 랭킹 페이지
 
-  ![랭킹_페이지](/uploads/22f9cd8fbee3966fae622667d76f1452/랭킹_페이지.PNG)
+  ![랭킹_페이지](https://github.com/sjhjack/CyberEscape/assets/102958758/6ab13a5a-0e76-4fa1-95e2-857ab0d7c86b)
 
 - #### 게임 방법 설명 페이지
 
-  ![게임설명](/uploads/5e6c7510dce3255a68d3fb95bca89970/게임설명.PNG)
+  ![게임설명](https://github.com/sjhjack/CyberEscape/assets/102958758/ea6add35-cba3-4a0c-a0a7-b7c0f365ca4b)
 
 - #### 로그인 / 회원가입 페이지
 
-  ![로그인](/uploads/6b6901ba628eda6e1dc33513500f10de/로그인.PNG)
-  ![회원가입](/uploads/8bc198a242e9acb35be95875a9a7cf24/회원가입.PNG)
+  ![로그인](https://github.com/sjhjack/CyberEscape/assets/102958758/69a8c539-0c7b-4613-b17f-29f912b5dae2)
+  ![회원가입](https://github.com/sjhjack/CyberEscape/assets/102958758/7b6c137d-71cc-4047-9124-16e29ea3356e)
 
 <br>
 
